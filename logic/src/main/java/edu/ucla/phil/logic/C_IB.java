@@ -8,7 +8,7 @@ import javax.swing.InputMap;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-class C_IB extends C_TA {
+class C_IB extends CellPanel {
    LPInvalidation f397;
 
    C_IB(LPInvalidation lpinvalidation) {
@@ -57,11 +57,11 @@ class C_IB extends C_TA {
                C_CE.m443(C_IB.this.f397);
             }
          };
-         if (LogicProgram.m1040("workEntry") != null) {
+         if (LogicProgram.getCredentials("workEntry") != null) {
             abstractaction = new AbstractAction() {
                @Override
                public void actionPerformed(ActionEvent actionevent) {
-                  if (LogicProgram.m1040("workEntry") != null && C_u_C.m2101("workEntry", "instructor")) {
+                  if (LogicProgram.getCredentials("workEntry") != null && UserSetup.m2101("workEntry", "instructor")) {
                      C_CE.m441(C_IB.this.f397);
                   }
                }
@@ -78,7 +78,7 @@ class C_IB extends C_TA {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
             if (C_IB.this.f397.checkDisabled) {
-               C_UA.m1328("Feature Disabled", "Checking is disabled for this problem.", null, null);
+               MessageDialog.showMessage("Feature Disabled", "Checking is disabled for this problem.", null, null);
             } else {
                C_IB.this.f397.evaluate();
             }
@@ -133,7 +133,7 @@ class C_IB extends C_TA {
       };
       jpanel.add(c__d = new C__D("Delete", abstractaction1, abstractaction));
       c__d.m1583("Right Click to Delete multiple problems");
-      if (!LogicProgram.f576) {
+      if (!LogicProgram.noNetwork) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {
@@ -145,7 +145,7 @@ class C_IB extends C_TA {
          c__d.m1583("Submit");
       }
 
-      if (LogicProgram.f573 && !LPInvalidation.submitExam) {
+      if (LogicProgram.printingEnabled && !LPInvalidation.submitExam) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {
@@ -162,7 +162,7 @@ class C_IB extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            LogicProgram.f586.showInFront();
+            LogicProgram.mainMenu.showInFront();
          }
       };
       jpanel.add(new C__D("Menu", abstractaction1));
@@ -182,7 +182,7 @@ class C_IB extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s1 = LogicProgram.m1078("feedback");
+            String s1 = LogicProgram.getLink("feedback");
             C_Q.m1184(s1);
          }
       };
@@ -190,8 +190,8 @@ class C_IB extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s1 = LogicProgram.m1078("invHelp");
-            C_Q.m1186(LogicProgram.f550, s1);
+            String s1 = LogicProgram.getLink("invHelp");
+            C_Q.m1186(LogicProgram.configDir, s1);
          }
       };
       jpanel1.add(new C__D("Help", abstractaction1));
@@ -200,10 +200,10 @@ class C_IB extends C_TA {
          public void actionPerformed(ActionEvent actionevent) {
             boolean flag = false;
             if ((!flag || C_IB.this.f397.size != 0) && C_IB.this.f397.statement != null) {
-               C_x_A c_x_a = new C_x_A(C_IB.this, true);
-               C_IB.this.f397.openDerivation(flag, c_x_a);
+               BusyIndicator busyindicator = new BusyIndicator(C_IB.this, true);
+               C_IB.this.f397.openDerivation(flag, busyindicator);
             } else {
-               C_UA.m1329(C_LA.m411("invnot001"), null, null, null);
+               MessageDialog.showMessage(C_LA.get("invnot001"), null, null, null);
             }
          }
       };
@@ -213,10 +213,10 @@ class C_IB extends C_TA {
          public void actionPerformed(ActionEvent actionevent) {
             boolean flag = false;
             if (!flag || C_IB.this.f397.size != 0 && C_IB.this.f397.statement != null) {
-               C_x_A c_x_a = new C_x_A(C_IB.this, true);
-               C_IB.this.f397.openTruthAnalysis(flag, c_x_a);
+               BusyIndicator busyindicator = new BusyIndicator(C_IB.this, true);
+               C_IB.this.f397.openTruthAnalysis(flag, busyindicator);
             } else {
-               C_UA.m1329(C_LA.m411("invnot003"), null, null, null);
+               MessageDialog.showMessage(C_LA.get("invnot003"), null, null, null);
             }
          }
       };
@@ -234,7 +234,7 @@ class C_IB extends C_TA {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
             if (C_IB.this.f397.expandOff) {
-               C_UA.m1329(C_LA.m411("invnot004"), null, null, null);
+               MessageDialog.showMessage(C_LA.get("invnot004"), null, null, null);
             } else if (C_IB.this.f397.expandAll) {
                C_IB.this.f397.expand(s, true);
             } else {
@@ -246,7 +246,7 @@ class C_IB extends C_TA {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
             if (C_IB.this.f397.expandOff) {
-               C_UA.m1329(C_LA.m411("invnot004"), null, null, null);
+               MessageDialog.showMessage(C_LA.get("invnot004"), null, null, null);
             } else {
                C_IB.this.f397.expand(s, false);
             }
@@ -257,12 +257,12 @@ class C_IB extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s1 = LogicProgram.m1078("invRefs");
-            C_Q.m1186(LogicProgram.f550, s1);
+            String s1 = LogicProgram.getLink("invRefs");
+            C_Q.m1186(LogicProgram.configDir, s1);
          }
       };
       jpanel1.add(new C__D("References", abstractaction1));
-      if (C_KC.f480 && !LogicProgram.f576 && C_KC.f451 != null) {
+      if (ServerConnection.f480 && !LogicProgram.noNetwork && ServerConnection.uploadUrl != null) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {

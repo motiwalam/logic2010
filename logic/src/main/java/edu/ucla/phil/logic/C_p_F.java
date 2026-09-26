@@ -1,6 +1,6 @@
 package edu.ucla.phil.logic;
 
-class C_p_F extends C_D {
+class C_p_F extends DialogHandler {
    int f1338 = 1;
    String f1339;
 
@@ -10,12 +10,12 @@ class C_p_F extends C_D {
    }
 
    @Override
-   boolean m451(C_UA c_ua) {
-      String s = this.m450(c_ua);
+   boolean m451(MessageDialog messagedialog) {
+      String s = this.m450(messagedialog);
       if (s == null) {
          return true;
       } else if (s.equalsIgnoreCase("backup")) {
-         C_KC.m896(LogicProgram.f567, null);
+         ServerConnection.m896(LogicProgram.f567, null);
          return false;
       } else if (s.equalsIgnoreCase("update")) {
          C_Q.m1184(this.f1339.replaceAll(" ", "%20"));

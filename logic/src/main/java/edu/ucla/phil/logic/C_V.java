@@ -28,7 +28,7 @@ class C_V extends PrintStream {
    public void println(Object object) {
       this.f816.println(object);
       super.println(object);
-      super.println(LogicProgram.m1079());
+      super.println(LogicProgram.utcTimestamp());
    }
 
    @Override

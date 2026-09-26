@@ -14,7 +14,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 class C_WB implements C_v_D {
-   static String[] f854 = LogicProgram.f596;
+   static String[] f854 = LogicProgram.symbols;
 
    static void m1427(String s) {
       m1430(s, null, null, null);
@@ -29,16 +29,16 @@ class C_WB implements C_v_D {
    }
 
    static void m1430(String s, Hashtable hashtable, Hashtable hashtable1, Point point) {
-      C_H c_h = C_h_E.m411(s);
+      Message message = C_h_E.get(s);
       C_RE c_re = null;
-      if (c_h.f373 != null) {
-         c_re = new C_RE(c_h.f373);
+      if (message.buttons != null) {
+         c_re = new C_RE(message.buttons);
          if (hashtable1 != null) {
             c_re.m448(hashtable1);
          }
       }
 
-      C_UA.m1329(c_h, hashtable, point, c_re);
+      MessageDialog.showMessage(message, hashtable, point, c_re);
    }
 
    static boolean m1431(LPSymbolizer lpsymbolizer, Point point) {
@@ -54,9 +54,9 @@ class C_WB implements C_v_D {
 
          ajradiobutton[0].setSelected(true);
          String[] astring2 = new String[]{"OK", "Cancel"};
-         C_UA c_ua = new C_UA(lpsymbolizer.frame, "", c_z_e, astring2);
-         c_ua.m1322(null);
-         if (c_ua.f790 != 0) {
+         MessageDialog messagedialog = new MessageDialog(lpsymbolizer.frame, "", c_z_e, astring2);
+         messagedialog.m1322(null);
+         if (messagedialog.f790 != 0) {
             return false;
          }
 
@@ -72,9 +72,9 @@ class C_WB implements C_v_D {
       } else if (lpsymbolizer.problemIndex != -1 || !lpsymbolizer.problem.m1682().equals(C_x_C.m2166(""))) {
          C_ZE c_ze = new C_ZE("Delete this problem?");
          String[] astring1 = new String[]{"OK", "Cancel"};
-         C_UA c_ua1 = new C_UA(lpsymbolizer.frame, "", c_ze, astring1);
-         c_ua1.m1322(null);
-         if (c_ua1.f790 != 0) {
+         MessageDialog messagedialog1 = new MessageDialog(lpsymbolizer.frame, "", c_ze, astring1);
+         messagedialog1.m1322(null);
+         if (messagedialog1.f790 != 0) {
             return false;
          }
       }
@@ -94,9 +94,9 @@ class C_WB implements C_v_D {
       } else {
          C_ZE c_ze = new C_ZE("Delete the work on this problem?");
          String[] astring = new String[]{"OK", "Cancel"};
-         C_UA c_ua = new C_UA(lpsymbolizer.frame, "", c_ze, astring);
-         c_ua.m1322(point);
-         if (c_ua.f790 != 0) {
+         MessageDialog messagedialog = new MessageDialog(lpsymbolizer.frame, "", c_ze, astring);
+         messagedialog.m1322(point);
+         if (messagedialog.f790 != 0) {
             return false;
          } else {
             lpsymbolizer.removeWork();
@@ -121,7 +121,7 @@ class C_WB implements C_v_D {
             lpsymbolizer.loadProblem(s);
             lpsymbolizer.problemIndex = i;
             LPSymbolizer.problems.m1776(lpsymbolizer.saveProblem(), i);
-            if (C_U.eraseWork) {
+            if (LogicModule.eraseWork) {
                lpsymbolizer.removeWork();
             }
          }
@@ -135,19 +135,19 @@ class C_WB implements C_v_D {
       boolean flag = false;
       if (m1450(lpsymbolizer, null)) {
          synchronized (LPSymbolizer.problems) {
-            C_YA c_ya = m1441(lpsymbolizer, false, true, null);
+            ProblemListView problemlistview = m1441(lpsymbolizer, false, true, null);
             JScrollPane jscrollpane = new JScrollPane();
-            jscrollpane.setViewportView(c_ya);
+            jscrollpane.setViewportView(problemlistview);
             String[] astring = new String[]{"OK", "Cancel"};
-            C_UA c_ua = new C_UA(lpsymbolizer.frame, C_e_D.m1782("Problems"), jscrollpane, astring);
-            c_ya.m1528(c_ua, 0);
-            Dimension dimension = new Dimension(32 * LogicProgram.f539, 32 * LogicProgram.f539);
-            c_ua.setSize(dimension);
-            c_ua.m1317("symChosen");
-            c_ya.requestFocus();
-            c_ua.m1323(C_UA.m1321(dimension), true);
-            if (c_ua.f790 == 0) {
-               int i = c_ya.m1532(c_ya.f899);
+            MessageDialog messagedialog = new MessageDialog(lpsymbolizer.frame, ProblemSet.m1782("Problems"), jscrollpane, astring);
+            problemlistview.m1528(messagedialog, 0);
+            Dimension dimension = new Dimension(32 * LogicProgram.fontSize, 32 * LogicProgram.fontSize);
+            messagedialog.setSize(dimension);
+            messagedialog.m1317("symChosen");
+            problemlistview.requestFocus();
+            messagedialog.m1323(MessageDialog.m1321(dimension), true);
+            if (messagedialog.f790 == 0) {
+               int i = problemlistview.m1532(problemlistview.f899);
                LPSymbolizer lpsymbolizer1;
                if ((lpsymbolizer1 = LPSymbolizer.openInstance(i, true)) != null) {
                   lpsymbolizer1.showInFront();
@@ -158,7 +158,7 @@ class C_WB implements C_v_D {
                   lpsymbolizer.loadProblem(LPSymbolizer.problems.m1778(i));
                   lpsymbolizer.problemIndex = i;
                   LPSymbolizer.problems.m1776(lpsymbolizer.saveProblem(), i);
-                  if (C_U.eraseWork) {
+                  if (LogicModule.eraseWork) {
                      lpsymbolizer.removeWork();
                   }
 
@@ -175,26 +175,26 @@ class C_WB implements C_v_D {
 
    static String m1435(LPSymbolizer lpsymbolizer, C_y_B c_y_b) {
       Object object = null;
-      C_YA c_ya = m1441(lpsymbolizer, false, true, null);
+      ProblemListView problemlistview = m1441(lpsymbolizer, false, true, null);
       JScrollPane jscrollpane = new JScrollPane();
-      jscrollpane.setViewportView(c_ya);
+      jscrollpane.setViewportView(problemlistview);
       String[] astring = new String[]{"Copy", "Cancel"};
       Object object1 = c_y_b == null ? null : LogicProgram.m1045(c_y_b);
       if (object1 == null) {
          object1 = lpsymbolizer.frame;
       }
 
-      C_UA c_ua = new C_UA((Frame)object1, C_e_D.m1782("Problems"), jscrollpane, astring);
-      c_ya.m1528(c_ua, 0);
-      Dimension dimension = new Dimension(20 * LogicProgram.f539, 25 * LogicProgram.f539);
-      c_ua.setSize(dimension);
-      c_ua.m1317("symSchemeChosen");
-      c_ya.requestFocus();
-      c_ua.m1323(C_UA.m1321(dimension), true);
-      if (c_ua.f790 == 0) {
-         int i = c_ya.m1532(c_ya.f899);
+      MessageDialog messagedialog = new MessageDialog((Frame)object1, ProblemSet.m1782("Problems"), jscrollpane, astring);
+      problemlistview.m1528(messagedialog, 0);
+      Dimension dimension = new Dimension(20 * LogicProgram.fontSize, 25 * LogicProgram.fontSize);
+      messagedialog.setSize(dimension);
+      messagedialog.m1317("symSchemeChosen");
+      problemlistview.requestFocus();
+      messagedialog.m1323(MessageDialog.m1321(dimension), true);
+      if (messagedialog.f790 == 0) {
+         int i = problemlistview.m1532(problemlistview.f899);
          if (i != -1) {
-            return LPSymbolizer.getProblemScheme(C_XD.m1493(LPSymbolizer.problems.m1778(i)));
+            return LPSymbolizer.getProblemScheme(TaggedRecord.m1493(LPSymbolizer.problems.m1778(i)));
          }
       }
 
@@ -205,9 +205,9 @@ class C_WB implements C_v_D {
       int[] aint = null;
       if (m1450(lpsymbolizer, null)) {
          synchronized (LPSymbolizer.problems) {
-            C_YA c_ya = m1441(lpsymbolizer, true, true, null);
+            ProblemListView problemlistview = m1441(lpsymbolizer, true, true, null);
             if (LPSymbolizer.submitExam) {
-               c_ya.clearSelection();
+               problemlistview.clearSelection();
             }
 
             Vector vector = LPSymbolizer.getChangedProblems();
@@ -216,26 +216,26 @@ class C_WB implements C_v_D {
 
                for (int i = 0; i < k; i++) {
                   String s = (String)vector.get(i);
-                  String s1 = C_XD.m1493(s);
+                  String s1 = TaggedRecord.m1493(s);
                   int j = LPSymbolizer.problems.m1767(s1);
                   if (j != -1) {
-                     c_ya.m1531(j, c_ya.f899);
+                     problemlistview.m1531(j, problemlistview.f899);
                   }
                }
             }
 
             JScrollPane jscrollpane = new JScrollPane();
-            jscrollpane.setViewportView(c_ya);
+            jscrollpane.setViewportView(problemlistview);
             String[] astring = new String[]{"Submit", "Cancel"};
-            C_UA c_ua = new C_UA(lpsymbolizer.frame, C_e_D.m1782("Submit Problems"), jscrollpane, astring);
-            c_ya.m1528(c_ua, 0);
-            Dimension dimension = new Dimension(32 * LogicProgram.f539, 32 * LogicProgram.f539);
-            c_ua.setSize(dimension);
-            c_ua.m1317("symChosen");
-            c_ya.requestFocus();
-            c_ua.m1323(C_UA.m1321(dimension), true);
-            if (c_ua.f790 == 0) {
-               aint = c_ya.m1533(c_ya.f899);
+            MessageDialog messagedialog = new MessageDialog(lpsymbolizer.frame, ProblemSet.m1782("Submit Problems"), jscrollpane, astring);
+            problemlistview.m1528(messagedialog, 0);
+            Dimension dimension = new Dimension(32 * LogicProgram.fontSize, 32 * LogicProgram.fontSize);
+            messagedialog.setSize(dimension);
+            messagedialog.m1317("symChosen");
+            problemlistview.requestFocus();
+            messagedialog.m1323(MessageDialog.m1321(dimension), true);
+            if (messagedialog.f790 == 0) {
+               aint = problemlistview.m1533(problemlistview.f899);
             }
          }
       }
@@ -248,25 +248,25 @@ class C_WB implements C_v_D {
       int[] aint = null;
       if (m1450(lpsymbolizer, null)) {
          synchronized (LPSymbolizer.problems) {
-            C_YA c_ya = m1441(lpsymbolizer, true, false, null);
+            ProblemListView problemlistview = m1441(lpsymbolizer, true, false, null);
             JScrollPane jscrollpane = new JScrollPane();
-            jscrollpane.setViewportView(c_ya);
-            C_LB c_lb = new C_LB();
-            C_s_B c_s_b = new C_s_B(LogicProgram.m1004(C_H.m412("not089")));
+            jscrollpane.setViewportView(problemlistview);
+            SizedPanel sizedpanel = new SizedPanel();
+            C_s_B c_s_b = new C_s_B(LogicProgram.m1004(Message.getText("not089")));
             c_s_b.setLineWrap(true);
             c_s_b.setWrapStyleWord(true);
-            c_lb.add(c_s_b, "North");
-            c_lb.add(jscrollpane, "Center");
+            sizedpanel.add(c_s_b, "North");
+            sizedpanel.add(jscrollpane, "Center");
             String[] astring = new String[]{"Upload", "Cancel"};
-            C_UA c_ua = new C_UA(lpsymbolizer.frame, C_e_D.m1782("Upload Problems"), c_lb, astring);
-            c_ya.m1528(c_ua, 0);
-            Dimension dimension = new Dimension(32 * LogicProgram.f539, 32 * LogicProgram.f539);
-            c_ua.setSize(dimension);
-            c_ua.m1317("symChosen");
-            c_ya.requestFocus();
-            c_ua.m1323(C_UA.m1321(dimension), true);
-            if (c_ua.f790 == 0) {
-               aint = c_ya.m1533(c_ya.f899);
+            MessageDialog messagedialog = new MessageDialog(lpsymbolizer.frame, ProblemSet.m1782("Upload Problems"), sizedpanel, astring);
+            problemlistview.m1528(messagedialog, 0);
+            Dimension dimension = new Dimension(32 * LogicProgram.fontSize, 32 * LogicProgram.fontSize);
+            messagedialog.setSize(dimension);
+            messagedialog.m1317("symChosen");
+            problemlistview.requestFocus();
+            messagedialog.m1323(MessageDialog.m1321(dimension), true);
+            if (messagedialog.f790 == 0) {
+               aint = problemlistview.m1533(problemlistview.f899);
             }
          }
       }
@@ -277,23 +277,23 @@ class C_WB implements C_v_D {
 
    static void m1438(LPSymbolizer lpsymbolizer) {
       synchronized (LPSymbolizer.problems) {
-         C_YA c_ya = m1441(lpsymbolizer, true, true, null);
+         ProblemListView problemlistview = m1441(lpsymbolizer, true, true, null);
          JScrollPane jscrollpane = new JScrollPane();
-         jscrollpane.setViewportView(c_ya);
+         jscrollpane.setViewportView(problemlistview);
          String[] astring = new String[]{"Delete Work", "Delete Problems", "Cancel"};
-         C_UA c_ua = new C_UA(lpsymbolizer.frame, C_e_D.m1782("Delete Problems"), jscrollpane, astring);
-         c_ya.m1528(c_ua, 0);
-         Dimension dimension = new Dimension(32 * LogicProgram.f539, 32 * LogicProgram.f539);
-         c_ua.setSize(dimension);
-         c_ua.m1317("symChosen");
-         c_ya.requestFocus();
-         c_ua.m1323(C_UA.m1321(dimension), true);
-         if (c_ua.f790 == 0) {
-            int[] aint1 = c_ya.m1533(c_ya.f899);
+         MessageDialog messagedialog = new MessageDialog(lpsymbolizer.frame, ProblemSet.m1782("Delete Problems"), jscrollpane, astring);
+         problemlistview.m1528(messagedialog, 0);
+         Dimension dimension = new Dimension(32 * LogicProgram.fontSize, 32 * LogicProgram.fontSize);
+         messagedialog.setSize(dimension);
+         messagedialog.m1317("symChosen");
+         problemlistview.requestFocus();
+         messagedialog.m1323(MessageDialog.m1321(dimension), true);
+         if (messagedialog.f790 == 0) {
+            int[] aint1 = problemlistview.m1533(problemlistview.f899);
             if (aint1.length != 0) {
-               C_H c_h1 = C_H.m411("not091");
-               C_b_E c_b_e1 = new C_b_E(c_h1.f373);
-               C_UA.m1329(c_h1, null, null, c_b_e1);
+               Message message1 = Message.get("not091");
+               C_b_E c_b_e1 = new C_b_E(message1.buttons);
+               MessageDialog.showMessage(message1, null, null, c_b_e1);
                if (c_b_e1.f1027 == 0) {
                   int k = aint1.length;
 
@@ -301,13 +301,13 @@ class C_WB implements C_v_D {
                      int l = aint1[k];
                      C__C c__c1 = (C__C)LPSymbolizer.problems.m1779(l);
                      if (c__c1 != null) {
-                        C_XD c_xd1 = new C_XD(c__c1.f1119);
-                        if (!LPSymbolizer.isExample(c_xd1.m1494())) {
-                           c__c1.f1119 = LPSymbolizer.removeWork(c_xd1);
-                           c__c1.f1120 = 0;
+                        TaggedRecord taggedrecord1 = new TaggedRecord(c__c1.name);
+                        if (!LPSymbolizer.isExample(taggedrecord1.getName())) {
+                           c__c1.name = LPSymbolizer.removeWork(taggedrecord1);
+                           c__c1.state = 0;
                            LPSymbolizer lpsymbolizer2 = LPSymbolizer.openInstance(l, false);
                            if (lpsymbolizer2 != null) {
-                              lpsymbolizer2.loadProblem(c__c1.f1119);
+                              lpsymbolizer2.loadProblem(c__c1.name);
                            }
                         }
                      }
@@ -316,12 +316,12 @@ class C_WB implements C_v_D {
 
                LPSymbolizer.saveProblems();
             }
-         } else if (c_ua.f790 == 1) {
-            int[] aint = c_ya.m1533(c_ya.f899);
+         } else if (messagedialog.f790 == 1) {
+            int[] aint = problemlistview.m1533(problemlistview.f899);
             if (aint.length != 0) {
-               C_H c_h = C_H.m411("not090");
-               C_b_E c_b_e = new C_b_E(c_h.f373);
-               C_UA.m1329(c_h, null, null, c_b_e);
+               Message message = Message.get("not090");
+               C_b_E c_b_e = new C_b_E(message.buttons);
+               MessageDialog.showMessage(message, null, null, c_b_e);
                if (c_b_e.f1027 == 0) {
                   int i = aint.length;
 
@@ -329,8 +329,8 @@ class C_WB implements C_v_D {
                      int j = aint[i];
                      C__C c__c = (C__C)LPSymbolizer.problems.m1779(j);
                      if (c__c != null) {
-                        C_XD c_xd = new C_XD(c__c.f1119);
-                        if (!LPSymbolizer.isExercise(c_xd.m1494())) {
+                        TaggedRecord taggedrecord = new TaggedRecord(c__c.name);
+                        if (!LPSymbolizer.isExercise(taggedrecord.getName())) {
                            LPSymbolizer lpsymbolizer1 = LPSymbolizer.openInstance(j, false);
                            LPSymbolizer.problems.m1101(j);
                            if (lpsymbolizer1 != null) {
@@ -353,24 +353,24 @@ class C_WB implements C_v_D {
       int[] aint = null;
       if (m1450(lpsymbolizer, null)) {
          synchronized (LPSymbolizer.problems) {
-            C_YA c_ya = m1441(lpsymbolizer, true, true, LPSymbolizer.noPrint);
+            ProblemListView problemlistview = m1441(lpsymbolizer, true, true, LPSymbolizer.noPrint);
             JScrollPane jscrollpane = new JScrollPane();
-            jscrollpane.setViewportView(c_ya);
+            jscrollpane.setViewportView(problemlistview);
             String[] astring = new String[]{"Print", "Print Results", "Print List", "Cancel"};
-            c_ya.f898 = 3;
-            C_UA c_ua = new C_UA(lpsymbolizer.frame, C_e_D.m1782("Print Problems"), jscrollpane, astring);
-            c_ya.m1528(c_ua, 0);
-            Dimension dimension = new Dimension(32 * LogicProgram.f539, 32 * LogicProgram.f539);
-            c_ua.setSize(dimension);
-            c_ua.m1317("symChosen");
-            c_ya.requestFocus();
-            c_ua.m1323(C_UA.m1321(dimension), true);
-            if (c_ua.f790 == 0) {
-               aint = c_ya.m1533(c_ya.f899);
-            } else if (c_ua.f790 == 1) {
-               C_c_A.m1666(c_ya.m1533(c_ya.f899));
-            } else if (c_ua.f790 == 2) {
-               C_WF.m1460(c_ya.m1533(c_ya.f899));
+            problemlistview.f898 = 3;
+            MessageDialog messagedialog = new MessageDialog(lpsymbolizer.frame, ProblemSet.m1782("Print Problems"), jscrollpane, astring);
+            problemlistview.m1528(messagedialog, 0);
+            Dimension dimension = new Dimension(32 * LogicProgram.fontSize, 32 * LogicProgram.fontSize);
+            messagedialog.setSize(dimension);
+            messagedialog.m1317("symChosen");
+            problemlistview.requestFocus();
+            messagedialog.m1323(MessageDialog.m1321(dimension), true);
+            if (messagedialog.f790 == 0) {
+               aint = problemlistview.m1533(problemlistview.f899);
+            } else if (messagedialog.f790 == 1) {
+               C_c_A.m1666(problemlistview.m1533(problemlistview.f899));
+            } else if (messagedialog.f790 == 2) {
+               C_WF.m1460(problemlistview.m1533(problemlistview.f899));
             }
          }
       }
@@ -381,31 +381,31 @@ class C_WB implements C_v_D {
 
    static void m1440(LPSymbolizer lpsymbolizer) {
       if (m1450(lpsymbolizer, null)) {
-         C_0E c_0e = new C_0E();
-         Dimension dimension = new Dimension(20 * LogicProgram.f539, 10 * LogicProgram.f539);
-         Point point = C_UA.m1321(dimension);
+         ModuleFrame moduleframe = new ModuleFrame();
+         Dimension dimension = new Dimension(20 * LogicProgram.fontSize, 10 * LogicProgram.fontSize);
+         Point point = MessageDialog.m1321(dimension);
          JScrollPane jscrollpane = new JScrollPane();
-         C_p_A c_p_a = new C_p_A();
+         EditableTextPane editabletextpane = new EditableTextPane();
          String[] astring = new String[]{"OK", "Cancel"};
-         c_p_a.setBackground(Color.WHITE);
-         jscrollpane.setViewportView(c_p_a);
-         C_UA c_ua = new C_UA(c_0e, "Submitted Problem", jscrollpane, astring);
-         c_ua.setSize(dimension);
-         c_ua.m1314(0);
-         c_ua.m1317("symSubmitted");
-         c_p_a.requestFocus();
-         c_ua.m1323(point, true);
-         c_0e.dispose();
-         if (c_ua.f790 == 0) {
-            lpsymbolizer.loadProblem(c_p_a.getText());
+         editabletextpane.setBackground(Color.WHITE);
+         jscrollpane.setViewportView(editabletextpane);
+         MessageDialog messagedialog = new MessageDialog(moduleframe, "Submitted Problem", jscrollpane, astring);
+         messagedialog.setSize(dimension);
+         messagedialog.m1314(0);
+         messagedialog.m1317("symSubmitted");
+         editabletextpane.requestFocus();
+         messagedialog.m1323(point, true);
+         moduleframe.dispose();
+         if (messagedialog.f790 == 0) {
+            lpsymbolizer.loadProblem(editabletextpane.getText());
          }
       }
 
       lpsymbolizer.requestFocus();
    }
 
-   static C_YA m1441(LPSymbolizer lpsymbolizer, boolean flag, boolean flag1, C_BE c_be) {
-      return LPSymbolizer.problems.m1781(lpsymbolizer, LPSymbolizer.exercises, flag, flag1, LPSymbolizer.monoProbs, c_be);
+   static ProblemListView m1441(LPSymbolizer lpsymbolizer, boolean flag, boolean flag1, ProblemSelector problemselector) {
+      return LPSymbolizer.problems.m1781(lpsymbolizer, LPSymbolizer.exercises, flag, flag1, LPSymbolizer.monoProbs, problemselector);
    }
 
    static void m1442(LPSymbolizer lpsymbolizer) {
@@ -414,32 +414,32 @@ class C_WB implements C_v_D {
 
    static void m1443(LPSymbolizer lpsymbolizer, String s) {
       if (s != null || m1450(lpsymbolizer, null)) {
-         C_0E c_0e = new C_0E();
-         Dimension dimension = new Dimension(20 * LogicProgram.f539, 10 * LogicProgram.f539);
-         Point point = C_UA.m1321(dimension);
+         ModuleFrame moduleframe = new ModuleFrame();
+         Dimension dimension = new Dimension(20 * LogicProgram.fontSize, 10 * LogicProgram.fontSize);
+         Point point = MessageDialog.m1321(dimension);
          JScrollPane jscrollpane = new JScrollPane();
-         C_IF c_if = new C_IF(c_0e);
+         FormulaEntryField formulaentryfield = new FormulaEntryField(moduleframe);
          if (s != null) {
-            c_if.setText(s);
+            formulaentryfield.setText(s);
          } else if (LPSymbolizer.lastUserProblem != null) {
-            c_if.setText(LPSymbolizer.lastUserProblem);
+            formulaentryfield.setText(LPSymbolizer.lastUserProblem);
          }
 
          C_I c_i = new C_I("OK:ok.Clear:clear.Cancel:cancel;0");
-         c_i.m447("edit", c_if);
+         c_i.m447("edit", formulaentryfield);
          c_i.m447("symbolizer", lpsymbolizer);
-         jscrollpane.setViewportView(c_if);
-         c_if.setBackground(Color.WHITE);
-         C_UA c_ua = new C_UA(c_0e, "User Problem", jscrollpane, c_i.m445());
-         c_ua.setSize(dimension);
-         c_ua.m1314(0);
-         c_ua.m1317("symUser");
-         c_if.f425 = c_ua;
-         c_if.requestFocus();
-         c_ua.m1323(point, true);
-         c_0e.dispose();
-         if (c_ua.f790 == 0) {
-            String s1 = c_if.getText();
+         jscrollpane.setViewportView(formulaentryfield);
+         formulaentryfield.setBackground(Color.WHITE);
+         MessageDialog messagedialog = new MessageDialog(moduleframe, "User Problem", jscrollpane, c_i.m445());
+         messagedialog.setSize(dimension);
+         messagedialog.m1314(0);
+         messagedialog.m1317("symUser");
+         formulaentryfield.f425 = messagedialog;
+         formulaentryfield.requestFocus();
+         messagedialog.m1323(point, true);
+         moduleframe.dispose();
+         if (messagedialog.f790 == 0) {
+            String s1 = formulaentryfield.getText();
             if (!LPSymbolizer.validateUserProblem(s1)) {
                return;
             }
@@ -464,9 +464,9 @@ class C_WB implements C_v_D {
    }
 
    static void m1444(LPSymbolizer lpsymbolizer, String s) {
-      C_0E c_0e = new C_0E();
-      Dimension dimension = new Dimension(25 * LogicProgram.f539, 15 * LogicProgram.f539);
-      Point point = C_UA.m1321(dimension);
+      ModuleFrame moduleframe = new ModuleFrame();
+      Dimension dimension = new Dimension(25 * LogicProgram.fontSize, 15 * LogicProgram.fontSize);
+      Point point = MessageDialog.m1321(dimension);
       JScrollPane jscrollpane = new JScrollPane();
       C_y_B c_y_b = new C_y_B(true);
       if (s != null) {
@@ -492,24 +492,24 @@ class C_WB implements C_v_D {
       c_r_e.m447("symbolizer", lpsymbolizer);
       jscrollpane.setViewportView(c_y_b);
       c_y_b.setBackground(Color.WHITE);
-      C_UA c_ua;
+      MessageDialog messagedialog;
       if (s == null) {
-         c_ua = new C_UA(c_0e, "Create Scheme", jscrollpane, c_r_e.m445());
+         messagedialog = new MessageDialog(moduleframe, "Create Scheme", jscrollpane, c_r_e.m445());
       } else {
-         c_ua = new C_UA(c_0e, "Edit Scheme", jscrollpane, c_r_e.m445());
+         messagedialog = new MessageDialog(moduleframe, "Edit Scheme", jscrollpane, c_r_e.m445());
       }
 
-      c_ua.setSize(dimension);
-      c_ua.m1314(0);
-      c_ua.m1317("symUserScheme");
-      c_ua.m1315(c_r_e);
-      c_ua.m1316("OK", "Accept scheme");
-      c_ua.m1316("Clear", "Reset scheme");
-      c_ua.m1316("Browse", "Load scheme from another problem");
+      messagedialog.setSize(dimension);
+      messagedialog.m1314(0);
+      messagedialog.m1317("symUserScheme");
+      messagedialog.m1315(c_r_e);
+      messagedialog.m1316("OK", "Accept scheme");
+      messagedialog.m1316("Clear", "Reset scheme");
+      messagedialog.m1316("Browse", "Load scheme from another problem");
       c_y_b.requestFocus();
-      c_ua.m1323(point, true);
-      c_0e.dispose();
-      if (c_ua.f790 == 0) {
+      messagedialog.m1323(point, true);
+      moduleframe.dispose();
+      if (messagedialog.f790 == 0) {
          LPSymbolizer.lastUserScheme = c_y_b.m2184();
          lpsymbolizer.scheme.m2182(LPSymbolizer.lastUserScheme);
          if (lpsymbolizer.problem != null) {
@@ -555,27 +555,27 @@ class C_WB implements C_v_D {
    }
 
    static void m1447(LPSymbolizer lpsymbolizer) {
-      if (lpsymbolizer.problem.f1058 || C_KC.f480 && !C_KC.f482 && C_u_C.m2102("symAnswerPrint", "instructor") == null) {
+      if (lpsymbolizer.problem.f1058 || ServerConnection.f480 && !ServerConnection.f482 && UserSetup.m2102("symAnswerPrint", "instructor") == null) {
          if (lpsymbolizer.problem.f1052 != null && !lpsymbolizer.dontChange) {
             lpsymbolizer.problem.m1700();
          }
 
-         C_YA c_ya = new C_YA(true);
+         ProblemListView problemlistview = new ProblemListView(true);
          Vector vector = lpsymbolizer.problem.f1056;
          C_d_C c_d_c = new C_d_C(lpsymbolizer);
          int i = vector == null ? 0 : vector.size();
 
          for (int j = 0; j < i; j++) {
-            c_d_c.m1703(new C_XD((String)vector.elementAt(j)));
+            c_d_c.m1703(new TaggedRecord((String)vector.elementAt(j)));
             String s = c_d_c.toString();
             C_QC c_qc = new C_QC(s, 2);
             c_qc.m1187(s);
             c_qc.setOpaque(true);
-            c_ya.m1526(c_qc);
+            problemlistview.m1526(c_qc);
          }
 
          JScrollPane jscrollpane = new JScrollPane();
-         jscrollpane.setViewportView(c_ya);
+         jscrollpane.setViewportView(problemlistview);
          C_QD c_qd;
          if (!lpsymbolizer.problem.f1058 || lpsymbolizer.dontChange) {
             c_qd = new C_QD("Use:load.OK:ok;0");
@@ -586,20 +586,20 @@ class C_WB implements C_v_D {
          }
 
          c_qd.m447("symbolizer", lpsymbolizer);
-         c_qd.m447("list", c_ya);
-         C_UA c_ua = new C_UA(null, "Answer Manager", jscrollpane, c_qd.m445());
-         c_ua.m1316("Add", "Add the answer currently in the workspace.");
-         c_ua.m1316("Use", "Load the selected answer into the workspace.");
-         c_ua.m1316("Delete", "Delete the selected answer(s).");
-         c_ua.m1316("Replace", "Replace the selected answer(s) with the answer currently in the workspace.");
-         c_ua.m1316("OK", "OK as is");
-         c_ua.m1315(c_qd);
-         c_ya.m1528(c_ua, 0);
-         Dimension dimension = new Dimension(32 * LogicProgram.f539, 40 * LogicProgram.f539);
-         c_ua.setSize(dimension);
-         c_ua.m1317("symEditAnswer");
-         c_ya.requestFocus();
-         c_ua.m1323(C_UA.m1321(dimension), true);
+         c_qd.m447("list", problemlistview);
+         MessageDialog messagedialog = new MessageDialog(null, "Answer Manager", jscrollpane, c_qd.m445());
+         messagedialog.m1316("Add", "Add the answer currently in the workspace.");
+         messagedialog.m1316("Use", "Load the selected answer into the workspace.");
+         messagedialog.m1316("Delete", "Delete the selected answer(s).");
+         messagedialog.m1316("Replace", "Replace the selected answer(s) with the answer currently in the workspace.");
+         messagedialog.m1316("OK", "OK as is");
+         messagedialog.m1315(c_qd);
+         problemlistview.m1528(messagedialog, 0);
+         Dimension dimension = new Dimension(32 * LogicProgram.fontSize, 40 * LogicProgram.fontSize);
+         messagedialog.setSize(dimension);
+         messagedialog.m1317("symEditAnswer");
+         problemlistview.requestFocus();
+         messagedialog.m1323(MessageDialog.m1321(dimension), true);
       } else {
          m1427("SymNot005");
       }
@@ -607,25 +607,25 @@ class C_WB implements C_v_D {
 
    static int[] m1448(Frame frame) {
       Object object = null;
-      C_YA c_ya = m1449(true);
+      ProblemListView problemlistview = m1449(true);
       JScrollPane jscrollpane = new JScrollPane();
-      jscrollpane.setViewportView(c_ya);
+      jscrollpane.setViewportView(problemlistview);
       String[] astring = new String[]{"Print", "Cancel"};
-      C_UA c_ua = new C_UA(frame, C_e_D.m1782("Print Answers"), jscrollpane, astring);
-      c_ya.m1528(c_ua, 0);
-      Dimension dimension = new Dimension(32 * LogicProgram.f539, 32 * LogicProgram.f539);
-      c_ua.setSize(dimension);
-      c_ua.m1317("symChosen");
-      c_ya.requestFocus();
-      c_ua.m1323(C_UA.m1321(dimension), true);
-      if (c_ua.f790 == 0) {
-         C_PD.m1179(c_ya.m1533(c_ya.f899));
+      MessageDialog messagedialog = new MessageDialog(frame, ProblemSet.m1782("Print Answers"), jscrollpane, astring);
+      problemlistview.m1528(messagedialog, 0);
+      Dimension dimension = new Dimension(32 * LogicProgram.fontSize, 32 * LogicProgram.fontSize);
+      messagedialog.setSize(dimension);
+      messagedialog.m1317("symChosen");
+      problemlistview.requestFocus();
+      messagedialog.m1323(MessageDialog.m1321(dimension), true);
+      if (messagedialog.f790 == 0) {
+         C_PD.m1179(problemlistview.m1533(problemlistview.f899));
       }
 
       return (int[])object;
    }
 
-   static C_YA m1449(boolean flag) {
+   static ProblemListView m1449(boolean flag) {
       return LPSymbolizer.exercises.m1781(null, LPSymbolizer.exercises, flag, true, null, null);
    }
 
@@ -637,9 +637,9 @@ class C_WB implements C_v_D {
          lpsymbolizer.frame.show();
          C_ZE c_ze = new C_ZE("Do you wish to save the current problem?");
          String[] astring = new String[]{"Yes", "No", "Cancel"};
-         C_UA c_ua = new C_UA(lpsymbolizer.frame, "", c_ze, astring);
-         c_ua.m1322(point);
-         return c_ua.f790 == 0 && !lpsymbolizer.saveProblems(s) ? false : c_ua.f790 == 0 || c_ua.f790 == 1;
+         MessageDialog messagedialog = new MessageDialog(lpsymbolizer.frame, "", c_ze, astring);
+         messagedialog.m1322(point);
+         return messagedialog.f790 == 0 && !lpsymbolizer.saveProblems(s) ? false : messagedialog.f790 == 0 || messagedialog.f790 == 1;
       }
    }
 
@@ -648,27 +648,27 @@ class C_WB implements C_v_D {
          s = "User";
       }
 
-      C_LB c_lb = new C_LB();
-      C_p_A c_p_a = new C_p_A(s, 300);
+      SizedPanel sizedpanel = new SizedPanel();
+      EditableTextPane editabletextpane = new EditableTextPane(s, 300);
       C_ZE c_ze = new C_ZE("Please supply a name for this problem");
-      C_0E c_0e = new C_0E();
-      c_p_a.select(0, 2147483647);
+      ModuleFrame moduleframe = new ModuleFrame();
+      editabletextpane.select(0, 2147483647);
       c_ze.setFocusable(false);
-      c_lb.setLayout(new C_m_A(0));
-      c_lb.add(c_ze);
-      c_lb.add(c_p_a);
+      sizedpanel.setLayout(new C_m_A(0));
+      sizedpanel.add(c_ze);
+      sizedpanel.add(editabletextpane);
       String[] astring = new String[]{"OK", "Cancel"};
-      C_UA c_ua = new C_UA(c_0e, "", c_lb, astring);
-      c_ua.m1314(0);
-      c_p_a.requestFocus();
-      c_ua.m1322(null);
-      c_0e.dispose();
-      if (c_ua.f790 != 0) {
+      MessageDialog messagedialog = new MessageDialog(moduleframe, "", sizedpanel, astring);
+      messagedialog.m1314(0);
+      editabletextpane.requestFocus();
+      messagedialog.m1322(null);
+      moduleframe.dispose();
+      if (messagedialog.f790 != 0) {
          return null;
       } else {
-         s = c_p_a.getText();
+         s = editabletextpane.getText();
          if ((s = s.trim()).equals("")) {
-            C_UA.m1329(C_H.m411("not006"), null, null, null);
+            MessageDialog.showMessage(Message.get("not006"), null, null, null);
             return null;
          } else if (LPSymbolizer.problems.m1780(s) != null) {
             LogicProgram.m972("not007", s);
@@ -682,47 +682,47 @@ class C_WB implements C_v_D {
    static String m1452(String s, String s1, C_d_C c_d_c) {
       Point point = c_d_c.f1045.getLocationOnScreen();
       Point point1 = new Point(point.x, point.y + c_d_c.f1045.getHeight());
-      C_IF c_if = new C_IF(c_d_c.f1044.frame);
-      c_if.setBackground(Color.WHITE);
+      FormulaEntryField formulaentryfield = new FormulaEntryField(c_d_c.f1044.frame);
+      formulaentryfield.setBackground(Color.WHITE);
       String[] astring = new String[]{"OK", "Cancel"};
-      C_LB c_lb = new C_LB();
-      c_lb.setLayout(new BorderLayout());
-      c_lb.setBorder(new EmptyBorder(7, 15, 7, 15));
+      SizedPanel sizedpanel = new SizedPanel();
+      sizedpanel.setLayout(new BorderLayout());
+      sizedpanel.setBorder(new EmptyBorder(7, 15, 7, 15));
       C_ZE c_ze = new C_ZE(s1, 0, 1);
       c_ze.setBorder(new EmptyBorder(0, 0, 5, 0));
       Dimension dimension = c_ze.getPreferredSize();
-      c_if.setBorder(new BevelBorder(1));
-      c_if.m2023(dimension.width);
-      c_if.invalidate();
-      c_lb.add(c_ze, "North");
-      c_lb.add(c_if, "East");
-      C_UA c_ua = new C_UA(c_d_c.f1044.frame, s, c_lb, astring);
-      c_ua.m1314(0);
-      c_if.f425 = c_ua;
-      c_if.requestFocus();
-      c_ua.m1323(point1, true);
-      return c_ua.f790 != 0 ? null : LogicProgram.m995(c_if.getText(), f854, maggie);
+      formulaentryfield.setBorder(new BevelBorder(1));
+      formulaentryfield.m2023(dimension.width);
+      formulaentryfield.invalidate();
+      sizedpanel.add(c_ze, "North");
+      sizedpanel.add(formulaentryfield, "East");
+      MessageDialog messagedialog = new MessageDialog(c_d_c.f1044.frame, s, sizedpanel, astring);
+      messagedialog.m1314(0);
+      formulaentryfield.f425 = messagedialog;
+      formulaentryfield.requestFocus();
+      messagedialog.m1323(point1, true);
+      return messagedialog.f790 != 0 ? null : LogicProgram.m995(formulaentryfield.getText(), f854, maggie);
    }
 
    static void m1453(LPSymbolizer lpsymbolizer) {
       if (lpsymbolizer.directEntryDisabled) {
-         C_UA.m1328("Feature Disabled", "Direct entry is disabled for this problem.", null, null);
+         MessageDialog.showMessage("Feature Disabled", "Direct entry is disabled for this problem.", null, null);
       } else {
-         Dimension dimension = new Dimension(20 * LogicProgram.f539, 7 * LogicProgram.f539);
-         Point point = C_UA.m1321(dimension);
+         Dimension dimension = new Dimension(20 * LogicProgram.fontSize, 7 * LogicProgram.fontSize);
+         Point point = MessageDialog.m1321(dimension);
          JScrollPane jscrollpane = new JScrollPane();
-         C_IF c_if = new C_IF(LogicProgram.m995(lpsymbolizer.lastDirect, maggie, f854), lpsymbolizer.frame);
+         FormulaEntryField formulaentryfield = new FormulaEntryField(LogicProgram.m995(lpsymbolizer.lastDirect, maggie, f854), lpsymbolizer.frame);
          String[] astring = new String[]{"OK", "Cancel"};
-         jscrollpane.setViewportView(c_if);
-         C_UA c_ua = new C_UA(lpsymbolizer.frame, "Direct Symbolization", jscrollpane, astring);
-         c_ua.setSize(dimension);
-         c_ua.m1314(0);
-         c_ua.m1317("symDirect");
-         c_if.f425 = c_ua;
-         c_if.requestFocus();
-         c_ua.m1323(point, true);
-         if (c_ua.f790 == 0) {
-            lpsymbolizer.lastDirect = LogicProgram.m995(c_if.getText(), f854, maggie);
+         jscrollpane.setViewportView(formulaentryfield);
+         MessageDialog messagedialog = new MessageDialog(lpsymbolizer.frame, "Direct Symbolization", jscrollpane, astring);
+         messagedialog.setSize(dimension);
+         messagedialog.m1314(0);
+         messagedialog.m1317("symDirect");
+         formulaentryfield.f425 = messagedialog;
+         formulaentryfield.requestFocus();
+         messagedialog.m1323(point, true);
+         if (messagedialog.f790 == 0) {
+            lpsymbolizer.lastDirect = LogicProgram.m995(formulaentryfield.getText(), f854, maggie);
             lpsymbolizer.problem.m1709(lpsymbolizer.lastDirect);
             if (lpsymbolizer.checkDisabled || lpsymbolizer.errorMessagesDisabled) {
                return;
@@ -733,41 +733,41 @@ class C_WB implements C_v_D {
                return;
             }
 
-            C_RF c_rf = c_d_c.m1698();
-            C_RF c_rf1 = lpsymbolizer.problem.m1698();
-            if (c_rf1 == null || c_rf == null || c_rf1.m1236(c_rf, new C_MB())) {
+            Expression expression = c_d_c.m1698();
+            Expression expression1 = lpsymbolizer.problem.m1698();
+            if (expression1 == null || expression == null || expression1.m1236(expression, new C_MB())) {
                lpsymbolizer.problem.m1742(lpsymbolizer.problem.m1715());
             }
          }
       }
    }
 
-   static void m1454(String s, String s1, C_D c_d) {
-      if (c_d != null) {
-         C_d_C c_d_c = (C_d_C)c_d.m449("target");
-         C_0E c_0e = new C_0E();
+   static void m1454(String s, String s1, DialogHandler dialoghandler) {
+      if (dialoghandler != null) {
+         C_d_C c_d_c = (C_d_C)dialoghandler.m449("target");
+         ModuleFrame moduleframe = new ModuleFrame();
          JScrollPane jscrollpane = new JScrollPane();
-         C_s_D c_s_d = new C_s_D(LogicProgram.m1004(s1));
-         c_s_d.setEditable(false);
-         c_s_d.setBackground(dialogWhite);
-         c_s_d.setCaretPosition(0);
-         String[] astring = c_d.m445();
-         jscrollpane.setViewportView(c_s_d);
-         C_UA c_ua = new C_UA(c_0e, s, jscrollpane, astring);
-         c_ua.m1317("symShowError");
-         c_ua.m1315(c_d);
-         Rectangle rectangle = c_ua.m1320();
+         FormulaTextPane formulatextpane = new FormulaTextPane(LogicProgram.m1004(s1));
+         formulatextpane.setEditable(false);
+         formulatextpane.setBackground(dialogWhite);
+         formulatextpane.setCaretPosition(0);
+         String[] astring = dialoghandler.m445();
+         jscrollpane.setViewportView(formulatextpane);
+         MessageDialog messagedialog = new MessageDialog(moduleframe, s, jscrollpane, astring);
+         messagedialog.m1317("symShowError");
+         messagedialog.m1315(dialoghandler);
+         Rectangle rectangle = messagedialog.m1320();
          Rectangle rectangle1 = LogicProgram.m1035(c_d_c.f1045.f1438, null);
-         Dimension dimension = rectangle == null ? new Dimension(32 * LogicProgram.f539, 15 * LogicProgram.f539) : rectangle.getSize();
+         Dimension dimension = rectangle == null ? new Dimension(32 * LogicProgram.fontSize, 15 * LogicProgram.fontSize) : rectangle.getSize();
          Point point = new Point(rectangle1.x + rectangle1.width / 2 - dimension.width / 2, rectangle1.y + rectangle1.height);
          if (rectangle != null) {
             rectangle.x = point.x;
             rectangle.y = point.y;
          }
 
-         c_ua.setSize(dimension);
-         c_ua.m1323(point, true);
-         c_0e.dispose();
+         messagedialog.setSize(dimension);
+         messagedialog.m1323(point, true);
+         moduleframe.dispose();
       }
    }
 }

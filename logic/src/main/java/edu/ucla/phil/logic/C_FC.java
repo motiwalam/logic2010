@@ -2,8 +2,8 @@ package edu.ucla.phil.logic;
 
 import java.util.Hashtable;
 
-public class C_FC implements C_v_ {
-   C_0C f305;
+public class C_FC implements ResponseHandler {
+   ServerSession f305;
    String f306;
    String f307;
    String f308;
@@ -11,11 +11,11 @@ public class C_FC implements C_v_ {
    Integer f310;
 
    String m538() {
-      return C_z_D.m2225(this.f307.trim());
+      return Scrambler.md5Base64(this.f307.trim());
    }
 
    String m539() {
-      return LogicProgram.m995(this.f307, C_n_A.maggie, LogicProgram.f598);
+      return LogicProgram.m995(this.f307, LogicConstants.maggie, LogicProgram.f598);
    }
 
    String m540() {
@@ -28,7 +28,7 @@ public class C_FC implements C_v_ {
    }
 
    @Override
-   public C_c_B m5() {
+   public ErrorRef m5() {
       return this.f305.m5();
    }
 }

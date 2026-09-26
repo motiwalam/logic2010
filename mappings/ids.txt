@@ -3,16 +3,16 @@ f1	edu/ucla/phil/logic/$A.K Ljava/lang/String;
 f2	edu/ucla/phil/logic/$A.G I
 f3	edu/ucla/phil/logic/$A.L I
 f4	edu/ucla/phil/logic/$A.O Ljava/lang/String;
-f5	edu/ucla/phil/logic/$A.P Ledu/ucla/phil/logic/$C;
-f6	edu/ucla/phil/logic/$A.E Ljava/lang/String;
-f7	edu/ucla/phil/logic/$A.M Ljava/lang/String;
-f8	edu/ucla/phil/logic/$A.N Ljava/lang/String;
-f9	edu/ucla/phil/logic/$A.R Ljava/lang/String;
-f10	edu/ucla/phil/logic/$A.C Ljava/lang/String;
-f11	edu/ucla/phil/logic/$A.F I
-f12	edu/ucla/phil/logic/$A.D J
-f13	edu/ucla/phil/logic/$A.J Ljava/lang/String;
-f14	edu/ucla/phil/logic/$A.I Ljava/lang/String;
+f5=session	edu/ucla/phil/logic/$A.P Ledu/ucla/phil/logic/$C;
+f6=evaluation	edu/ucla/phil/logic/$A.E Ljava/lang/String;
+f7=problemMd5	edu/ucla/phil/logic/$A.M Ljava/lang/String;
+f8=work	edu/ucla/phil/logic/$A.N Ljava/lang/String;
+f9=problemName	edu/ucla/phil/logic/$A.R Ljava/lang/String;
+f10=module	edu/ucla/phil/logic/$A.C Ljava/lang/String;
+f11=helpCount	edu/ucla/phil/logic/$A.F I
+f12=duration	edu/ucla/phil/logic/$A.D J
+f13=timestamp	edu/ucla/phil/logic/$A.J Ljava/lang/String;
+f14=submissionUid	edu/ucla/phil/logic/$A.I Ljava/lang/String;
 f15	edu/ucla/phil/logic/$A.Q [Ljava/lang/String;
 f16	edu/ucla/phil/logic/$A.H [Ljava/lang/String;
 m1	edu/ucla/phil/logic/$A.E()V
@@ -163,29 +163,29 @@ m47	edu/ucla/phil/logic/_.Ð()Ljava/lang/String;
 m48	edu/ucla/phil/logic/$B.µ()Ljava/lang/String;
 m48	edu/ucla/phil/logic/G.µ()Ljava/lang/String;
 m48	edu/ucla/phil/logic/_.µ()Ljava/lang/String;
-f17	edu/ucla/phil/logic/$C.o Ledu/ucla/phil/logic/pD;
-f18	edu/ucla/phil/logic/$C.q Ljava/lang/String;
-f19	edu/ucla/phil/logic/$C.m I
-f20	edu/ucla/phil/logic/$C.r Ljava/util/Hashtable;
-f21	edu/ucla/phil/logic/$C.n [Ljava/lang/String;
-f22	edu/ucla/phil/logic/$C.t Ljava/lang/String;
+f17=credentials	edu/ucla/phil/logic/$C.o Ledu/ucla/phil/logic/pD;
+f18=nonce	edu/ucla/phil/logic/$C.q Ljava/lang/String;
+f19=nonceCount	edu/ucla/phil/logic/$C.m I
+f20=params	edu/ucla/phil/logic/$C.r Ljava/util/Hashtable;
+f21=digestFields	edu/ucla/phil/logic/$C.n [Ljava/lang/String;
+f22=cnonce	edu/ucla/phil/logic/$C.t Ljava/lang/String;
 f23	edu/ucla/phil/logic/$C.p Ledu/ucla/phil/logic/cB;
 f24	edu/ucla/phil/logic/$C.s I
 m49	edu/ucla/phil/logic/$C.C(Ljava/lang/String;)V
 m50	edu/ucla/phil/logic/$C.M()V
 m51	edu/ucla/phil/logic/$C.P()Ljava/lang/String;
 m52	edu/ucla/phil/logic/$C.A(Ljava/util/Hashtable;[Ljava/lang/String;)V
-m53	edu/ucla/phil/logic/$C.A(Ljava/util/Hashtable;Ljava/lang/String;)V
+m53=setParams	edu/ucla/phil/logic/$C.A(Ljava/util/Hashtable;Ljava/lang/String;)V
 m54	edu/ucla/phil/logic/$C.B(Ljava/lang/String;)[Ljava/lang/String;
 m55	edu/ucla/phil/logic/$C.O()Ljava/lang/String;
-m56	edu/ucla/phil/logic/$C.N()Ljava/lang/String;
-m57	edu/ucla/phil/logic/$C.Q()Ljava/lang/String;
-m58	edu/ucla/phil/logic/$C.D(Ljava/lang/String;)Ljava/util/Vector;
+m56=digestParams	edu/ucla/phil/logic/$C.N()Ljava/lang/String;
+m57=encodeForm	edu/ucla/phil/logic/$C.Q()Ljava/lang/String;
+m58=encodeMultipart	edu/ucla/phil/logic/$C.D(Ljava/lang/String;)Ljava/util/Vector;
 m59	edu/ucla/phil/logic/$C.A(Ljava/util/Vector;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V
 f25	edu/ucla/phil/logic/$D.B Ljava/lang/String;
 f26	edu/ucla/phil/logic/$D.A Z
 m60	edu/ucla/phil/logic/$D.A(Ledu/ucla/phil/logic/$D;)I
-f27	edu/ucla/phil/logic/$E.ϳ Ledu/ucla/phil/logic/U;
+f27=module	edu/ucla/phil/logic/$E.ϳ Ledu/ucla/phil/logic/U;
 m61	edu/ucla/phil/logic/$E.D([Ljava/awt/Color;)V
 m62	edu/ucla/phil/logic/$E.q(Z)V
 m63	edu/ucla/phil/logic/$E.C(Ljava/awt/event/KeyEvent;)V
@@ -330,9 +330,9 @@ f91	edu/ucla/phil/logic/A/E.Ó [I
 f92	edu/ucla/phil/logic/A/E.Ã I
 f93	edu/ucla/phil/logic/A/E.Õ I
 f94	edu/ucla/phil/logic/A/E.Å Z
-m114	edu/ucla/phil/logic/A/E.B()Ledu/ucla/phil/logic/RF;
-m114	edu/ucla/phil/logic/B/E.B()Ledu/ucla/phil/logic/RF;
-m114	edu/ucla/phil/logic/FB.B()Ledu/ucla/phil/logic/RF;
+m114=parse	edu/ucla/phil/logic/A/E.B()Ledu/ucla/phil/logic/RF;
+m114=parse	edu/ucla/phil/logic/B/E.B()Ledu/ucla/phil/logic/RF;
+m114=parse	edu/ucla/phil/logic/FB.B()Ledu/ucla/phil/logic/RF;
 m115	edu/ucla/phil/logic/A/E.å()Ledu/ucla/phil/logic/RF;
 m116	edu/ucla/phil/logic/A/E.ó()Ledu/ucla/phil/logic/yA;
 m117	edu/ucla/phil/logic/A/E.à()Ledu/ucla/phil/logic/yA;
@@ -413,9 +413,9 @@ m191	edu/ucla/phil/logic/A/E.Ã()Z
 m192	edu/ucla/phil/logic/A/E.Í()Z
 m193	edu/ucla/phil/logic/A/E.Â()Z
 m194	edu/ucla/phil/logic/A/E.B(Ljava/io/InputStream;)V
-m195	edu/ucla/phil/logic/A/E.A(Ljava/io/Reader;)V
-m195	edu/ucla/phil/logic/B/E.A(Ljava/io/Reader;)V
-m195	edu/ucla/phil/logic/FB.A(Ljava/io/Reader;)V
+m195=reinit	edu/ucla/phil/logic/A/E.A(Ljava/io/Reader;)V
+m195=reinit	edu/ucla/phil/logic/B/E.A(Ljava/io/Reader;)V
+m195=reinit	edu/ucla/phil/logic/FB.A(Ljava/io/Reader;)V
 m196	edu/ucla/phil/logic/A/E.A(Ledu/ucla/phil/logic/A/D;)V
 m197	edu/ucla/phil/logic/A/E.À(I)Ledu/ucla/phil/logic/A/G;
 m198	edu/ucla/phil/logic/A/E.µ(I)Z
@@ -425,9 +425,9 @@ m201	edu/ucla/phil/logic/A/E.º()I
 m202	edu/ucla/phil/logic/A/E.H(II)V
 m203	edu/ucla/phil/logic/A/E.æ()Ledu/ucla/phil/logic/A/A;
 m204	edu/ucla/phil/logic/A/E.ë()V
-m205	edu/ucla/phil/logic/A/E.A()V
-m205	edu/ucla/phil/logic/B/E.A()V
-m205	edu/ucla/phil/logic/FB.A()V
+m205=disableTracing	edu/ucla/phil/logic/A/E.A()V
+m205=disableTracing	edu/ucla/phil/logic/B/E.A()V
+m205=disableTracing	edu/ucla/phil/logic/FB.A()V
 m206	edu/ucla/phil/logic/A/E.C(Ljava/lang/String;)V
 m207	edu/ucla/phil/logic/A/E.D(Ljava/lang/String;)V
 m208	edu/ucla/phil/logic/A/E.A(Ledu/ucla/phil/logic/A/G;Ljava/lang/String;)V
@@ -804,27 +804,27 @@ m408	edu/ucla/phil/logic/BE.A(I)V
 m409	edu/ucla/phil/logic/BE.A(Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/String;
 f247	edu/ucla/phil/logic/BF.C Ljava/util/Hashtable;
 f248	edu/ucla/phil/logic/BF.F Ljava/lang/String;
-m410	edu/ucla/phil/logic/BF.A()Z
-m410	edu/ucla/phil/logic/FE.A()Z
-m410	edu/ucla/phil/logic/H.A()Z
-m410	edu/ucla/phil/logic/LA.A()Z
-m410	edu/ucla/phil/logic/ND.A()Z
-m410	edu/ucla/phil/logic/hE.A()Z
-m410	edu/ucla/phil/logic/n.A()Z
-m411	edu/ucla/phil/logic/BF.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
-m411	edu/ucla/phil/logic/FE.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
-m411	edu/ucla/phil/logic/H.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
-m411	edu/ucla/phil/logic/LA.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
-m411	edu/ucla/phil/logic/ND.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
-m411	edu/ucla/phil/logic/hE.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
-m411	edu/ucla/phil/logic/n.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
-m412	edu/ucla/phil/logic/BF.B(Ljava/lang/String;)Ljava/lang/String;
-m412	edu/ucla/phil/logic/FE.B(Ljava/lang/String;)Ljava/lang/String;
-m412	edu/ucla/phil/logic/H.B(Ljava/lang/String;)Ljava/lang/String;
-m412	edu/ucla/phil/logic/LA.B(Ljava/lang/String;)Ljava/lang/String;
-m412	edu/ucla/phil/logic/ND.B(Ljava/lang/String;)Ljava/lang/String;
-m412	edu/ucla/phil/logic/hE.B(Ljava/lang/String;)Ljava/lang/String;
-m412	edu/ucla/phil/logic/n.B(Ljava/lang/String;)Ljava/lang/String;
+m410=loadMessages	edu/ucla/phil/logic/BF.A()Z
+m410=loadMessages	edu/ucla/phil/logic/FE.A()Z
+m410=loadMessages	edu/ucla/phil/logic/H.A()Z
+m410=loadMessages	edu/ucla/phil/logic/LA.A()Z
+m410=loadMessages	edu/ucla/phil/logic/ND.A()Z
+m410=loadMessages	edu/ucla/phil/logic/hE.A()Z
+m410=loadMessages	edu/ucla/phil/logic/n.A()Z
+m411=get	edu/ucla/phil/logic/BF.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
+m411=get	edu/ucla/phil/logic/FE.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
+m411=get	edu/ucla/phil/logic/H.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
+m411=get	edu/ucla/phil/logic/LA.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
+m411=get	edu/ucla/phil/logic/ND.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
+m411=get	edu/ucla/phil/logic/hE.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
+m411=get	edu/ucla/phil/logic/n.A(Ljava/lang/String;)Ledu/ucla/phil/logic/H;
+m412=getText	edu/ucla/phil/logic/BF.B(Ljava/lang/String;)Ljava/lang/String;
+m412=getText	edu/ucla/phil/logic/FE.B(Ljava/lang/String;)Ljava/lang/String;
+m412=getText	edu/ucla/phil/logic/H.B(Ljava/lang/String;)Ljava/lang/String;
+m412=getText	edu/ucla/phil/logic/LA.B(Ljava/lang/String;)Ljava/lang/String;
+m412=getText	edu/ucla/phil/logic/ND.B(Ljava/lang/String;)Ljava/lang/String;
+m412=getText	edu/ucla/phil/logic/hE.B(Ljava/lang/String;)Ljava/lang/String;
+m412=getText	edu/ucla/phil/logic/n.B(Ljava/lang/String;)Ljava/lang/String;
 f249	edu/ucla/phil/logic/CA.J [I
 f250	edu/ucla/phil/logic/CA.H Ledu/ucla/phil/logic/lB$_A;
 f251	edu/ucla/phil/logic/CA.I Ljava/awt/Component;
@@ -1029,9 +1029,9 @@ m533	edu/ucla/phil/logic/FA.B(Ljava/lang/String;II)Z
 m534	edu/ucla/phil/logic/FA.C(Ljava/lang/String;I)I
 m535	edu/ucla/phil/logic/FA.C(Ljava/lang/String;II)I
 f303	edu/ucla/phil/logic/FB.K I
-f304	edu/ucla/phil/logic/FB.J I
-m536	edu/ucla/phil/logic/FB.A(I)V
-m537	edu/ucla/phil/logic/FB.C()I
+f304=syntax	edu/ucla/phil/logic/FB.J I
+m536=setSyntax	edu/ucla/phil/logic/FB.A(I)V
+m537=getSyntax	edu/ucla/phil/logic/FB.C()I
 f305	edu/ucla/phil/logic/FC.w Ledu/ucla/phil/logic/$C;
 f306	edu/ucla/phil/logic/FC.v Ljava/lang/String;
 f307	edu/ucla/phil/logic/FC.x Ljava/lang/String;
@@ -1228,27 +1228,27 @@ f367	edu/ucla/phil/logic/GF.C Ledu/ucla/phil/logic/RF;
 f368	edu/ucla/phil/logic/GF.B Ledu/ucla/phil/logic/RF;
 f369	edu/ucla/phil/logic/GF.A Ledu/ucla/phil/logic/cB;
 m656	edu/ucla/phil/logic/GF.A(Ledu/ucla/phil/logic/GF;)Z
-f370	edu/ucla/phil/logic/H.G Ljava/lang/String;
-f371	edu/ucla/phil/logic/H.E Ljava/lang/String;
-f372	edu/ucla/phil/logic/H.A Ljava/lang/String;
-f373	edu/ucla/phil/logic/H.D Ljava/lang/String;
-f374	edu/ucla/phil/logic/H.B Z
+f370=id	edu/ucla/phil/logic/H.G Ljava/lang/String;
+f371=title	edu/ucla/phil/logic/H.E Ljava/lang/String;
+f372=text	edu/ucla/phil/logic/H.A Ljava/lang/String;
+f373=buttons	edu/ucla/phil/logic/H.D Ljava/lang/String;
+f374=isError	edu/ucla/phil/logic/H.B Z
 f375	edu/ucla/phil/logic/H.C Ljava/util/Hashtable;
 f376	edu/ucla/phil/logic/H.F Ljava/lang/String;
 m657	edu/ucla/phil/logic/H.A(I)Z
-m658	edu/ucla/phil/logic/H.A(Ledu/ucla/phil/logic/XD;)Ljava/util/Hashtable;
+m658=parseMessages	edu/ucla/phil/logic/H.A(Ledu/ucla/phil/logic/XD;)Ljava/util/Hashtable;
 m659	edu/ucla/phil/logic/H.A(Ledu/ucla/phil/logic/H;)Ljava/lang/String;
 m660	edu/ucla/phil/logic/H.A(Ljava/lang/String;I)Ljava/lang/String;
-m661	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/util/Hashtable;)Ljava/lang/String;
+m661=substitute	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/util/Hashtable;)Ljava/lang/String;
 m662	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/util/Hashtable;[Ledu/ucla/phil/logic/kA;)Ljava/lang/String;
 m663	edu/ucla/phil/logic/H.A([Ledu/ucla/phil/logic/kA;Ljava/lang/String;)Ljava/lang/String;
-m664	edu/ucla/phil/logic/H.A(Ljava/util/Hashtable;Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
+m664=putParam	edu/ucla/phil/logic/H.A(Ljava/util/Hashtable;Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
 m665	edu/ucla/phil/logic/H.A(Ljava/util/Hashtable;Ljava/util/Hashtable;)Ljava/util/Hashtable;
-m666	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
-m667	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
-m668	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
-m669	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
-m670	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
+m666=params	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
+m667=params	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
+m668=params	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
+m669=params	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
+m670=params	edu/ucla/phil/logic/H.A(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/util/Hashtable;
 m671	edu/ucla/phil/logic/H.A(Ljava/util/Hashtable;)V
 f377	edu/ucla/phil/logic/HA.D Ledu/ucla/phil/logic/RF;
 f378	edu/ucla/phil/logic/HA.B Ledu/ucla/phil/logic/VC;
@@ -1269,8 +1269,8 @@ m682	edu/ucla/phil/logic/HB.C(Ljava/lang/String;)Z
 m682	edu/ucla/phil/logic/OE.C(Ljava/lang/String;)Z
 m683	edu/ucla/phil/logic/HB.Q()Z
 m683	edu/ucla/phil/logic/OE.Q()Z
-m684	edu/ucla/phil/logic/HB.F()Z
-m684	edu/ucla/phil/logic/OE.F()Z
+m684=save	edu/ucla/phil/logic/HB.F()Z
+m684=save	edu/ucla/phil/logic/OE.F()Z
 f382	edu/ucla/phil/logic/HC.Ǩ Ledu/ucla/phil/logic/NF;
 f383	edu/ucla/phil/logic/HC.ǩ Ljava/awt/Component;
 m685	edu/ucla/phil/logic/HC.i(Z)V
@@ -1466,37 +1466,37 @@ m798	edu/ucla/phil/logic/KB.A(Ledu/ucla/phil/logic/LPDerivation;Ledu/ucla/phil/l
 m799	edu/ucla/phil/logic/KB.A(Ledu/ucla/phil/logic/YA;[ILedu/ucla/phil/logic/zB;Ljava/util/Vector;)V
 m800	edu/ucla/phil/logic/KB.A(Ledu/ucla/phil/logic/YA;[ILedu/ucla/phil/logic/z;Ledu/ucla/phil/logic/nF;)V
 m801	edu/ucla/phil/logic/KB.E(Ljava/awt/Component;)Ledu/ucla/phil/logic/TA;
-f445	edu/ucla/phil/logic/KC.Τ Ledu/ucla/phil/logic/p;
-f446	edu/ucla/phil/logic/KC.σ Ledu/ucla/phil/logic/p;
-f447	edu/ucla/phil/logic/KC.ο Ledu/ucla/phil/logic/p;
-f448	edu/ucla/phil/logic/KC.π Ledu/ucla/phil/logic/p;
-f449	edu/ucla/phil/logic/KC.Ϋ Ledu/ucla/phil/logic/p;
-f450	edu/ucla/phil/logic/KC.έ Ledu/ucla/phil/logic/p;
-f451	edu/ucla/phil/logic/KC.ά Ledu/ucla/phil/logic/p;
-f452	edu/ucla/phil/logic/KC.ς Ledu/ucla/phil/logic/p;
-f453	edu/ucla/phil/logic/KC.η Ledu/ucla/phil/logic/p;
-f454	edu/ucla/phil/logic/KC.ί Ledu/ucla/phil/logic/p;
-f455	edu/ucla/phil/logic/KC.ϒ Ledu/ucla/phil/logic/p;
-f456	edu/ucla/phil/logic/KC.ύ Ledu/ucla/phil/logic/p;
-f457	edu/ucla/phil/logic/KC.φ Ledu/ucla/phil/logic/p;
-f458	edu/ucla/phil/logic/KC.Υ Ledu/ucla/phil/logic/p;
-f459	edu/ucla/phil/logic/KC.κ Ledu/ucla/phil/logic/p;
-f460	edu/ucla/phil/logic/KC.ψ Ledu/ucla/phil/logic/p;
-f461	edu/ucla/phil/logic/KC.ω Ledu/ucla/phil/logic/p;
-f462	edu/ucla/phil/logic/KC.Φ Ledu/ucla/phil/logic/p;
-f463	edu/ucla/phil/logic/KC.Σ Ledu/ucla/phil/logic/p;
-f464	edu/ucla/phil/logic/KC.Ω Ledu/ucla/phil/logic/p;
-f465	edu/ucla/phil/logic/KC.λ Ledu/ucla/phil/logic/p;
+f445=verifyUrl	edu/ucla/phil/logic/KC.Τ Ledu/ucla/phil/logic/p;
+f446=userUrl	edu/ucla/phil/logic/KC.σ Ledu/ucla/phil/logic/p;
+f447=userInfoUrl	edu/ucla/phil/logic/KC.ο Ledu/ucla/phil/logic/p;
+f448=passwordUrl	edu/ucla/phil/logic/KC.π Ledu/ucla/phil/logic/p;
+f449=siteUrl	edu/ucla/phil/logic/KC.Ϋ Ledu/ucla/phil/logic/p;
+f450=submissionUrl	edu/ucla/phil/logic/KC.έ Ledu/ucla/phil/logic/p;
+f451=uploadUrl	edu/ucla/phil/logic/KC.ά Ledu/ucla/phil/logic/p;
+f452=backupUrl	edu/ucla/phil/logic/KC.ς Ledu/ucla/phil/logic/p;
+f453=backupInfoUrl	edu/ucla/phil/logic/KC.η Ledu/ucla/phil/logic/p;
+f454=restoreUrl	edu/ucla/phil/logic/KC.ί Ledu/ucla/phil/logic/p;
+f455=deleteBackupUrl	edu/ucla/phil/logic/KC.ϒ Ledu/ucla/phil/logic/p;
+f456=nonceUrl	edu/ucla/phil/logic/KC.ύ Ledu/ucla/phil/logic/p;
+f457=loadRemoteUrl	edu/ucla/phil/logic/KC.φ Ledu/ucla/phil/logic/p;
+f458=courseRemoteUrl	edu/ucla/phil/logic/KC.Υ Ledu/ucla/phil/logic/p;
+f459=getUserRelationUrl	edu/ucla/phil/logic/KC.κ Ledu/ucla/phil/logic/p;
+f460=addUserRelationUrl	edu/ucla/phil/logic/KC.ψ Ledu/ucla/phil/logic/p;
+f461=insertProblemUrl	edu/ucla/phil/logic/KC.ω Ledu/ucla/phil/logic/p;
+f462=updateProblemUrl	edu/ucla/phil/logic/KC.Φ Ledu/ucla/phil/logic/p;
+f463=deleteProblemUrl	edu/ucla/phil/logic/KC.Σ Ledu/ucla/phil/logic/p;
+f464=sqlGeneratorUrl	edu/ucla/phil/logic/KC.Ω Ledu/ucla/phil/logic/p;
+f465=websiteUrl	edu/ucla/phil/logic/KC.λ Ledu/ucla/phil/logic/p;
 f466	edu/ucla/phil/logic/KC.ε Ljava/io/File;
 f467	edu/ucla/phil/logic/KC.Ϊ Ljava/io/File;
 f468	edu/ucla/phil/logic/KC.Ψ Ljava/io/File;
 f469	edu/ucla/phil/logic/KC.ή Ljava/io/File;
 f470	edu/ucla/phil/logic/KC.ϋ Ljava/io/File;
-f471	edu/ucla/phil/logic/KC.ϐ Ljava/lang/String;
-f472	edu/ucla/phil/logic/KC.ξ Ljava/lang/String;
-f473	edu/ucla/phil/logic/KC.ώ Ljava/lang/String;
-f474	edu/ucla/phil/logic/KC.ι Ljava/lang/String;
-f475	edu/ucla/phil/logic/KC.Π Ljava/lang/String;
+f471=institution	edu/ucla/phil/logic/KC.ϐ Ljava/lang/String;
+f472=term	edu/ucla/phil/logic/KC.ξ Ljava/lang/String;
+f473=course	edu/ucla/phil/logic/KC.ώ Ljava/lang/String;
+f474=ident	edu/ucla/phil/logic/KC.ι Ljava/lang/String;
+f475=textVersion	edu/ucla/phil/logic/KC.Π Ljava/lang/String;
 f476	edu/ucla/phil/logic/KC.τ Ljava/lang/String;
 f477	edu/ucla/phil/logic/KC.ϑ Ljava/lang/String;
 f478	edu/ucla/phil/logic/KC.θ Ljava/lang/String;
@@ -1504,25 +1504,25 @@ f479	edu/ucla/phil/logic/KC.υ Ljava/lang/String;
 f480	edu/ucla/phil/logic/KC.γ Z
 f481	edu/ucla/phil/logic/KC.δ Z
 f482	edu/ucla/phil/logic/KC.Ρ Z
-f483	edu/ucla/phil/logic/KC.ό Z
+f483=demoMode	edu/ucla/phil/logic/KC.ό Z
 f484	edu/ucla/phil/logic/KC.Ο Z
 f485	edu/ucla/phil/logic/KC.α Z
 f486	edu/ucla/phil/logic/KC.β Z
-f487	edu/ucla/phil/logic/KC.ΰ Ledu/ucla/phil/logic/pD;
+f487=serverCredentials	edu/ucla/phil/logic/KC.ΰ Ledu/ucla/phil/logic/pD;
 f488	edu/ucla/phil/logic/KC.χ Ljava/lang/String;
 f489	edu/ucla/phil/logic/KC.ν Ledu/ucla/phil/logic/aF;
 f490	edu/ucla/phil/logic/KC.μ Ljava/lang/String;
-f491	edu/ucla/phil/logic/KC.Χ [Ljava/lang/String;
-f492	edu/ucla/phil/logic/KC.ϊ [Ljava/lang/String;
+f491=WORK_FILES	edu/ucla/phil/logic/KC.Χ [Ljava/lang/String;
+f492=DATA_FILES	edu/ucla/phil/logic/KC.ϊ [Ljava/lang/String;
 f493	edu/ucla/phil/logic/KC.ζ Ljava/lang/String;
 f494	edu/ucla/phil/logic/KC.ρ Ljava/lang/String;
-m802	edu/ucla/phil/logic/KC.Ž()Z
-m803	edu/ucla/phil/logic/KC.Ú(Ljava/lang/String;)Ledu/ucla/phil/logic/p;
-m804	edu/ucla/phil/logic/KC.A(Ljava/net/URL;)Ljava/lang/String;
+m802=readDatabaseLinks	edu/ucla/phil/logic/KC.Ž()Z
+m803=getLinkUrl	edu/ucla/phil/logic/KC.Ú(Ljava/lang/String;)Ledu/ucla/phil/logic/p;
+m804=httpGet	edu/ucla/phil/logic/KC.A(Ljava/net/URL;)Ljava/lang/String;
 m805	edu/ucla/phil/logic/KC.A(Ljava/net/URL;Ledu/ucla/phil/logic/N;)Ljava/lang/String;
 m806	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/p;Ledu/ucla/phil/logic/$C;Ledu/ucla/phil/logic/rA;)Ljava/lang/String;
-m807	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/p;Ljava/lang/String;Ledu/ucla/phil/logic/rA;)Ljava/lang/String;
-m808	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/p;Ledu/ucla/phil/logic/$C;Ledu/ucla/phil/logic/rA;Ljava/lang/String;)Ljava/lang/String;
+m807=postForm	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/p;Ljava/lang/String;Ledu/ucla/phil/logic/rA;)Ljava/lang/String;
+m808=postMultipart	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/p;Ledu/ucla/phil/logic/$C;Ledu/ucla/phil/logic/rA;Ljava/lang/String;)Ljava/lang/String;
 m809	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/p;Ljava/util/Vector;Ledu/ucla/phil/logic/rA;Ljava/lang/String;)Ljava/lang/String;
 m810	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/p;Ljava/util/Vector;Ljava/lang/String;Ledu/ucla/phil/logic/rA;Ljava/io/File;Ledu/ucla/phil/logic/N;)Ljava/lang/String;
 m811	edu/ucla/phil/logic/KC.B(Ledu/ucla/phil/logic/p;Ljava/util/Vector;Ljava/lang/String;Ledu/ucla/phil/logic/rA;Ljava/io/File;Ledu/ucla/phil/logic/N;)Ljava/lang/String;
@@ -1531,7 +1531,7 @@ m813	edu/ucla/phil/logic/KC.A(Ljava/io/OutputStream;Ljava/util/Vector;)Ljava/io/
 m814	edu/ucla/phil/logic/KC.Þ(Ljava/lang/String;)Ljava/lang/String;
 m815	edu/ucla/phil/logic/KC.Ü(Ljava/lang/String;)Ljava/lang/String;
 m816	edu/ucla/phil/logic/KC.C(Ljava/lang/Integer;)Ljava/lang/String;
-m817	edu/ucla/phil/logic/KC.Û(Ljava/lang/String;)[[Ljava/lang/Object;
+m817=parseResponseTable	edu/ucla/phil/logic/KC.Û(Ljava/lang/String;)[[Ljava/lang/Object;
 m818	edu/ucla/phil/logic/KC.A([[Ljava/lang/Object;Ljava/lang/String;)I
 m819	edu/ucla/phil/logic/KC.A([[Ljava/lang/Object;ILjava/lang/String;)I
 m820	edu/ucla/phil/logic/KC.A([[Ljava/lang/Object;IILjava/lang/String;)I
@@ -1543,15 +1543,15 @@ m825	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/p;Ledu/ucla/phil/logic/$C;Led
 m826	edu/ucla/phil/logic/KC.Ý(Ljava/lang/String;)Ljava/lang/String;
 m827	edu/ucla/phil/logic/KC.B(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 m828	edu/ucla/phil/logic/KC.A(J)Ledu/ucla/phil/logic/rA;
-m829	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/xA;)Ledu/ucla/phil/logic/$C;
-m830	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/xA;Ledu/ucla/phil/logic/rA;)Ledu/ucla/phil/logic/v;
+m829=openSession	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/xA;)Ledu/ucla/phil/logic/$C;
+m830=requestNonce	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/xA;Ledu/ucla/phil/logic/rA;)Ledu/ucla/phil/logic/v;
 m831	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/$C;Ledu/ucla/phil/logic/rA;)Z
 m832	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/$C;Ledu/ucla/phil/logic/xA;)Z
 m833	edu/ucla/phil/logic/KC.A(Ljava/lang/Integer;Ledu/ucla/phil/logic/v;)Z
 m834	edu/ucla/phil/logic/KC.A([[Ljava/lang/Object;Ledu/ucla/phil/logic/$C;)Z
-m835	edu/ucla/phil/logic/KC.C(Ledu/ucla/phil/logic/xA;)Ledu/ucla/phil/logic/$A;
-m836	edu/ucla/phil/logic/KC.B(Ledu/ucla/phil/logic/$A;Ledu/ucla/phil/logic/xA;)Z
-m837	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/$A;Ledu/ucla/phil/logic/xA;Ledu/ucla/phil/logic/rA;)Z
+m835=prepareSubmission	edu/ucla/phil/logic/KC.C(Ledu/ucla/phil/logic/xA;)Ledu/ucla/phil/logic/$A;
+m836=submit	edu/ucla/phil/logic/KC.B(Ledu/ucla/phil/logic/$A;Ledu/ucla/phil/logic/xA;)Z
+m837=submitOnce	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/$A;Ledu/ucla/phil/logic/xA;Ledu/ucla/phil/logic/rA;)Z
 m838	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/$A;Ledu/ucla/phil/logic/xA;)V
 m839	edu/ucla/phil/logic/KC.C(Ljava/io/File;)Z
 m840	edu/ucla/phil/logic/KC.B(Ledu/ucla/phil/logic/xA;)Ledu/ucla/phil/logic/LD;
@@ -1591,7 +1591,7 @@ m873	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/jB;)I
 m874	edu/ucla/phil/logic/KC.C(Ledu/ucla/phil/logic/jB;)I
 m875	edu/ucla/phil/logic/KC.A(Ljava/lang/String;Ledu/ucla/phil/logic/v;)Ledu/ucla/phil/logic/p;
 m876	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/p;Ledu/ucla/phil/logic/jB;)Ljava/io/File;
-m877	edu/ucla/phil/logic/KC.A(Ljava/io/File;Ljava/lang/String;)Ljava/io/File;
+m877=resolvePath	edu/ucla/phil/logic/KC.A(Ljava/io/File;Ljava/lang/String;)Ljava/io/File;
 m878	edu/ucla/phil/logic/KC.A(Ljava/io/File;Ledu/ucla/phil/logic/v;)Z
 m879	edu/ucla/phil/logic/KC.ƀ()V
 m880	edu/ucla/phil/logic/KC.ſ()V
@@ -1640,7 +1640,7 @@ m922	edu/ucla/phil/logic/KC.A(Ledu/ucla/phil/logic/v;)Z
 f495	edu/ucla/phil/logic/KD.B Ljava/security/MessageDigest;
 f496	edu/ucla/phil/logic/KD.C [B
 f497	edu/ucla/phil/logic/KD.A J
-m923	edu/ucla/phil/logic/KD.B()[B
+m923=digest	edu/ucla/phil/logic/KD.B()[B
 m924	edu/ucla/phil/logic/KD.A()J
 m925	edu/ucla/phil/logic/KD.A(Ljava/io/File;)V
 m926	edu/ucla/phil/logic/KD.A(Ljava/io/File;Z)V
@@ -1717,8 +1717,8 @@ f525	edu/ucla/phil/logic/LE.A Z
 m945	edu/ucla/phil/logic/LE.B()I
 m946	edu/ucla/phil/logic/LE.A([BII)I
 m947	edu/ucla/phil/logic/LE.A()V
-f526	edu/ucla/phil/logic/LF.E [Ledu/ucla/phil/logic/RF;
-f527	edu/ucla/phil/logic/LF.F Ledu/ucla/phil/logic/RF;
+f526=premises	edu/ucla/phil/logic/LF.E [Ledu/ucla/phil/logic/RF;
+f527=conclusion	edu/ucla/phil/logic/LF.F Ledu/ucla/phil/logic/RF;
 m948	edu/ucla/phil/logic/LF.D(Ljava/lang/String;)V
 m949	edu/ucla/phil/logic/LF.G()[Ledu/ucla/phil/logic/RF;
 m950	edu/ucla/phil/logic/LF.F()Ledu/ucla/phil/logic/RF;
@@ -1745,16 +1745,16 @@ m959	edu/ucla/phil/logic/LPTruthAnalysis$_A.A()V
 m959	edu/ucla/phil/logic/U$_A.A()V
 f528	edu/ucla/phil/logic/LPSymbolizer$_A.D Z
 f529	edu/ucla/phil/logic/LogicProgram.ʒ Ledu/ucla/phil/logic/V;
-f530	edu/ucla/phil/logic/LogicProgram.ʵ Ledu/ucla/phil/logic/tA;
-f531	edu/ucla/phil/logic/LogicProgram.ʉ Ledu/ucla/phil/logic/wB;
-f532	edu/ucla/phil/logic/LogicProgram.ʛ Ledu/ucla/phil/logic/wB;
-f533	edu/ucla/phil/logic/LogicProgram.ʕ Ledu/ucla/phil/logic/OE;
+f530=overrides	edu/ucla/phil/logic/LogicProgram.ʵ Ledu/ucla/phil/logic/tA;
+f531=prefs	edu/ucla/phil/logic/LogicProgram.ʉ Ledu/ucla/phil/logic/wB;
+f532=workPrefs	edu/ucla/phil/logic/LogicProgram.ʛ Ledu/ucla/phil/logic/wB;
+f533=user	edu/ucla/phil/logic/LogicProgram.ʕ Ledu/ucla/phil/logic/OE;
 f534	edu/ucla/phil/logic/LogicProgram.ɭ Ledu/ucla/phil/logic/zB;
-f535	edu/ucla/phil/logic/LogicProgram.ɱ Ljava/util/Hashtable;
-f536	edu/ucla/phil/logic/LogicProgram.ɳ Ljava/util/Hashtable;
-f537	edu/ucla/phil/logic/LogicProgram.ɦ Ljava/lang/String;
+f535=links	edu/ucla/phil/logic/LogicProgram.ɱ Ljava/util/Hashtable;
+f536=coreInfo	edu/ucla/phil/logic/LogicProgram.ɳ Ljava/util/Hashtable;
+f537=scrambleKey	edu/ucla/phil/logic/LogicProgram.ɦ Ljava/lang/String;
 f538	edu/ucla/phil/logic/LogicProgram.ʥ I
-f539	edu/ucla/phil/logic/LogicProgram.ʌ I
+f539=fontSize	edu/ucla/phil/logic/LogicProgram.ʌ I
 f540	edu/ucla/phil/logic/LogicProgram.ʚ [Ljava/awt/Font;
 f541	edu/ucla/phil/logic/LogicProgram.ɠ Ljava/awt/Dimension;
 f542	edu/ucla/phil/logic/LogicProgram.ʲ I
@@ -1765,18 +1765,18 @@ f546	edu/ucla/phil/logic/LogicProgram.ʳ I
 f547	edu/ucla/phil/logic/LogicProgram.ɯ I
 f548	edu/ucla/phil/logic/LogicProgram.ʈ I
 f549	edu/ucla/phil/logic/LogicProgram.ɢ I
-f550	edu/ucla/phil/logic/LogicProgram.ʐ Ljava/io/File;
+f550=configDir	edu/ucla/phil/logic/LogicProgram.ʐ Ljava/io/File;
 f551	edu/ucla/phil/logic/LogicProgram.ʧ Ljava/io/File;
-f552	edu/ucla/phil/logic/LogicProgram.ɾ Ljava/io/File;
-f553	edu/ucla/phil/logic/LogicProgram.ʠ Ljava/io/File;
+f552=linkDir	edu/ucla/phil/logic/LogicProgram.ɾ Ljava/io/File;
+f553=progDir	edu/ucla/phil/logic/LogicProgram.ʠ Ljava/io/File;
 f554	edu/ucla/phil/logic/LogicProgram.ɻ Ljava/io/File;
-f555	edu/ucla/phil/logic/LogicProgram.ʑ Ljava/io/File;
+f555=workDir	edu/ucla/phil/logic/LogicProgram.ʑ Ljava/io/File;
 f556	edu/ucla/phil/logic/LogicProgram.ʄ Ljava/io/File;
 f557	edu/ucla/phil/logic/LogicProgram.ɿ Ljava/io/File;
 f558	edu/ucla/phil/logic/LogicProgram.ʃ Ljava/io/File;
-f559	edu/ucla/phil/logic/LogicProgram.ʢ Ljava/io/File;
+f559=userFile	edu/ucla/phil/logic/LogicProgram.ʢ Ljava/io/File;
 f560	edu/ucla/phil/logic/LogicProgram.ɧ Ljava/io/File;
-f561	edu/ucla/phil/logic/LogicProgram.ʅ Ljava/io/File;
+f561=ruleDir	edu/ucla/phil/logic/LogicProgram.ʅ Ljava/io/File;
 f562	edu/ucla/phil/logic/LogicProgram.ʨ Ljava/io/File;
 f563	edu/ucla/phil/logic/LogicProgram.ɰ Ljava/io/File;
 f564	edu/ucla/phil/logic/LogicProgram.ʣ Ljava/lang/String;
@@ -1784,14 +1784,14 @@ f565	edu/ucla/phil/logic/LogicProgram.ɮ Ljava/lang/String;
 f566	edu/ucla/phil/logic/LogicProgram.ɥ I
 f567	edu/ucla/phil/logic/LogicProgram.ʗ Ljava/lang/String;
 f568	edu/ucla/phil/logic/LogicProgram.ʓ Ljava/lang/String;
-f569	edu/ucla/phil/logic/LogicProgram.ʆ Ljava/lang/String;
-f570	edu/ucla/phil/logic/LogicProgram.ɽ Ljava/lang/String;
+f569=codeVersion	edu/ucla/phil/logic/LogicProgram.ʆ Ljava/lang/String;
+f570=arch	edu/ucla/phil/logic/LogicProgram.ɽ Ljava/lang/String;
 f571	edu/ucla/phil/logic/LogicProgram.ʍ Z
-f572	edu/ucla/phil/logic/LogicProgram.ʁ Z
-f573	edu/ucla/phil/logic/LogicProgram.ɵ Z
-f574	edu/ucla/phil/logic/LogicProgram.ɶ Z
-f575	edu/ucla/phil/logic/LogicProgram.ʙ Z
-f576	edu/ucla/phil/logic/LogicProgram.ʔ Z
+f572=debug	edu/ucla/phil/logic/LogicProgram.ʁ Z
+f573=printingEnabled	edu/ucla/phil/logic/LogicProgram.ɵ Z
+f574=overheadColors	edu/ucla/phil/logic/LogicProgram.ɶ Z
+f575=remote	edu/ucla/phil/logic/LogicProgram.ʙ Z
+f576=noNetwork	edu/ucla/phil/logic/LogicProgram.ʔ Z
 f577	edu/ucla/phil/logic/LogicProgram.ʰ Z
 f578	edu/ucla/phil/logic/LogicProgram.ʴ Z
 f579	edu/ucla/phil/logic/LogicProgram.ʋ Z
@@ -1801,8 +1801,8 @@ f582	edu/ucla/phil/logic/LogicProgram.ʡ Z
 f583	edu/ucla/phil/logic/LogicProgram.ɨ Z
 f584	edu/ucla/phil/logic/LogicProgram.ʖ Z
 f585	edu/ucla/phil/logic/LogicProgram.ʞ Z
-f586	edu/ucla/phil/logic/LogicProgram.ʦ Ledu/ucla/phil/logic/zC;
-f587	edu/ucla/phil/logic/LogicProgram.ʂ Ledu/ucla/phil/logic/m;
+f586=mainMenu	edu/ucla/phil/logic/LogicProgram.ʦ Ledu/ucla/phil/logic/zC;
+f587=instanceGuard	edu/ucla/phil/logic/LogicProgram.ʂ Ledu/ucla/phil/logic/m;
 f588	edu/ucla/phil/logic/LogicProgram.ɺ Ljava/lang/Integer;
 f589	edu/ucla/phil/logic/LogicProgram.ʝ Z
 f590	edu/ucla/phil/logic/LogicProgram.ʎ Z
@@ -1810,8 +1810,8 @@ f591	edu/ucla/phil/logic/LogicProgram.ɲ Z
 f592	edu/ucla/phil/logic/LogicProgram.ɹ Ledu/ucla/phil/logic/OE;
 f593	edu/ucla/phil/logic/LogicProgram.ʀ Ljava/lang/String;
 f594	edu/ucla/phil/logic/LogicProgram.ɸ Ljava/util/ArrayList;
-f595	edu/ucla/phil/logic/LogicProgram.ɴ Ljava/util/Hashtable;
-f596	edu/ucla/phil/logic/LogicProgram.ʏ [Ljava/lang/String;
+f595=credentials	edu/ucla/phil/logic/LogicProgram.ɴ Ljava/util/Hashtable;
+f596=symbols	edu/ucla/phil/logic/LogicProgram.ʏ [Ljava/lang/String;
 f597	edu/ucla/phil/logic/LogicProgram.ɣ [Ljava/lang/String;
 f598	edu/ucla/phil/logic/LogicProgram.ʟ [Ljava/lang/String;
 f599	edu/ucla/phil/logic/LogicProgram.ʜ Ljava/lang/String;
@@ -1823,10 +1823,10 @@ f604	edu/ucla/phil/logic/LogicProgram.ɬ [Ljava/awt/Color;
 f605	edu/ucla/phil/logic/LogicProgram.ɩ [Ljava/awt/Color;
 f606	edu/ucla/phil/logic/LogicProgram.ʤ [Ljava/awt/Color;
 f607	edu/ucla/phil/logic/LogicProgram.ʘ [Ljava/awt/Color;
-m960	edu/ucla/phil/logic/LogicProgram.ś()V
-m961	edu/ucla/phil/logic/LogicProgram.ŗ()I
-m962	edu/ucla/phil/logic/LogicProgram.ş()I
-m963	edu/ucla/phil/logic/LogicProgram.Š()Z
+m960=loadIconsAndFonts	edu/ucla/phil/logic/LogicProgram.ś()V
+m961=initialize	edu/ucla/phil/logic/LogicProgram.ŗ()I
+m962=initializeUser	edu/ucla/phil/logic/LogicProgram.ş()I
+m963=loadRulesAndTheorems	edu/ucla/phil/logic/LogicProgram.Š()Z
 m964	edu/ucla/phil/logic/LogicProgram.Ő()Z
 m965	edu/ucla/phil/logic/LogicProgram.B(Ljava/io/File;)Z
 m966	edu/ucla/phil/logic/LogicProgram.Ť()Ljava/util/Hashtable;
@@ -1840,7 +1840,7 @@ m973	edu/ucla/phil/logic/LogicProgram.Ŝ()Ljava/lang/String;
 m974	edu/ucla/phil/logic/LogicProgram.Á(Ljava/lang/String;)V
 m975	edu/ucla/phil/logic/LogicProgram.Ŕ()Z
 m976	edu/ucla/phil/logic/LogicProgram.Ś()Z
-m977	edu/ucla/phil/logic/LogicProgram.ţ()V
+m977=exit	edu/ucla/phil/logic/LogicProgram.ţ()V
 m978	edu/ucla/phil/logic/LogicProgram.Ŗ()V
 m979	edu/ucla/phil/logic/LogicProgram.ő()V
 m980	edu/ucla/phil/logic/LogicProgram.C([Ljava/lang/String;)[Ljava/lang/String;
@@ -1873,7 +1873,7 @@ m1006	edu/ucla/phil/logic/LogicProgram.y(Ljava/lang/String;)Ledu/ucla/phil/logic
 m1007	edu/ucla/phil/logic/LogicProgram.G(Ljava/lang/String;Z)Ledu/ucla/phil/logic/RF;
 m1008	edu/ucla/phil/logic/LogicProgram.D(Ljava/lang/String;ZZ)Ledu/ucla/phil/logic/RF;
 m1009	edu/ucla/phil/logic/LogicProgram.A(Ljava/lang/String;ZZZ)Ledu/ucla/phil/logic/RF;
-m1010	edu/ucla/phil/logic/LogicProgram.É(Ljava/lang/String;)Ljava/lang/Integer;
+m1010=parseInteger	edu/ucla/phil/logic/LogicProgram.É(Ljava/lang/String;)Ljava/lang/Integer;
 m1011	edu/ucla/phil/logic/LogicProgram.K(Ljava/lang/String;I)Ljava/lang/Integer;
 m1012	edu/ucla/phil/logic/LogicProgram.À(Ljava/lang/String;)Ljava/lang/Long;
 m1013	edu/ucla/phil/logic/LogicProgram.L(Ljava/lang/String;I)Ljava/lang/Long;
@@ -1892,8 +1892,8 @@ m1025	edu/ucla/phil/logic/LogicProgram.B(Ljava/lang/Integer;)Ledu/ucla/phil/logi
 m1026	edu/ucla/phil/logic/LogicProgram.Ê(Ljava/lang/String;)Ledu/ucla/phil/logic/VB;
 m1027	edu/ucla/phil/logic/LogicProgram.A(Ljava/lang/String;Ljava/util/Vector;Ledu/ucla/phil/logic/nF;Z)V
 m1028	edu/ucla/phil/logic/LogicProgram.º(Ljava/lang/String;)I
-m1029	edu/ucla/phil/logic/LogicProgram.q(I)Ljava/awt/Font;
-m1030	edu/ucla/phil/logic/LogicProgram.C(II)Ljava/awt/Font;
+m1029=getFont	edu/ucla/phil/logic/LogicProgram.q(I)Ljava/awt/Font;
+m1030=getFont	edu/ucla/phil/logic/LogicProgram.C(II)Ljava/awt/Font;
 m1031	edu/ucla/phil/logic/LogicProgram.B(Ledu/ucla/phil/logic/$E;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 m1032	edu/ucla/phil/logic/LogicProgram.A(Ledu/ucla/phil/logic/$E;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 m1033	edu/ucla/phil/logic/LogicProgram.A(Ljava/awt/Container;Ljava/awt/Component;)Z
@@ -1902,8 +1902,8 @@ m1035	edu/ucla/phil/logic/LogicProgram.A(Ljava/awt/Component;Ljava/awt/Component
 m1036	edu/ucla/phil/logic/LogicProgram.A(Ljava/awt/Component;Ljava/awt/Container;)Ljava/awt/Rectangle;
 m1037	edu/ucla/phil/logic/LogicProgram.J(Ljava/awt/Component;)Ljava/awt/Container;
 m1038	edu/ucla/phil/logic/LogicProgram.A(Ljava/awt/Container;)Ljava/awt/Rectangle;
-m1039	edu/ucla/phil/logic/LogicProgram.A(Ledu/ucla/phil/logic/pD;)V
-m1040	edu/ucla/phil/logic/LogicProgram.¢(Ljava/lang/String;)Ledu/ucla/phil/logic/pD;
+m1039=addCredentials	edu/ucla/phil/logic/LogicProgram.A(Ledu/ucla/phil/logic/pD;)V
+m1040=getCredentials	edu/ucla/phil/logic/LogicProgram.¢(Ljava/lang/String;)Ledu/ucla/phil/logic/pD;
 m1041	edu/ucla/phil/logic/LogicProgram.H(Ljava/awt/Component;)Ljava/awt/Dialog;
 m1042	edu/ucla/phil/logic/LogicProgram.A(Ljavax/swing/JComponent;)Ljava/awt/Dialog;
 m1043	edu/ucla/phil/logic/LogicProgram.B(Ljavax/swing/JComponent;)Ljava/awt/Window;
@@ -1918,14 +1918,14 @@ m1051	edu/ucla/phil/logic/LogicProgram.A([Ljava/lang/Object;Ljava/lang/Object;)I
 m1052	edu/ucla/phil/logic/LogicProgram.A([Ljava/lang/Object;Ljava/lang/Object;I)I
 m1053	edu/ucla/phil/logic/LogicProgram.k(Z)V
 m1054	edu/ucla/phil/logic/LogicProgram.ŝ()Ljava/lang/String;
-m1055	edu/ucla/phil/logic/LogicProgram.Ş()V
-m1056	edu/ucla/phil/logic/LogicProgram.B(Ljava/io/Reader;)Z
+m1055=resetOptions	edu/ucla/phil/logic/LogicProgram.Ş()V
+m1056=readOptions	edu/ucla/phil/logic/LogicProgram.B(Ljava/io/Reader;)Z
 m1057	edu/ucla/phil/logic/LogicProgram.Ţ()V
 m1058	edu/ucla/phil/logic/LogicProgram.œ()V
 m1059	edu/ucla/phil/logic/LogicProgram.š()V
 m1060	edu/ucla/phil/logic/LogicProgram.A(Ledu/ucla/phil/logic/BE;Ljava/lang/String;)Z
-m1061	edu/ucla/phil/logic/LogicProgram.t(I)V
-m1062	edu/ucla/phil/logic/LogicProgram.H(Ljava/lang/String;Z)Ledu/ucla/phil/logic/XB;
+m1061=setSyntax	edu/ucla/phil/logic/LogicProgram.t(I)V
+m1062=openDataFile	edu/ucla/phil/logic/LogicProgram.H(Ljava/lang/String;Z)Ledu/ucla/phil/logic/XB;
 m1063	edu/ucla/phil/logic/LogicProgram.B(Ljava/lang/String;ZZ)Ledu/ucla/phil/logic/XB;
 m1064	edu/ucla/phil/logic/LogicProgram.w(Ljava/lang/String;)Ledu/ucla/phil/logic/XB;
 m1065	edu/ucla/phil/logic/LogicProgram.E(Ljava/lang/String;Z)Ledu/ucla/phil/logic/XB;
@@ -1934,15 +1934,15 @@ m1067	edu/ucla/phil/logic/LogicProgram.C(Ljava/lang/String;ZZ)Ledu/ucla/phil/log
 m1068	edu/ucla/phil/logic/LogicProgram.A(Ljava/lang/String;ZZ)Ljava/io/FileWriter;
 m1069	edu/ucla/phil/logic/LogicProgram.A(Ljava/lang/String;Ljava/lang/String;Z)Ljava/io/RandomAccessFile;
 m1070	edu/ucla/phil/logic/LogicProgram.Ã(Ljava/lang/String;)V
-m1071	edu/ucla/phil/logic/LogicProgram.ř()Ljava/util/Hashtable;
-m1072	edu/ucla/phil/logic/LogicProgram.A(Ljava/io/File;Z)Ljava/util/Hashtable;
+m1071=readCoreInfo	edu/ucla/phil/logic/LogicProgram.ř()Ljava/util/Hashtable;
+m1072=readLinks	edu/ucla/phil/logic/LogicProgram.A(Ljava/io/File;Z)Ljava/util/Hashtable;
 m1073	edu/ucla/phil/logic/LogicProgram.B(Ljava/util/Hashtable;Ljava/lang/String;Ljava/lang/String;)V
-m1074	edu/ucla/phil/logic/LogicProgram.µ(Ljava/lang/String;)Ljava/io/File;
+m1074=canonicalFile	edu/ucla/phil/logic/LogicProgram.µ(Ljava/lang/String;)Ljava/io/File;
 m1075	edu/ucla/phil/logic/LogicProgram.A(Ljava/io/File;)Ljava/io/File;
-m1076	edu/ucla/phil/logic/LogicProgram.A(Ljava/util/Hashtable;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-m1077	edu/ucla/phil/logic/LogicProgram.D(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-m1078	edu/ucla/phil/logic/LogicProgram.Å(Ljava/lang/String;)Ljava/lang/String;
-m1079	edu/ucla/phil/logic/LogicProgram.ŕ()Ljava/lang/String;
+m1076=getValue	edu/ucla/phil/logic/LogicProgram.A(Ljava/util/Hashtable;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+m1077=getLink	edu/ucla/phil/logic/LogicProgram.D(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+m1078=getLink	edu/ucla/phil/logic/LogicProgram.Å(Ljava/lang/String;)Ljava/lang/String;
+m1079=utcTimestamp	edu/ucla/phil/logic/LogicProgram.ŕ()Ljava/lang/String;
 m1080	edu/ucla/phil/logic/LogicProgram.Ř()Ljava/lang/String;
 m1081	edu/ucla/phil/logic/LogicProgram.J(Ljava/lang/String;I)Ljava/lang/String;
 m1082	edu/ucla/phil/logic/LogicProgram.A(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
@@ -2106,38 +2106,38 @@ m1142	edu/ucla/phil/logic/OD.A()Ljava/lang/String;
 m1143	edu/ucla/phil/logic/OD.A(Ljava/lang/String;)Ljava/lang/String;
 m1144	edu/ucla/phil/logic/OD.A(Z)V
 f659	edu/ucla/phil/logic/OE.A I
-f660	edu/ucla/phil/logic/OE.G [Ljava/lang/String;
+f660=FIELD_KEYS	edu/ucla/phil/logic/OE.G [Ljava/lang/String;
 f661	edu/ucla/phil/logic/OE.F Ljava/util/Vector;
-f662	edu/ucla/phil/logic/OE.E Z
-f663	edu/ucla/phil/logic/OE.D Z
+f662=dirty	edu/ucla/phil/logic/OE.E Z
+f663=demo	edu/ucla/phil/logic/OE.D Z
 f664	edu/ucla/phil/logic/OE.C Ljava/lang/Integer;
 f665	edu/ucla/phil/logic/OE.H Ljava/lang/Integer;
 f666	edu/ucla/phil/logic/OE.B [Ljava/lang/String;
-m1145	edu/ucla/phil/logic/OE.A(Z)Ledu/ucla/phil/logic/OE;
+m1145=load	edu/ucla/phil/logic/OE.A(Z)Ledu/ucla/phil/logic/OE;
 m1146	edu/ucla/phil/logic/OE.E()Ljava/lang/String;
 m1147	edu/ucla/phil/logic/OE.A(Ljava/util/Enumeration;)Ljava/lang/String;
 m1148	edu/ucla/phil/logic/OE.A(Ljava/util/Enumeration;Ljava/lang/String;)Ljava/lang/String;
-m1149	edu/ucla/phil/logic/OE.A(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-m1150	edu/ucla/phil/logic/OE.K()Ljava/lang/String;
-m1151	edu/ucla/phil/logic/OE.J()Ljava/lang/String;
-m1152	edu/ucla/phil/logic/OE.L()Ljava/lang/String;
-m1153	edu/ucla/phil/logic/OE.I()Ljava/lang/String;
+m1149=getField	edu/ucla/phil/logic/OE.A(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+m1150=getFirstName	edu/ucla/phil/logic/OE.K()Ljava/lang/String;
+m1151=getMiddleName	edu/ucla/phil/logic/OE.J()Ljava/lang/String;
+m1152=getLastName	edu/ucla/phil/logic/OE.L()Ljava/lang/String;
+m1153=getStudentId	edu/ucla/phil/logic/OE.I()Ljava/lang/String;
 m1154	edu/ucla/phil/logic/OE.B(Z)Ljava/lang/String;
-m1155	edu/ucla/phil/logic/OE.B()Ljava/lang/String;
-m1156	edu/ucla/phil/logic/OE.P()Ljava/lang/String;
-m1157	edu/ucla/phil/logic/OE.T()Ljava/lang/String;
-m1158	edu/ucla/phil/logic/OE.M()Ljava/lang/String;
-m1159	edu/ucla/phil/logic/OE.O()Ljava/lang/String;
+m1155=getEmail	edu/ucla/phil/logic/OE.B()Ljava/lang/String;
+m1156=getInstitution	edu/ucla/phil/logic/OE.P()Ljava/lang/String;
+m1157=getTerm	edu/ucla/phil/logic/OE.T()Ljava/lang/String;
+m1158=getIdent	edu/ucla/phil/logic/OE.M()Ljava/lang/String;
+m1159=getClassName	edu/ucla/phil/logic/OE.O()Ljava/lang/String;
 m1160	edu/ucla/phil/logic/OE.N()Z
 m1161	edu/ucla/phil/logic/OE.A()Ljava/lang/String;
 m1162	edu/ucla/phil/logic/OE.B(Ljava/lang/String;)V
 m1163	edu/ucla/phil/logic/OE.R()Ledu/ucla/phil/logic/MF;
 m1164	edu/ucla/phil/logic/OE.H()Ljava/lang/Integer;
 m1165	edu/ucla/phil/logic/OE.G()Ljava/util/Hashtable;
-m1166	edu/ucla/phil/logic/OE.D()Ledu/ucla/phil/logic/OE;
-m1167	edu/ucla/phil/logic/OE.A(Ljava/io/Reader;)Ledu/ucla/phil/logic/OE;
-m1168	edu/ucla/phil/logic/OE.A(Ljava/io/Writer;)V
-m1169	edu/ucla/phil/logic/OE.C()Ljava/lang/String;
+m1166=createDemoUser	edu/ucla/phil/logic/OE.D()Ledu/ucla/phil/logic/OE;
+m1167=read	edu/ucla/phil/logic/OE.A(Ljava/io/Reader;)Ledu/ucla/phil/logic/OE;
+m1168=write	edu/ucla/phil/logic/OE.A(Ljava/io/Writer;)V
+m1169=getFullName	edu/ucla/phil/logic/OE.C()Ljava/lang/String;
 m1170	edu/ucla/phil/logic/OE.S()Z
 m1171	edu/ucla/phil/logic/OE.A(Ljava/lang/String;)Z
 f667	edu/ucla/phil/logic/OF.H Ljava/lang/Integer;
@@ -2262,10 +2262,10 @@ m1204	edu/ucla/phil/logic/RD.A(Ljava/lang/String;Ljava/util/Vector;Ledu/ucla/phi
 m1204	edu/ucla/phil/logic/TB.A(Ljava/lang/String;Ljava/util/Vector;Ledu/ucla/phil/logic/nF;Z)V
 m1204	edu/ucla/phil/logic/oF.A(Ljava/lang/String;Ljava/util/Vector;Ledu/ucla/phil/logic/nF;Z)V
 f737	edu/ucla/phil/logic/RE.Ü [Ljava/lang/String;
-f738	edu/ucla/phil/logic/RF.К I
-f739	edu/ucla/phil/logic/RF.Л Ljava/lang/String;
-f740	edu/ucla/phil/logic/RF.З Ljava/util/Vector;
-f741	edu/ucla/phil/logic/RF.И I
+f738=kind	edu/ucla/phil/logic/RF.К I
+f739=symbol	edu/ucla/phil/logic/RF.Л Ljava/lang/String;
+f740=children	edu/ucla/phil/logic/RF.З Ljava/util/Vector;
+f741=childCount	edu/ucla/phil/logic/RF.И I
 f742	edu/ucla/phil/logic/RF.Й Z
 m1205	edu/ucla/phil/logic/RF.B(ZI)Ljava/lang/String;
 m1206	edu/ucla/phil/logic/RF.ƭ()Ljava/lang/String;
@@ -2301,20 +2301,20 @@ m1211	edu/ucla/phil/logic/qA.A(Ledu/ucla/phil/logic/DD;)V
 m1211	edu/ucla/phil/logic/qF.A(Ledu/ucla/phil/logic/DD;)V
 m1211	edu/ucla/phil/logic/tD.A(Ledu/ucla/phil/logic/DD;)V
 m1211	edu/ucla/phil/logic/xD.A(Ledu/ucla/phil/logic/DD;)V
-m1212	edu/ucla/phil/logic/RF.ƪ()V
-m1212	edu/ucla/phil/logic/WE.ƪ()V
-m1212	edu/ucla/phil/logic/i.ƪ()V
-m1212	edu/ucla/phil/logic/nC.ƪ()V
-m1212	edu/ucla/phil/logic/oA.ƪ()V
-m1212	edu/ucla/phil/logic/qA.ƪ()V
-m1212	edu/ucla/phil/logic/qF.ƪ()V
-m1212	edu/ucla/phil/logic/tD.ƪ()V
-m1212	edu/ucla/phil/logic/xD.ƪ()V
-m1213	edu/ucla/phil/logic/RF.Ƭ()I
-m1214	edu/ucla/phil/logic/RF.Ʊ()Ljava/lang/String;
-m1215	edu/ucla/phil/logic/RF.V(Ledu/ucla/phil/logic/RF;)V
-m1216	edu/ucla/phil/logic/RF.ƴ()I
-m1217	edu/ucla/phil/logic/RF.z(I)Ledu/ucla/phil/logic/RF;
+m1212=initKind	edu/ucla/phil/logic/RF.ƪ()V
+m1212=initKind	edu/ucla/phil/logic/WE.ƪ()V
+m1212=initKind	edu/ucla/phil/logic/i.ƪ()V
+m1212=initKind	edu/ucla/phil/logic/nC.ƪ()V
+m1212=initKind	edu/ucla/phil/logic/oA.ƪ()V
+m1212=initKind	edu/ucla/phil/logic/qA.ƪ()V
+m1212=initKind	edu/ucla/phil/logic/qF.ƪ()V
+m1212=initKind	edu/ucla/phil/logic/tD.ƪ()V
+m1212=initKind	edu/ucla/phil/logic/xD.ƪ()V
+m1213=getKind	edu/ucla/phil/logic/RF.Ƭ()I
+m1214=getSymbol	edu/ucla/phil/logic/RF.Ʊ()Ljava/lang/String;
+m1215=addChild	edu/ucla/phil/logic/RF.V(Ledu/ucla/phil/logic/RF;)V
+m1216=getChildCount	edu/ucla/phil/logic/RF.ƴ()I
+m1217=getChild	edu/ucla/phil/logic/RF.z(I)Ledu/ucla/phil/logic/RF;
 m1218	edu/ucla/phil/logic/RF.N(Ljava/lang/String;I)I
 m1219	edu/ucla/phil/logic/RF.ñ(Ljava/lang/String;)I
 m1220	edu/ucla/phil/logic/RF.A(Ledu/ucla/phil/logic/e;)Ledu/ucla/phil/logic/RF;
@@ -2340,18 +2340,18 @@ m1236	edu/ucla/phil/logic/RF.A(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/MB;)
 m1236	edu/ucla/phil/logic/WE.A(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/MB;)Z
 m1236	edu/ucla/phil/logic/i.A(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/MB;)Z
 m1236	edu/ucla/phil/logic/oA.A(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/MB;)Z
-m1237	edu/ucla/phil/logic/RF.Ƨ()Ledu/ucla/phil/logic/RF;
-m1238	edu/ucla/phil/logic/RF.D(Ledu/ucla/phil/logic/jD;)Ledu/ucla/phil/logic/RF;
+m1237=copy	edu/ucla/phil/logic/RF.Ƨ()Ledu/ucla/phil/logic/RF;
+m1238=instantiate	edu/ucla/phil/logic/RF.D(Ledu/ucla/phil/logic/jD;)Ledu/ucla/phil/logic/RF;
 m1239	edu/ucla/phil/logic/RF.A(Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;)Ledu/ucla/phil/logic/RF;
-m1240	edu/ucla/phil/logic/RF.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
-m1240	edu/ucla/phil/logic/WE.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
-m1240	edu/ucla/phil/logic/i.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
-m1240	edu/ucla/phil/logic/nC.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
-m1240	edu/ucla/phil/logic/oA.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
-m1240	edu/ucla/phil/logic/qA.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
-m1240	edu/ucla/phil/logic/qF.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
-m1240	edu/ucla/phil/logic/tD.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
-m1240	edu/ucla/phil/logic/xD.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
+m1240=instantiate	edu/ucla/phil/logic/RF.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
+m1240=instantiate	edu/ucla/phil/logic/WE.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
+m1240=instantiate	edu/ucla/phil/logic/i.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
+m1240=instantiate	edu/ucla/phil/logic/nC.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
+m1240=instantiate	edu/ucla/phil/logic/oA.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
+m1240=instantiate	edu/ucla/phil/logic/qA.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
+m1240=instantiate	edu/ucla/phil/logic/qF.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
+m1240=instantiate	edu/ucla/phil/logic/tD.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
+m1240=instantiate	edu/ucla/phil/logic/xD.B(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/jD;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/RF;
 m1241	edu/ucla/phil/logic/RF.N(Ljava/util/Vector;)V
 m1242	edu/ucla/phil/logic/RF.B(Ljava/util/Vector;I)I
 m1242	edu/ucla/phil/logic/i.B(Ljava/util/Vector;I)I
@@ -2381,7 +2381,7 @@ m1253	edu/ucla/phil/logic/RF.C(Ljava/util/Vector;Ljava/util/Vector;)V
 m1253	edu/ucla/phil/logic/i.C(Ljava/util/Vector;Ljava/util/Vector;)V
 m1254	edu/ucla/phil/logic/RF.Ƴ()Ledu/ucla/phil/logic/L;
 m1255	edu/ucla/phil/logic/RF.Y(Ledu/ucla/phil/logic/RF;)Z
-m1256	edu/ucla/phil/logic/RF.ƨ()Ledu/ucla/phil/logic/qF;
+m1256=negate	edu/ucla/phil/logic/RF.ƨ()Ledu/ucla/phil/logic/qF;
 m1257	edu/ucla/phil/logic/RF.Ʈ()Ledu/ucla/phil/logic/RF;
 m1258	edu/ucla/phil/logic/RF.A(Ledu/ucla/phil/logic/JD;)V
 m1258	edu/ucla/phil/logic/WE.A(Ledu/ucla/phil/logic/JD;)V
@@ -2416,10 +2416,10 @@ m1270	edu/ucla/phil/logic/RF.W(Ledu/ucla/phil/logic/RF;)Ledu/ucla/phil/logic/cB;
 m1270	edu/ucla/phil/logic/nC.W(Ledu/ucla/phil/logic/RF;)Ledu/ucla/phil/logic/cB;
 m1270	edu/ucla/phil/logic/qA.W(Ledu/ucla/phil/logic/RF;)Ledu/ucla/phil/logic/cB;
 m1271	edu/ucla/phil/logic/RF.A(Ledu/ucla/phil/logic/RF;Ledu/ucla/phil/logic/MB;Ljava/util/Vector;)Ledu/ucla/phil/logic/GF;
-m1272	edu/ucla/phil/logic/RF.ƥ()Ledu/ucla/phil/logic/iA;
-m1272	edu/ucla/phil/logic/i.ƥ()Ledu/ucla/phil/logic/iA;
-m1272	edu/ucla/phil/logic/nC.ƥ()Ledu/ucla/phil/logic/iA;
-m1272	edu/ucla/phil/logic/qA.ƥ()Ledu/ucla/phil/logic/iA;
+m1272=getSchematicLetter	edu/ucla/phil/logic/RF.ƥ()Ledu/ucla/phil/logic/iA;
+m1272=getSchematicLetter	edu/ucla/phil/logic/i.ƥ()Ledu/ucla/phil/logic/iA;
+m1272=getSchematicLetter	edu/ucla/phil/logic/nC.ƥ()Ledu/ucla/phil/logic/iA;
+m1272=getSchematicLetter	edu/ucla/phil/logic/qA.ƥ()Ledu/ucla/phil/logic/iA;
 m1273	edu/ucla/phil/logic/RF.E(Ledu/ucla/phil/logic/jD;)Z
 m1273	edu/ucla/phil/logic/i.E(Ledu/ucla/phil/logic/jD;)Z
 m1273	edu/ucla/phil/logic/nC.E(Ledu/ucla/phil/logic/jD;)Z
@@ -2428,9 +2428,9 @@ m1274	edu/ucla/phil/logic/RF.C(Ledu/ucla/phil/logic/jD;)Z
 m1274	edu/ucla/phil/logic/i.C(Ledu/ucla/phil/logic/jD;)Z
 m1274	edu/ucla/phil/logic/nC.C(Ledu/ucla/phil/logic/jD;)Z
 m1274	edu/ucla/phil/logic/qA.C(Ledu/ucla/phil/logic/jD;)Z
-m1275	edu/ucla/phil/logic/RF.ƫ()Ledu/ucla/phil/logic/RF;
-m1275	edu/ucla/phil/logic/yA.ƫ()Ledu/ucla/phil/logic/RF;
-m1276	edu/ucla/phil/logic/RF.Ʀ()Ljava/util/Vector;
+m1275=universalClosure	edu/ucla/phil/logic/RF.ƫ()Ledu/ucla/phil/logic/RF;
+m1275=universalClosure	edu/ucla/phil/logic/yA.ƫ()Ledu/ucla/phil/logic/RF;
+m1276=getFreeVariables	edu/ucla/phil/logic/RF.Ʀ()Ljava/util/Vector;
 m1277	edu/ucla/phil/logic/RF.K(Ljava/util/Vector;)V
 m1277	edu/ucla/phil/logic/i.K(Ljava/util/Vector;)V
 f743	edu/ucla/phil/logic/S.A Ledu/ucla/phil/logic/bA;
@@ -2544,8 +2544,8 @@ m1324	edu/ucla/phil/logic/UA.B(Ljava/awt/Point;Z)V
 m1325	edu/ucla/phil/logic/UA.Ű()V
 m1326	edu/ucla/phil/logic/UA.ŭ()Z
 m1327	edu/ucla/phil/logic/UA.A(Ljava/util/Vector;[Ledu/ucla/phil/logic/pA;I)Z
-m1328	edu/ucla/phil/logic/UA.A(Ljava/lang/String;Ljava/lang/String;Ljava/awt/Point;Ledu/ucla/phil/logic/D;)V
-m1329	edu/ucla/phil/logic/UA.A(Ledu/ucla/phil/logic/H;Ljava/util/Hashtable;Ljava/awt/Point;Ledu/ucla/phil/logic/D;)V
+m1328=showMessage	edu/ucla/phil/logic/UA.A(Ljava/lang/String;Ljava/lang/String;Ljava/awt/Point;Ledu/ucla/phil/logic/D;)V
+m1329=showMessage	edu/ucla/phil/logic/UA.A(Ledu/ucla/phil/logic/H;Ljava/util/Hashtable;Ljava/awt/Point;Ledu/ucla/phil/logic/D;)V
 m1330	edu/ucla/phil/logic/UA.A(Ledu/ucla/phil/logic/H;Ljava/util/Hashtable;)Ledu/ucla/phil/logic/uB;
 m1331	edu/ucla/phil/logic/UA.A(Ledu/ucla/phil/logic/uB;)V
 m1332	edu/ucla/phil/logic/UA.A(Ljava/lang/String;Ljava/lang/String;Ljava/awt/Rectangle;Ledu/ucla/phil/logic/D;)V
@@ -2762,19 +2762,19 @@ m1465	edu/ucla/phil/logic/XA.G()Z
 m1466	edu/ucla/phil/logic/XA.L()Z
 m1467	edu/ucla/phil/logic/XA.J()Z
 m1468	edu/ucla/phil/logic/XA.A(ILedu/ucla/phil/logic/xA;Ledu/ucla/phil/logic/rA;)Z
-f873	edu/ucla/phil/logic/XB.A Ljava/lang/String;
-f874	edu/ucla/phil/logic/XD.A Ljava/lang/String;
-f875	edu/ucla/phil/logic/XD.D Ljava/util/Vector;
-f876	edu/ucla/phil/logic/XD.B Ledu/ucla/phil/logic/XB;
+f873=key	edu/ucla/phil/logic/XB.A Ljava/lang/String;
+f874=tags	edu/ucla/phil/logic/XD.A Ljava/lang/String;
+f875=values	edu/ucla/phil/logic/XD.D Ljava/util/Vector;
+f876=reader	edu/ucla/phil/logic/XD.B Ledu/ucla/phil/logic/XB;
 f877	edu/ucla/phil/logic/XD.C Z
 f878	edu/ucla/phil/logic/XD.E Ljava/lang/String;
-m1469	edu/ucla/phil/logic/XD.H()Z
-m1470	edu/ucla/phil/logic/XD.D()V
+m1469=readNext	edu/ucla/phil/logic/XD.H()Z
+m1470=close	edu/ucla/phil/logic/XD.D()V
 m1471	edu/ucla/phil/logic/XD.E()V
 m1472	edu/ucla/phil/logic/XD.A(Ljava/io/Reader;Z)V
-m1473	edu/ucla/phil/logic/XD.D(Ljava/lang/String;)V
-m1474	edu/ucla/phil/logic/XD.C(I)C
-m1475	edu/ucla/phil/logic/XD.C(C)I
+m1473=parse	edu/ucla/phil/logic/XD.D(Ljava/lang/String;)V
+m1474=tagAt	edu/ucla/phil/logic/XD.C(I)C
+m1475=indexOfTag	edu/ucla/phil/logic/XD.C(C)I
 m1476	edu/ucla/phil/logic/XD.A(CI)I
 m1477	edu/ucla/phil/logic/XD.A(C)[I
 m1478	edu/ucla/phil/logic/XD.K(Ljava/lang/String;)I
@@ -2782,7 +2782,7 @@ m1479	edu/ucla/phil/logic/XD.A(Ljava/lang/String;I)I
 m1480	edu/ucla/phil/logic/XD.A(II)I
 m1481	edu/ucla/phil/logic/XD.F(Ljava/lang/String;)[I
 m1482	edu/ucla/phil/logic/XD.I()I
-m1483	edu/ucla/phil/logic/XD.A(I)Ljava/lang/String;
+m1483=valueAt	edu/ucla/phil/logic/XD.A(I)Ljava/lang/String;
 m1484	edu/ucla/phil/logic/XD.E(Ljava/lang/String;)Ljava/lang/String;
 m1485	edu/ucla/phil/logic/XD.D(I)Ljava/lang/Integer;
 m1486	edu/ucla/phil/logic/XD.E(I)Ljava/lang/Long;
@@ -2793,7 +2793,7 @@ m1490	edu/ucla/phil/logic/XD.B(Ljava/lang/String;I)V
 m1491	edu/ucla/phil/logic/XD.A(CLjava/lang/String;I)V
 m1492	edu/ucla/phil/logic/XD.A(CLjava/lang/String;)V
 m1493	edu/ucla/phil/logic/XD.L(Ljava/lang/String;)Ljava/lang/String;
-m1494	edu/ucla/phil/logic/XD.G()Ljava/lang/String;
+m1494=getName	edu/ucla/phil/logic/XD.G()Ljava/lang/String;
 m1495	edu/ucla/phil/logic/XD.A(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 m1496	edu/ucla/phil/logic/XD.J(Ljava/lang/String;)V
 m1497	edu/ucla/phil/logic/XD.C()Ljava/lang/String;
@@ -2810,7 +2810,7 @@ m1507	edu/ucla/phil/logic/XD.G(Ljava/lang/String;)Ljava/lang/String;
 m1508	edu/ucla/phil/logic/XD.B(Ljava/lang/String;C)Ljava/lang/String;
 m1509	edu/ucla/phil/logic/XD.I(Ljava/lang/String;)Ljava/lang/String;
 m1510	edu/ucla/phil/logic/XD.A(Ljava/lang/String;C)Ljava/lang/String;
-m1511	edu/ucla/phil/logic/XD.B(Ljava/lang/String;)Z
+m1511=isBlankOrComment	edu/ucla/phil/logic/XD.B(Ljava/lang/String;)Z
 f879	edu/ucla/phil/logic/XE.B I
 f880	edu/ucla/phil/logic/XE.C [I
 f881	edu/ucla/phil/logic/XE.A [I
@@ -3232,8 +3232,8 @@ f1060	edu/ucla/phil/logic/dE.Ǳ I
 f1061	edu/ucla/phil/logic/dE.ǰ Ledu/ucla/phil/logic/bA;
 m1744	edu/ucla/phil/logic/dE.ņ()I
 m1745	edu/ucla/phil/logic/dE.k(I)V
-f1062	edu/ucla/phil/logic/e.A I
-f1063	edu/ucla/phil/logic/e.B [I
+f1062=depth	edu/ucla/phil/logic/e.A I
+f1063=indexes	edu/ucla/phil/logic/e.B [I
 m1746	edu/ucla/phil/logic/e.C([I)Ledu/ucla/phil/logic/e;
 m1747	edu/ucla/phil/logic/e.A([I)V
 m1748	edu/ucla/phil/logic/e.A([III)V
@@ -3356,8 +3356,8 @@ m1810	edu/ucla/phil/logic/fD.ª(I)Ljava/lang/String;
 m1811	edu/ucla/phil/logic/fD.Ǔ()Ljava/lang/String;
 m1812	edu/ucla/phil/logic/fD.û(Ljava/lang/String;)I
 f1118	edu/ucla/phil/logic/fE.ǲ Ledu/ucla/phil/logic/sB;
-f1119	edu/ucla/phil/logic/fF.A Ljava/lang/String;
-f1120	edu/ucla/phil/logic/fF.B I
+f1119=name	edu/ucla/phil/logic/fF.A Ljava/lang/String;
+f1120=state	edu/ucla/phil/logic/fF.B I
 f1121	edu/ucla/phil/logic/fF.E Z
 f1122	edu/ucla/phil/logic/fF.G Z
 f1123	edu/ucla/phil/logic/fF.C I
@@ -3530,7 +3530,7 @@ m1901	edu/ucla/phil/logic/k.A([I)Z
 m1902	edu/ucla/phil/logic/k.ĸ()V
 m1903	edu/ucla/phil/logic/k.A(ILjava/awt/Color;Z)V
 m1904	edu/ucla/phil/logic/k.ĺ()V
-f1199	edu/ucla/phil/logic/kC.A Ljava/io/PrintWriter;
+f1199=out	edu/ucla/phil/logic/kC.A Ljava/io/PrintWriter;
 m1905	edu/ucla/phil/logic/kC.A(Ljava/lang/String;)V
 m1906	edu/ucla/phil/logic/kC.A(Ljava/lang/Throwable;)V
 m1907	edu/ucla/phil/logic/kD.L([I)V
@@ -3789,8 +3789,8 @@ m2023	edu/ucla/phil/logic/pA.I(I)V
 m2024	edu/ucla/phil/logic/pA.L(Ljava/lang/String;)V
 m2025	edu/ucla/phil/logic/pA.£()Ljava/lang/String;
 m2026	edu/ucla/phil/logic/pA.¤()Z
-f1334	edu/ucla/phil/logic/pD.A Ljava/lang/String;
-f1335	edu/ucla/phil/logic/pD.B Ljava/lang/String;
+f1334=user	edu/ucla/phil/logic/pD.A Ljava/lang/String;
+f1335=password	edu/ucla/phil/logic/pD.B Ljava/lang/String;
 f1336	edu/ucla/phil/logic/pE.ō I
 f1337	edu/ucla/phil/logic/pE.Ō Z
 m2027	edu/ucla/phil/logic/pE.c(Ljava/lang/String;)Ledu/ucla/phil/logic/pE;
@@ -4004,10 +4004,10 @@ m2147	edu/ucla/phil/logic/wA.A(Ledu/ucla/phil/logic/LPTruthAnalysis;ZZLedu/ucla/
 m2148	edu/ucla/phil/logic/wA.A(Ledu/ucla/phil/logic/LPTruthAnalysis;Ljava/awt/Point;)Z
 m2149	edu/ucla/phil/logic/wA.A(Ledu/ucla/phil/logic/LPTruthAnalysis;)V
 f1425	edu/ucla/phil/logic/wB.A Ljava/util/Hashtable;
-m2150	edu/ucla/phil/logic/wB.B(Ljava/lang/String;)Ljava/lang/String;
-m2151	edu/ucla/phil/logic/wB.A(Ljava/lang/String;Ljava/lang/String;)V
+m2150=get	edu/ucla/phil/logic/wB.B(Ljava/lang/String;)Ljava/lang/String;
+m2151=put	edu/ucla/phil/logic/wB.A(Ljava/lang/String;Ljava/lang/String;)V
 m2152	edu/ucla/phil/logic/wB.A(Ljava/lang/String;)V
-m2153	edu/ucla/phil/logic/wB.A(Ljava/io/File;)V
+m2153=load	edu/ucla/phil/logic/wB.A(Ljava/io/File;)V
 m2154	edu/ucla/phil/logic/wB.A(Ljava/io/Reader;)V
 m2155	edu/ucla/phil/logic/wB.B(Ljava/io/File;)V
 m2156	edu/ucla/phil/logic/wB.A(Ljava/io/Writer;)V
@@ -4135,66 +4135,66 @@ m2213	edu/ucla/phil/logic/zC.A(Ljava/util/Hashtable;Ljava/util/Hashtable;)Z
 m2214	edu/ucla/phil/logic/zC.B(Ljava/util/Vector;Ljava/util/Vector;)Ljava/util/Vector;
 m2215	edu/ucla/phil/logic/zC.A(Ljava/util/Hashtable;Ljava/lang/String;Ljava/lang/String;Ledu/ucla/phil/logic/BE;Ledu/ucla/phil/logic/aA;)V
 m2216	edu/ucla/phil/logic/zC.ę()Ljava/awt/Rectangle;
-f1490	edu/ucla/phil/logic/zD.A Ljava/lang/String;
+f1490=ALPHABET	edu/ucla/phil/logic/zD.A Ljava/lang/String;
 f1491	edu/ucla/phil/logic/zD.C I
 f1492	edu/ucla/phil/logic/zD.B [I
-f1493	edu/ucla/phil/logic/zD.D Ljava/lang/String;
-m2217	edu/ucla/phil/logic/zD.C(Ljava/lang/String;)Ljava/lang/String;
-m2218	edu/ucla/phil/logic/zD.B(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-m2219	edu/ucla/phil/logic/zD.A(Ljava/lang/String;)Ljava/lang/String;
-m2220	edu/ucla/phil/logic/zD.A(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+f1493=DEFAULT_KEY	edu/ucla/phil/logic/zD.D Ljava/lang/String;
+m2217=scramble	edu/ucla/phil/logic/zD.C(Ljava/lang/String;)Ljava/lang/String;
+m2218=scramble	edu/ucla/phil/logic/zD.B(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+m2219=unscramble	edu/ucla/phil/logic/zD.A(Ljava/lang/String;)Ljava/lang/String;
+m2220=unscramble	edu/ucla/phil/logic/zD.A(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 m2221	edu/ucla/phil/logic/zD.E(Ljava/lang/String;)[I
 m2222	edu/ucla/phil/logic/zD.A()[[Ljava/lang/String;
-m2223	edu/ucla/phil/logic/zD.B(Ljava/io/File;)Ljava/lang/String;
-m2224	edu/ucla/phil/logic/zD.A([B)Ljava/lang/String;
-m2225	edu/ucla/phil/logic/zD.B(Ljava/lang/String;)Ljava/lang/String;
-m2226	edu/ucla/phil/logic/zD.A(Ljava/io/File;)Ljava/lang/String;
-m2227	edu/ucla/phil/logic/zD.A(Ljava/io/File;Z)Ljava/lang/String;
-m2228	edu/ucla/phil/logic/zD.B([B)Ljava/lang/String;
-m2229	edu/ucla/phil/logic/zD.A([BZ)Ljava/lang/String;
-m2230	edu/ucla/phil/logic/zD.D(Ljava/lang/String;)Ljava/lang/String;
-m2231	edu/ucla/phil/logic/zD.A(Ljava/lang/String;Z)Ljava/lang/String;
+m2223=md5Base64	edu/ucla/phil/logic/zD.B(Ljava/io/File;)Ljava/lang/String;
+m2224=md5Base64	edu/ucla/phil/logic/zD.A([B)Ljava/lang/String;
+m2225=md5Base64	edu/ucla/phil/logic/zD.B(Ljava/lang/String;)Ljava/lang/String;
+m2226=md5Hex	edu/ucla/phil/logic/zD.A(Ljava/io/File;)Ljava/lang/String;
+m2227=md5Hex	edu/ucla/phil/logic/zD.A(Ljava/io/File;Z)Ljava/lang/String;
+m2228=md5Hex	edu/ucla/phil/logic/zD.B([B)Ljava/lang/String;
+m2229=md5Hex	edu/ucla/phil/logic/zD.A([BZ)Ljava/lang/String;
+m2230=md5Hex	edu/ucla/phil/logic/zD.D(Ljava/lang/String;)Ljava/lang/String;
+m2231=md5Hex	edu/ucla/phil/logic/zD.A(Ljava/lang/String;Z)Ljava/lang/String;
 f1494	edu/ucla/phil/logic/zE.Ȍ Ljavax/swing/ButtonGroup;
 f1495	edu/ucla/phil/logic/zE.ȍ Ljavax/swing/border/Border;
 m2232	edu/ucla/phil/logic/zE.F(Ljava/awt/Component;)V
 m2233	edu/ucla/phil/logic/zE.G(Ljava/awt/Component;)V
 # classes
-edu/ucla/phil/logic/$A	edu/ucla/phil/logic/C_0A
-edu/ucla/phil/logic/$B	edu/ucla/phil/logic/C_0B
-edu/ucla/phil/logic/$C	edu/ucla/phil/logic/C_0C
+edu/ucla/phil/logic/$A	edu/ucla/phil/logic/Submission
+edu/ucla/phil/logic/$B	edu/ucla/phil/logic/DerivationNode
+edu/ucla/phil/logic/$C	edu/ucla/phil/logic/ServerSession
 edu/ucla/phil/logic/$D	edu/ucla/phil/logic/C_0D
-edu/ucla/phil/logic/$E	edu/ucla/phil/logic/C_0E
-edu/ucla/phil/logic/$E$1	edu/ucla/phil/logic/C_0E$1
+edu/ucla/phil/logic/$E	edu/ucla/phil/logic/ModuleFrame
+edu/ucla/phil/logic/$E$1	edu/ucla/phil/logic/ModuleFrame$1
 edu/ucla/phil/logic/$F	edu/ucla/phil/logic/C_0F
 edu/ucla/phil/logic/A	edu/ucla/phil/logic/C_A
-edu/ucla/phil/logic/A/A	edu/ucla/phil/logic/pkgA/C_A
-edu/ucla/phil/logic/A/B	edu/ucla/phil/logic/pkgA/C_B
-edu/ucla/phil/logic/A/C	edu/ucla/phil/logic/pkgA/C_C
-edu/ucla/phil/logic/A/D	edu/ucla/phil/logic/pkgA/C_D
-edu/ucla/phil/logic/A/E	edu/ucla/phil/logic/pkgA/C_E
-edu/ucla/phil/logic/A/E$_A	edu/ucla/phil/logic/pkgA/C_E$C__A
-edu/ucla/phil/logic/A/F	edu/ucla/phil/logic/pkgA/C_F
-edu/ucla/phil/logic/A/G	edu/ucla/phil/logic/pkgA/C_G
+edu/ucla/phil/logic/A/A	edu/ucla/phil/logic/pkgA/Syntax2ParseException
+edu/ucla/phil/logic/A/B	edu/ucla/phil/logic/pkgA/Syntax2CharStream
+edu/ucla/phil/logic/A/C	edu/ucla/phil/logic/pkgA/Syntax2TokenMgrError
+edu/ucla/phil/logic/A/D	edu/ucla/phil/logic/pkgA/Syntax2TokenManager
+edu/ucla/phil/logic/A/E	edu/ucla/phil/logic/pkgA/Syntax2Parser
+edu/ucla/phil/logic/A/E$_A	edu/ucla/phil/logic/pkgA/Syntax2Parser$C__A
+edu/ucla/phil/logic/A/F	edu/ucla/phil/logic/pkgA/Syntax2Constants
+edu/ucla/phil/logic/A/G	edu/ucla/phil/logic/pkgA/Syntax2Token
 edu/ucla/phil/logic/AA	edu/ucla/phil/logic/C_AA
 edu/ucla/phil/logic/AB	edu/ucla/phil/logic/C_AB
 edu/ucla/phil/logic/AC	edu/ucla/phil/logic/C_AC
 edu/ucla/phil/logic/AD	edu/ucla/phil/logic/C_AD
 edu/ucla/phil/logic/AE	edu/ucla/phil/logic/C_AE
-edu/ucla/phil/logic/AF	edu/ucla/phil/logic/C_AF
+edu/ucla/phil/logic/AF	edu/ucla/phil/logic/CellRenderable
 edu/ucla/phil/logic/B	edu/ucla/phil/logic/C_B
-edu/ucla/phil/logic/B/A	edu/ucla/phil/logic/pkgB/C_A
-edu/ucla/phil/logic/B/B	edu/ucla/phil/logic/pkgB/C_B
-edu/ucla/phil/logic/B/C	edu/ucla/phil/logic/pkgB/C_C
-edu/ucla/phil/logic/B/D	edu/ucla/phil/logic/pkgB/C_D
-edu/ucla/phil/logic/B/E	edu/ucla/phil/logic/pkgB/C_E
-edu/ucla/phil/logic/B/E$_A	edu/ucla/phil/logic/pkgB/C_E$C__A
-edu/ucla/phil/logic/B/F	edu/ucla/phil/logic/pkgB/C_F
-edu/ucla/phil/logic/B/G	edu/ucla/phil/logic/pkgB/C_G
+edu/ucla/phil/logic/B/A	edu/ucla/phil/logic/pkgB/Syntax1ParseException
+edu/ucla/phil/logic/B/B	edu/ucla/phil/logic/pkgB/Syntax1CharStream
+edu/ucla/phil/logic/B/C	edu/ucla/phil/logic/pkgB/Syntax1TokenMgrError
+edu/ucla/phil/logic/B/D	edu/ucla/phil/logic/pkgB/Syntax1TokenManager
+edu/ucla/phil/logic/B/E	edu/ucla/phil/logic/pkgB/Syntax1Parser
+edu/ucla/phil/logic/B/E$_A	edu/ucla/phil/logic/pkgB/Syntax1Parser$C__A
+edu/ucla/phil/logic/B/F	edu/ucla/phil/logic/pkgB/Syntax1Constants
+edu/ucla/phil/logic/B/G	edu/ucla/phil/logic/pkgB/Syntax1Token
 edu/ucla/phil/logic/BA	edu/ucla/phil/logic/C_BA
 edu/ucla/phil/logic/BB	edu/ucla/phil/logic/C_BB
 edu/ucla/phil/logic/BC	edu/ucla/phil/logic/C_BC
 edu/ucla/phil/logic/BD	edu/ucla/phil/logic/C_BD
-edu/ucla/phil/logic/BE	edu/ucla/phil/logic/C_BE
+edu/ucla/phil/logic/BE	edu/ucla/phil/logic/ProblemSelector
 edu/ucla/phil/logic/BF	edu/ucla/phil/logic/C_BF
 edu/ucla/phil/logic/C	edu/ucla/phil/logic/C_C
 edu/ucla/phil/logic/CA	edu/ucla/phil/logic/C_CA
@@ -4203,12 +4203,12 @@ edu/ucla/phil/logic/CC	edu/ucla/phil/logic/C_CC
 edu/ucla/phil/logic/CD	edu/ucla/phil/logic/C_CD
 edu/ucla/phil/logic/CE	edu/ucla/phil/logic/C_CE
 edu/ucla/phil/logic/CF	edu/ucla/phil/logic/C_CF
-edu/ucla/phil/logic/D	edu/ucla/phil/logic/C_D
+edu/ucla/phil/logic/D	edu/ucla/phil/logic/DialogHandler
 edu/ucla/phil/logic/DA	edu/ucla/phil/logic/C_DA
 edu/ucla/phil/logic/DB	edu/ucla/phil/logic/C_DB
 edu/ucla/phil/logic/DC	edu/ucla/phil/logic/C_DC
 edu/ucla/phil/logic/DD	edu/ucla/phil/logic/C_DD
-edu/ucla/phil/logic/DE	edu/ucla/phil/logic/C_DE
+edu/ucla/phil/logic/DE	edu/ucla/phil/logic/DerivationConstants
 edu/ucla/phil/logic/DF	edu/ucla/phil/logic/C_DF
 edu/ucla/phil/logic/E	edu/ucla/phil/logic/C_E
 edu/ucla/phil/logic/EA	edu/ucla/phil/logic/C_EA
@@ -4219,23 +4219,23 @@ edu/ucla/phil/logic/EE	edu/ucla/phil/logic/C_EE
 edu/ucla/phil/logic/EF	edu/ucla/phil/logic/C_EF
 edu/ucla/phil/logic/F	edu/ucla/phil/logic/C_F
 edu/ucla/phil/logic/FA	edu/ucla/phil/logic/C_FA
-edu/ucla/phil/logic/FB	edu/ucla/phil/logic/C_FB
+edu/ucla/phil/logic/FB	edu/ucla/phil/logic/FormulaParser
 edu/ucla/phil/logic/FC	edu/ucla/phil/logic/C_FC
 edu/ucla/phil/logic/FD	edu/ucla/phil/logic/C_FD
 edu/ucla/phil/logic/FE	edu/ucla/phil/logic/C_FE
 edu/ucla/phil/logic/FF	edu/ucla/phil/logic/C_FF
-edu/ucla/phil/logic/G	edu/ucla/phil/logic/C_G
+edu/ucla/phil/logic/G	edu/ucla/phil/logic/DerivationLine
 edu/ucla/phil/logic/GA	edu/ucla/phil/logic/C_GA
 edu/ucla/phil/logic/GB	edu/ucla/phil/logic/C_GB
 edu/ucla/phil/logic/GC	edu/ucla/phil/logic/C_GC
 edu/ucla/phil/logic/GD	edu/ucla/phil/logic/C_GD
 edu/ucla/phil/logic/GE	edu/ucla/phil/logic/C_GE
-edu/ucla/phil/logic/GF	edu/ucla/phil/logic/C_GF
-edu/ucla/phil/logic/H	edu/ucla/phil/logic/C_H
+edu/ucla/phil/logic/GF	edu/ucla/phil/logic/LetterReplacement
+edu/ucla/phil/logic/H	edu/ucla/phil/logic/Message
 edu/ucla/phil/logic/HA	edu/ucla/phil/logic/C_HA
-edu/ucla/phil/logic/HB	edu/ucla/phil/logic/C_HB
+edu/ucla/phil/logic/HB	edu/ucla/phil/logic/NewUserInfo
 edu/ucla/phil/logic/HC	edu/ucla/phil/logic/C_HC
-edu/ucla/phil/logic/HD	edu/ucla/phil/logic/C_HD
+edu/ucla/phil/logic/HD	edu/ucla/phil/logic/Justification
 edu/ucla/phil/logic/HE	edu/ucla/phil/logic/C_HE
 edu/ucla/phil/logic/HF	edu/ucla/phil/logic/C_HF
 edu/ucla/phil/logic/I	edu/ucla/phil/logic/C_I
@@ -4263,12 +4263,12 @@ edu/ucla/phil/logic/IB$6	edu/ucla/phil/logic/C_IB$6
 edu/ucla/phil/logic/IB$7	edu/ucla/phil/logic/C_IB$7
 edu/ucla/phil/logic/IB$8	edu/ucla/phil/logic/C_IB$8
 edu/ucla/phil/logic/IB$9	edu/ucla/phil/logic/C_IB$9
-edu/ucla/phil/logic/IC	edu/ucla/phil/logic/C_IC
+edu/ucla/phil/logic/IC	edu/ucla/phil/logic/FormulaLexerError
 edu/ucla/phil/logic/ID	edu/ucla/phil/logic/C_ID
 edu/ucla/phil/logic/IE	edu/ucla/phil/logic/C_IE
-edu/ucla/phil/logic/IF	edu/ucla/phil/logic/C_IF
-edu/ucla/phil/logic/IF$1	edu/ucla/phil/logic/C_IF$1
-edu/ucla/phil/logic/J	edu/ucla/phil/logic/C_J
+edu/ucla/phil/logic/IF	edu/ucla/phil/logic/FormulaEntryField
+edu/ucla/phil/logic/IF$1	edu/ucla/phil/logic/FormulaEntryField$1
+edu/ucla/phil/logic/J	edu/ucla/phil/logic/MessageRef
 edu/ucla/phil/logic/JA	edu/ucla/phil/logic/C_JA
 edu/ucla/phil/logic/JB	edu/ucla/phil/logic/C_JB
 edu/ucla/phil/logic/JC	edu/ucla/phil/logic/C_JC
@@ -4278,17 +4278,17 @@ edu/ucla/phil/logic/JF	edu/ucla/phil/logic/C_JF
 edu/ucla/phil/logic/K	edu/ucla/phil/logic/C_K
 edu/ucla/phil/logic/KA	edu/ucla/phil/logic/C_KA
 edu/ucla/phil/logic/KB	edu/ucla/phil/logic/C_KB
-edu/ucla/phil/logic/KC	edu/ucla/phil/logic/C_KC
-edu/ucla/phil/logic/KD	edu/ucla/phil/logic/C_KD
+edu/ucla/phil/logic/KC	edu/ucla/phil/logic/ServerConnection
+edu/ucla/phil/logic/KD	edu/ucla/phil/logic/Md5OutputStream
 edu/ucla/phil/logic/KE	edu/ucla/phil/logic/C_KE
 edu/ucla/phil/logic/KF	edu/ucla/phil/logic/C_KF
 edu/ucla/phil/logic/L	edu/ucla/phil/logic/C_L
 edu/ucla/phil/logic/LA	edu/ucla/phil/logic/C_LA
-edu/ucla/phil/logic/LB	edu/ucla/phil/logic/C_LB
+edu/ucla/phil/logic/LB	edu/ucla/phil/logic/SizedPanel
 edu/ucla/phil/logic/LC	edu/ucla/phil/logic/C_LC
 edu/ucla/phil/logic/LD	edu/ucla/phil/logic/C_LD
 edu/ucla/phil/logic/LE	edu/ucla/phil/logic/C_LE
-edu/ucla/phil/logic/LF	edu/ucla/phil/logic/C_LF
+edu/ucla/phil/logic/LF	edu/ucla/phil/logic/SchematicRule
 edu/ucla/phil/logic/LPDerivation$_A	edu/ucla/phil/logic/LPDerivation$C__A
 edu/ucla/phil/logic/LPInvalidation$_A	edu/ucla/phil/logic/LPInvalidation$C__A
 edu/ucla/phil/logic/LPParsing$_A	edu/ucla/phil/logic/LPParsing$C__A
@@ -4302,8 +4302,8 @@ edu/ucla/phil/logic/MB	edu/ucla/phil/logic/C_MB
 edu/ucla/phil/logic/MC	edu/ucla/phil/logic/C_MC
 edu/ucla/phil/logic/MD	edu/ucla/phil/logic/C_MD
 edu/ucla/phil/logic/ME	edu/ucla/phil/logic/C_ME
-edu/ucla/phil/logic/MF	edu/ucla/phil/logic/C_MF
-edu/ucla/phil/logic/N	edu/ucla/phil/logic/C_N
+edu/ucla/phil/logic/MF	edu/ucla/phil/logic/CourseInfo
+edu/ucla/phil/logic/N	edu/ucla/phil/logic/HttpDigestAuth
 edu/ucla/phil/logic/NA	edu/ucla/phil/logic/C_NA
 edu/ucla/phil/logic/NB	edu/ucla/phil/logic/C_NB
 edu/ucla/phil/logic/NC	edu/ucla/phil/logic/C_NC
@@ -4311,11 +4311,11 @@ edu/ucla/phil/logic/ND	edu/ucla/phil/logic/C_ND
 edu/ucla/phil/logic/NE	edu/ucla/phil/logic/C_NE
 edu/ucla/phil/logic/NF	edu/ucla/phil/logic/C_NF
 edu/ucla/phil/logic/O	edu/ucla/phil/logic/C_O
-edu/ucla/phil/logic/OA	edu/ucla/phil/logic/C_OA
+edu/ucla/phil/logic/OA	edu/ucla/phil/logic/DelimitedTokenizer
 edu/ucla/phil/logic/OB	edu/ucla/phil/logic/C_OB
 edu/ucla/phil/logic/OC	edu/ucla/phil/logic/C_OC
 edu/ucla/phil/logic/OD	edu/ucla/phil/logic/C_OD
-edu/ucla/phil/logic/OE	edu/ucla/phil/logic/C_OE
+edu/ucla/phil/logic/OE	edu/ucla/phil/logic/UserInfo
 edu/ucla/phil/logic/OF	edu/ucla/phil/logic/C_OF
 edu/ucla/phil/logic/P	edu/ucla/phil/logic/C_P
 edu/ucla/phil/logic/PA	edu/ucla/phil/logic/C_PA
@@ -4350,7 +4350,7 @@ edu/ucla/phil/logic/QA	edu/ucla/phil/logic/C_QA
 edu/ucla/phil/logic/QB	edu/ucla/phil/logic/C_QB
 edu/ucla/phil/logic/QC	edu/ucla/phil/logic/C_QC
 edu/ucla/phil/logic/QD	edu/ucla/phil/logic/C_QD
-edu/ucla/phil/logic/QE	edu/ucla/phil/logic/C_QE
+edu/ucla/phil/logic/QE	edu/ucla/phil/logic/Theorem
 edu/ucla/phil/logic/QF	edu/ucla/phil/logic/C_QF
 edu/ucla/phil/logic/R	edu/ucla/phil/logic/C_R
 edu/ucla/phil/logic/RA	edu/ucla/phil/logic/C_RA
@@ -4374,38 +4374,38 @@ edu/ucla/phil/logic/RB$9	edu/ucla/phil/logic/C_RB$9
 edu/ucla/phil/logic/RC	edu/ucla/phil/logic/C_RC
 edu/ucla/phil/logic/RD	edu/ucla/phil/logic/C_RD
 edu/ucla/phil/logic/RE	edu/ucla/phil/logic/C_RE
-edu/ucla/phil/logic/RF	edu/ucla/phil/logic/C_RF
+edu/ucla/phil/logic/RF	edu/ucla/phil/logic/Expression
 edu/ucla/phil/logic/S	edu/ucla/phil/logic/C_S
 edu/ucla/phil/logic/SA	edu/ucla/phil/logic/C_SA
 edu/ucla/phil/logic/SB	edu/ucla/phil/logic/C_SB
 edu/ucla/phil/logic/SC	edu/ucla/phil/logic/C_SC
-edu/ucla/phil/logic/SD	edu/ucla/phil/logic/C_SD
-edu/ucla/phil/logic/SD$1	edu/ucla/phil/logic/C_SD$1
+edu/ucla/phil/logic/SD	edu/ucla/phil/logic/ProgressDialog
+edu/ucla/phil/logic/SD$1	edu/ucla/phil/logic/ProgressDialog$1
 edu/ucla/phil/logic/SE	edu/ucla/phil/logic/C_SE
-edu/ucla/phil/logic/SF	edu/ucla/phil/logic/C_SF
-edu/ucla/phil/logic/T	edu/ucla/phil/logic/C_T
-edu/ucla/phil/logic/T$1	edu/ucla/phil/logic/C_T$1
-edu/ucla/phil/logic/TA	edu/ucla/phil/logic/C_TA
+edu/ucla/phil/logic/SF	edu/ucla/phil/logic/Institution
+edu/ucla/phil/logic/T	edu/ucla/phil/logic/KeypadDialog
+edu/ucla/phil/logic/T$1	edu/ucla/phil/logic/KeypadDialog$1
+edu/ucla/phil/logic/TA	edu/ucla/phil/logic/CellPanel
 edu/ucla/phil/logic/TB	edu/ucla/phil/logic/C_TB
 edu/ucla/phil/logic/TC	edu/ucla/phil/logic/C_TC
 edu/ucla/phil/logic/TD	edu/ucla/phil/logic/C_TD
 edu/ucla/phil/logic/TE	edu/ucla/phil/logic/C_TE
 edu/ucla/phil/logic/TF	edu/ucla/phil/logic/C_TF
-edu/ucla/phil/logic/U	edu/ucla/phil/logic/C_U
-edu/ucla/phil/logic/U$_A	edu/ucla/phil/logic/C_U$C__A
-edu/ucla/phil/logic/UA	edu/ucla/phil/logic/C_UA
-edu/ucla/phil/logic/UA$1	edu/ucla/phil/logic/C_UA$1
+edu/ucla/phil/logic/U	edu/ucla/phil/logic/LogicModule
+edu/ucla/phil/logic/U$_A	edu/ucla/phil/logic/LogicModule$C__A
+edu/ucla/phil/logic/UA	edu/ucla/phil/logic/MessageDialog
+edu/ucla/phil/logic/UA$1	edu/ucla/phil/logic/MessageDialog$1
 edu/ucla/phil/logic/UB	edu/ucla/phil/logic/C_UB
-edu/ucla/phil/logic/UC	edu/ucla/phil/logic/C_UC
-edu/ucla/phil/logic/UC$_A	edu/ucla/phil/logic/C_UC$C__A
-edu/ucla/phil/logic/UC$_B	edu/ucla/phil/logic/C_UC$C__B
+edu/ucla/phil/logic/UC	edu/ucla/phil/logic/ProgramLauncher
+edu/ucla/phil/logic/UC$_A	edu/ucla/phil/logic/ProgramLauncher$C__A
+edu/ucla/phil/logic/UC$_B	edu/ucla/phil/logic/ProgramLauncher$C__B
 edu/ucla/phil/logic/UD	edu/ucla/phil/logic/C_UD
 edu/ucla/phil/logic/UE	edu/ucla/phil/logic/C_UE
 edu/ucla/phil/logic/UF	edu/ucla/phil/logic/C_UF
 edu/ucla/phil/logic/V	edu/ucla/phil/logic/C_V
 edu/ucla/phil/logic/VA	edu/ucla/phil/logic/C_VA
-edu/ucla/phil/logic/VB	edu/ucla/phil/logic/C_VB
-edu/ucla/phil/logic/VC	edu/ucla/phil/logic/C_VC
+edu/ucla/phil/logic/VB	edu/ucla/phil/logic/Rule
+edu/ucla/phil/logic/VC	edu/ucla/phil/logic/ArgumentParser
 edu/ucla/phil/logic/VD	edu/ucla/phil/logic/C_VD
 edu/ucla/phil/logic/VE	edu/ucla/phil/logic/C_VE
 edu/ucla/phil/logic/VF	edu/ucla/phil/logic/C_VF
@@ -4414,17 +4414,17 @@ edu/ucla/phil/logic/WA	edu/ucla/phil/logic/C_WA
 edu/ucla/phil/logic/WB	edu/ucla/phil/logic/C_WB
 edu/ucla/phil/logic/WC	edu/ucla/phil/logic/C_WC
 edu/ucla/phil/logic/WD	edu/ucla/phil/logic/C_WD
-edu/ucla/phil/logic/WE	edu/ucla/phil/logic/C_WE
+edu/ucla/phil/logic/WE	edu/ucla/phil/logic/DescriptionTerm
 edu/ucla/phil/logic/WF	edu/ucla/phil/logic/C_WF
-edu/ucla/phil/logic/X	edu/ucla/phil/logic/C_X
+edu/ucla/phil/logic/X	edu/ucla/phil/logic/Term
 edu/ucla/phil/logic/XA	edu/ucla/phil/logic/C_XA
-edu/ucla/phil/logic/XB	edu/ucla/phil/logic/C_XB
-edu/ucla/phil/logic/XC	edu/ucla/phil/logic/C_XC
-edu/ucla/phil/logic/XD	edu/ucla/phil/logic/C_XD
+edu/ucla/phil/logic/XB	edu/ucla/phil/logic/ScrambledReader
+edu/ucla/phil/logic/XC	edu/ucla/phil/logic/ModuleConstants
+edu/ucla/phil/logic/XD	edu/ucla/phil/logic/TaggedRecord
 edu/ucla/phil/logic/XE	edu/ucla/phil/logic/C_XE
 edu/ucla/phil/logic/XF	edu/ucla/phil/logic/C_XF
 edu/ucla/phil/logic/Y	edu/ucla/phil/logic/C_Y
-edu/ucla/phil/logic/YA	edu/ucla/phil/logic/C_YA
+edu/ucla/phil/logic/YA	edu/ucla/phil/logic/ProblemListView
 edu/ucla/phil/logic/YB	edu/ucla/phil/logic/C_YB
 edu/ucla/phil/logic/YC	edu/ucla/phil/logic/C_YC
 edu/ucla/phil/logic/YD	edu/ucla/phil/logic/C_YD
@@ -4437,18 +4437,18 @@ edu/ucla/phil/logic/ZC	edu/ucla/phil/logic/C_ZC
 edu/ucla/phil/logic/ZD	edu/ucla/phil/logic/C_ZD
 edu/ucla/phil/logic/ZE	edu/ucla/phil/logic/C_ZE
 edu/ucla/phil/logic/ZF	edu/ucla/phil/logic/C_ZF
-edu/ucla/phil/logic/_	edu/ucla/phil/logic/C__
+edu/ucla/phil/logic/_	edu/ucla/phil/logic/DerivationBox
 edu/ucla/phil/logic/_A	edu/ucla/phil/logic/C__A
 edu/ucla/phil/logic/_B	edu/ucla/phil/logic/C__B
 edu/ucla/phil/logic/_C	edu/ucla/phil/logic/C__C
 edu/ucla/phil/logic/_D	edu/ucla/phil/logic/C__D
 edu/ucla/phil/logic/_E	edu/ucla/phil/logic/C__E
 edu/ucla/phil/logic/_F	edu/ucla/phil/logic/C__F
-edu/ucla/phil/logic/a	edu/ucla/phil/logic/C_a_
+edu/ucla/phil/logic/a	edu/ucla/phil/logic/DerivationLineChecker
 edu/ucla/phil/logic/aA	edu/ucla/phil/logic/C_a_A
 edu/ucla/phil/logic/aB	edu/ucla/phil/logic/C_a_B
 edu/ucla/phil/logic/aC	edu/ucla/phil/logic/C_a_C
-edu/ucla/phil/logic/aD	edu/ucla/phil/logic/C_a_D
+edu/ucla/phil/logic/aD	edu/ucla/phil/logic/ExpressionKinds
 edu/ucla/phil/logic/aE	edu/ucla/phil/logic/C_a_E
 edu/ucla/phil/logic/aF	edu/ucla/phil/logic/C_a_F
 edu/ucla/phil/logic/b	edu/ucla/phil/logic/C_b_
@@ -4476,30 +4476,30 @@ edu/ucla/phil/logic/bB$8	edu/ucla/phil/logic/C_b_B$8
 edu/ucla/phil/logic/bB$9	edu/ucla/phil/logic/C_b_B$9
 edu/ucla/phil/logic/bC	edu/ucla/phil/logic/C_b_C
 edu/ucla/phil/logic/bC$_A	edu/ucla/phil/logic/C_b_C$C__A
-edu/ucla/phil/logic/bD	edu/ucla/phil/logic/C_b_D
+edu/ucla/phil/logic/bD	edu/ucla/phil/logic/PlainRecordReader
 edu/ucla/phil/logic/bE	edu/ucla/phil/logic/C_b_E
 edu/ucla/phil/logic/bF	edu/ucla/phil/logic/C_b_F
 edu/ucla/phil/logic/c	edu/ucla/phil/logic/C_c_
 edu/ucla/phil/logic/cA	edu/ucla/phil/logic/C_c_A
-edu/ucla/phil/logic/cB	edu/ucla/phil/logic/C_c_B
+edu/ucla/phil/logic/cB	edu/ucla/phil/logic/ErrorRef
 edu/ucla/phil/logic/cC	edu/ucla/phil/logic/C_c_C
 edu/ucla/phil/logic/cD	edu/ucla/phil/logic/C_c_D
 edu/ucla/phil/logic/cE	edu/ucla/phil/logic/C_c_E
 edu/ucla/phil/logic/cF	edu/ucla/phil/logic/C_c_F
 edu/ucla/phil/logic/d	edu/ucla/phil/logic/C_d_
-edu/ucla/phil/logic/dA	edu/ucla/phil/logic/C_d_A
+edu/ucla/phil/logic/dA	edu/ucla/phil/logic/ProblemEditorFrame
 edu/ucla/phil/logic/dB	edu/ucla/phil/logic/C_d_B
 edu/ucla/phil/logic/dC	edu/ucla/phil/logic/C_d_C
 edu/ucla/phil/logic/dD	edu/ucla/phil/logic/C_d_D
 edu/ucla/phil/logic/dE	edu/ucla/phil/logic/C_d_E
 edu/ucla/phil/logic/dF	edu/ucla/phil/logic/C_d_F
-edu/ucla/phil/logic/e	edu/ucla/phil/logic/C_e_
+edu/ucla/phil/logic/e	edu/ucla/phil/logic/ExpressionPath
 edu/ucla/phil/logic/eA	edu/ucla/phil/logic/C_e_A
 edu/ucla/phil/logic/eB	edu/ucla/phil/logic/C_e_B
 edu/ucla/phil/logic/eC	edu/ucla/phil/logic/C_e_C
-edu/ucla/phil/logic/eD	edu/ucla/phil/logic/C_e_D
-edu/ucla/phil/logic/eD$_A	edu/ucla/phil/logic/C_e_D$C__A
-edu/ucla/phil/logic/eE	edu/ucla/phil/logic/C_e_E
+edu/ucla/phil/logic/eD	edu/ucla/phil/logic/ProblemSet
+edu/ucla/phil/logic/eD$_A	edu/ucla/phil/logic/ProblemSet$C__A
+edu/ucla/phil/logic/eE	edu/ucla/phil/logic/StyledTextPane
 edu/ucla/phil/logic/eF	edu/ucla/phil/logic/C_e_F
 edu/ucla/phil/logic/f	edu/ucla/phil/logic/C_f_
 edu/ucla/phil/logic/fA	edu/ucla/phil/logic/C_f_A
@@ -4507,12 +4507,12 @@ edu/ucla/phil/logic/fB	edu/ucla/phil/logic/C_f_B
 edu/ucla/phil/logic/fC	edu/ucla/phil/logic/C_f_C
 edu/ucla/phil/logic/fD	edu/ucla/phil/logic/C_f_D
 edu/ucla/phil/logic/fE	edu/ucla/phil/logic/C_f_E
-edu/ucla/phil/logic/fF	edu/ucla/phil/logic/C_f_F
+edu/ucla/phil/logic/fF	edu/ucla/phil/logic/ProblemEntry
 edu/ucla/phil/logic/g	edu/ucla/phil/logic/C_g_
 edu/ucla/phil/logic/gA	edu/ucla/phil/logic/C_g_A
 edu/ucla/phil/logic/gB	edu/ucla/phil/logic/C_g_B
 edu/ucla/phil/logic/gC	edu/ucla/phil/logic/C_g_C
-edu/ucla/phil/logic/gD	edu/ucla/phil/logic/C_g_D
+edu/ucla/phil/logic/gD	edu/ucla/phil/logic/ProblemTitlePanel
 edu/ucla/phil/logic/gE	edu/ucla/phil/logic/C_g_E
 edu/ucla/phil/logic/gF	edu/ucla/phil/logic/C_g_F
 edu/ucla/phil/logic/h	edu/ucla/phil/logic/C_h_
@@ -4540,9 +4540,9 @@ edu/ucla/phil/logic/hD	edu/ucla/phil/logic/C_h_D
 edu/ucla/phil/logic/hE	edu/ucla/phil/logic/C_h_E
 edu/ucla/phil/logic/hF	edu/ucla/phil/logic/C_h_F
 edu/ucla/phil/logic/hF$1	edu/ucla/phil/logic/C_h_F$1
-edu/ucla/phil/logic/i	edu/ucla/phil/logic/C_i_
-edu/ucla/phil/logic/iA	edu/ucla/phil/logic/C_i_A
-edu/ucla/phil/logic/iB	edu/ucla/phil/logic/C_i_B
+edu/ucla/phil/logic/i	edu/ucla/phil/logic/SimpleTerm
+edu/ucla/phil/logic/iA	edu/ucla/phil/logic/SchematicLetter
+edu/ucla/phil/logic/iB	edu/ucla/phil/logic/HttpDownloader
 edu/ucla/phil/logic/iC	edu/ucla/phil/logic/C_i_C
 edu/ucla/phil/logic/iD	edu/ucla/phil/logic/C_i_D
 edu/ucla/phil/logic/iE	edu/ucla/phil/logic/C_i_E
@@ -4550,14 +4550,14 @@ edu/ucla/phil/logic/iF	edu/ucla/phil/logic/C_i_F
 edu/ucla/phil/logic/j	edu/ucla/phil/logic/C_j_
 edu/ucla/phil/logic/jA	edu/ucla/phil/logic/C_j_A
 edu/ucla/phil/logic/jB	edu/ucla/phil/logic/C_j_B
-edu/ucla/phil/logic/jC	edu/ucla/phil/logic/C_j_C
-edu/ucla/phil/logic/jD	edu/ucla/phil/logic/C_j_D
+edu/ucla/phil/logic/jC	edu/ucla/phil/logic/AccountManager
+edu/ucla/phil/logic/jD	edu/ucla/phil/logic/SchemeInstantiation
 edu/ucla/phil/logic/jE	edu/ucla/phil/logic/C_j_E
 edu/ucla/phil/logic/jF	edu/ucla/phil/logic/C_j_F
 edu/ucla/phil/logic/k	edu/ucla/phil/logic/C_k_
 edu/ucla/phil/logic/kA	edu/ucla/phil/logic/C_k_A
-edu/ucla/phil/logic/kB	edu/ucla/phil/logic/C_k_B
-edu/ucla/phil/logic/kC	edu/ucla/phil/logic/C_k_C
+edu/ucla/phil/logic/kB	edu/ucla/phil/logic/FormulaParseException
+edu/ucla/phil/logic/kC	edu/ucla/phil/logic/DiagnosticsLog
 edu/ucla/phil/logic/kD	edu/ucla/phil/logic/C_k_D
 edu/ucla/phil/logic/kE	edu/ucla/phil/logic/C_k_E
 edu/ucla/phil/logic/kF	edu/ucla/phil/logic/C_k_F
@@ -4572,65 +4572,65 @@ edu/ucla/phil/logic/lD	edu/ucla/phil/logic/C_l_D
 edu/ucla/phil/logic/lE	edu/ucla/phil/logic/C_l_E
 edu/ucla/phil/logic/lE$1	edu/ucla/phil/logic/C_l_E$1
 edu/ucla/phil/logic/lF	edu/ucla/phil/logic/C_l_F
-edu/ucla/phil/logic/m	edu/ucla/phil/logic/C_m_
+edu/ucla/phil/logic/m	edu/ucla/phil/logic/SingleInstanceGuard
 edu/ucla/phil/logic/mA	edu/ucla/phil/logic/C_m_A
 edu/ucla/phil/logic/mB	edu/ucla/phil/logic/C_m_B
-edu/ucla/phil/logic/mC	edu/ucla/phil/logic/C_m_C
+edu/ucla/phil/logic/mC	edu/ucla/phil/logic/HexEncoder
 edu/ucla/phil/logic/mD	edu/ucla/phil/logic/C_m_D
 edu/ucla/phil/logic/mE	edu/ucla/phil/logic/C_m_E
 edu/ucla/phil/logic/mF	edu/ucla/phil/logic/C_m_F
 edu/ucla/phil/logic/n	edu/ucla/phil/logic/C_n_
-edu/ucla/phil/logic/nA	edu/ucla/phil/logic/C_n_A
+edu/ucla/phil/logic/nA	edu/ucla/phil/logic/LogicConstants
 edu/ucla/phil/logic/nB	edu/ucla/phil/logic/C_n_B
-edu/ucla/phil/logic/nC	edu/ucla/phil/logic/C_n_C
+edu/ucla/phil/logic/nC	edu/ucla/phil/logic/OperationTerm
 edu/ucla/phil/logic/nD	edu/ucla/phil/logic/C_n_D
 edu/ucla/phil/logic/nE	edu/ucla/phil/logic/C_n_E
 edu/ucla/phil/logic/nF	edu/ucla/phil/logic/C_n_F
 edu/ucla/phil/logic/o	edu/ucla/phil/logic/C_o_
-edu/ucla/phil/logic/oA	edu/ucla/phil/logic/C_o_A
-edu/ucla/phil/logic/oB	edu/ucla/phil/logic/C_o_B
+edu/ucla/phil/logic/oA	edu/ucla/phil/logic/QuantifiedFormula
+edu/ucla/phil/logic/oB	edu/ucla/phil/logic/Base64Codec
 edu/ucla/phil/logic/oC	edu/ucla/phil/logic/C_o_C
 edu/ucla/phil/logic/oD	edu/ucla/phil/logic/C_o_D
 edu/ucla/phil/logic/oE	edu/ucla/phil/logic/C_o_E
 edu/ucla/phil/logic/oF	edu/ucla/phil/logic/C_o_F
-edu/ucla/phil/logic/p	edu/ucla/phil/logic/C_p_
-edu/ucla/phil/logic/pA	edu/ucla/phil/logic/C_p_A
+edu/ucla/phil/logic/p	edu/ucla/phil/logic/ServerUrl
+edu/ucla/phil/logic/pA	edu/ucla/phil/logic/EditableTextPane
 edu/ucla/phil/logic/pB	edu/ucla/phil/logic/C_p_B
 edu/ucla/phil/logic/pC	edu/ucla/phil/logic/C_p_C
-edu/ucla/phil/logic/pD	edu/ucla/phil/logic/C_p_D
+edu/ucla/phil/logic/pD	edu/ucla/phil/logic/Credentials
 edu/ucla/phil/logic/pE	edu/ucla/phil/logic/C_p_E
 edu/ucla/phil/logic/pF	edu/ucla/phil/logic/C_p_F
 edu/ucla/phil/logic/q	edu/ucla/phil/logic/C_q_
-edu/ucla/phil/logic/qA	edu/ucla/phil/logic/C_q_A
+edu/ucla/phil/logic/qA	edu/ucla/phil/logic/AtomicFormula
 edu/ucla/phil/logic/qB	edu/ucla/phil/logic/C_q_B
 edu/ucla/phil/logic/qC	edu/ucla/phil/logic/C_q_C
 edu/ucla/phil/logic/qD	edu/ucla/phil/logic/C_q_D
 edu/ucla/phil/logic/qE	edu/ucla/phil/logic/C_q_E
-edu/ucla/phil/logic/qF	edu/ucla/phil/logic/C_q_F
+edu/ucla/phil/logic/qF	edu/ucla/phil/logic/ConnectiveFormula
 edu/ucla/phil/logic/r	edu/ucla/phil/logic/C_r_
-edu/ucla/phil/logic/rA	edu/ucla/phil/logic/C_r_A
+edu/ucla/phil/logic/rA	edu/ucla/phil/logic/NetworkTask
 edu/ucla/phil/logic/rB	edu/ucla/phil/logic/C_r_B
 edu/ucla/phil/logic/rC	edu/ucla/phil/logic/C_r_C
-edu/ucla/phil/logic/rD	edu/ucla/phil/logic/C_r_D
+edu/ucla/phil/logic/rD	edu/ucla/phil/logic/RuleProperties
 edu/ucla/phil/logic/rE	edu/ucla/phil/logic/C_r_E
 edu/ucla/phil/logic/s	edu/ucla/phil/logic/C_s_
 edu/ucla/phil/logic/sA	edu/ucla/phil/logic/C_s_A
 edu/ucla/phil/logic/sB	edu/ucla/phil/logic/C_s_B
-edu/ucla/phil/logic/sC	edu/ucla/phil/logic/C_s_C
-edu/ucla/phil/logic/sD	edu/ucla/phil/logic/C_s_D
+edu/ucla/phil/logic/sC	edu/ucla/phil/logic/QueryResult
+edu/ucla/phil/logic/sD	edu/ucla/phil/logic/FormulaTextPane
 edu/ucla/phil/logic/sE	edu/ucla/phil/logic/C_s_E
 edu/ucla/phil/logic/t	edu/ucla/phil/logic/C_t_
-edu/ucla/phil/logic/tA	edu/ucla/phil/logic/C_t_A
+edu/ucla/phil/logic/tA	edu/ucla/phil/logic/OverrideSettings
 edu/ucla/phil/logic/tB	edu/ucla/phil/logic/C_t_B
 edu/ucla/phil/logic/tC	edu/ucla/phil/logic/C_t_C
-edu/ucla/phil/logic/tD	edu/ucla/phil/logic/C_t_D
+edu/ucla/phil/logic/tD	edu/ucla/phil/logic/MembershipFormula
 edu/ucla/phil/logic/tE	edu/ucla/phil/logic/C_t_E
 edu/ucla/phil/logic/u	edu/ucla/phil/logic/C_u_
 edu/ucla/phil/logic/u$_A	edu/ucla/phil/logic/C_u_$C__A
 edu/ucla/phil/logic/uA	edu/ucla/phil/logic/C_u_A
 edu/ucla/phil/logic/uA$_A	edu/ucla/phil/logic/C_u_A$C__A
-edu/ucla/phil/logic/uB	edu/ucla/phil/logic/C_u_B
-edu/ucla/phil/logic/uC	edu/ucla/phil/logic/C_u_C
+edu/ucla/phil/logic/uB	edu/ucla/phil/logic/BaseDialog
+edu/ucla/phil/logic/uC	edu/ucla/phil/logic/UserSetup
 edu/ucla/phil/logic/uD	edu/ucla/phil/logic/C_u_D
 edu/ucla/phil/logic/uE	edu/ucla/phil/logic/C_u_E
 edu/ucla/phil/logic/uE$1	edu/ucla/phil/logic/C_u_E$1
@@ -4650,7 +4650,7 @@ edu/ucla/phil/logic/uE$6	edu/ucla/phil/logic/C_u_E$6
 edu/ucla/phil/logic/uE$7	edu/ucla/phil/logic/C_u_E$7
 edu/ucla/phil/logic/uE$8	edu/ucla/phil/logic/C_u_E$8
 edu/ucla/phil/logic/uE$9	edu/ucla/phil/logic/C_u_E$9
-edu/ucla/phil/logic/v	edu/ucla/phil/logic/C_v_
+edu/ucla/phil/logic/v	edu/ucla/phil/logic/ResponseHandler
 edu/ucla/phil/logic/vA	edu/ucla/phil/logic/C_v_A
 edu/ucla/phil/logic/vB	edu/ucla/phil/logic/C_v_B
 edu/ucla/phil/logic/vC	edu/ucla/phil/logic/C_v_C
@@ -4658,25 +4658,25 @@ edu/ucla/phil/logic/vD	edu/ucla/phil/logic/C_v_D
 edu/ucla/phil/logic/vE	edu/ucla/phil/logic/C_v_E
 edu/ucla/phil/logic/w	edu/ucla/phil/logic/C_w_
 edu/ucla/phil/logic/wA	edu/ucla/phil/logic/C_w_A
-edu/ucla/phil/logic/wB	edu/ucla/phil/logic/C_w_B
+edu/ucla/phil/logic/wB	edu/ucla/phil/logic/PreferencesFile
 edu/ucla/phil/logic/wC	edu/ucla/phil/logic/C_w_C
 edu/ucla/phil/logic/wD	edu/ucla/phil/logic/C_w_D
 edu/ucla/phil/logic/wE	edu/ucla/phil/logic/C_w_E
 edu/ucla/phil/logic/x	edu/ucla/phil/logic/C_x_
-edu/ucla/phil/logic/xA	edu/ucla/phil/logic/C_x_A
+edu/ucla/phil/logic/xA	edu/ucla/phil/logic/BusyIndicator
 edu/ucla/phil/logic/xB	edu/ucla/phil/logic/C_x_B
 edu/ucla/phil/logic/xC	edu/ucla/phil/logic/C_x_C
-edu/ucla/phil/logic/xD	edu/ucla/phil/logic/C_x_D
+edu/ucla/phil/logic/xD	edu/ucla/phil/logic/IdentityFormula
 edu/ucla/phil/logic/xE	edu/ucla/phil/logic/C_x_E
 edu/ucla/phil/logic/y	edu/ucla/phil/logic/C_y_
-edu/ucla/phil/logic/yA	edu/ucla/phil/logic/C_y_A
+edu/ucla/phil/logic/yA	edu/ucla/phil/logic/Formula
 edu/ucla/phil/logic/yB	edu/ucla/phil/logic/C_y_B
 edu/ucla/phil/logic/yC	edu/ucla/phil/logic/C_y_C
 edu/ucla/phil/logic/yD	edu/ucla/phil/logic/C_y_D
 edu/ucla/phil/logic/yE	edu/ucla/phil/logic/C_y_E
-edu/ucla/phil/logic/z	edu/ucla/phil/logic/C_z_
+edu/ucla/phil/logic/z	edu/ucla/phil/logic/TheoremTable
 edu/ucla/phil/logic/zA	edu/ucla/phil/logic/C_z_A
-edu/ucla/phil/logic/zB	edu/ucla/phil/logic/C_z_B
-edu/ucla/phil/logic/zC	edu/ucla/phil/logic/C_z_C
-edu/ucla/phil/logic/zD	edu/ucla/phil/logic/C_z_D
+edu/ucla/phil/logic/zB	edu/ucla/phil/logic/RuleTable
+edu/ucla/phil/logic/zC	edu/ucla/phil/logic/MainMenu
+edu/ucla/phil/logic/zD	edu/ucla/phil/logic/Scrambler
 edu/ucla/phil/logic/zE	edu/ucla/phil/logic/C_z_E

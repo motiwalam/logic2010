@@ -7,7 +7,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import javax.swing.JPanel;
 
-class C__B extends Hashtable implements C_n_A {
+class C__B extends Hashtable implements LogicConstants {
    Vector f925 = null;
    int f926 = 0;
 
@@ -24,7 +24,7 @@ class C__B extends Hashtable implements C_n_A {
    }
 
    boolean m1570(String s, String s1, boolean flag) {
-      if (!C_i_.m1852(s1, flag)) {
+      if (!SimpleTerm.m1852(s1, flag)) {
          return false;
       } else {
          this.put(s, s1);
@@ -36,16 +36,16 @@ class C__B extends Hashtable implements C_n_A {
       return this.m1570(s, s1, false);
    }
 
-   boolean m1572(C_RF c_rf, C_RF c_rf1, C_MB c_mb) {
-      return c_rf1 == null ? true : this.m1573(c_rf, c_rf1, c_mb.m1095(c_rf, c_rf1));
+   boolean m1572(Expression expression, Expression expression1, C_MB c_mb) {
+      return expression1 == null ? true : this.m1573(expression, expression1, c_mb.m1095(expression, expression1));
    }
 
-   boolean m1573(C_RF c_rf, C_RF c_rf1, int[][] aint) {
-      if (c_rf1 == null) {
+   boolean m1573(Expression expression, Expression expression1, int[][] aint) {
+      if (expression1 == null) {
          return true;
       } else {
-         Vector vector = c_rf.m1243();
-         Vector vector1 = c_rf1.m1243();
+         Vector vector = expression.m1243();
+         Vector vector1 = expression1.m1243();
          int i = vector.size();
 
          for (int j = 0; j < i; j++) {
@@ -70,14 +70,14 @@ class C__B extends Hashtable implements C_n_A {
       }
    }
 
-   boolean m1574(C_RF c_rf, C_RF c_rf1, C_MB c_mb, C_a_ c_a_) {
-      return this.m1575(c_rf, c_rf1, c_mb.m1095(c_rf, c_rf1), c_a_);
+   boolean m1574(Expression expression, Expression expression1, C_MB c_mb, DerivationLineChecker derivationlinechecker) {
+      return this.m1575(expression, expression1, c_mb.m1095(expression, expression1), derivationlinechecker);
    }
 
-   boolean m1575(C_RF c_rf, C_RF c_rf1, int[][] aint, C_a_ c_a_) {
-      C_G c_g = c_a_ == null ? null : c_a_.f935;
-      Vector vector = c_rf.m1243();
-      Vector vector1 = c_rf1.m1243();
+   boolean m1575(Expression expression, Expression expression1, int[][] aint, DerivationLineChecker derivationlinechecker) {
+      DerivationLine derivationline = derivationlinechecker == null ? null : derivationlinechecker.f935;
+      Vector vector = expression.m1243();
+      Vector vector1 = expression1.m1243();
       C_L c_l = new C_L();
       c_l.setSize(vector1.size());
       int i = vector.size();
@@ -95,7 +95,7 @@ class C__B extends Hashtable implements C_n_A {
          for (int i1 = 0; i1 < i; i1++) {
             String s = c__b1.m1569(astring[i1]);
             if (s == null) {
-               s = C_i_A.m1853(this.f926++);
+               s = SchematicLetter.m1853(this.f926++);
                c__b1.m1570(astring[i1], s, true);
             }
 
@@ -107,57 +107,57 @@ class C__B extends Hashtable implements C_n_A {
             }
          }
 
-         if (this.f926 != 0 && c_g != null) {
-            if (c_g.f317.f915.serialMode && c_a_.f956 == null) {
-               c_a_.m1621("dererr064");
-               c_g.f317.f915.complete = false;
+         if (this.f926 != 0 && derivationline != null) {
+            if (derivationline.f317.f915.serialMode && derivationlinechecker.f956 == null) {
+               derivationlinechecker.m1621("dererr064");
+               derivationline.f317.f915.complete = false;
                return false;
             }
 
-            C_j_D c_j_d = new C_j_D();
+            SchemeInstantiation schemeinstantiation = new SchemeInstantiation();
             C_PB[] ac_pb = new C_PB[this.f926];
 
             for (int j1 = 0; j1 < this.f926; j1++) {
-               c_j_d.m1886(ac_pb[j1] = new C_PB(C_i_A.m1853(j1)));
+               schemeinstantiation.m1886(ac_pb[j1] = new C_PB(SchematicLetter.m1853(j1)));
             }
 
-            C_f_ c_f_ = new C_f_(c_j_d, 50, c_g.f317.f915.frame, true);
+            C_f_ c_f_ = new C_f_(schemeinstantiation, 50, derivationline.f317.f915.frame, true);
             JPanel jpanel = new JPanel();
             jpanel.setLayout(new C_m_A(0));
             String s1 = this.f926 == 1 ? "" : "s";
             String s2 = this.f926 == 1 ? "a " : "";
             jpanel.add(new C_ZE("Given the expression"));
-            C_RF c_rf2 = c_rf1.m1237();
-            c_rf2.m1241(c_l);
-            String s3 = c_rf2.toString();
+            Expression expression2 = expression1.copy();
+            expression2.m1241(c_l);
+            String s3 = expression2.toString();
             C_CB c_cb = m1577(s3, 0, this.f926);
             jpanel.add(LogicProgram.m991(s3, 0, 14, 250, c_cb));
             jpanel.add(new C_ZE("please choose " + s2 + "symbol" + s1 + " for"));
             jpanel.add(new C_ZE("the following bound variable" + s1));
             jpanel.add(c_f_);
             String[] astring1 = new String[]{"OK", "Cancel"};
-            C_UA c_ua = new C_UA(c_g.f317.f915.frame, "Line " + c_g.m30(), jpanel, astring1);
-            c_ua.m1314(0);
-            c_f_.m1801(c_ua);
-            c_g.m22(true);
-            if (!c_ua.m1327(c_a_.f956, c_f_.m1803(), 0)) {
-               if (c_g.f317.f915.serialMode) {
-                  c_a_.m1621("dererr064");
-                  c_g.f317.f915.complete = false;
-                  c_ua.dispose();
+            MessageDialog messagedialog = new MessageDialog(derivationline.f317.f915.frame, "Line " + derivationline.m30(), jpanel, astring1);
+            messagedialog.m1314(0);
+            c_f_.m1801(messagedialog);
+            derivationline.m22(true);
+            if (!messagedialog.m1327(derivationlinechecker.f956, c_f_.m1803(), 0)) {
+               if (derivationline.f317.f915.serialMode) {
+                  derivationlinechecker.m1621("dererr064");
+                  derivationline.f317.f915.complete = false;
+                  messagedialog.dispose();
                   return false;
                }
 
-               Rectangle rectangle = LogicProgram.m1035(c_g.f324, null);
-               c_ua.pack();
-               c_ua.m1322(new Point(rectangle.x, rectangle.y + rectangle.height));
+               Rectangle rectangle = LogicProgram.m1035(derivationline.f324, null);
+               messagedialog.pack();
+               messagedialog.m1322(new Point(rectangle.x, rectangle.y + rectangle.height));
             } else {
-               c_ua.dispose();
+               messagedialog.dispose();
             }
 
-            if (c_ua.f790 != 1 && c_ua.f790 != -1) {
-               if ((c_j_d = c_f_.m1802()) == null) {
-                  c_g.m12(c_f_.f1099, c_f_.f1100);
+            if (messagedialog.f790 != 1 && messagedialog.f790 != -1) {
+               if ((schemeinstantiation = c_f_.m1802()) == null) {
+                  derivationline.m12(c_f_.f1099, c_f_.f1100);
                   return false;
                }
 
@@ -172,9 +172,11 @@ class C__B extends Hashtable implements C_n_A {
                   if (aint[k1] != null && aint[k1].length != 0) {
                      String s4 = this.m1569(astring[k1]);
                      if (s4 == null) {
-                        C_GF c_gf = c_j_d.m1878(ac_pb[this.f926++]);
-                        if (c_gf != null && !this.m1571(astring[k1], c_gf.f368.f739)) {
-                           c_g.m553("dererr060", c_a_, C_H.m666("variable name", "\\l" + c_gf.f368.f739 + "\\l"));
+                        LetterReplacement letterreplacement = schemeinstantiation.m1878(ac_pb[this.f926++]);
+                        if (letterreplacement != null && !this.m1571(astring[k1], letterreplacement.f368.symbol)) {
+                           derivationline.m553(
+                              "dererr060", derivationlinechecker, Message.params("variable name", "\\l" + letterreplacement.f368.symbol + "\\l")
+                           );
                            return false;
                         }
                      }
@@ -184,16 +186,16 @@ class C__B extends Hashtable implements C_n_A {
                }
             }
 
-            c_g.m11("dererr028");
-            c_g.f317.f915.abort(true);
+            derivationline.m11("dererr028");
+            derivationline.f317.f915.abort(true);
             return false;
          }
 
-         c_rf1.m1241(c_l);
-         this.f925 = c_rf1.m1259();
+         expression1.m1241(c_l);
+         this.f925 = expression1.m1259();
          if (this.f925 != null) {
-            if (c_g != null) {
-               c_g.m550("dererr061", c_a_);
+            if (derivationline != null) {
+               derivationline.m550("dererr061", derivationlinechecker);
             }
 
             return false;
@@ -203,14 +205,14 @@ class C__B extends Hashtable implements C_n_A {
       }
    }
 
-   boolean m1576(C_RF c_rf, C_RF c_rf1, C_j_D c_j_d) {
+   boolean m1576(Expression expression, Expression expression1, SchemeInstantiation schemeinstantiation) {
       C_MB c_mb = new C_MB();
-      C_RF c_rf2 = c_rf.m1239(c_j_d, c_mb);
-      int[][] aint = c_mb.m1095(c_rf, c_rf2);
-      if (!this.m1573(c_rf, c_rf1, aint)) {
+      Expression expression2 = expression.m1239(schemeinstantiation, c_mb);
+      int[][] aint = c_mb.m1095(expression, expression2);
+      if (!this.m1573(expression, expression1, aint)) {
          return false;
       } else {
-         return !this.m1575(c_rf, c_rf2, aint, null) ? false : c_rf2.m1235(c_rf1);
+         return !this.m1575(expression, expression2, aint, null) ? false : expression2.m1235(expression1);
       }
    }
 
@@ -219,7 +221,7 @@ class C__B extends Hashtable implements C_n_A {
 
       for (int k = 0; k < j; k++) {
          C_n_F c_n_f = new C_n_F();
-         String s1 = C_i_A.m1853(i + k);
+         String s1 = SchematicLetter.m1853(i + k);
          int l = -1;
 
          while ((l = s.indexOf(s1, l + 1)) != -1) {
@@ -232,8 +234,8 @@ class C__B extends Hashtable implements C_n_A {
       return C_CB.m420(vector);
    }
 
-   boolean m1578(C_RF c_rf) {
-      Vector vector = c_rf.m1243();
+   boolean m1578(Expression expression) {
+      Vector vector = expression.m1243();
       int i = vector.size();
 
       for (int j = 0; j < i; j++) {
@@ -246,7 +248,7 @@ class C__B extends Hashtable implements C_n_A {
    }
 
    static String m1579(Vector vector, int i) {
-      return ((C_RF)vector.elementAt(i)).m1217(0).m1214();
+      return ((Expression)vector.elementAt(i)).getChild(0).getSymbol();
    }
 
    String m1580() {

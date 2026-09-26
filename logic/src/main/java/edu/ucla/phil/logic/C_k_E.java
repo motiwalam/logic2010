@@ -4,26 +4,26 @@ import java.awt.BorderLayout;
 import java.util.Hashtable;
 import javax.swing.BorderFactory;
 
-class C_k_E extends C_LB implements C_n_A {
+class C_k_E extends SizedPanel implements LogicConstants {
    LPTruthAnalysis f1200;
    C_XF f1201;
    C_B f1202;
    C_m_F f1203;
    C_ZE f1204;
-   C_TA f1205;
-   C_TA f1206;
-   C_TA f1207;
+   CellPanel f1205;
+   CellPanel f1206;
+   CellPanel f1207;
    C_K f1208;
    C_d_ f1209;
    C_RC f1210;
    String f1211;
    String f1212;
-   static String[] f1213 = LogicProgram.f596;
+   static String[] f1213 = LogicProgram.symbols;
    C_HA f1214;
    int f1215;
    int f1216;
    int f1217;
-   C_VC f1218;
+   ArgumentParser f1218;
    boolean f1219;
    boolean f1220 = false;
 
@@ -36,13 +36,13 @@ class C_k_E extends C_LB implements C_n_A {
       this.f1212 = null;
       this.setLayout(new BorderLayout());
       this.f1204 = new C_ZE("", 2);
-      this.f1205 = new C_TA();
+      this.f1205 = new CellPanel();
       this.f1210 = new C_RC(this);
-      this.add(this.f1207 = new C_TA(), "West");
+      this.add(this.f1207 = new CellPanel(), "West");
       this.f1207.setLayout(new BorderLayout());
       this.f1209 = new C_d_(this);
       this.f1201 = new C_XF(this);
-      this.f1206 = new C_TA();
+      this.f1206 = new CellPanel();
       this.f1206.setBorder(BorderFactory.createEtchedBorder());
       this.f1206.setLayout(new C_m_A(17));
       this.f1206.add(this.f1202 = new C_B(this));
@@ -89,10 +89,10 @@ class C_k_E extends C_LB implements C_n_A {
       this.f1201.m1521(null);
    }
 
-   void m1910(C_XD c_xd) {
+   void m1910(TaggedRecord taggedrecord) {
       this.m1908();
-      this.m1913(c_xd.m1494());
-      this.f1212 = LPTruthAnalysis.getProblemStatement(c_xd);
+      this.m1913(taggedrecord.getName());
+      this.f1212 = LPTruthAnalysis.getProblemStatement(taggedrecord);
       if (this.f1212 == null) {
          this.f1200.titlePanel.m1823("");
       } else {
@@ -100,11 +100,11 @@ class C_k_E extends C_LB implements C_n_A {
       }
 
       this.f1200.titlePanel.f1131.validate();
-      this.f1218 = new C_VC(this.f1212);
+      this.f1218 = new ArgumentParser(this.f1212);
       this.f1214 = new C_HA(this.f1218);
       this.f1216 = this.f1218.f827.length;
       this.f1217 = this.f1214.f379.size();
-      this.f1200.assumeTautology = LPTruthAnalysis.assumeTautology(c_xd);
+      this.f1200.assumeTautology = LPTruthAnalysis.assumeTautology(taggedrecord);
       if (this.f1200.assumeTautology) {
          this.f1209.m1673("Please complete a truth table for this formula.");
          this.f1209.f1033.setVisible(false);
@@ -113,11 +113,11 @@ class C_k_E extends C_LB implements C_n_A {
       }
 
       Hashtable hashtable = new Hashtable();
-      int[] aint = c_xd.m1477('@');
+      int[] aint = taggedrecord.m1477('@');
       int i = aint.length;
 
       for (int j = 0; j < i; j++) {
-         String s = c_xd.m1483(aint[j]);
+         String s = taggedrecord.valueAt(aint[j]);
          int k = s.indexOf(58);
          if (k != -1) {
             String s1 = s.substring(0, k);
@@ -135,13 +135,13 @@ class C_k_E extends C_LB implements C_n_A {
       }
 
       if (!this.f1200.assumeTautology) {
-         Integer integer = c_xd.m1485(c_xd.m1475('*'));
+         Integer integer = taggedrecord.m1485(taggedrecord.indexOfTag('*'));
          this.f1215 = integer == null ? -1 : integer;
-         integer = c_xd.m1485(c_xd.m1475('#'));
+         integer = taggedrecord.m1485(taggedrecord.indexOfTag('#'));
          this.f1201.f892 = integer == null ? -1 : integer;
       }
 
-      String s2 = c_xd.m1483(c_xd.m1475('&'));
+      String s2 = taggedrecord.valueAt(taggedrecord.indexOfTag('&'));
       if (s2 != null || this.f1200.completeSetup) {
          this.f1205.add(this.f1203 = new C_m_F(this));
          this.f1203.m1952(s2);
@@ -167,8 +167,8 @@ class C_k_E extends C_LB implements C_n_A {
 
    String m1912() {
       String s = "";
-      s = s + C_XD.m1508(this.f1211, '$');
-      s = s + C_XD.m1508(this.f1212, '=');
+      s = s + TaggedRecord.m1508(this.f1211, '$');
+      s = s + TaggedRecord.m1508(this.f1212, '=');
       Hashtable hashtable = this.f1201.m1524();
 
       for (int i = 0; i < this.f1201.f894; i++) {
@@ -181,7 +181,7 @@ class C_k_E extends C_LB implements C_n_A {
                   s1 = s1 + (k == 0 ? ":" : ".") + astring[k];
                }
 
-               s = s + C_XD.m1508(s1, '@');
+               s = s + TaggedRecord.m1508(s1, '@');
             }
          }
       }
@@ -196,7 +196,7 @@ class C_k_E extends C_LB implements C_n_A {
          s = s + this.f1215 + "`*";
       }
 
-      return s + C_XD.m1508(this.f1203 == null ? null : this.f1203.m1953(), '&');
+      return s + TaggedRecord.m1508(this.f1203 == null ? null : this.f1203.m1953(), '&');
    }
 
    void m1913(String s) {

@@ -3,14 +3,14 @@ package edu.ucla.phil.logic;
 import java.util.Vector;
 
 class C_m_B {
-   C_RF f1276;
-   C_RF f1277;
+   Expression f1276;
+   Expression f1277;
    C_MB f1278;
-   C_i_[] f1279;
+   SimpleTerm[] f1279;
 
-   C_m_B(C_RF c_rf, C_RF c_rf1, C_MB c_mb, Vector vector) {
-      this.f1276 = c_rf;
-      this.f1277 = c_rf1;
+   C_m_B(Expression expression, Expression expression1, C_MB c_mb, Vector vector) {
+      this.f1276 = expression;
+      this.f1277 = expression1;
       this.f1278 = c_mb;
    }
 

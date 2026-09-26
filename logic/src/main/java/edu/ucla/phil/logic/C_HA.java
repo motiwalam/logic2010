@@ -3,45 +3,45 @@ package edu.ucla.phil.logic;
 import java.util.Vector;
 
 class C_HA {
-   C_RF f377;
-   C_VC f378;
+   Expression f377;
+   ArgumentParser f378;
    Vector f379;
    boolean[] f380;
 
-   C_HA(C_RF c_rf) {
+   C_HA(Expression expression) {
       this.f378 = null;
       this.f379 = new Vector();
-      this.m672(this.f377 = c_rf);
+      this.m672(this.f377 = expression);
       this.m675();
    }
 
-   C_HA(C_VC c_vc) {
+   C_HA(ArgumentParser argumentparser) {
       this.f377 = null;
-      this.f378 = c_vc;
+      this.f378 = argumentparser;
       this.f379 = new Vector();
-      int i = c_vc.f827.length;
+      int i = argumentparser.f827.length;
 
       for (int j = 0; j < i; j++) {
-         this.m672(c_vc.f827[j]);
+         this.m672(argumentparser.f827[j]);
       }
 
-      this.m672(c_vc.f828);
+      this.m672(argumentparser.f828);
       this.m675();
    }
 
-   void m672(C_RF c_rf) {
-      if (c_rf instanceof C_q_F) {
-         int i = c_rf.m1216();
+   void m672(Expression expression) {
+      if (expression instanceof ConnectiveFormula) {
+         int i = expression.getChildCount();
 
          for (int j = 0; j < i; j++) {
-            this.m672(c_rf.m1217(j));
+            this.m672(expression.getChild(j));
          }
-      } else if (c_rf != null && this.m678(c_rf) == -1) {
-         this.f379.addElement(c_rf);
+      } else if (expression != null && this.m678(expression) == -1) {
+         this.f379.addElement(expression);
       }
    }
 
-   C_c_B m673(String s) {
+   ErrorRef m673(String s) {
       Vector vector = new Vector();
 
       while (s != null) {
@@ -56,17 +56,17 @@ class C_HA {
          }
 
          if ((s1 = s1.trim()).length() != 0) {
-            C_RF c_rf;
+            Expression expression;
             try {
-               c_rf = LogicProgram.m1006(s1);
-            } catch (C_k_B c_k_b) {
-               c_rf = null;
+               expression = LogicProgram.m1006(s1);
+            } catch (FormulaParseException formulaparseexception) {
+               expression = null;
             }
 
-            if (c_rf == null) {
-               vector.addElement(new C_c_B("truerr016", C_H.m666("unparsed", s1)));
+            if (expression == null) {
+               vector.addElement(new ErrorRef("truerr016", Message.params("unparsed", s1)));
             } else {
-               vector.addElement(c_rf);
+               vector.addElement(expression);
             }
          }
       }
@@ -74,30 +74,30 @@ class C_HA {
       return this.m674(vector);
    }
 
-   C_c_B m674(Vector vector) {
+   ErrorRef m674(Vector vector) {
       int j = vector.size();
       int[] aint = new int[j];
 
       for (int i = 0; i < j; i++) {
          Object object = vector.elementAt(i);
-         if (object instanceof C_c_B) {
-            return (C_c_B)object;
+         if (object instanceof ErrorRef) {
+            return (ErrorRef)object;
          }
 
-         aint[i] = this.m678((C_RF)object);
+         aint[i] = this.m678((Expression)object);
          if (aint[i] == -1) {
-            return new C_c_B("truerr017", C_H.m666("sentence", object + ""));
+            return new ErrorRef("truerr017", Message.params("sentence", object + ""));
          }
 
          for (int k = 0; k < i; k++) {
             if (aint[i] == aint[k]) {
-               return new C_c_B("truerr018", C_H.m666("sentence", object + ""));
+               return new ErrorRef("truerr018", Message.params("sentence", object + ""));
             }
          }
       }
 
       if (this.f379.size() != j) {
-         return new C_c_B("truerr015");
+         return new ErrorRef("truerr015");
       } else {
          Vector vector1 = new Vector();
 
@@ -107,7 +107,7 @@ class C_HA {
 
          this.f379 = vector1;
          this.m675();
-         return new C_c_B(null);
+         return new ErrorRef(null);
       }
    }
 
@@ -133,42 +133,42 @@ class C_HA {
       }
    }
 
-   void m676(C_RF c_rf, boolean[] aboolean) {
+   void m676(Expression expression, boolean[] aboolean) {
       int i = aboolean.length;
 
       for (int j = 0; j < i; j++) {
-         aboolean[j] = this.m677(c_rf, this.m679(j));
+         aboolean[j] = this.m677(expression, this.m679(j));
       }
    }
 
-   boolean m677(C_RF c_rf, boolean[] aboolean) {
-      if (c_rf instanceof C_q_F) {
-         String s = c_rf.m1214();
+   boolean m677(Expression expression, boolean[] aboolean) {
+      if (expression instanceof ConnectiveFormula) {
+         String s = expression.getSymbol();
          if (s.equals("~")) {
-            return !this.m677(c_rf.m1217(0), aboolean);
+            return !this.m677(expression.getChild(0), aboolean);
          } else if (s.equals("&")) {
-            return this.m677(c_rf.m1217(0), aboolean) & this.m677(c_rf.m1217(1), aboolean);
+            return this.m677(expression.getChild(0), aboolean) & this.m677(expression.getChild(1), aboolean);
          } else if (s.equals("|")) {
-            return this.m677(c_rf.m1217(0), aboolean) | this.m677(c_rf.m1217(1), aboolean);
+            return this.m677(expression.getChild(0), aboolean) | this.m677(expression.getChild(1), aboolean);
          } else if (s.equals("->")) {
-            return !this.m677(c_rf.m1217(0), aboolean) | this.m677(c_rf.m1217(1), aboolean);
+            return !this.m677(expression.getChild(0), aboolean) | this.m677(expression.getChild(1), aboolean);
          } else {
-            return s.equals("<->") ? this.m677(c_rf.m1217(0), aboolean) == this.m677(c_rf.m1217(1), aboolean) : false;
+            return s.equals("<->") ? this.m677(expression.getChild(0), aboolean) == this.m677(expression.getChild(1), aboolean) : false;
          }
       } else {
-         int i = this.m678(c_rf);
+         int i = this.m678(expression);
          return i == -1 ? false : aboolean[i];
       }
    }
 
-   int m678(C_RF c_rf) {
-      if (c_rf == null) {
+   int m678(Expression expression) {
+      if (expression == null) {
          return -1;
       } else {
          int i = this.f379.size();
 
          for (int j = 0; j < i; j++) {
-            if (c_rf.m1236((C_RF)this.f379.elementAt(j), new C_MB())) {
+            if (expression.m1236((Expression)this.f379.elementAt(j), new C_MB())) {
                return j;
             }
          }
@@ -201,12 +201,12 @@ class C_HA {
       return true;
    }
 
-   static boolean m681(C_RF c_rf, C_RF c_rf1) {
-      if (c_rf instanceof C_y_A && c_rf1 instanceof C_y_A) {
-         C_q_F c_q_f = new C_q_F("<->");
-         c_q_f.m1215(c_rf);
-         c_q_f.m1215(c_rf1);
-         return new C_HA(c_q_f).m680();
+   static boolean m681(Expression expression, Expression expression1) {
+      if (expression instanceof Formula && expression1 instanceof Formula) {
+         ConnectiveFormula connectiveformula = new ConnectiveFormula("<->");
+         connectiveformula.addChild(expression);
+         connectiveformula.addChild(expression1);
+         return new C_HA(connectiveformula).m680();
       } else {
          return false;
       }

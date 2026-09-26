@@ -4,9 +4,9 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-class C_t_E extends C_ZE implements C_n_A {
+class C_t_E extends C_ZE implements LogicConstants {
    boolean f1377;
-   C_G f1378;
+   DerivationLine f1378;
    private static int f1379 = 0;
    int f1380 = ++f1379;
 
@@ -16,10 +16,10 @@ class C_t_E extends C_ZE implements C_n_A {
       this.f1378 = null;
    }
 
-   C_t_E(C_G c_g) {
+   C_t_E(DerivationLine derivationline) {
       super("", 4);
       this.f1377 = false;
-      this.f1378 = c_g;
+      this.f1378 = derivationline;
    }
 
    C_t_E m2089() {

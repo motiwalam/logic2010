@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
-class C_K extends C_TA implements ActionListener, C_LC {
+class C_K extends CellPanel implements ActionListener, C_LC {
    C_B f441;
    JButton f442;
 

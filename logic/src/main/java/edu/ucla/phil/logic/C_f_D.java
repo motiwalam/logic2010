@@ -4,7 +4,7 @@ import java.awt.AWTEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.border.EmptyBorder;
 
-class C_f_D extends C_TA implements C_LC {
+class C_f_D extends CellPanel implements C_LC {
    C_y_D f1112;
    C_ZE f1113;
    C_j_[] f1114;

@@ -8,8 +8,8 @@ import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-class C_k_ extends C_NC implements C_n_A, C_j_F, MouseListener {
-   static String[] f1193 = LogicProgram.f596;
+class C_k_ extends C_NC implements LogicConstants, C_j_F, MouseListener {
+   static String[] f1193 = LogicProgram.symbols;
    C_DD f1194;
    int[] f1195 = null;
    Point f1196 = null;
@@ -18,7 +18,7 @@ class C_k_ extends C_NC implements C_n_A, C_j_F, MouseListener {
 
    C_k_(C_DD c_dd) {
       super(LogicProgram.m995(c_dd.toString(), maggie, f1193));
-      this.setFont(LogicProgram.m1029(LogicProgram.f539 * 7 / 6));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize * 7 / 6));
       this.f1194 = c_dd;
       this.setEditable(false);
       this.addMouseListener(this);
@@ -26,7 +26,7 @@ class C_k_ extends C_NC implements C_n_A, C_j_F, MouseListener {
 
    C_k_(String s, boolean flag) {
       super(LogicProgram.m995(s, maggie, f1193));
-      this.setFont(LogicProgram.m1029(LogicProgram.f539 * 7 / 6));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize * 7 / 6));
       this.f1194 = flag ? new C_DD(s) : null;
       if (this.f1194 != null && this.f1194.f278 == null) {
          this.f1194 = null;

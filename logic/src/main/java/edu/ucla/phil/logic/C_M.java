@@ -4,8 +4,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-class C_M extends C_LB {
-   C_G f608;
+class C_M extends SizedPanel {
+   DerivationLine f608;
 
    C_M() {
       this(null, null);
@@ -23,13 +23,13 @@ class C_M extends C_LB {
       this(null, dimension);
    }
 
-   C_M(C_G c_g) {
-      this(c_g, null);
+   C_M(DerivationLine derivationline) {
+      this(derivationline, null);
    }
 
-   C_M(C_G c_g, Dimension dimension) {
+   C_M(DerivationLine derivationline, Dimension dimension) {
       super(dimension);
-      this.f608 = c_g;
+      this.f608 = derivationline;
    }
 
    @Override
@@ -40,11 +40,11 @@ class C_M extends C_LB {
 
    void m1087(Graphics graphics) {
       if (this.f608 != null && this.getComponentCount() == 0) {
-         C__ c__ = this.f608.f317;
-         if (c__ != null) {
-            Rectangle rectangle = LogicProgram.m1035(this, c__.f915.problem);
-            c__.m1552(graphics, rectangle);
-            c__ = c__.f916;
+         DerivationBox derivationbox = this.f608.f317;
+         if (derivationbox != null) {
+            Rectangle rectangle = LogicProgram.m1035(this, derivationbox.f915.problem);
+            derivationbox.m1552(graphics, rectangle);
+            derivationbox = derivationbox.f916;
          }
       }
    }

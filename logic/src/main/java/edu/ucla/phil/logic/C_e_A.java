@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import javax.swing.JCheckBox;
 
-class C_e_A extends C_LB {
+class C_e_A extends SizedPanel {
    C_IE f1064;
    int f1065;
    int f1066;
@@ -89,7 +89,7 @@ class C_e_A extends C_LB {
          if (this.f1064.f423 == 0) {
             JCheckBox jcheckbox1 = (JCheckBox)this.f1068.m1197(new Point(0, 0));
             if (jcheckbox1.isSelected()) {
-               vector.addElement(new C_e_());
+               vector.addElement(new ExpressionPath());
             }
          } else {
             for (int i = 0; i < this.f1067; i++) {
@@ -104,9 +104,9 @@ class C_e_A extends C_LB {
                   JCheckBox jcheckbox = (JCheckBox)this.f1068.m1197(new Point(i1, i));
                   aint[this.f1064.f423 - 1] = i1;
                   if (jcheckbox.isSelected()) {
-                     C_e_ c_e_ = new C_e_();
-                     c_e_.m1747(aint);
-                     vector.addElement(c_e_);
+                     ExpressionPath expressionpath = new ExpressionPath();
+                     expressionpath.m1747(aint);
+                     vector.addElement(expressionpath);
                   }
                }
             }
@@ -133,9 +133,9 @@ class C_e_A extends C_LB {
                for (int k1 = 0; k1 < this.f1066; k1++) {
                   C_d_E c_d_e1 = (C_d_E)this.f1068.m1197(new Point(k1, l));
                   aint[this.f1064.f423 - 1] = k1;
-                  C_e_ c_e_1 = new C_e_();
-                  c_e_1.m1747(aint);
-                  hashtable.put(c_e_1, new Integer(c_d_e1.m1744()));
+                  ExpressionPath expressionpath1 = new ExpressionPath();
+                  expressionpath1.m1747(aint);
+                  hashtable.put(expressionpath1, new Integer(c_d_e1.m1744()));
                }
             }
 

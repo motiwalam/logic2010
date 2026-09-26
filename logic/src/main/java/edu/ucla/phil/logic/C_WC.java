@@ -5,14 +5,14 @@ import java.io.OutputStream;
 
 public class C_WC extends OutputStream {
    OutputStream f855;
-   C_o_B f856;
+   Base64Codec f856;
    byte[] f857;
    int f858;
    boolean f859;
 
    public C_WC(OutputStream outputstream) {
       this.f855 = outputstream;
-      this.f856 = new C_o_B();
+      this.f856 = new Base64Codec();
       this.f857 = null;
       this.f858 = 0;
       this.f859 = false;

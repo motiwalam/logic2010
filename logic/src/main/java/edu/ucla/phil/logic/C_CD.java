@@ -20,16 +20,16 @@ class C_CD {
    }
 
    void m424() {
-      C_H c_h = C_h_E.m411("symnot001");
-      this.f258 = c_h.f370;
-      this.f259 = C_H.m661(c_h.f372, m425(this.f261, this.f262, this.f263));
-      this.f264 = new C_RE(c_h.f373);
+      Message message = C_h_E.get("symnot001");
+      this.f258 = message.id;
+      this.f259 = Message.substitute(message.text, m425(this.f261, this.f262, this.f263));
+      this.f264 = new C_RE(message.buttons);
    }
 
    static Hashtable m425(C_d_C c_d_c, Vector vector, Vector vector1) {
       String s = C_f_A.m1807(c_d_c.m1682(), vector1, vector);
       String s1 = c_d_c.m1729(vector1, vector);
-      return C_H.m667("right statement", s, "right type", s1);
+      return Message.params("right statement", s, "right type", s1);
    }
 
    void m426() {

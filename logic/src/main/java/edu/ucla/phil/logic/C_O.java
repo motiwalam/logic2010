@@ -2,37 +2,37 @@ package edu.ucla.phil.logic;
 
 import javax.swing.SwingUtilities;
 
-class C_O extends C_e_D {
+class C_O extends ProblemSet {
    @Override
-   void m1099(C_U.C__A c_u$c__a) {
+   void m1099(LogicModule.C__A logicmodule$c__a) {
       LPTruthAnalysis.restating = true;
-      C_e_D.C__A c_e_d$c__a = new C_e_D.C__A(this.size(), new C_XD(), new LPTruthAnalysis(false), c_u$c__a);
-      SwingUtilities.invokeLater(c_e_d$c__a);
+      ProblemSet.C__A problemset$c__a = new ProblemSet.C__A(this.size(), new TaggedRecord(), new LPTruthAnalysis(false), logicmodule$c__a);
+      SwingUtilities.invokeLater(problemset$c__a);
    }
 
    @Override
-   C_f_F m1102(String s, boolean flag) {
+   ProblemEntry m1102(String s, boolean flag) {
       return new C_f_C(s, flag);
    }
 
    @Override
-   boolean m1103(C_XD c_xd) {
-      return LPTruthAnalysis.hasWork(c_xd);
+   boolean m1103(TaggedRecord taggedrecord) {
+      return LPTruthAnalysis.hasWork(taggedrecord);
    }
 
    @Override
-   String m1104(C_XD c_xd) {
-      return LPTruthAnalysis.getWork(c_xd);
+   String m1104(TaggedRecord taggedrecord) {
+      return LPTruthAnalysis.getWork(taggedrecord);
    }
 
    @Override
-   String m1105(C_XD c_xd) {
-      return LPTruthAnalysis.removeWork(c_xd);
+   String m1105(TaggedRecord taggedrecord) {
+      return LPTruthAnalysis.removeWork(taggedrecord);
    }
 
    @Override
-   String m1106(C_XD c_xd) {
-      return LPTruthAnalysis.getProblemStatement(c_xd);
+   String m1106(TaggedRecord taggedrecord) {
+      return LPTruthAnalysis.getProblemStatement(taggedrecord);
    }
 
    @Override

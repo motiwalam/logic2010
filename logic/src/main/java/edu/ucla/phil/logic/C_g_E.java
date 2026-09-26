@@ -24,20 +24,20 @@ class C_g_E extends C_IE {
    }
 
    boolean m1830(String s) {
-      C_OA c_oa = new C_OA("\\{;");
-      c_oa.m1132(s);
+      DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\{;");
+      delimitedtokenizer.m1132(s);
 
-      while (c_oa.m1133() != null) {
-         String s1 = c_oa.m1135();
-         Integer integer = LogicProgram.m1010(s1.trim());
+      while (delimitedtokenizer.m1133() != null) {
+         String s1 = delimitedtokenizer.m1135();
+         Integer integer = LogicProgram.parseInteger(s1.trim());
          if (integer == null) {
             return false;
          }
 
-         if (c_oa.m1134() == '{' || this.f1135 != null) {
-            while (c_oa.m1134() == '{') {
-               C_e_ c_e_ = C_e_.m1746(C_e_.m1755("{" + c_oa.m1135()));
-               if (c_e_ == null || c_e_.f1062 != this.f423) {
+         if (delimitedtokenizer.m1134() == '{' || this.f1135 != null) {
+            while (delimitedtokenizer.m1134() == '{') {
+               ExpressionPath expressionpath = ExpressionPath.m1746(ExpressionPath.m1755("{" + delimitedtokenizer.m1135()));
+               if (expressionpath == null || expressionpath.depth != this.f423) {
                   return false;
                }
 
@@ -45,7 +45,7 @@ class C_g_E extends C_IE {
                   this.f1134 = new Hashtable();
                }
 
-               this.f1134.put(c_e_, integer);
+               this.f1134.put(expressionpath, integer);
             }
          } else {
             this.f1135 = integer;
@@ -66,10 +66,10 @@ class C_g_E extends C_IE {
          Enumeration enumeration = this.f1134.keys();
 
          while (enumeration.hasMoreElements()) {
-            C_e_ c_e_ = (C_e_)enumeration.nextElement();
-            Integer integer = (Integer)this.f1134.get(c_e_);
+            ExpressionPath expressionpath = (ExpressionPath)enumeration.nextElement();
+            Integer integer = (Integer)this.f1134.get(expressionpath);
             if (integer < i) {
-               int[] aint = c_e_.m1752();
+               int[] aint = expressionpath.m1752();
                int k = aint.length;
                int j = 0;
 
@@ -78,7 +78,7 @@ class C_g_E extends C_IE {
                }
 
                if (j >= k) {
-                  hashtable.put(c_e_, integer);
+                  hashtable.put(expressionpath, integer);
                }
             }
          }
@@ -176,7 +176,7 @@ class C_g_E extends C_IE {
    Object m708(int[] aint) {
       if (aint == null ? this.f423 == 0 : aint.length == this.f423) {
          if (this.f423 != 0 && this.f1134 != null) {
-            Integer integer = (Integer)this.f1134.get(C_e_.m1746(aint));
+            Integer integer = (Integer)this.f1134.get(ExpressionPath.m1746(aint));
             return integer == null ? (this.f1135 == null ? new Integer(0) : this.f1135) : integer;
          } else {
             return this.f1135 == null ? new Integer(0) : this.f1135;

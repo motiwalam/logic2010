@@ -8,7 +8,7 @@ import javax.swing.InputMap;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-class C_u_E extends C_TA {
+class C_u_E extends CellPanel {
    LPTruthAnalysis f1399;
 
    C_u_E(LPTruthAnalysis lptruthanalysis) {
@@ -57,11 +57,11 @@ class C_u_E extends C_TA {
                C_w_A.m2149(C_u_E.this.f1399);
             }
          };
-         if (LogicProgram.m1040("workEntry") != null) {
+         if (LogicProgram.getCredentials("workEntry") != null) {
             abstractaction = new AbstractAction() {
                @Override
                public void actionPerformed(ActionEvent actionevent) {
-                  if (LogicProgram.m1040("workEntry") != null && C_u_C.m2101("workEntry", "instructor")) {
+                  if (LogicProgram.getCredentials("workEntry") != null && UserSetup.m2101("workEntry", "instructor")) {
                      C_w_A.m2146(C_u_E.this.f1399);
                   }
                }
@@ -78,7 +78,7 @@ class C_u_E extends C_TA {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
             if (C_u_E.this.f1399.checkDisabled) {
-               C_UA.m1328("Feature Disabled", "Checking is disabled for this problem.", null, null);
+               MessageDialog.showMessage("Feature Disabled", "Checking is disabled for this problem.", null, null);
             } else {
                C_u_E.this.f1399.checkProblem();
             }
@@ -133,7 +133,7 @@ class C_u_E extends C_TA {
       };
       jpanel.add(c__d = new C__D("Delete", abstractaction1, abstractaction));
       c__d.m1583("Right Click to Delete multiple problems");
-      if (!LogicProgram.f576) {
+      if (!LogicProgram.noNetwork) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {
@@ -145,7 +145,7 @@ class C_u_E extends C_TA {
          c__d.m1583("Submit");
       }
 
-      if (LogicProgram.f573 && !LPTruthAnalysis.submitExam) {
+      if (LogicProgram.printingEnabled && !LPTruthAnalysis.submitExam) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {
@@ -162,7 +162,7 @@ class C_u_E extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            LogicProgram.f586.showInFront();
+            LogicProgram.mainMenu.showInFront();
          }
       };
       jpanel.add(new C__D("Menu", abstractaction1));
@@ -182,7 +182,7 @@ class C_u_E extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("feedback");
+            String s = LogicProgram.getLink("feedback");
             C_Q.m1184(s);
          }
       };
@@ -190,20 +190,20 @@ class C_u_E extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("truHelp");
-            C_Q.m1186(LogicProgram.f550, s);
+            String s = LogicProgram.getLink("truHelp");
+            C_Q.m1186(LogicProgram.configDir, s);
          }
       };
       jpanel1.add(new C__D("Help", abstractaction1));
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("truRefs");
-            C_Q.m1186(LogicProgram.f550, s);
+            String s = LogicProgram.getLink("truRefs");
+            C_Q.m1186(LogicProgram.configDir, s);
          }
       };
       jpanel1.add(new C__D("References", abstractaction1));
-      if (C_KC.f480 && !LogicProgram.f576 && C_KC.f451 != null) {
+      if (ServerConnection.f480 && !LogicProgram.noNetwork && ServerConnection.uploadUrl != null) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {

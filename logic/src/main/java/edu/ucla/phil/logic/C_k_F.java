@@ -31,7 +31,7 @@ class C_k_F extends BufferedWriter {
 
    void m1914() {
       if (this.f1222.length() != 0) {
-         this.f1222 = C_z_D.m2218(this.f1222, this.f1221);
+         this.f1222 = Scrambler.scramble(this.f1222, this.f1221);
          this.write(this.f1222, 0, this.f1222.length());
          this.f1222 = "";
       }

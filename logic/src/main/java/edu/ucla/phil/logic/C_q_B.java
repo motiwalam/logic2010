@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Font;
 
-class C_q_B extends C_LB implements C_TE {
+class C_q_B extends SizedPanel implements C_TE {
    boolean f1341 = false;
 
    C_q_B() {

@@ -5,18 +5,18 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import javax.swing.BorderFactory;
 
-class C_m_F extends C_TA implements C_n_A, C_F, C_LC {
-   static String[] f1285 = LogicProgram.f596;
+class C_m_F extends CellPanel implements LogicConstants, C_F, C_LC {
+   static String[] f1285 = LogicProgram.symbols;
    C_k_E f1286;
    C_HA f1287;
    int f1288;
    int f1289;
    boolean f1290;
-   C_TA f1291;
+   CellPanel f1291;
    C_ZE f1292;
-   C_TA[] f1293;
-   C_TA f1294;
-   C_LB f1295;
+   CellPanel[] f1293;
+   CellPanel f1294;
+   SizedPanel f1295;
    C_a_B f1296;
    C_a_B f1297;
    C_u_ f1298;
@@ -27,33 +27,33 @@ class C_m_F extends C_TA implements C_n_A, C_F, C_LC {
       this.f1290 = false;
       this.f1288 = this.f1287 == null ? 0 : this.f1287.f379.size();
       this.f1289 = this.f1288 == 0 ? 0 : 1 << this.f1288;
-      this.f1293 = new C_TA[this.f1289];
+      this.f1293 = new CellPanel[this.f1289];
       this.setLayout(new BorderLayout());
-      this.add(this.f1291 = new C_TA(), "North");
-      this.f1291.setBackground(C_n_A.bruinBlue);
+      this.add(this.f1291 = new CellPanel(), "North");
+      this.f1291.setBackground(LogicConstants.bruinBlue);
       this.m1950();
-      this.add(this.f1294 = new C_TA(), "Center");
+      this.add(this.f1294 = new CellPanel(), "Center");
       this.f1294.setLayout(new C_m_A());
       this.f1294.setBorder(BorderFactory.createEtchedBorder());
 
       for (int i = 0; i < this.f1289; i++) {
-         C_TA c_ta = new C_TA();
+         CellPanel cellpanel = new CellPanel();
          String s = C_XF.m1523(i, this.f1288);
 
          for (int j = 0; j < this.f1288; j++) {
             C_b_A c_b_a;
-            c_ta.add(c_b_a = new C_b_A(new String[]{"T", "F"}, "?"));
+            cellpanel.add(c_b_a = new C_b_A(new String[]{"T", "F"}, "?"));
             c_b_a.setBorder(BorderFactory.createBevelBorder(0, Color.gray, Color.black));
             c_b_a.m1645(new Integer(i >> this.f1288 - j - 1 & 1));
             c_b_a.m1659(this);
          }
 
-         this.f1294.add(this.f1293[i] = c_ta);
+         this.f1294.add(this.f1293[i] = cellpanel);
       }
 
       this.m1959();
       Color[] acolor = c_k_e.f1200.colors;
-      this.f1295 = new C_LB();
+      this.f1295 = new SizedPanel();
       C_QF c_qf;
       this.f1295.setLayout(c_qf = new C_QF(2, 2, 0, 0, true, false));
       c_qf.setVgap(1);
@@ -74,8 +74,8 @@ class C_m_F extends C_TA implements C_n_A, C_F, C_LC {
       this.f1291.removeAll();
 
       for (int i = 0; i < this.f1288; i++) {
-         C_RF c_rf = (C_RF)this.f1287.f379.elementAt(i);
-         this.f1291.add(this.f1292 = new C_ZE(LogicProgram.m995(c_rf.toString(), maggie, f1285)));
+         Expression expression = (Expression)this.f1287.f379.elementAt(i);
+         this.f1291.add(this.f1292 = new C_ZE(LogicProgram.m995(expression.toString(), maggie, f1285)));
          this.f1292.setHorizontalAlignment(0);
       }
    }
@@ -120,10 +120,10 @@ class C_m_F extends C_TA implements C_n_A, C_F, C_LC {
       int i1 = s == null ? 0 : s.length();
 
       for (int j = 0; j < this.f1289; j++) {
-         C_TA c_ta = this.f1293[j];
+         CellPanel cellpanel = this.f1293[j];
 
          for (int k = 0; k < this.f1288; k++) {
-            C_b_A c_b_a = (C_b_A)c_ta.getComponent(k);
+            C_b_A c_b_a = (C_b_A)cellpanel.getComponent(k);
             c_b_a.m1650(l < i1 ? "TF".indexOf(s.charAt(l++)) : -1, false);
             this.m1958(c_b_a, false);
          }
@@ -148,10 +148,10 @@ class C_m_F extends C_TA implements C_n_A, C_F, C_LC {
             boolean flag = false;
 
             for (int l = 0; l < this.f1289; l++) {
-               C_TA c_ta = this.f1293[l];
+               CellPanel cellpanel = this.f1293[l];
 
                for (int j = 0; j < this.f1288; j++) {
-                  int k = ((C_b_A)c_ta.getComponent(j)).m1651();
+                  int k = ((C_b_A)cellpanel.getComponent(j)).m1651();
                   s = s + "?TF".charAt(k + 1);
                   if (k != -1) {
                      flag = true;
@@ -172,20 +172,20 @@ class C_m_F extends C_TA implements C_n_A, C_F, C_LC {
       return this.m1956().f427 == null;
    }
 
-   C_c_B m1956() {
+   ErrorRef m1956() {
       if (this.f1286.f1219) {
-         return new C_c_B(null, C_H.m666("summary", "Correct"));
+         return new ErrorRef(null, Message.params("summary", "Correct"));
       } else if (this.f1286.f1200.completeSetup && !this.f1290) {
-         return new C_c_B("truerr020", C_H.m666("summary", "Incomplete"));
+         return new ErrorRef("truerr020", Message.params("summary", "Incomplete"));
       } else {
          boolean flag = false;
          boolean flag1 = false;
 
          for (int i = 0; i < this.f1289; i++) {
-            C_TA c_ta = this.f1293[i];
+            CellPanel cellpanel = this.f1293[i];
 
             for (int j = 0; j < this.f1288; j++) {
-               C_b_A c_b_a = (C_b_A)c_ta.getComponent(j);
+               C_b_A c_b_a = (C_b_A)cellpanel.getComponent(j);
                int k = c_b_a.m1651();
                if (k == -1) {
                   flag = true;
@@ -196,26 +196,26 @@ class C_m_F extends C_TA implements C_n_A, C_F, C_LC {
          }
 
          if (flag1) {
-            return new C_c_B("truerr011", C_H.m666("summary", "Incorrect"));
+            return new ErrorRef("truerr011", Message.params("summary", "Incorrect"));
          } else {
-            return flag ? new C_c_B("truerr012", C_H.m666("summary", "Incomplete")) : new C_c_B(null, C_H.m666("summary", "Correct"));
+            return flag ? new ErrorRef("truerr012", Message.params("summary", "Incomplete")) : new ErrorRef(null, Message.params("summary", "Correct"));
          }
       }
    }
 
-   C_c_B m1957() {
+   ErrorRef m1957() {
       if (this.f1290) {
-         return new C_c_B(null, C_H.m666("summary", "Correct"));
+         return new ErrorRef(null, Message.params("summary", "Correct"));
       } else {
          String s = LogicProgram.m995(this.f1296.getText(), f1285, maggie);
-         C_c_B c_c_b = this.f1287.m673(s);
-         if (c_c_b.f427 != null) {
-            return (C_c_B)c_c_b.m718("summary", "Incorrect");
+         ErrorRef errorref = this.f1287.m673(s);
+         if (errorref.f427 != null) {
+            return (ErrorRef)errorref.m718("summary", "Incorrect");
          } else {
-            Integer integer = LogicProgram.m1010(this.f1297.getText());
+            Integer integer = LogicProgram.parseInteger(this.f1297.getText());
             return integer != null && integer == this.f1289
-               ? (C_c_B)c_c_b.m718("summary", "Correct")
-               : new C_c_B("truerr019", C_H.m666("summary", "Incorrect"));
+               ? (ErrorRef)errorref.m718("summary", "Correct")
+               : new ErrorRef("truerr019", Message.params("summary", "Incorrect"));
          }
       }
    }

@@ -17,7 +17,7 @@ class C_y_B extends JPanel implements C_v_D, Scrollable, MouseListener {
    MouseListener mouseListener = null;
    boolean f1450 = false;
    GridBagConstraints f1451 = new GridBagConstraints();
-   static String[] f1452 = LogicProgram.f596;
+   static String[] f1452 = LogicProgram.symbols;
 
    C_y_B() {
       this.setLayout(new GridBagLayout());
@@ -47,12 +47,12 @@ class C_y_B extends JPanel implements C_v_D, Scrollable, MouseListener {
 
    @Override
    public int getScrollableUnitIncrement(Rectangle rectangle, int i, int j) {
-      return this.m2183() > 0 ? ((C_p_A)this.f1448.elementAt(0)).getHeight() : 1;
+      return this.m2183() > 0 ? ((EditableTextPane)this.f1448.elementAt(0)).getHeight() : 1;
    }
 
    @Override
    public int getScrollableBlockIncrement(Rectangle rectangle, int i, int j) {
-      return this.m2183() > 0 ? ((C_p_A)this.f1448.elementAt(0)).getHeight() : 1;
+      return this.m2183() > 0 ? ((EditableTextPane)this.f1448.elementAt(0)).getHeight() : 1;
    }
 
    void m2180() {
@@ -62,20 +62,20 @@ class C_y_B extends JPanel implements C_v_D, Scrollable, MouseListener {
       this.f1451.gridy = 0;
    }
 
-   void m2181(C_XD c_xd) {
-      if (c_xd == null) {
+   void m2181(TaggedRecord taggedrecord) {
+      if (taggedrecord == null) {
          this.m2180();
       } else {
-         this.m2182(c_xd.m1483(c_xd.m1475('=')));
+         this.m2182(taggedrecord.valueAt(taggedrecord.indexOfTag('=')));
       }
    }
 
    void m2182(String s) {
       this.m2180();
       if (s != null) {
-         C_OA c_oa = new C_OA("\\:");
-         C_OA c_oa1 = new C_OA("\\.");
-         c_oa.m1132(s);
+         DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\:");
+         DelimitedTokenizer delimitedtokenizer1 = new DelimitedTokenizer("\\.");
+         delimitedtokenizer.m1132(s);
          this.f1451.weighty = 0.0;
          this.f1451.gridwidth = 1;
          this.f1451.gridx = 0;
@@ -101,18 +101,18 @@ class C_y_B extends JPanel implements C_v_D, Scrollable, MouseListener {
          this.f1451.gridy++;
 
          while (true) {
-            String s1 = c_oa.m1135();
+            String s1 = delimitedtokenizer.m1135();
             if (s1 == null) {
                break;
             }
 
-            c_oa1.m1132(c_oa.m1133());
-            String s2 = c_oa1.m1135();
+            delimitedtokenizer1.m1132(delimitedtokenizer.m1133());
+            String s2 = delimitedtokenizer1.m1135();
             if (s2 == null) {
                break;
             }
 
-            c_oa.m1132(c_oa1.m1133());
+            delimitedtokenizer.m1132(delimitedtokenizer1.m1133());
             this.m2185(s1, s2);
          }
 
@@ -127,21 +127,21 @@ class C_y_B extends JPanel implements C_v_D, Scrollable, MouseListener {
    String m2184() {
       int i = this.m2183();
       String s = "";
-      C_OA c_oa = new C_OA("\\:");
-      C_OA c_oa1 = new C_OA("\\.");
+      DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\:");
+      DelimitedTokenizer delimitedtokenizer1 = new DelimitedTokenizer("\\.");
 
       for (int j = 0; j < i; j++) {
-         C_p_A c_p_a = (C_p_A)this.f1448.elementAt(j);
-         C_p_A c_p_a1 = (C_p_A)this.f1449.elementAt(j);
-         if (c_p_a != null && c_p_a1 != null) {
-            String s1 = LogicProgram.m995(c_p_a.getText().trim(), f1452, maggie);
-            String s2 = c_p_a1.getText().trim();
+         EditableTextPane editabletextpane = (EditableTextPane)this.f1448.elementAt(j);
+         EditableTextPane editabletextpane1 = (EditableTextPane)this.f1449.elementAt(j);
+         if (editabletextpane != null && editabletextpane1 != null) {
+            String s1 = LogicProgram.m995(editabletextpane.getText().trim(), f1452, maggie);
+            String s2 = editabletextpane1.getText().trim();
             if (s1.length() != 0 && s2.length() != 0) {
                if (s.length() != 0) {
                   s = s + ".";
                }
 
-               s = s + c_oa.m1137(s1) + ":" + c_oa1.m1137(s2);
+               s = s + delimitedtokenizer.m1137(s1) + ":" + delimitedtokenizer1.m1137(s2);
             }
          }
       }
@@ -191,12 +191,12 @@ class C_y_B extends JPanel implements C_v_D, Scrollable, MouseListener {
       this.validate();
    }
 
-   int m2186(C_p_A c_p_a) {
-      return this.f1448.indexOf(c_p_a);
+   int m2186(EditableTextPane editabletextpane) {
+      return this.f1448.indexOf(editabletextpane);
    }
 
-   int m2187(C_p_A c_p_a) {
-      return this.f1449.indexOf(c_p_a);
+   int m2187(EditableTextPane editabletextpane) {
+      return this.f1449.indexOf(editabletextpane);
    }
 
    @Override

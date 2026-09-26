@@ -19,8 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
-class LPRecognition extends C_U {
-   int fontSize = LogicProgram.f539;
+class LPRecognition extends LogicModule {
+   int fontSize;
    Font font;
    static final String workFileName = "recwork.txt";
    static final String logFileName = "recdata.txt";
@@ -28,18 +28,18 @@ class LPRecognition extends C_U {
    static Class messageClass = C_BF.class;
    static C_j_A exercises = null;
    static C_j_A problems = null;
-   static C_BE noErrMess = null;
-   static C_BE noPrintErr = null;
-   static C_BE noCheck = null;
-   static C_BE noPrintCheck = null;
-   static C_BE noPrint = null;
-   static C_BE monoProbs = null;
-   static C_BE logPrint = null;
-   static C_BE logSubmit = null;
-   static C_BE needPrint = null;
-   static C_BE needSubmit = null;
-   static C_BE addToDB = null;
-   static C_BE updateDB = null;
+   static ProblemSelector noErrMess = null;
+   static ProblemSelector noPrintErr = null;
+   static ProblemSelector noCheck = null;
+   static ProblemSelector noPrintCheck = null;
+   static ProblemSelector noPrint = null;
+   static ProblemSelector monoProbs = null;
+   static ProblemSelector logPrint = null;
+   static ProblemSelector logSubmit = null;
+   static ProblemSelector needPrint = null;
+   static ProblemSelector needSubmit = null;
+   static ProblemSelector addToDB = null;
+   static ProblemSelector updateDB = null;
    static Vector instances = new Vector();
    static Vector activeRuleXRefs = null;
    static C_c_C printQueue = new C_c_C("Recognition");
@@ -52,7 +52,7 @@ class LPRecognition extends C_U {
    C_AB problem;
    C_h_ buttonPanel;
    JScrollPane scroller;
-   C_LB scrollPanel;
+   SizedPanel scrollPanel;
    Vector activeRules;
    C_n_F activeRange;
    boolean dontChange;
@@ -67,13 +67,14 @@ class LPRecognition extends C_U {
 
    LPRecognition(boolean flag) {
       super(flag);
+      this.fontSize = LogicProgram.fontSize;
       this.setLayout(new BorderLayout());
       this.add(this.titlePanel, "North");
       this.scroller = new JScrollPane();
       this.add(this.scroller, "Center");
       this.scroller.getVerticalScrollBar().setUnitIncrement(22);
-      this.scroller.setViewportView(this.scrollPanel = new C_LB());
-      this.scroller.setBackground(C_n_A.bruinBlue);
+      this.scroller.setViewportView(this.scrollPanel = new SizedPanel());
+      this.scroller.setBackground(LogicConstants.bruinBlue);
       this.scrollPanel.add(this.problem = new C_AB(this), "Center");
       this.add(this.buttonPanel = C_h_.m1834(this), "South");
       this.newProblem();
@@ -98,13 +99,13 @@ class LPRecognition extends C_U {
       this.removeWork();
    }
 
-   static synchronized void startup(Rectangle rectangle, C_x_A c_x_a, String s) {
+   static synchronized void startup(Rectangle rectangle, BusyIndicator busyindicator, String s) {
       if (startups == null) {
          startups = new Vector();
       }
 
       if (exercises != null || getExercises()) {
-         LPRecognition.C__A lprecognition$c__a = new LPRecognition.C__A(c_x_a, rectangle, s);
+         LPRecognition.C__A lprecognition$c__a = new LPRecognition.C__A(busyindicator, rectangle, s);
          startups.add(lprecognition$c__a);
          if (startups.size() <= 1) {
             if (problems == null) {
@@ -131,12 +132,12 @@ class LPRecognition extends C_U {
       int i = startups.size();
 
       for (int j = 0; j < i; j++) {
-         ((C_U.C__A)startups.get(i - 1 - j)).m1310();
+         ((LogicModule.C__A)startups.get(i - 1 - j)).m1310();
       }
 
       while (!startups.isEmpty()) {
-         C_U.C__A c_u$c__a = (C_U.C__A)startups.remove(0);
-         SwingUtilities.invokeLater(c_u$c__a);
+         LogicModule.C__A logicmodule$c__a = (LogicModule.C__A)startups.remove(0);
+         SwingUtilities.invokeLater(logicmodule$c__a);
       }
    }
 
@@ -150,24 +151,24 @@ class LPRecognition extends C_U {
       return rectangle;
    }
 
-   static void allocateRecModule(C_U.C__A c_u$c__a) {
+   static void allocateRecModule(LogicModule.C__A logicmodule$c__a) {
       LPRecognition lprecognition = new LPRecognition(false);
       instances.addElement(lprecognition);
-      if (c_u$c__a.f784 == null || newProblem == null) {
+      if (logicmodule$c__a.f784 == null || newProblem == null) {
          lprecognition.loadProblem((String)null);
          if (newProblem == null) {
             newProblem = lprecognition.saveProblem();
          }
       }
 
-      if (c_u$c__a.f784 != null) {
-         lprecognition.loadProblem(c_u$c__a.f784);
-         c_u$c__a.f784 = null;
+      if (logicmodule$c__a.f784 != null) {
+         lprecognition.loadProblem(logicmodule$c__a.f784);
+         logicmodule$c__a.f784 = null;
       }
 
       lprecognition.setupFrame(LPInfo.programName + ": Recognizing Rules");
       lprecognition.buttonPanel.m1836();
-      lprecognition.frame.setBounds(lprecognition.fixModuleRect(c_u$c__a.f783));
+      lprecognition.frame.setBounds(lprecognition.fixModuleRect(logicmodule$c__a.f783));
       lprecognition.frame.setVisible(true);
       lprecognition.requestFocus();
    }
@@ -231,15 +232,15 @@ class LPRecognition extends C_U {
 
    static boolean checkQuit(Hashtable hashtable, Hashtable hashtable1) {
       resetOptions();
-      readOptions(LogicProgram.m1062("options", false));
+      readOptions(LogicProgram.openDataFile("options", false));
       readOptions(LogicProgram.m1065("options", false));
       logNeeds();
       if (needPrint != null && !needPrint.m402() || needSubmit != null && !needSubmit.m402()) {
          C_a_A c_a_a = new C_a_A(readWork());
          c_a_a.m1634(readExercises());
-         C_z_C.m2215(hashtable, "recdata.txt", "P", needPrint, c_a_a);
+         MainMenu.m2215(hashtable, "recdata.txt", "P", needPrint, c_a_a);
          c_a_a.m1635();
-         C_z_C.m2215(hashtable1, "recdata.txt", "S", needSubmit, c_a_a);
+         MainMenu.m2215(hashtable1, "recdata.txt", "S", needSubmit, c_a_a);
       }
 
       resetOptions();
@@ -258,7 +259,7 @@ class LPRecognition extends C_U {
 
          while (c_a_a.hasMoreElements()) {
             String s = (String)c_a_a.nextElement();
-            if ((vector == null || !vector.contains(s)) && hasWork(new C_XD(s))) {
+            if ((vector == null || !vector.contains(s)) && hasWork(new TaggedRecord(s))) {
                vector1.add(s);
             }
          }
@@ -304,8 +305,8 @@ class LPRecognition extends C_U {
 
    void setFontSize(int i) {
       this.fontSize = i;
-      this.font = LogicProgram.m1029(i);
-      this.problem.f137.setFont(LogicProgram.m1029(i * 3 / 2));
+      this.font = LogicProgram.getFont(i);
+      this.problem.f137.setFont(LogicProgram.getFont(i * 3 / 2));
       if (this.frame != null) {
          this.frame.setFont(this.font);
       }
@@ -334,19 +335,19 @@ class LPRecognition extends C_U {
    String getChangedProblem() {
       String s = this.saveProblem();
       String s1 = this.problemIndex == -1 ? newProblem : problems.m1778(this.problemIndex);
-      return C_XD.m1500(s).equals(C_XD.m1500(s1)) ? null : s;
+      return TaggedRecord.m1500(s).equals(TaggedRecord.m1500(s1)) ? null : s;
    }
 
    static int getProblemState(String s) {
-      return new LPRecognition(false).getProblemState(new C_XD(s));
+      return new LPRecognition(false).getProblemState(new TaggedRecord(s));
    }
 
    @Override
-   int getProblemState(C_XD c_xd) {
-      if (!hasWork(c_xd)) {
+   int getProblemState(TaggedRecord taggedrecord) {
+      if (!hasWork(taggedrecord)) {
          return 0;
       } else {
-         this.loadProblem(c_xd);
+         this.loadProblem(taggedrecord);
          return this.checkProblem() ? 2 : 1;
       }
    }
@@ -361,23 +362,23 @@ class LPRecognition extends C_U {
          s = s + this.workTime + "`t";
       }
 
-      return C_XD.m1509(s);
+      return TaggedRecord.m1509(s);
    }
 
    void setupFrame(String s) {
-      this.frame = new C_0E(s);
+      this.frame = new ModuleFrame(s);
       this.setFontSize(this.fontSize);
       this.setColors(this.colors);
-      this.frame.f27 = this;
+      this.frame.module = this;
       this.frame.add(this, "Center");
    }
 
    static String getProblemStatement(String s) {
-      return getProblemStatement(new C_XD(s));
+      return getProblemStatement(new TaggedRecord(s));
    }
 
-   static String getProblemStatement(C_XD c_xd) {
-      return c_xd.m1483(c_xd.m1478("="));
+   static String getProblemStatement(TaggedRecord taggedrecord) {
+      return taggedrecord.valueAt(taggedrecord.m1478("="));
    }
 
    static synchronized boolean getProblems() {
@@ -388,29 +389,29 @@ class LPRecognition extends C_U {
          if (c_j_a == null) {
             return false;
          } else {
-            if (c_j_a.f1079 && !c_j_a.m1777(LogicProgram.f533).equals(c_j_a.f1076)) {
+            if (c_j_a.f1079 && !c_j_a.m1777(LogicProgram.user).equals(c_j_a.f1076)) {
                System.out.println("Could not digest file: recwork.txt");
-               if (!C_u_C.m2101("indigestion", "instructor")) {
+               if (!UserSetup.m2101("indigestion", "instructor")) {
                   LogicProgram.m971("not003", "recwork.txt");
                   return false;
                }
             }
 
             problems = c_j_a;
-            C_ED.f296 = C_f_F.m1816("recwork.txt", problems);
-            C_f_F.m1815(exercises, C_ED.f296);
+            C_ED.f296 = ProblemEntry.m1816("recwork.txt", problems);
+            ProblemEntry.m1815(exercises, C_ED.f296);
             return true;
          }
       }
    }
 
    static boolean getExercises() {
-      if (!C_BF.m410()) {
+      if (!C_BF.loadMessages()) {
          LogicProgram.m971("not001", "the rule recognition messages file");
          return false;
       } else {
          resetOptions();
-         readOptions(LogicProgram.m1062("options", false));
+         readOptions(LogicProgram.openDataFile("options", false));
          readOptions(LogicProgram.m1065("options", false));
          logNeeds();
          if ((exercises = readExercises()) == null) {
@@ -430,27 +431,27 @@ class LPRecognition extends C_U {
    }
 
    static boolean hasWork(String s) {
-      return hasWork(new C_XD(s));
+      return hasWork(new TaggedRecord(s));
    }
 
-   static boolean hasWork(C_XD c_xd) {
-      return c_xd.m1475('*') != -1;
+   static boolean hasWork(TaggedRecord taggedrecord) {
+      return taggedrecord.indexOfTag('*') != -1;
    }
 
-   static String getWork(C_XD c_xd) {
-      return c_xd.m1484("*");
+   static String getWork(TaggedRecord taggedrecord) {
+      return taggedrecord.m1484("*");
    }
 
    void loadProblem(String s) {
-      this.loadProblem(new C_XD(s));
+      this.loadProblem(new TaggedRecord(s));
    }
 
-   void loadProblem(C_XD c_xd) {
+   void loadProblem(TaggedRecord taggedrecord) {
       this.reset();
-      this.loadExerciseInfo(c_xd);
-      this.problem.m215(c_xd);
-      this.errorCount = c_xd.m1498();
-      this.workTime = c_xd.m1499();
+      this.loadExerciseInfo(taggedrecord);
+      this.problem.m215(taggedrecord);
+      this.errorCount = taggedrecord.m1498();
+      this.workTime = taggedrecord.m1499();
       this.loadTime = 0L;
       this.updateWorkTime();
       this.problemIndex = -1;
@@ -458,16 +459,16 @@ class LPRecognition extends C_U {
    }
 
    void loadUserProblem(String s) {
-      C_VC c_vc = new C_VC(s);
-      String s1 = c_vc.m1384();
+      ArgumentParser argumentparser = new ArgumentParser(s);
+      String s1 = argumentparser.m1384();
       if (s1 != null) {
-         Hashtable hashtable = C_H.m666("expression", LogicProgram.m995(s1, maggie, kaplan));
-         C_UA.m1329(C_BF.m411("recerr001"), hashtable, null, null);
-      } else if (!c_vc.f829 && c_vc.m1385() == 0) {
-         this.loadProblem(C_XD.m1509(C_XD.m1508(C_VC.m1383(s), '=')));
+         Hashtable hashtable = Message.params("expression", LogicProgram.m995(s1, maggie, kaplan));
+         MessageDialog.showMessage(C_BF.get("recerr001"), hashtable, null, null);
+      } else if (!argumentparser.f829 && argumentparser.m1385() == 0) {
+         this.loadProblem(TaggedRecord.m1509(TaggedRecord.m1508(ArgumentParser.m1383(s), '=')));
       } else {
-         C_H c_h = C_BF.m411("recerr002");
-         C_UA.m1329(C_BF.m411("recerr002"), null, null, null);
+         Message message = C_BF.get("recerr002");
+         MessageDialog.showMessage(C_BF.get("recerr002"), null, null, null);
       }
    }
 
@@ -480,8 +481,8 @@ class LPRecognition extends C_U {
       this.problem.m219();
    }
 
-   static String removeWork(C_XD c_xd) {
-      return c_xd.m1484("$=@~&%u!");
+   static String removeWork(TaggedRecord taggedrecord) {
+      return taggedrecord.m1484("$=@~&%u!");
    }
 
    static boolean readProblems(Reader reader, C_j_A c_j_a, boolean flag) {
@@ -493,7 +494,7 @@ class LPRecognition extends C_U {
    }
 
    static boolean readProblems(Reader reader, C_j_A c_j_a, boolean flag, boolean flag1) {
-      return C_U.readProblems(reader, c_j_a, flag, flag1);
+      return LogicModule.readProblems(reader, c_j_a, flag, flag1);
    }
 
    static boolean saveProblems() {
@@ -501,7 +502,7 @@ class LPRecognition extends C_U {
          return false;
       } else {
          try {
-            writeProblems(problems, new FileWriter(new File(LogicProgram.f555, "recwork.txt")));
+            writeProblems(problems, new FileWriter(new File(LogicProgram.workDir, "recwork.txt")));
             return true;
          } catch (IOException ioexception) {
             LogicProgram.m971("not004", "recwork.txt");
@@ -553,7 +554,7 @@ class LPRecognition extends C_U {
                }
 
                this.setProblemTitle(s2);
-               C_ED c_ed = new C_ED(C_XD.m1495(s, s2), false);
+               C_ED c_ed = new C_ED(TaggedRecord.m1495(s, s2), false);
                this.problemIndex = problems.m1771(c_ed, false);
                this.problemIndex = this.problemIndex == -1 ? problems.size() : this.problemIndex + 1;
                problems.insertElementAt(c_ed, this.problemIndex);
@@ -585,21 +586,21 @@ class LPRecognition extends C_U {
    static C_j_A readExercises(boolean flag, boolean flag1, boolean flag2) {
       C_j_A c_j_a = new C_j_A();
       if (!flag) {
-         C_XB c_xb = LogicProgram.m1062("recwork.txt", false);
-         if (c_xb == null) {
+         ScrambledReader scrambledreader = LogicProgram.openDataFile("recwork.txt", false);
+         if (scrambledreader == null) {
             LogicProgram.m971("not001", "the core Recognition exercise file");
             return null;
          }
 
-         if (!readProblems(c_xb, c_j_a, true)) {
+         if (!readProblems(scrambledreader, c_j_a, true)) {
             LogicProgram.m971("not002", "the core Recognition exercise file");
             return null;
          }
       }
 
       if (!flag1) {
-         C_XB c_xb1 = LogicProgram.m1065("recwork.txt", flag2);
-         if (c_xb1 != null && (flag ? !readProblems(c_xb1, c_j_a, true) : !mergeProblems(c_xb1, c_j_a, true))) {
+         ScrambledReader scrambledreader1 = LogicProgram.m1065("recwork.txt", flag2);
+         if (scrambledreader1 != null && (flag ? !readProblems(scrambledreader1, c_j_a, true) : !mergeProblems(scrambledreader1, c_j_a, true))) {
             LogicProgram.m971("not002", "the local Recognition exercise file");
             return null;
          }
@@ -613,26 +614,26 @@ class LPRecognition extends C_U {
          return null;
       } else {
          C_j_A c_j_a = new C_j_A();
-         C_XB c_xb = LogicProgram.m1062("recwork.txt", true);
-         if (!LogicProgram.f584 || c_xb instanceof C_b_D) {
-            if (c_xb == null) {
+         ScrambledReader scrambledreader = LogicProgram.openDataFile("recwork.txt", true);
+         if (!LogicProgram.f584 || scrambledreader instanceof PlainRecordReader) {
+            if (scrambledreader == null) {
                LogicProgram.m971("not001", "recwork.txt");
                return null;
             }
 
-            if (c_xb instanceof C_b_D) {
+            if (scrambledreader instanceof PlainRecordReader) {
                c_j_a.f1079 = true;
             }
 
-            if (!readProblems(c_xb, c_j_a, false)) {
+            if (!readProblems(scrambledreader, c_j_a, false)) {
                LogicProgram.m971("not002", "recwork.txt");
                return null;
             }
          }
 
-         if (!(c_xb instanceof C_b_D)) {
-            c_xb = LogicProgram.m1065("recwork.txt", false);
-            if (c_xb != null && !mergeProblems(c_xb, c_j_a, false)) {
+         if (!(scrambledreader instanceof PlainRecordReader)) {
+            scrambledreader = LogicProgram.m1065("recwork.txt", false);
+            if (scrambledreader != null && !mergeProblems(scrambledreader, c_j_a, false)) {
                LogicProgram.m971("not002", "recwork.txt");
                return null;
             }
@@ -644,7 +645,7 @@ class LPRecognition extends C_U {
 
    static String getExerciseTitle(String s) {
       String s1;
-      return exercises != null && (s1 = exercises.m1780(s)) != null ? C_XD.m1493(s1) : null;
+      return exercises != null && (s1 = exercises.m1780(s)) != null ? TaggedRecord.m1493(s1) : null;
    }
 
    static boolean isExercise(String s) {
@@ -652,18 +653,18 @@ class LPRecognition extends C_U {
    }
 
    static boolean isExample(String s) {
-      return exercises != null && s != null && C_XD.m1502(exercises.m1780(s));
+      return exercises != null && s != null && TaggedRecord.m1502(exercises.m1780(s));
    }
 
-   void loadExerciseInfo(C_XD c_xd) {
-      c_xd = new C_XD(exercises == null ? null : exercises.m1780(c_xd.m1494()));
-      String s = c_xd.m1494();
-      String s1 = c_xd.m1483(c_xd.m1475('o'));
+   void loadExerciseInfo(TaggedRecord taggedrecord) {
+      taggedrecord = new TaggedRecord(exercises == null ? null : exercises.m1780(taggedrecord.getName()));
+      String s = taggedrecord.getName();
+      String s1 = taggedrecord.valueAt(taggedrecord.indexOfTag('o'));
       if (s1 != null) {
          s = s1;
       }
 
-      this.probOptions = c_xd.m1506('%');
+      this.probOptions = taggedrecord.m1506('%');
       this.dontChange = this.probOptions != null && this.probOptions.containsKey("eg");
       this.errorMessagesDisabled = LogicProgram.m1060(this.forPrint ? noPrintErr : noErrMess, s);
       this.checkDisabled = LogicProgram.m1060(this.forPrint ? noPrintCheck : noCheck, s);
@@ -678,18 +679,18 @@ class LPRecognition extends C_U {
 
    static void readOptions(Reader reader) {
       if (reader != null) {
-         C_XD c_xd = new C_XD(reader, true);
+         TaggedRecord taggedrecord = new TaggedRecord(reader, true);
          String s = "";
 
-         while (c_xd.m1469()) {
-            String s1 = c_xd.m1494();
+         while (taggedrecord.readNext()) {
+            String s1 = taggedrecord.getName();
             if (s1 != null && s1.trim().equalsIgnoreCase("recognition")) {
-               int[] aint = c_xd.m1481("a+?");
+               int[] aint = taggedrecord.m1481("a+?");
                int i = aint.length;
 
                for (int j = 0; j < i; j++) {
-                  char c0 = c_xd.m1474(aint[j]);
-                  String s2 = c_xd.m1483(aint[j]);
+                  char c0 = taggedrecord.tagAt(aint[j]);
+                  String s2 = taggedrecord.valueAt(aint[j]);
                   if (c0 == 'a') {
                      activeRuleXRefs.addElement(new C_y_E(s2, null, true).m2195(s));
                   } else if (c0 == '+') {
@@ -706,82 +707,82 @@ class LPRecognition extends C_U {
                         String s3 = s2.substring(0, k).trim();
                         if (s3.equalsIgnoreCase("noErrMess")) {
                            if (noErrMess == null) {
-                              noErrMess = new C_BE();
+                              noErrMess = new ProblemSelector();
                            }
 
-                           noErrMess.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noErrMess.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("noCheck")) {
                            if (noCheck == null) {
-                              noCheck = new C_BE();
+                              noCheck = new ProblemSelector();
                            }
 
-                           noCheck.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("noPrint")) {
                            if (noPrint == null) {
-                              noPrint = new C_BE();
+                              noPrint = new ProblemSelector();
                            }
 
-                           noPrint.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("noPrintCheck")) {
                            if (noPrintCheck == null) {
-                              noPrintCheck = new C_BE();
+                              noPrintCheck = new ProblemSelector();
                            }
 
-                           noPrintCheck.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noPrintCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("noPrintErr")) {
                            if (noPrintErr == null) {
-                              noPrintErr = new C_BE();
+                              noPrintErr = new ProblemSelector();
                            }
 
-                           noPrintErr.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noPrintErr.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("monoProbs")) {
                            if (monoProbs == null) {
-                              monoProbs = new C_BE();
+                              monoProbs = new ProblemSelector();
                            }
 
-                           monoProbs.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           monoProbs.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("addToDB")) {
                            if (addToDB == null) {
-                              addToDB = new C_BE();
+                              addToDB = new ProblemSelector();
                            }
 
-                           addToDB.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           addToDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("updateDB")) {
                            if (updateDB == null) {
-                              updateDB = new C_BE();
+                              updateDB = new ProblemSelector();
                            }
 
-                           updateDB.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           updateDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("logPrint")) {
                            if (logPrint == null) {
-                              logPrint = new C_BE();
+                              logPrint = new ProblemSelector();
                            }
 
-                           logPrint.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           logPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("logSubmit")) {
                            if (logSubmit == null) {
-                              logSubmit = new C_BE();
+                              logSubmit = new ProblemSelector();
                            }
 
-                           logSubmit.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           logSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("needPrint")) {
                            if (needPrint == null) {
-                              needPrint = new C_BE();
+                              needPrint = new ProblemSelector();
                            }
 
-                           needPrint.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           needPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("needSubmit")) {
                            if (needSubmit == null) {
-                              needSubmit = new C_BE();
+                              needSubmit = new ProblemSelector();
                            }
 
-                           needSubmit.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           needSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("prefix")) {
                            s = s2.substring(k + 1);
                         } else if (s3.equalsIgnoreCase("termprefix")) {
-                           String s4 = C_KC.f471 + "." + C_KC.f472 + ".";
-                           if (C_KC.f474.length() > 0) {
-                              s4 = s4 + C_KC.f474 + ".";
+                           String s4 = ServerConnection.institution + "." + ServerConnection.term + ".";
+                           if (ServerConnection.ident.length() > 0) {
+                              s4 = s4 + ServerConnection.ident + ".";
                            }
 
                            s = s4 + s2.substring(k + 1);
@@ -792,14 +793,14 @@ class LPRecognition extends C_U {
             }
          }
 
-         c_xd.m1470();
+         taggedrecord.close();
       }
    }
 
    static void logNeeds() {
       if (needPrint != null && !needPrint.m402()) {
          if (logPrint == null) {
-            logPrint = new C_BE();
+            logPrint = new ProblemSelector();
          }
 
          logPrint.m395(needPrint);
@@ -807,21 +808,21 @@ class LPRecognition extends C_U {
 
       if (needSubmit != null && !needSubmit.m402()) {
          if (logSubmit == null) {
-            logSubmit = new C_BE();
+            logSubmit = new ProblemSelector();
          }
 
          logSubmit.m395(needSubmit);
       }
    }
 
-   boolean ruleActive(C_VB c_vb) {
-      for (C_LF c_lf : c_vb.m1374()) {
-         if (this.activeRules.indexOf(c_lf.f820) != -1) {
+   boolean ruleActive(Rule rule) {
+      for (SchematicRule schematicrule : rule.m1374()) {
+         if (this.activeRules.indexOf(schematicrule.f820) != -1) {
             return true;
          }
 
-         C_QE c_qe = c_lf.f822;
-         if (c_qe != null && this.activeRange.m1983(c_qe.f700)) {
+         Theorem theorem = schematicrule.f822;
+         if (theorem != null && this.activeRange.m1983(theorem.f700)) {
             return true;
          }
       }
@@ -829,128 +830,128 @@ class LPRecognition extends C_U {
       return false;
    }
 
-   C_VB activeRules() {
-      C_VB c_vb = new C_VB("activeRules");
+   Rule activeRules() {
+      Rule rule = new Rule("activeRules");
       int i = this.activeRules.size();
 
       for (int j = 0; j < i; j++) {
-         c_vb.m1370(LogicProgram.m1026((String)this.activeRules.elementAt(j)));
+         rule.m1370(LogicProgram.m1026((String)this.activeRules.elementAt(j)));
       }
 
       Enumeration enumeration = this.activeRange.m1985();
 
       while (enumeration.hasMoreElements()) {
-         c_vb.m1370(LogicProgram.f534.m2204((Integer)enumeration.nextElement()));
+         rule.m1370(LogicProgram.f534.m2204((Integer)enumeration.nextElement()));
       }
 
-      return c_vb;
+      return rule;
    }
 
    static int[] getExerciseIndices() {
       if (problems != null && exercises != null) {
-         C_e_ c_e_ = new C_e_();
+         ExpressionPath expressionpath = new ExpressionPath();
          int i = problems.size();
 
          for (int j = 0; j < i; j++) {
-            if (isExercise(C_XD.m1493(problems.m1778(j)))) {
-               c_e_.m1749(j);
+            if (isExercise(TaggedRecord.m1493(problems.m1778(j)))) {
+               expressionpath.m1749(j);
             }
          }
 
-         return c_e_.m1752();
+         return expressionpath.m1752();
       } else {
          return null;
       }
    }
 
    void submitExam() {
-      if (C_u_C.m2105("Recognizing Rules")) {
+      if (UserSetup.m2105("Recognizing Rules")) {
          int[] aint = getExerciseIndices();
-         C_x_A c_x_a = new C_x_A(this);
-         C_0A c_0a = C_KC.m835(c_x_a);
-         if (c_0a != null) {
+         BusyIndicator busyindicator = new BusyIndicator(this);
+         Submission submission = ServerConnection.prepareSubmission(busyindicator);
+         if (submission != null) {
             if (C_EC.m501(this, null)) {
-               submit(c_0a, aint, c_x_a);
-               C_KC.m838(c_0a, c_x_a);
-               C_j_C.m1873(c_0a);
+               submit(submission, aint, busyindicator);
+               ServerConnection.m838(submission, busyindicator);
+               AccountManager.m1873(submission);
             } else {
-               C_KC.m838(c_0a, c_x_a);
+               ServerConnection.m838(submission, busyindicator);
             }
          }
       }
    }
 
    void submitProblems() {
-      C_x_A c_x_a = new C_x_A(this);
-      C_0A c_0a = C_KC.m835(c_x_a);
-      if (c_0a != null) {
+      BusyIndicator busyindicator = new BusyIndicator(this);
+      Submission submission = ServerConnection.prepareSubmission(busyindicator);
+      if (submission != null) {
          int[] aint = C_EC.m506(this);
          if (aint == null) {
-            C_KC.m838(c_0a, c_x_a);
+            ServerConnection.m838(submission, busyindicator);
          } else {
-            submit(c_0a, aint, c_x_a);
-            C_KC.m838(c_0a, c_x_a);
-            C_j_C.m1873(c_0a);
+            submit(submission, aint, busyindicator);
+            ServerConnection.m838(submission, busyindicator);
+            AccountManager.m1873(submission);
          }
       }
    }
 
-   static void submit(C_0A c_0a, int[] aint, C_x_A c_x_a) {
+   static void submit(Submission submission, int[] aint, BusyIndicator busyindicator) {
       synchronized (problems) {
          Vector vector = new Vector();
          Vector vector1 = new Vector();
          int i = aint.length;
 
          for (int j = 0; j < i; j++) {
-            c_0a.m1();
+            submission.m1();
             String s = problems.m1778(aint[j]);
-            C_XD c_xd = new C_XD(s);
-            String s1 = getProblemStatement(c_xd);
-            c_0a.f7 = C_z_D.m2225(s1 == null ? "" : s1.trim());
+            TaggedRecord taggedrecord = new TaggedRecord(s);
+            String s1 = getProblemStatement(taggedrecord);
+            submission.problemMd5 = Scrambler.md5Base64(s1 == null ? "" : s1.trim());
             int k = getProblemState(s);
-            c_0a.f6 = C_ED.f1128[k];
-            c_0a.f8 = s;
-            c_0a.f9 = c_xd.m1494();
-            c_0a.f10 = moduleAbbrs[moduleIndex];
-            c_0a.f11 = c_xd.m1498();
-            c_0a.f12 = c_xd.m1499();
-            boolean flag = LogicProgram.m1060(logSubmit, getExerciseTitle(c_0a.f9));
-            if (C_KC.m836(c_0a, c_x_a)) {
-               vector.addElement(trimTitle(c_0a.f9));
+            submission.evaluation = C_ED.f1128[k];
+            submission.work = s;
+            submission.problemName = taggedrecord.getName();
+            submission.module = moduleAbbrs[moduleIndex];
+            submission.helpCount = taggedrecord.m1498();
+            submission.duration = taggedrecord.m1499();
+            boolean flag = LogicProgram.m1060(logSubmit, getExerciseTitle(submission.problemName));
+            if (ServerConnection.submit(submission, busyindicator)) {
+               vector.addElement(trimTitle(submission.problemName));
                if (flag) {
-                  LogicProgram.m1083("recdata.txt", "S", s, c_0a.m3());
+                  LogicProgram.m1083("recdata.txt", "S", s, submission.m3());
                }
             } else {
-               vector1.addElement(trimTitle(c_0a.f9));
+               vector1.addElement(trimTitle(submission.problemName));
                if (flag) {
                   LogicProgram.m1082("recdata.txt", "F", s);
                }
             }
          }
 
-         c_0a.m1();
-         vector.copyInto(c_0a.f15 = new String[vector.size()]);
-         vector1.copyInto(c_0a.f16 = new String[vector1.size()]);
+         submission.m1();
+         vector.copyInto(submission.f15 = new String[vector.size()]);
+         vector1.copyInto(submission.f16 = new String[vector1.size()]);
       }
    }
 
    void uploadProblems() {
-      C_x_A c_x_a = new C_x_A(this);
-      C_LD c_ld = C_KC.m840(c_x_a);
+      BusyIndicator busyindicator = new BusyIndicator(this);
+      C_LD c_ld = ServerConnection.m840(busyindicator);
       if (c_ld != null) {
          c_ld.f520 = null;
          int[] aint = C_EC.m508(this);
          if (aint == null) {
-            C_KC.m843(c_ld, c_x_a);
+            ServerConnection.m843(c_ld, busyindicator);
          } else {
-            upload(c_ld, aint, c_x_a);
-            C_KC.m843(c_ld, c_x_a);
-            C_j_C.m1875(c_ld);
+            upload(c_ld, aint, busyindicator);
+            ServerConnection.m843(c_ld, busyindicator);
+            AccountManager.m1875(c_ld);
          }
       }
    }
 
-   static void upload(C_LD c_ld, int[] aint, C_x_A c_x_a) {
+   static void upload(C_LD c_ld, int[] aint, BusyIndicator busyindicator) {
       synchronized (problems) {
          Vector vector = new Vector();
          Vector vector1 = new Vector();
@@ -959,16 +960,20 @@ class LPRecognition extends C_U {
          for (int j = 0; j < i; j++) {
             c_ld.m944();
             String s = problems.m1778(aint[j]);
-            C_f_F c_f_f = problems.m1779(aint[j]);
-            C_XD c_xd = new C_XD(s);
-            String s1 = getProblemStatement(c_xd);
-            c_ld.f510 = c_xd.m1494();
+            ProblemEntry problementry = problems.m1779(aint[j]);
+            TaggedRecord taggedrecord = new TaggedRecord(s);
+            String s1 = getProblemStatement(taggedrecord);
+            c_ld.f510 = taggedrecord.getName();
             c_ld.f511 = s1;
             c_ld.f512 = LogicProgram.m995(s1, maggie, html);
             c_ld.f514 = null;
             c_ld.f513 = moduleAbbrs[moduleIndex];
             c_ld.f515 = null;
-            if (c_f_f != null && c_f_f.f1120 == 2 && !isExercise(c_ld.f510) && c_xd.m1497() == null && C_KC.m841(c_ld, c_x_a)) {
+            if (problementry != null
+               && problementry.state == 2
+               && !isExercise(c_ld.f510)
+               && taggedrecord.m1497() == null
+               && ServerConnection.m841(c_ld, busyindicator)) {
                vector.addElement(trimTitle(c_ld.f510));
             } else {
                vector1.addElement(trimTitle(c_ld.f510));
@@ -993,16 +998,16 @@ class LPRecognition extends C_U {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         C_f_F c_f_f = problems.m1779(aint[j]);
-         int k = c_f_f.f1120;
-         C_XD c_xd = new C_XD(c_f_f.f1119);
-         String s = c_xd.m1494();
+         ProblemEntry problementry = problems.m1779(aint[j]);
+         int k = problementry.state;
+         TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
+         String s = taggedrecord.getName();
          if (!printIncorrect || k == 1) {
-            String s1 = getProblemStatement(c_xd);
+            String s1 = getProblemStatement(taggedrecord);
             s1 = LogicProgram.m995(s1, maggie, kaplan);
-            String s2 = c_xd.m1483(c_xd.m1475('*'));
+            String s2 = taggedrecord.valueAt(taggedrecord.indexOfTag('*'));
             LPRecognition lprecognition = new LPRecognition(true);
-            lprecognition.loadProblem(c_f_f.f1119);
+            lprecognition.loadProblem(problementry.name);
             JPanel jpanel = new JPanel();
             jpanel.setLayout(new C_m_A());
             JPanel jpanel1 = new JPanel();
@@ -1015,16 +1020,16 @@ class LPRecognition extends C_U {
             c_nc.setBackground(LogicProgram.f605[1]);
             jpanel.add(jpanel1);
             if (!flag && !lprecognition.checkDisabled && s2 != null) {
-               C_e_E c_e_e = new C_e_E("Answer: " + s2);
-               c_e_e.setBackground(LogicProgram.f605[1]);
-               jpanel.add(c_e_e);
+               StyledTextPane styledtextpane = new StyledTextPane("Answer: " + s2);
+               styledtextpane.setBackground(LogicProgram.f605[1]);
+               jpanel.add(styledtextpane);
             }
 
             vector.add(jpanel);
          }
 
          if (LogicProgram.m1060(logPrint, getExerciseTitle(s))) {
-            LogicProgram.m1082("recdata.txt", flag ? "R" : "P", c_f_f.f1119);
+            LogicProgram.m1082("recdata.txt", flag ? "R" : "P", problementry.name);
          }
       }
 
@@ -1036,90 +1041,90 @@ class LPRecognition extends C_U {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         C_f_F c_f_f = problems.m1779(aint[j]);
-         C_XD c_xd = new C_XD(c_f_f.f1119);
-         String s = c_xd.m1494();
-         String s1 = getProblemStatement(c_xd);
+         ProblemEntry problementry = problems.m1779(aint[j]);
+         TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
+         String s = taggedrecord.getName();
+         String s1 = getProblemStatement(taggedrecord);
          JPanel jpanel = new JPanel();
          jpanel.setLayout(new C_u_(null, 1, new int[]{dimension.width}));
-         C_e_E c_e_e;
-         jpanel.add(c_e_e = new C_e_E(LogicProgram.m1004("\\l" + s + ": " + s1)));
-         c_e_e.m1787(true);
-         c_e_e.m1789(true);
-         c_e_e.setBackground(LogicProgram.f605[1]);
+         StyledTextPane styledtextpane;
+         jpanel.add(styledtextpane = new StyledTextPane(LogicProgram.m1004("\\l" + s + ": " + s1)));
+         styledtextpane.m1787(true);
+         styledtextpane.m1789(true);
+         styledtextpane.setBackground(LogicProgram.f605[1]);
          vector.add(jpanel);
       }
 
       return vector;
    }
 
-   static void insertDBProbs(C_BE c_be) {
-      if (c_be != null && !c_be.m402() && C_u_C.m2101("addToDB", "developer")) {
+   static void insertDBProbs(ProblemSelector problemselector) {
+      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            C_XD c_xd = new C_XD(exercises.m1778(j));
-            String s = c_xd.m1494();
-            if (c_be.m404(s)) {
-               if (C_k_C.f1199 != null) {
-                  C_k_C.f1199.println(LogicProgram.m1079());
-                  C_k_C.f1199.println("adding " + s);
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            String s = taggedrecord.getName();
+            if (problemselector.m404(s)) {
+               if (DiagnosticsLog.out != null) {
+                  DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
+                  DiagnosticsLog.out.println("adding " + s);
                }
 
-               String s1 = getProblemStatement(c_xd);
-               String s2 = c_xd.m1483(c_xd.m1475('!'));
+               String s1 = getProblemStatement(taggedrecord);
+               String s2 = taggedrecord.valueAt(taggedrecord.indexOfTag('!'));
                if (s2 != null && s2.length() > 255) {
                   s2 = s2.substring(0, 252) + "...";
                }
 
-               String s3 = C_z_D.m2225(s1.trim());
+               String s3 = Scrambler.md5Base64(s1.trim());
                String s4 = LogicProgram.m995(s1, maggie, html);
-               String s5 = c_xd.m1483(c_xd.m1475('C'));
+               String s5 = taggedrecord.valueAt(taggedrecord.indexOfTag('C'));
                if (s5 == null) {
                   s5 = s;
                }
 
                String s6 = "insert into logic_problem (COMMENT,DTCREATION,PROBLEM_NAME,TPROBLEM,TPROBLEM_MD5,TWEB_FORM_PROBLEM,VERSION,SYNTAX,COMMON_NAME)";
-               s6 = s6 + " values (" + C_KC.m815(s2) + ",GETDATE()," + C_KC.m815(s) + "," + C_KC.m815(s1) + ",";
-               s6 = s6 + C_KC.m815(s3) + "," + C_KC.m815(s4) + "," + nameVersion(s) + "," + C_FB.m537() + ",";
-               s6 = s6 + C_KC.m815(s5) + ")";
-               C_KC.m814(s6);
+               s6 = s6 + " values (" + ServerConnection.m815(s2) + ",GETDATE()," + ServerConnection.m815(s) + "," + ServerConnection.m815(s1) + ",";
+               s6 = s6 + ServerConnection.m815(s3) + "," + ServerConnection.m815(s4) + "," + nameVersion(s) + "," + FormulaParser.getSyntax() + ",";
+               s6 = s6 + ServerConnection.m815(s5) + ")";
+               ServerConnection.m814(s6);
             }
          }
       }
    }
 
-   static void updateDBProbs(C_BE c_be) {
-      if (c_be != null && !c_be.m402() && C_u_C.m2101("addToDB", "developer")) {
+   static void updateDBProbs(ProblemSelector problemselector) {
+      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            C_XD c_xd = new C_XD(exercises.m1778(j));
-            String s = c_xd.m1494();
-            if (c_be.m404(s)) {
-               if (C_k_C.f1199 != null) {
-                  C_k_C.f1199.println(LogicProgram.m1079());
-                  C_k_C.f1199.println("updating " + s);
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            String s = taggedrecord.getName();
+            if (problemselector.m404(s)) {
+               if (DiagnosticsLog.out != null) {
+                  DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
+                  DiagnosticsLog.out.println("updating " + s);
                }
 
-               String s1 = getProblemStatement(c_xd);
-               String s2 = c_xd.m1483(c_xd.m1475('!'));
+               String s1 = getProblemStatement(taggedrecord);
+               String s2 = taggedrecord.valueAt(taggedrecord.indexOfTag('!'));
                if (s2 != null && s2.length() > 255) {
                   s2 = s2.substring(0, 252) + "...";
                }
 
-               String s3 = C_z_D.m2225(s1.trim());
+               String s3 = Scrambler.md5Base64(s1.trim());
                String s4 = LogicProgram.m995(s1, maggie, html);
-               String s5 = c_xd.m1483(c_xd.m1475('C'));
+               String s5 = taggedrecord.valueAt(taggedrecord.indexOfTag('C'));
                if (s5 == null) {
                   s5 = s;
                }
 
-               String s6 = "update logic_problem set tproblem = " + C_KC.m815(s1) + ", tproblem_md5 = " + C_KC.m815(s3);
-               s6 = s6 + ", tweb_form_problem = " + C_KC.m815(s4) + ", comment = " + C_KC.m815(s2);
-               s6 = s6 + ", version = " + nameVersion(s) + ", common_name = " + C_KC.m815(s5);
-               s6 = s6 + " where problem_name = " + C_KC.m815(s) + " and syntax = " + C_FB.m537();
-               C_KC.m814(s6);
+               String s6 = "update logic_problem set tproblem = " + ServerConnection.m815(s1) + ", tproblem_md5 = " + ServerConnection.m815(s3);
+               s6 = s6 + ", tweb_form_problem = " + ServerConnection.m815(s4) + ", comment = " + ServerConnection.m815(s2);
+               s6 = s6 + ", version = " + nameVersion(s) + ", common_name = " + ServerConnection.m815(s5);
+               s6 = s6 + " where problem_name = " + ServerConnection.m815(s) + " and syntax = " + FormulaParser.getSyntax();
+               ServerConnection.m814(s6);
             }
          }
       }
@@ -1139,9 +1144,9 @@ class LPRecognition extends C_U {
       return this.workTime;
    }
 
-   static class C__A extends C_U.C__A {
-      C__A(C_x_A c_x_a, Rectangle rectangle, String s) {
-         super(c_x_a, rectangle, s);
+   static class C__A extends LogicModule.C__A {
+      C__A(BusyIndicator busyindicator, Rectangle rectangle, String s) {
+         super(busyindicator, rectangle, s);
       }
 
       @Override

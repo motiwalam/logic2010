@@ -123,8 +123,8 @@ class C_R extends JPanel implements ActionListener, C_LC {
                   }
 
                   if (s.equals("Rules")) {
-                     C_x_A c_x_a = new C_x_A(this.f713);
-                     C_KB.m798(this.f713, c_x_a);
+                     BusyIndicator busyindicator = new BusyIndicator(this.f713);
+                     C_KB.m798(this.f713, busyindicator);
                      return;
                   }
                }
@@ -161,8 +161,8 @@ class C_R extends JPanel implements ActionListener, C_LC {
                   }
 
                   if (s.equals("Feedback")) {
-                     String s8 = LogicProgram.m1078("browser");
-                     String s14 = LogicProgram.m1078("feedback");
+                     String s8 = LogicProgram.getLink("browser");
+                     String s14 = LogicProgram.getLink("feedback");
                      String[] astring4 = new String[]{s8, s14};
 
                      try {
@@ -174,8 +174,8 @@ class C_R extends JPanel implements ActionListener, C_LC {
                   }
 
                   if (s.equals("Course Web Site")) {
-                     String s7 = LogicProgram.m1078("browser");
-                     String s13 = LogicProgram.m1078("website");
+                     String s7 = LogicProgram.getLink("browser");
+                     String s13 = LogicProgram.getLink("website");
                      String[] astring3 = new String[]{s7, "\"" + s13};
 
                      try {
@@ -187,17 +187,17 @@ class C_R extends JPanel implements ActionListener, C_LC {
                   }
 
                   if (s.equals("Old Help")) {
-                     C_XB c_xb = LogicProgram.m1062("help.txt", false);
-                     if (c_xb != null) {
-                        C_KB.m779(c_xb);
+                     ScrambledReader scrambledreader = LogicProgram.openDataFile("help.txt", false);
+                     if (scrambledreader != null) {
+                        C_KB.m779(scrambledreader);
                      }
 
                      return;
                   }
 
                   if (s.equals("Help")) {
-                     String s6 = LogicProgram.m1078("word");
-                     String s12 = LogicProgram.m1078("derhelp");
+                     String s6 = LogicProgram.getLink("word");
+                     String s12 = LogicProgram.getLink("derhelp");
                      String[] astring2 = new String[]{s6, "\"" + s12 + "\""};
 
                      try {
@@ -209,8 +209,8 @@ class C_R extends JPanel implements ActionListener, C_LC {
                   }
 
                   if (s.equals("Starting")) {
-                     String s5 = LogicProgram.m1078("word");
-                     String s11 = LogicProgram.m1078("derstart");
+                     String s5 = LogicProgram.getLink("word");
+                     String s11 = LogicProgram.getLink("derstart");
                      String[] astring1 = new String[]{s5, "\"" + s11 + "\""};
 
                      try {
@@ -222,8 +222,8 @@ class C_R extends JPanel implements ActionListener, C_LC {
                   }
 
                   if (s.equals("FAQ")) {
-                     String s2 = LogicProgram.m1078("word");
-                     String s3 = LogicProgram.m1078("faq");
+                     String s2 = LogicProgram.getLink("word");
+                     String s3 = LogicProgram.getLink("faq");
                      String[] astring = new String[]{s2, "\"" + s3 + "\""};
 
                      try {

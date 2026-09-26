@@ -7,11 +7,11 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-class C_l_A extends C_LB {
+class C_l_A extends SizedPanel {
    C_CC f1225;
    C_CC f1226;
-   C_LB f1227;
-   C_e_E f1228;
+   SizedPanel f1227;
+   StyledTextPane f1228;
    C_u_ f1229;
 
    C_l_A(boolean flag) {
@@ -19,21 +19,21 @@ class C_l_A extends C_LB {
          this.f1229 = null;
          this.setLayout(new BorderLayout());
          this.add(this.f1225 = new C_CC(true), "West");
-         this.add(this.f1227 = new C_LB(), "Center");
+         this.add(this.f1227 = new SizedPanel(), "Center");
          this.add(this.f1226 = new C_CC(true), "East");
       } else {
          this.setLayout(this.f1229 = new C_u_(3));
          this.add(this.f1225 = new C_CC(true));
-         this.add(this.f1227 = new C_LB());
+         this.add(this.f1227 = new SizedPanel());
          this.add(this.f1226 = new C_CC(true));
       }
 
-      this.f1228 = new C_e_E();
+      this.f1228 = new StyledTextPane();
       StyledDocument styleddocument = this.f1228.getStyledDocument();
       SimpleAttributeSet simpleattributeset = new SimpleAttributeSet();
       StyleConstants.setAlignment(simpleattributeset, 1);
-      StyleConstants.setForeground(simpleattributeset, C_n_A.bruinBlack);
-      StyleConstants.setBackground(simpleattributeset, C_n_A.bruinWhite);
+      StyleConstants.setForeground(simpleattributeset, LogicConstants.bruinBlack);
+      StyleConstants.setBackground(simpleattributeset, LogicConstants.bruinWhite);
       StyleConstants.setFontFamily(simpleattributeset, this.f1228.getFont().getFamily());
       StyleConstants.setFontSize(simpleattributeset, this.f1228.getFont().getSize());
       StyleConstants.setBold(simpleattributeset, this.f1228.getFont().isBold());
@@ -41,8 +41,8 @@ class C_l_A extends C_LB {
       this.f1228.m1787(true);
       this.f1228.m1789(true);
       this.f1227.add(this.f1228);
-      this.f1227.setBackground(C_n_A.bruinWhite);
-      this.f1227.setForeground(C_n_A.bruinBlack);
+      this.f1227.setBackground(LogicConstants.bruinWhite);
+      this.f1227.setForeground(LogicConstants.bruinBlack);
       this.f1228.setVisible(false);
       this.setEnabled(false);
    }

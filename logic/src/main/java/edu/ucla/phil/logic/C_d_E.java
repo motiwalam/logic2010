@@ -1,6 +1,6 @@
 package edu.ucla.phil.logic;
 
-class C_d_E extends C_LB {
+class C_d_E extends SizedPanel {
    int f1060;
    C_b_A f1061;
 

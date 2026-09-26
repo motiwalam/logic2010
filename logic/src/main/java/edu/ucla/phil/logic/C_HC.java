@@ -5,7 +5,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.KeyEvent;
 
-class C_HC extends C_LB implements C_LC {
+class C_HC extends SizedPanel implements C_LC {
    C_NF f382;
    Component f383;
 

@@ -5,11 +5,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JPanel;
 
-class C_JF extends JPanel implements C_n_A, C_LC, KeyListener {
+class C_JF extends JPanel implements LogicConstants, C_LC, KeyListener {
    C_r_B f439;
    int width;
    int height;
-   static String[] f440 = LogicProgram.f596;
+   static String[] f440 = LogicProgram.symbols;
 
    C_JF(C_r_B c_r_b, String[][] astring, boolean flag, boolean flag1) {
       this.f439 = c_r_b;
@@ -120,7 +120,7 @@ class C_JF extends JPanel implements C_n_A, C_LC, KeyListener {
             keyevent.consume();
          } else {
             String s;
-            if ((s = C_s_D.m2081(c0, i)) != null) {
+            if ((s = FormulaTextPane.m2081(c0, i)) != null) {
                this.m738(s);
                keyevent.consume();
             } else if (!Character.isISOControl(c0)) {

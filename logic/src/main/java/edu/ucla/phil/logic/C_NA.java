@@ -17,12 +17,12 @@ class C_NA extends C_NF {
       if (event.id == 401 && event.key == 10) {
          Object object = this;
 
-         while (object != null && !(object instanceof C_UA)) {
+         while (object != null && !(object instanceof MessageDialog)) {
             object = object.getParent();
          }
 
          if (object != null) {
-            return ((C_UA)object).handleEvent(event);
+            return ((MessageDialog)object).handleEvent(event);
          }
       }
 

@@ -10,8 +10,8 @@ class C_g_B extends C_ZD {
    @Override
    protected void fireActionPerformed(ActionEvent actionevent) {
       super.fireActionPerformed(actionevent);
-      C__ c__ = (C__)this.m1546();
-      c__.m1564();
-      c__.f915.setWidths(false);
+      DerivationBox derivationbox = (DerivationBox)this.m1546();
+      derivationbox.m1564();
+      derivationbox.f915.setWidths(false);
    }
 }

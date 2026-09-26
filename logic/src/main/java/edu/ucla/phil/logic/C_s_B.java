@@ -7,7 +7,7 @@ class C_s_B extends C_NC implements C_TE {
       this.setLineWrap(true);
       this.setWrapStyleWord(true);
       this.setEditable(false);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
    }
 
    C_s_B(String s) {
@@ -15,7 +15,7 @@ class C_s_B extends C_NC implements C_TE {
       this.setLineWrap(true);
       this.setWrapStyleWord(true);
       this.setEditable(false);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
    }
 
    @Override

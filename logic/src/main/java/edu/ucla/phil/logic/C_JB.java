@@ -12,7 +12,7 @@ class C_JB extends JPanel implements ComponentListener, C_LC {
 
    C_JB(JScrollPane jscrollpane, C_JE c_je) {
       this.setLayout(new FlowLayout(0, 0, 0));
-      this.setFont(LogicProgram.m1029(c_je.f438 * 7 / 10));
+      this.setFont(LogicProgram.getFont(c_je.f438 * 7 / 10));
       this.f432 = jscrollpane;
       this.f433 = c_je;
    }

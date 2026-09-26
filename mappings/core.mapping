@@ -1,0 +1,340 @@
+# core.mapping -- survey-phase names for the central classes of logic.jar.
+# Class lines use the ORIGINAL obfuscated name (see "# classes" in ids.txt);
+# the placeholder is given in the trailing comment.
+
+## ---------------------------------------------------------------- constants / shared interfaces
+class nA LogicConstants               # C_n_A: colors (bruinGold..), symbol tables (maggie/kaplan*/html*), letter sets
+class XC ModuleConstants              # C_XC: derModule..truModule, moduleNames/moduleWorks/moduleClasses
+class DE DerivationConstants          # C_DE: EXPR_PARSE.., ASS_DD.., SCHEME_FAILED..
+class aD ExpressionKinds              # C_a_D: int kind codes 0..7 used by Expression.kind
+class AF CellRenderable               # C_AF: prerender/setCellForeground/setCellBackground
+class $B DerivationNode               # C_0B: implemented by DerivationBox and DerivationLine
+class v ResponseHandler               # C_v_: server-response sink: m4(error, params) / m5()
+
+## ---------------------------------------------------------------- program entry / config
+class UC ProgramLauncher              # C_UC: builds a java command line (-Dlink.dir, -Dprog.dir ...) from maps.txt/paths.txt
+class m SingleInstanceGuard           # C_m_: "TCPSolo" server socket: prevents two running copies
+class tA OverrideSettings             # C_t_A: override.txt (key:value, plain text)
+class wB PreferencesFile              # C_w_B: prefs.txt (case-insensitive key:value)
+m2150 get
+m2151 put
+m2153 load
+class SD ProgressDialog               # C_SD: "Starting the program..." splash/progress box
+
+## ---------------------------------------------------------------- scrambled data files
+class zD Scrambler                    # C_z_D: running-key text cipher + MD5 helpers
+f1490 ALPHABET
+f1493 DEFAULT_KEY
+m2217 scramble
+m2218 scramble
+m2219 unscramble
+m2220 unscramble
+m2223 md5Base64
+m2224 md5Base64
+m2225 md5Base64
+m2226 md5Hex
+m2227 md5Hex
+m2228 md5Hex
+m2229 md5Hex
+m2230 md5Hex
+m2231 md5Hex
+class XB ScrambledReader              # C_XB: BufferedReader whose readLine() unscrambles with a key
+f873 key
+class bD PlainRecordReader            # C_b_D: ScrambledReader with null key (plain text)
+class KD Md5OutputStream              # C_KD
+m923 digest
+class mC HexEncoder                   # C_m_C
+class oB Base64Codec                  # C_o_B
+class XD TaggedRecord                 # C_XD: one line of "value`c value`c ..." backquote-tagged fields
+f874 tags
+f875 values
+f876 reader
+m1469 readNext
+m1470 close
+m1473 parse
+m1474 tagAt
+m1475 indexOfTag
+m1483 valueAt
+m1494 getName
+m1511 isBlankOrComment
+class OA DelimitedTokenizer           # C_OA
+
+## ---------------------------------------------------------------- messages / dialogs
+class H Message                       # C_H: entry of a message catalogue (messages, derMessages, ...)
+f370 id
+f371 title
+f372 text
+f373 buttons
+f374 isError
+m410 loadMessages
+m411 get
+m412 getText
+m658 parseMessages
+m661 substitute
+m664 putParam
+m666 params
+m667 params
+m668 params
+m669 params
+m670 params
+class J MessageRef                    # C_J: message id + parameter table
+class cB ErrorRef                     # C_c_B: MessageRef used as an error/result value
+class UA MessageDialog                # C_UA
+m1328 showMessage
+m1329 showMessage
+class uB BaseDialog                   # C_u_B
+class D DialogHandler                 # C_D: parses a "label:action;default" button spec, handles the choice
+class T KeypadDialog                  # C_T: popup dialog bound to a text pane (symbol keypads subclass it)
+class xA BusyIndicator                # C_x_A: wait cursor + progress dialog during network calls
+
+## ---------------------------------------------------------------- expressions (formula tree)
+class RF Expression                   # C_RF
+f738 kind
+f739 symbol
+f740 children
+f741 childCount
+m1212 initKind
+m1213 getKind
+m1214 getSymbol
+m1215 addChild
+m1216 getChildCount
+m1217 getChild
+m1237 copy
+m1238 instantiate
+m1240 instantiate
+m1256 negate
+m1272 getSchematicLetter
+m1275 universalClosure
+m1276 getFreeVariables
+class X Term                          # C_X
+class yA Formula                      # C_y_A
+class qA AtomicFormula                # C_q_A: kind 0: predicate/sentence letter applied to terms
+class oA QuantifiedFormula            # C_o_A: kind 1: @x / !x
+class qF ConnectiveFormula            # C_q_F: kind 2: ~ & | -> <->
+class i SimpleTerm                    # C_i_: kind 3: variable or name
+class nC OperationTerm                # C_n_C: kind 4: operation symbol applied to terms
+class WE DescriptionTerm              # C_WE: kind 5: definite description
+class xD IdentityFormula              # C_x_D: kind 6: = / <>
+class tD MembershipFormula            # C_t_D: kind 7: [m]
+class e ExpressionPath                # C_e_: path of child indexes into an Expression
+f1062 depth
+f1063 indexes
+
+## ---------------------------------------------------------------- parsers (JavaCC, two syntaxes)
+class FB FormulaParser                # C_FB: static front end: picks syntax 1 (pkgB) or 2 (pkgA)
+f304 syntax
+m536 setSyntax
+m537 getSyntax
+m114 parse
+m195 reinit
+m205 disableTracing
+class kB FormulaParseException        # C_k_B
+class IC FormulaLexerError            # C_IC
+class A/E Syntax2Parser               # pkgA/C_E
+class A/D Syntax2TokenManager         # pkgA/C_D
+class A/B Syntax2CharStream           # pkgA/C_B
+class A/A Syntax2ParseException       # pkgA/C_A
+class A/C Syntax2TokenMgrError        # pkgA/C_C
+class A/F Syntax2Constants            # pkgA/C_F
+class A/G Syntax2Token                # pkgA/C_G
+class B/E Syntax1Parser               # pkgB/C_E
+class B/D Syntax1TokenManager         # pkgB/C_D
+class B/B Syntax1CharStream           # pkgB/C_B
+class B/A Syntax1ParseException       # pkgB/C_A
+class B/C Syntax1TokenMgrError        # pkgB/C_C
+class B/F Syntax1Constants            # pkgB/C_F
+class B/G Syntax1Token                # pkgB/C_G
+
+## ---------------------------------------------------------------- schemes, rules, theorems
+class jD SchemeInstantiation          # C_j_D: maps SchematicLetter -> LetterReplacement
+class iA SchematicLetter              # C_i_A
+class GF LetterReplacement            # C_GF
+class VB Rule                         # C_VB: named rule, possibly compound ("DN = DNE.DNI")
+class LF SchematicRule                # C_LF: premises + conclusion schemata
+f526 premises
+f527 conclusion
+class QE Theorem                      # C_QE
+class zB RuleTable                    # C_z_B: rules file (banshee.txt)
+class z TheoremTable                  # C_z_: theorems file (fiend.txt)
+class rD RuleProperties               # C_r_D
+class VC ArgumentParser               # C_VC: "P. Q .: R" -> premises / conclusion
+
+## ---------------------------------------------------------------- derivations (shared by modules)
+class _ DerivationBox                 # C__: a (sub)derivation: show line + body
+class G DerivationLine                # C_G
+class a DerivationLineChecker         # C_a_
+class HD Justification                # C_HD: line annotation: rule application, assumption, ...
+
+## ---------------------------------------------------------------- problems / work
+class eD ProblemSet                   # C_e_D: Vector of ProblemEntry, one subclass per module
+class fF ProblemEntry                 # C_f_F
+f1119 name
+f1120 state
+class BE ProblemSelector              # C_BE: option scope like name{"1.7","1.72",...}
+class YA ProblemListView              # C_YA
+class dA ProblemEditorFrame           # C_d_A
+class gD ProblemTitlePanel            # C_g_D
+
+## ---------------------------------------------------------------- user / course
+class OE UserInfo                     # C_OE: work/user.txt
+f660 FIELD_KEYS
+f662 dirty
+f663 demo
+m1145 load
+m684 save
+m1166 createDemoUser
+m1167 read
+m1168 write
+m1149 getField
+m1150 getFirstName
+m1151 getMiddleName
+m1152 getLastName
+m1153 getStudentId
+m1155 getEmail
+m1156 getInstitution
+m1157 getTerm
+m1158 getIdent
+m1159 getClassName
+m1169 getFullName
+class HB NewUserInfo                  # C_HB: UserInfo whose edit dialog asks institution/term/course/ID
+class MF CourseInfo                   # C_MF
+class SF Institution                  # C_SF: per-institution term/student-ID formats (UCLA, UCSB, ...)
+class uC UserSetup                    # C_u_C: startup checks and user/course setup dialogs
+class jC AccountManager               # C_j_C: course registration, password, uploading problems
+
+## ---------------------------------------------------------------- server
+class KC ServerConnection             # C_KC: all HTTP requests to logiclx.humnet.ucla.edu, updates, backups
+f445 verifyUrl
+f446 userUrl
+f447 userInfoUrl
+f448 passwordUrl
+f449 siteUrl
+f450 submissionUrl
+f451 uploadUrl
+f452 backupUrl
+f453 backupInfoUrl
+f454 restoreUrl
+f455 deleteBackupUrl
+f456 nonceUrl
+f457 loadRemoteUrl
+f458 courseRemoteUrl
+f459 getUserRelationUrl
+f460 addUserRelationUrl
+f461 insertProblemUrl
+f462 updateProblemUrl
+f463 deleteProblemUrl
+f464 sqlGeneratorUrl
+f465 websiteUrl
+f471 institution
+f472 term
+f473 course
+f474 ident
+f475 textVersion
+f483 demoMode
+f487 serverCredentials
+f491 WORK_FILES
+f492 DATA_FILES
+m802 readDatabaseLinks
+m803 getLinkUrl
+m804 httpGet
+m807 postForm
+m808 postMultipart
+m817 parseResponseTable
+m829 openSession
+m830 requestNonce
+m835 prepareSubmission
+m836 submit
+m837 submitOnce
+m877 resolvePath
+class $C ServerSession                # C_0C: nonce-based authenticated request builder
+f17 credentials
+f18 nonce
+f19 nonceCount
+f20 params
+f21 digestFields
+f22 cnonce
+m53 setParams
+m56 digestParams
+m57 encodeForm
+m58 encodeMultipart
+class $A Submission                   # C_0A
+f5 session
+f6 evaluation
+f7 problemMd5
+f8 work
+f9 problemName
+f10 module
+f11 helpCount
+f12 duration
+f13 timestamp
+f14 submissionUid
+class p ServerUrl                     # C_p_
+class pD Credentials                  # C_p_D
+f1334 user
+f1335 password
+class N HttpDigestAuth                # C_N
+class rA NetworkTask                  # C_r_A: abortable network operation with timeout + progress dialog
+class sC QueryResult                  # C_s_C
+class kC DiagnosticsLog               # C_k_C: work/diagnostics.txt
+f1199 out
+class iB HttpDownloader               # C_i_B
+
+## ---------------------------------------------------------------- UI framework
+class U LogicModule                   # C_U: abstract base of the six LP* modules and MainMenu
+class TA CellPanel                    # C_TA
+class $E ModuleFrame                  # C_0E
+f27 module
+class zC MainMenu                     # C_z_C: "Logic 2010: A Workbook" launcher window
+class LB SizedPanel                   # C_LB
+class eE StyledTextPane               # C_e_E
+class pA EditableTextPane             # C_p_A
+class sD FormulaTextPane              # C_s_D
+class IF FormulaEntryField            # C_IF
+
+## ---------------------------------------------------------------- LogicProgram members
+m960 loadIconsAndFonts
+m961 initialize
+m962 initializeUser
+m963 loadRulesAndTheorems
+m977 exit
+m1010 parseInteger
+m1029 getFont
+m1030 getFont
+m1039 addCredentials
+m1040 getCredentials
+m1055 resetOptions
+m1056 readOptions
+m1061 setSyntax
+m1062 openDataFile
+m1071 readCoreInfo
+m1072 readLinks
+m1074 canonicalFile
+m1076 getValue
+m1077 getLink
+m1078 getLink
+m1079 utcTimestamp
+f530 overrides
+f531 prefs
+f532 workPrefs
+f533 user
+f535 links
+f536 coreInfo
+f537 scrambleKey
+f539 fontSize
+f550 configDir
+f552 linkDir
+f553 progDir
+f555 workDir
+f559 userFile
+f561 ruleDir
+f569 codeVersion
+f570 arch
+f572 debug
+f573 printingEnabled
+f574 overheadColors
+f575 remote
+f576 noNetwork
+f586 mainMenu
+f587 instanceGuard
+f595 credentials
+f596 symbols

@@ -14,10 +14,10 @@ class C_g_F extends MetalCheckBoxIcon {
    }
 
    static int m1833() {
-      if (LogicProgram.f539 < 13) {
-         return LogicProgram.f539;
+      if (LogicProgram.fontSize < 13) {
+         return LogicProgram.fontSize;
       } else {
-         return LogicProgram.f539 < 18 ? 13 : LogicProgram.f539 * 3 / 4;
+         return LogicProgram.fontSize < 18 ? 13 : LogicProgram.fontSize * 3 / 4;
       }
    }
 

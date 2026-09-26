@@ -8,24 +8,24 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-abstract class C_h_F extends C_IF {
+abstract class C_h_F extends FormulaEntryField {
    int f1164;
    Vector f1165;
-   C_X[] f1166;
+   Term[] f1166;
    int[] f1167;
    Vector f1168;
    Hashtable f1169;
-   static String[] f1170 = LogicProgram.f596;
+   static String[] f1170 = LogicProgram.symbols;
 
-   C_h_F(C_RF c_rf, int i, Frame frame, int j) {
-      this(c_rf, i, frame, j, new Hashtable());
+   C_h_F(Expression expression, int i, Frame frame, int j) {
+      this(expression, i, frame, j, new Hashtable());
    }
 
-   C_h_F(C_RF c_rf, int i, Frame frame, int j, Hashtable hashtable) {
-      super(LogicProgram.m995(c_rf.m1205(true, 1), maggie, f1170), i, frame);
+   C_h_F(Expression expression, int i, Frame frame, int j, Hashtable hashtable) {
+      super(LogicProgram.m995(expression.m1205(true, 1), maggie, f1170), i, frame);
       this.f1164 = j;
       this.f1165 = new Vector();
-      this.f1166 = new C_X[j];
+      this.f1166 = new Term[j];
       this.f1167 = new int[j];
       this.f1168 = new Vector();
       this.f1169 = hashtable;
@@ -45,7 +45,7 @@ abstract class C_h_F extends C_IF {
       if (!this.isEditable()) {
          int i = 0;
 
-         while (i < this.f1164 && !C_i_A.m1853(i).equals(s)) {
+         while (i < this.f1164 && !SchematicLetter.m1853(i).equals(s)) {
             i++;
          }
 
@@ -54,8 +54,8 @@ abstract class C_h_F extends C_IF {
          }
 
          String s1 = this.getText();
-         Hashtable hashtable = C_H.m665(this.f1169, null);
-         C_H.m664(hashtable, "full text", LogicProgram.m1005(s1));
+         Hashtable hashtable = Message.m665(this.f1169, null);
+         Message.putParam(hashtable, "full text", LogicProgram.m1005(s1));
          String s2 = this.getSelectedText();
          if (s2.length() == 0) {
             this.m1843(hashtable);
@@ -63,22 +63,22 @@ abstract class C_h_F extends C_IF {
             return;
          }
 
-         C_H.m664(hashtable, "selection", LogicProgram.m1005(s2));
+         Message.putParam(hashtable, "selection", LogicProgram.m1005(s2));
          int[] aint = new int[]{this.getSelectionStart(), this.getSelectionEnd()};
          String s3 = LogicProgram.m996(s1, f1170, maggie, aint);
          String s4 = s3.substring(0, aint[0]) + s + s3.substring(aint[1]);
-         C_H.m664(hashtable, "subbed text", "\\l" + s4 + "\\l");
+         Message.putParam(hashtable, "subbed text", "\\l" + s4 + "\\l");
 
-         C_RF c_rf;
+         Expression expression;
          try {
-            c_rf = LogicProgram.m1008(LogicProgram.m995(s2, f1170, maggie), true, false);
-         } catch (C_k_B c_k_b2) {
+            expression = LogicProgram.m1008(LogicProgram.m995(s2, f1170, maggie), true, false);
+         } catch (FormulaParseException formulaparseexception2) {
             this.m927(hashtable);
             this.requestFocus();
             return;
          }
 
-         if (!(c_rf instanceof C_X)) {
+         if (!(expression instanceof Term)) {
             this.m928(hashtable);
             this.requestFocus();
             return;
@@ -86,23 +86,23 @@ abstract class C_h_F extends C_IF {
 
          try {
             LogicProgram.m1008(s4, true, true);
-         } catch (C_k_B c_k_b1) {
+         } catch (FormulaParseException formulaparseexception1) {
             this.m929(hashtable);
             this.requestFocus();
             return;
          }
 
-         C_RF c_rf1;
+         Expression expression1;
          try {
-            c_rf1 = LogicProgram.m1008(s3, true, true);
-         } catch (C_k_B c_k_b) {
-            c_rf1 = null;
+            expression1 = LogicProgram.m1008(s3, true, true);
+         } catch (FormulaParseException formulaparseexception) {
+            expression1 = null;
          }
 
-         C_DD c_dd = new C_DD(c_rf1);
+         C_DD c_dd = new C_DD(expression1);
          c_dd.f284 = s3;
-         C_RF c_rf2 = c_dd.m480(aint[0], aint[1]).m456();
-         Vector vector = c_rf2.m1259();
+         Expression expression2 = c_dd.m480(aint[0], aint[1]).m456();
+         Vector vector = expression2.m1259();
          if (vector != null) {
             this.m930(vector, hashtable);
             this.requestFocus();
@@ -110,8 +110,8 @@ abstract class C_h_F extends C_IF {
          }
 
          if (this.f1167[i] != 0) {
-            if (!c_rf.m1235(this.f1166[i])) {
-               this.m931(C_H.m664(hashtable, "old term", "\\l" + this.f1166[i] + "\\l"));
+            if (!expression.m1235(this.f1166[i])) {
+               this.m931(Message.putParam(hashtable, "old term", "\\l" + this.f1166[i] + "\\l"));
                this.requestFocus();
                return;
             }
@@ -120,9 +120,9 @@ abstract class C_h_F extends C_IF {
 
             while (enumeration.hasMoreElements()) {
                C_s_ c_s_ = (C_s_)enumeration.nextElement();
-               C_c_B c_c_b = c_s_.m1965(i, c_rf);
-               if (c_c_b != null) {
-                  C_KB.m761(c_c_b.f427, C_H.m665(hashtable, c_c_b.f428));
+               ErrorRef errorref = c_s_.m1965(i, expression);
+               if (errorref != null) {
+                  C_KB.m761(errorref.f427, Message.m665(hashtable, errorref.f428));
                   this.requestFocus();
                   return;
                }
@@ -132,10 +132,10 @@ abstract class C_h_F extends C_IF {
 
             while (enumeration.hasMoreElements()) {
                C_s_ c_s_1 = (C_s_)enumeration.nextElement();
-               c_s_1.m1964(i, c_rf.toString());
+               c_s_1.m1964(i, expression.toString());
             }
 
-            this.f1166[i] = (C_X)c_rf;
+            this.f1166[i] = (Term)expression;
          }
 
          this.f1167[i]++;
@@ -185,7 +185,7 @@ abstract class C_h_F extends C_IF {
             this.f1166[j] = null;
          }
 
-         this.m1795(null, k, k + C_i_A.m1853(j).length());
+         this.m1795(null, k, k + SchematicLetter.m1853(j).length());
          this.m1796(s, k);
          this.select(k, k + s.length());
          return true;

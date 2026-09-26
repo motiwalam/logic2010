@@ -25,33 +25,33 @@ class C_DF extends C_DC {
             C_v_A c_v_a = ((C_g_B)jcomponent).m1546();
             Rectangle rectangle = jcomponent.getBounds();
             Rectangle rectangle1 = c_v_a.getBounds();
-            int k = ((C__)c_v_a).f917.f322.getPreferredSize().height;
+            int k = ((DerivationBox)c_v_a).f917.f322.getPreferredSize().height;
             rectangle.y = rectangle1.y + (k - rectangle.height) / 2;
             jcomponent.setBounds(rectangle);
          }
 
-         if (jcomponent instanceof C_G) {
-            C_G c_g = (C_G)jcomponent;
-            if (c_g.f327 != null) {
-               c_g.f327.invalidate();
+         if (jcomponent instanceof DerivationLine) {
+            DerivationLine derivationline = (DerivationLine)jcomponent;
+            if (derivationline.f327 != null) {
+               derivationline.f327.invalidate();
             }
          }
       }
 
-      C__ c__ = (C__)container;
-      LPDerivation lpderivation = c__.f915;
-      if (c__.f918 != null && c__.m2124()) {
-         Rectangle rectangle2 = LogicProgram.m1035(c__, lpderivation.problem);
-         Rectangle rectangle3 = LogicProgram.m1035(c__.f917, lpderivation.problem);
-         Rectangle rectangle4 = LogicProgram.m1035(c__.f918, lpderivation.problem);
+      DerivationBox derivationbox = (DerivationBox)container;
+      LPDerivation lpderivation = derivationbox.f915;
+      if (derivationbox.f918 != null && derivationbox.m2124()) {
+         Rectangle rectangle2 = LogicProgram.m1035(derivationbox, lpderivation.problem);
+         Rectangle rectangle3 = LogicProgram.m1035(derivationbox.f917, lpderivation.problem);
+         Rectangle rectangle4 = LogicProgram.m1035(derivationbox.f918, lpderivation.problem);
          Rectangle rectangle5 = new Rectangle();
          rectangle5.x = rectangle2.x + lpderivation.indent - 1;
          rectangle5.y = rectangle2.y + rectangle3.height - 1;
          rectangle5.width = lpderivation.proofWidths[0] - lpderivation.hSpacer.width - rectangle5.x;
          rectangle5.height = rectangle4.y + rectangle4.height - lpderivation.vSpacer.height - rectangle5.y;
-         c__.f919 = rectangle5;
+         derivationbox.f919 = rectangle5;
       } else {
-         c__.f919 = null;
+         derivationbox.f919 = null;
       }
 
       lpderivation.numbers.validate();

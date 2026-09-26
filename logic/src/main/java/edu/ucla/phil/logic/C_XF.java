@@ -5,13 +5,13 @@ import java.util.Hashtable;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
-class C_XF extends C_LB implements C_n_A {
-   static String[] f882 = LogicProgram.f596;
+class C_XF extends SizedPanel implements LogicConstants {
+   static String[] f882 = LogicProgram.symbols;
    C_k_E f883;
    JScrollPane f884;
-   C_TA f885;
-   C_TA f886;
-   C_TA[] f887;
+   CellPanel f885;
+   CellPanel f886;
+   CellPanel[] f887;
    C_u_ f888;
    C_x_B[] f889;
    C_GD[][] f890;
@@ -23,8 +23,8 @@ class C_XF extends C_LB implements C_n_A {
    C_XF(C_k_E c_k_e) {
       this.f883 = c_k_e;
       this.setLayout(new C_m_A());
-      this.add(this.f885 = new C_TA());
-      this.add(this.f884 = new JScrollPane(this.f886 = new C_TA()));
+      this.add(this.f885 = new CellPanel());
+      this.add(this.f884 = new JScrollPane(this.f886 = new CellPanel()));
       this.setBorder(new EmptyBorder(5, 5, 5, 5));
       this.f886.setLayout(new C_m_A());
       this.f886.setBackground(c_k_e.f1200.colors[1]);
@@ -37,8 +37,8 @@ class C_XF extends C_LB implements C_n_A {
       this.f885.removeAll();
 
       for (int i = 0; i < this.f883.f1217; i++) {
-         C_RF c_rf = (C_RF)this.f883.f1214.f379.elementAt(i);
-         this.f885.add(new C_ZE(LogicProgram.m995(c_rf.toString(), maggie, f882)));
+         Expression expression = (Expression)this.f883.f1214.f379.elementAt(i);
+         this.f885.add(new C_ZE(LogicProgram.m995(expression.toString(), maggie, f882)));
       }
 
       for (int j = 0; j < this.f883.f1216; j++) {
@@ -66,18 +66,18 @@ class C_XF extends C_LB implements C_n_A {
       this.f893 = 2 + this.f883.f1217 + this.f883.f1216;
       this.f894 = this.f883.f1217 == 0 ? 0 : 1 << this.f883.f1217;
       this.f891 = null;
-      this.f887 = new C_TA[this.f894];
+      this.f887 = new CellPanel[this.f894];
       this.f890 = new C_GD[this.f894][this.f883.f1216 + 1];
       this.f889 = new C_x_B[this.f894];
       this.m1520();
 
       for (int i = 0; i < this.f894; i++) {
-         C_TA c_ta = new C_TA();
+         CellPanel cellpanel = new CellPanel();
          String s = m1523(i, this.f883.f1217);
 
          for (int j = 0; j < this.f883.f1217; j++) {
             C_ZE c_ze = new C_ZE(s.substring(j, j + 1));
-            c_ta.add(c_ze);
+            cellpanel.add(c_ze);
          }
 
          String[] astring = hashtable == null ? null : (String[])hashtable.get(s);
@@ -88,14 +88,14 @@ class C_XF extends C_LB implements C_n_A {
                s1 = "+?";
             }
 
-            c_ta.add(this.f890[i][k] = new C_GD(s1, this.f883, new Point(k, i)));
+            cellpanel.add(this.f890[i][k] = new C_GD(s1, this.f883, new Point(k, i)));
          }
 
          if (!this.f883.f1200.assumeTautology) {
-            c_ta.add(this.f889[i] = new C_x_B(this, i));
+            cellpanel.add(this.f889[i] = new C_x_B(this, i));
          }
 
-         this.f886.add(this.f887[i] = c_ta);
+         this.f886.add(this.f887[i] = cellpanel);
       }
 
       if (!this.f883.f1200.assumeTautology) {

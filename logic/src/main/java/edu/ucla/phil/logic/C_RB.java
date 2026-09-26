@@ -8,7 +8,7 @@ import javax.swing.InputMap;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-class C_RB extends C_TA {
+class C_RB extends CellPanel {
    LPParsing f716;
 
    C_RB(LPParsing lpparsing) {
@@ -57,11 +57,11 @@ class C_RB extends C_TA {
                C_KA.m758(C_RB.this.f716);
             }
          };
-         if (LogicProgram.m1040("workEntry") != null) {
+         if (LogicProgram.getCredentials("workEntry") != null) {
             abstractaction = new AbstractAction() {
                @Override
                public void actionPerformed(ActionEvent actionevent) {
-                  if (LogicProgram.m1040("workEntry") != null && C_u_C.m2101("workEntry", "instructor")) {
+                  if (LogicProgram.getCredentials("workEntry") != null && UserSetup.m2101("workEntry", "instructor")) {
                      C_KA.m754(C_RB.this.f716);
                   }
                }
@@ -127,7 +127,7 @@ class C_RB extends C_TA {
       };
       jpanel.add(c__d = new C__D("Delete", abstractaction1, abstractaction));
       c__d.m1583("Right Click to Delete multiple problems");
-      if (!LogicProgram.f576) {
+      if (!LogicProgram.noNetwork) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {
@@ -139,7 +139,7 @@ class C_RB extends C_TA {
          c__d.m1583("Submit");
       }
 
-      if (LogicProgram.f573 && !LPParsing.submitExam) {
+      if (LogicProgram.printingEnabled && !LPParsing.submitExam) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {
@@ -156,7 +156,7 @@ class C_RB extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            LogicProgram.f586.showInFront();
+            LogicProgram.mainMenu.showInFront();
          }
       };
       jpanel.add(new C__D("Menu", abstractaction1));
@@ -176,7 +176,7 @@ class C_RB extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("feedback");
+            String s = LogicProgram.getLink("feedback");
             C_Q.m1184(s);
          }
       };
@@ -184,12 +184,12 @@ class C_RB extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("parHelp");
-            C_Q.m1186(LogicProgram.f550, s);
+            String s = LogicProgram.getLink("parHelp");
+            C_Q.m1186(LogicProgram.configDir, s);
          }
       };
       jpanel1.add(new C__D("Help", abstractaction1));
-      if (C_KC.f480 && !LogicProgram.f576 && C_KC.f451 != null) {
+      if (ServerConnection.f480 && !LogicProgram.noNetwork && ServerConnection.uploadUrl != null) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {

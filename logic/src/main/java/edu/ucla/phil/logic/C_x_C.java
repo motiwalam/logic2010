@@ -6,7 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
 
-class C_x_C extends C_LB implements C_v_D {
+class C_x_C extends SizedPanel implements C_v_D {
    C_d_C f1437;
    C_x_E f1438;
    C_NB f1439;
@@ -181,7 +181,7 @@ class C_x_C extends C_LB implements C_v_D {
 
    void m2174(boolean flag, int i) {
       if (flag) {
-         C_p_A.m2024(this.f1438.getText());
+         EditableTextPane.m2024(this.f1438.getText());
       }
 
       if (!this.f1438.hasFocus()) {

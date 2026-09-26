@@ -21,18 +21,18 @@ class C_a_C extends C_IE {
    }
 
    boolean m1640(String s) {
-      C_OA c_oa = new C_OA("\\{");
-      c_oa.m1132(s);
+      DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\{");
+      delimitedtokenizer.m1132(s);
 
-      while (c_oa.m1133() != null) {
-         String s1 = c_oa.m1135();
+      while (delimitedtokenizer.m1133() != null) {
+         String s1 = delimitedtokenizer.m1135();
          if (!s1.trim().equals("")) {
             return false;
          }
 
-         while (c_oa.m1134() == '{') {
-            C_e_ c_e_ = C_e_.m1746(C_e_.m1755("{" + c_oa.m1135()));
-            if (c_e_ == null || c_e_.f1062 != this.f423) {
+         while (delimitedtokenizer.m1134() == '{') {
+            ExpressionPath expressionpath = ExpressionPath.m1746(ExpressionPath.m1755("{" + delimitedtokenizer.m1135()));
+            if (expressionpath == null || expressionpath.depth != this.f423) {
                return false;
             }
 
@@ -40,8 +40,8 @@ class C_a_C extends C_IE {
                this.f969 = new Vector();
             }
 
-            if (!this.f969.contains(c_e_)) {
-               this.f969.addElement(c_e_);
+            if (!this.f969.contains(expressionpath)) {
+               this.f969.addElement(expressionpath);
             }
          }
       }
@@ -56,8 +56,8 @@ class C_a_C extends C_IE {
          Enumeration enumeration = this.f969.elements();
 
          while (enumeration.hasMoreElements()) {
-            C_e_ c_e_ = (C_e_)enumeration.nextElement();
-            int[] aint = c_e_.m1752();
+            ExpressionPath expressionpath = (ExpressionPath)enumeration.nextElement();
+            int[] aint = expressionpath.m1752();
             int k = aint.length;
             int j = 0;
 
@@ -66,7 +66,7 @@ class C_a_C extends C_IE {
             }
 
             if (j >= k) {
-               vector.addElement(c_e_);
+               vector.addElement(expressionpath);
             }
          }
 
@@ -101,12 +101,12 @@ class C_a_C extends C_IE {
          int k = this.f969 == null ? 0 : this.f969.size();
          if (this.f423 == 1) {
             for (int j = 0; j < k; j++) {
-               s = s + (j == 0 ? "" : ", ") + ((C_e_)this.f969.elementAt(j)).m1752()[0];
+               s = s + (j == 0 ? "" : ", ") + ((ExpressionPath)this.f969.elementAt(j)).m1752()[0];
             }
          } else {
             for (int i1 = 0; i1 < k; i1++) {
                s = s + (i1 == 0 ? "" : ", ") + "(";
-               int[] aint = ((C_e_)this.f969.elementAt(i1)).m1752();
+               int[] aint = ((ExpressionPath)this.f969.elementAt(i1)).m1752();
 
                for (int l = 0; l < this.f423; l++) {
                   s = s + (l == 0 ? "" : ",") + aint[l];
@@ -126,7 +126,7 @@ class C_a_C extends C_IE {
          if (this.f969 == null || this.f969.isEmpty()) {
             return Boolean.FALSE;
          } else {
-            return this.f423 == 0 ? Boolean.TRUE : new Boolean(this.f969.contains(C_e_.m1746(aint)));
+            return this.f423 == 0 ? Boolean.TRUE : new Boolean(this.f969.contains(ExpressionPath.m1746(aint)));
          }
       } else {
          throw new IllegalArgumentException();

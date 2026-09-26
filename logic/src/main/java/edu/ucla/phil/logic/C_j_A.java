@@ -2,37 +2,37 @@ package edu.ucla.phil.logic;
 
 import javax.swing.SwingUtilities;
 
-class C_j_A extends C_e_D {
+class C_j_A extends ProblemSet {
    @Override
-   void m1099(C_U.C__A c_u$c__a) {
+   void m1099(LogicModule.C__A logicmodule$c__a) {
       LPRecognition.restating = true;
-      C_e_D.C__A c_e_d$c__a = new C_e_D.C__A(this.size(), new C_XD(), new LPRecognition(false), c_u$c__a);
-      SwingUtilities.invokeLater(c_e_d$c__a);
+      ProblemSet.C__A problemset$c__a = new ProblemSet.C__A(this.size(), new TaggedRecord(), new LPRecognition(false), logicmodule$c__a);
+      SwingUtilities.invokeLater(problemset$c__a);
    }
 
    @Override
-   C_f_F m1102(String s, boolean flag) {
+   ProblemEntry m1102(String s, boolean flag) {
       return new C_ED(s, flag);
    }
 
    @Override
-   boolean m1103(C_XD c_xd) {
-      return LPRecognition.hasWork(c_xd);
+   boolean m1103(TaggedRecord taggedrecord) {
+      return LPRecognition.hasWork(taggedrecord);
    }
 
    @Override
-   String m1104(C_XD c_xd) {
-      return LPRecognition.getWork(c_xd);
+   String m1104(TaggedRecord taggedrecord) {
+      return LPRecognition.getWork(taggedrecord);
    }
 
    @Override
-   String m1105(C_XD c_xd) {
-      return LPRecognition.removeWork(c_xd);
+   String m1105(TaggedRecord taggedrecord) {
+      return LPRecognition.removeWork(taggedrecord);
    }
 
    @Override
-   String m1106(C_XD c_xd) {
-      return LPRecognition.getProblemStatement(c_xd);
+   String m1106(TaggedRecord taggedrecord) {
+      return LPRecognition.getProblemStatement(taggedrecord);
    }
 
    @Override

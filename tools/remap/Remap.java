@@ -118,7 +118,7 @@ public class Remap {
                 String where = mp + ":" + lineNo;
                 if (p[0].equals("class")) {
                     if (p.length != 3) die(where + ": expected 'class OLD NEW'");
-                    String old = p[1].contains("/") ? p[1] : BASE + p[1];
+                    String old = p[1].startsWith("edu/") ? p[1] : BASE + p[1];
                     if (!classes.containsKey(old)) die(where + ": unknown class " + old);
                     classMap.put(old, qualifyNew(old, p[2]));
                 } else {
@@ -135,7 +135,8 @@ public class Remap {
             int d = name.lastIndexOf('$');
             if (d > 0 && classes.containsKey(name.substring(0, d))) {
                 String outerNew = classMap.get(name.substring(0, d));
-                String innerNew = mapped.substring(mapped.lastIndexOf('$') + 1);
+                String simpleNew = mapped.substring(mapped.lastIndexOf('/') + 1);
+                String innerNew = simpleNew.substring(simpleNew.lastIndexOf('$') + 1);
                 classMap.put(name, outerNew + "$" + innerNew);
             }
         }

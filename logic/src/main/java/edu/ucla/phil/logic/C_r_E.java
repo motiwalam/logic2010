@@ -1,13 +1,13 @@
 package edu.ucla.phil.logic;
 
-class C_r_E extends C_D implements C_v_D {
+class C_r_E extends DialogHandler implements C_v_D {
    C_r_E(String s) {
       super(s);
    }
 
    @Override
-   boolean m451(C_UA c_ua) {
-      String s = this.m450(c_ua);
+   boolean m451(MessageDialog messagedialog) {
+      String s = this.m450(messagedialog);
       C_y_B c_y_b = (C_y_B)this.m449("scheme");
       LPSymbolizer lpsymbolizer = (LPSymbolizer)this.m449("symbolizer");
       if (c_y_b == null) {
@@ -29,7 +29,7 @@ class C_r_E extends C_D implements C_v_D {
       } else if (s.equalsIgnoreCase("cancel")) {
          return true;
       } else if (s.equalsIgnoreCase("help")) {
-         C_UA.m1329(C_h_E.m411("symnot008"), null, null, null);
+         MessageDialog.showMessage(C_h_E.get("symnot008"), null, null, null);
          return false;
       } else {
          return false;

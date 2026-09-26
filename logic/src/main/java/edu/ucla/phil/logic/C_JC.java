@@ -2,7 +2,7 @@ package edu.ucla.phil.logic;
 
 import java.awt.event.KeyEvent;
 
-class C_JC extends C_s_D {
+class C_JC extends FormulaTextPane {
    C_y_B f434;
 
    C_JC(String s, C_y_B c_y_b) {

@@ -17,7 +17,7 @@ class C_MC extends C_CA {
    static void m1096(int[] aint) {
       if (aint != null) {
          C_MC c_mc = new C_MC(aint);
-         c_mc.m414(Box.createVerticalStrut(LogicProgram.f539 * 3));
+         c_mc.m414(Box.createVerticalStrut(LogicProgram.fontSize * 3));
          c_mc.m1923();
       }
    }

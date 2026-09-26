@@ -1,19 +1,19 @@
 package edu.ucla.phil.logic;
 
-class C_HF extends C_HD {
+class C_HF extends Justification {
    static final int f390 = 1;
-   C_LF f391;
+   SchematicRule f391;
    int[] f392;
-   C_j_D f393;
+   SchemeInstantiation f393;
    C__B f394;
    int f395;
    Object f396;
 
-   C_HF(C_LF c_lf, int[] aint, C_j_D c_j_d, C__B c__b) {
-      super(c_lf.f820);
-      this.f391 = c_lf;
+   C_HF(SchematicRule schematicrule, int[] aint, SchemeInstantiation schemeinstantiation, C__B c__b) {
+      super(schematicrule.f820);
+      this.f391 = schematicrule;
       this.f392 = aint;
-      this.f393 = c_j_d;
+      this.f393 = schemeinstantiation;
       this.f394 = c__b;
       this.f395 = 0;
       this.f396 = null;
@@ -28,7 +28,7 @@ class C_HF extends C_HD {
       }
 
       if (this.f393 != null) {
-         c_hf1.f393 = (C_j_D)this.f393.clone();
+         c_hf1.f393 = (SchemeInstantiation)this.f393.clone();
       }
 
       if (this.f394 != null) {
@@ -40,7 +40,7 @@ class C_HF extends C_HD {
       return c_hf1;
    }
 
-   C_LF m688() {
+   SchematicRule m688() {
       return this.f391;
    }
 
@@ -48,7 +48,7 @@ class C_HF extends C_HD {
       return this.f392;
    }
 
-   C_j_D m690() {
+   SchemeInstantiation m690() {
       return this.f393;
    }
 
@@ -57,59 +57,59 @@ class C_HF extends C_HD {
    }
 
    int m692() {
-      return this.f391.f526.length;
+      return this.f391.premises.length;
    }
 
-   C_RF m693(int i) {
+   Expression m693(int i) {
       return this.m694(i, null);
    }
 
-   C_RF m694(int i, C_a_ c_a_) {
+   Expression m694(int i, DerivationLineChecker derivationlinechecker) {
       C_MB c_mb = new C_MB();
-      C_RF c_rf = this.f391.f526[this.f392[i]].m1239(this.f393, c_mb);
-      this.f394.m1574(this.f391.f526[this.f392[i]], c_rf, c_mb, c_a_);
-      return c_rf;
+      Expression expression = this.f391.premises[this.f392[i]].m1239(this.f393, c_mb);
+      this.f394.m1574(this.f391.premises[this.f392[i]], expression, c_mb, derivationlinechecker);
+      return expression;
    }
 
-   C_RF m695() {
+   Expression m695() {
       return this.m696(null);
    }
 
-   C_RF m696(C_a_ c_a_) {
+   Expression m696(DerivationLineChecker derivationlinechecker) {
       C_MB c_mb = new C_MB();
-      C_RF c_rf = this.f391.f527.m1239(this.f393, c_mb);
-      this.f394.m1574(this.f391.f527, c_rf, c_mb, c_a_);
-      return c_rf;
+      Expression expression = this.f391.conclusion.m1239(this.f393, c_mb);
+      this.f394.m1574(this.f391.conclusion, expression, c_mb, derivationlinechecker);
+      return expression;
    }
 
-   boolean m697(C_RF c_rf) {
-      return c_rf.m1274(this.f393) && this.f394.m1578(c_rf);
+   boolean m697(Expression expression) {
+      return expression.m1274(this.f393) && this.f394.m1578(expression);
    }
 
    @Override
-   boolean m600(C_a_ c_a_) {
-      C_VB c_vb = LPDerivation.getRule(c_a_.f939);
-      if (c_vb != null && c_vb.m1375(this.f391)) {
-         int i = this.f391.f526.length;
-         c_a_.getClass();
-         if (!c_a_.f944 && !c_a_.f945 ? i <= c_a_.f938 : i == c_a_.f938) {
+   boolean m600(DerivationLineChecker derivationlinechecker) {
+      Rule rule = LPDerivation.getRule(derivationlinechecker.f939);
+      if (rule != null && rule.m1375(this.f391)) {
+         int i = this.f391.premises.length;
+         derivationlinechecker.getClass();
+         if (!derivationlinechecker.f944 && !derivationlinechecker.f945 ? i <= derivationlinechecker.f938 : i == derivationlinechecker.f938) {
             for (int j = 0; j < i; j++) {
-               C_RF c_rf = this.m693(j);
-               if (c_rf.m1259() != null || !c_rf.m1235(c_a_.m1628(j - i))) {
+               Expression expression = this.m693(j);
+               if (expression.m1259() != null || !expression.m1235(derivationlinechecker.m1628(j - i))) {
                   return false;
                }
             }
 
-            if (this.f391.m956(c_vb.m1373(c_a_.f935.f317.f915, c_a_.f946 ? "manualOrDisabled" : "disabled")) == -1) {
+            if (this.f391.m956(rule.m1373(derivationlinechecker.f935.f317.f915, derivationlinechecker.f946 ? "manualOrDisabled" : "disabled")) == -1) {
                return false;
-            } else if ((c_a_.f942 = this.m695()).m1259() != null) {
+            } else if ((derivationlinechecker.f942 = this.m695()).m1259() != null) {
                return false;
-            } else if (!c_a_.m1613(this.f393, true)) {
+            } else if (!derivationlinechecker.m1613(this.f393, true)) {
                return false;
-            } else if (c_a_.f944 && !c_a_.m1609(true)) {
+            } else if (derivationlinechecker.f944 && !derivationlinechecker.m1609(true)) {
                return false;
             } else {
-               c_a_.m1631(i);
+               derivationlinechecker.m1631(i);
                return true;
             }
          } else {
@@ -136,7 +136,7 @@ class C_HF extends C_HD {
 
    @Override
    public String toString() {
-      return this.f384 + C_e_.m1753(this.f392) + this.f393.m1896() + "," + this.f394.m1580();
+      return this.f384 + ExpressionPath.m1753(this.f392) + this.f393.m1896() + "," + this.f394.m1580();
    }
 
    static C_HF m699(String s) {
@@ -144,13 +144,13 @@ class C_HF extends C_HD {
       if ((i = s.indexOf("{")) == -1) {
          return null;
       } else {
-         C_VB c_vb = LPDerivation.getRule(s.substring(0, i));
-         if (c_vb != null && c_vb instanceof C_LF) {
+         Rule rule = LPDerivation.getRule(s.substring(0, i));
+         if (rule != null && rule instanceof SchematicRule) {
             s = s.substring(i);
             if ((i = s.indexOf("}")) == -1) {
                return null;
             } else {
-               int[] aint = C_e_.m1755(s.substring(0, i + 1));
+               int[] aint = ExpressionPath.m1755(s.substring(0, i + 1));
                if (aint == null) {
                   return null;
                } else {
@@ -158,13 +158,13 @@ class C_HF extends C_HD {
                   if ((i = s.indexOf(",")) == -1) {
                      return null;
                   } else {
-                     C_j_D c_j_d = C_j_D.m1897(s.substring(0, i));
-                     if (c_j_d == null) {
+                     SchemeInstantiation schemeinstantiation = SchemeInstantiation.m1897(s.substring(0, i));
+                     if (schemeinstantiation == null) {
                         return null;
                      } else {
                         s = s.substring(i + 1);
                         C__B c__b = C__B.m1581(s);
-                        return new C_HF((C_LF)c_vb, aint, c_j_d, c__b);
+                        return new C_HF((SchematicRule)rule, aint, schemeinstantiation, c__b);
                      }
                   }
                }
@@ -175,7 +175,7 @@ class C_HF extends C_HD {
       }
    }
 
-   C_FD m700(C_a_ c_a_) {
-      return new C_FD(this, c_a_);
+   C_FD m700(DerivationLineChecker derivationlinechecker) {
+      return new C_FD(this, derivationlinechecker);
    }
 }

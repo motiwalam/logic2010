@@ -22,7 +22,7 @@ class C_0D {
 
    @Override
    public String toString() {
-      return (this.f26 ? "" : "~") + "\"" + C_OA.m1139(this.f25, "\\\"") + "\"";
+      return (this.f26 ? "" : "~") + "\"" + DelimitedTokenizer.m1139(this.f25, "\\\"") + "\"";
    }
 
    @Override

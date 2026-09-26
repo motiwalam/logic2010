@@ -5,14 +5,14 @@ import java.io.InputStream;
 
 public class C_LE extends InputStream {
    InputStream f521;
-   C_o_B f522;
+   Base64Codec f522;
    byte[] f523;
    int f524;
    boolean f525;
 
    public C_LE(InputStream inputstream) {
       this.f521 = inputstream;
-      this.f522 = new C_o_B();
+      this.f522 = new Base64Codec();
       this.f523 = null;
       this.f524 = 0;
       this.f525 = false;

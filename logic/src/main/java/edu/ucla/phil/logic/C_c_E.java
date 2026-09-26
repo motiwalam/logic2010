@@ -1,6 +1,6 @@
 package edu.ucla.phil.logic;
 
-class C_c_E extends C_HD {
+class C_c_E extends Justification {
    static final int f1030 = 5;
    boolean f1031;
 
@@ -10,26 +10,26 @@ class C_c_E extends C_HD {
    }
 
    @Override
-   boolean m600(C_a_ c_a_) {
-      if (!c_a_.f939.equals(this.f384)) {
+   boolean m600(DerivationLineChecker derivationlinechecker) {
+      if (!derivationlinechecker.f939.equals(this.f384)) {
          return false;
       } else {
-         c_a_.getClass();
-         if ((c_a_.f944 || c_a_.f945) && c_a_.f938 != 0) {
+         derivationlinechecker.getClass();
+         if ((derivationlinechecker.f944 || derivationlinechecker.f945) && derivationlinechecker.f938 != 0) {
             return false;
-         } else if (c_a_.f942 == null && c_a_.f935.m16() == 1) {
-            C_RF c_rf = c_a_.f935.f317.m44();
-            if (c_rf == null) {
+         } else if (derivationlinechecker.f942 == null && derivationlinechecker.f935.m16() == 1) {
+            Expression expression = derivationlinechecker.f935.f317.m44();
+            if (expression == null) {
                return false;
-            } else if (!c_rf.m1214().equals("<->")) {
+            } else if (!expression.getSymbol().equals("<->")) {
                return false;
             } else {
-               c_a_.f935.f317.f920 = 3;
-               c_a_.f942 = c_rf.m1217(c_a_.f935.f317.f923 = this.f1031 ? 1 : 0);
-               if (c_a_.f944 && !c_a_.m1609(true)) {
+               derivationlinechecker.f935.f317.f920 = 3;
+               derivationlinechecker.f942 = expression.getChild(derivationlinechecker.f935.f317.f923 = this.f1031 ? 1 : 0);
+               if (derivationlinechecker.f944 && !derivationlinechecker.m1609(true)) {
                   return false;
                } else {
-                  c_a_.m1631(0);
+                  derivationlinechecker.m1631(0);
                   return true;
                }
             }

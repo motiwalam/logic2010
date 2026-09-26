@@ -15,7 +15,7 @@ public class C_n_F {
    public C_n_F(String s) {
       this();
       this.f1313 = s.indexOf("~") != -1;
-      int[] aint = C_e_.m1755(s);
+      int[] aint = ExpressionPath.m1755(s);
       int i = aint == null ? 0 : aint.length;
 
       for (int j = 0; j < i; j++) {
@@ -190,7 +190,7 @@ public class C_n_F {
 
    @Override
    public String toString() {
-      return (this.f1313 ? "~" : "") + C_e_.m1754(this.f1316, 0, this.f1314);
+      return (this.f1313 ? "~" : "") + ExpressionPath.m1754(this.f1316, 0, this.f1314);
    }
 
    public Enumeration m1985() {

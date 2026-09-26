@@ -18,7 +18,7 @@ class C_NC extends JTextArea implements C_LC {
    C_NC() {
       this.setBackground(null);
       this.setForeground(null);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
       this.enableEvents(8L);
    }
 

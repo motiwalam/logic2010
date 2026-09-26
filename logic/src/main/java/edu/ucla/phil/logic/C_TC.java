@@ -17,7 +17,7 @@ class C_TC extends C_CA {
    static void m1307(int[] aint) {
       if (aint != null) {
          C_TC c_tc = new C_TC(aint);
-         c_tc.m414(Box.createVerticalStrut(LogicProgram.f539 * 3));
+         c_tc.m414(Box.createVerticalStrut(LogicProgram.fontSize * 3));
          c_tc.m1923();
       }
    }

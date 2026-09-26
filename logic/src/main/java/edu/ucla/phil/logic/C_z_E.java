@@ -8,7 +8,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-class C_z_E extends C_LB implements C_LC {
+class C_z_E extends SizedPanel implements C_LC {
    ButtonGroup f1494 = new ButtonGroup();
    Border f1495;
 

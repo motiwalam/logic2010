@@ -6,23 +6,23 @@ class C_h_D {
    Vector f1160 = new Vector();
    Vector f1161 = new Vector();
 
-   void m1839(C_RF c_rf) {
-      if (c_rf instanceof C_q_A) {
-         C_a_C c_a_c = new C_a_C(c_rf.m1214(), c_rf.m1216());
+   void m1839(Expression expression) {
+      if (expression instanceof AtomicFormula) {
+         C_a_C c_a_c = new C_a_C(expression.getSymbol(), expression.getChildCount());
          if (!this.f1160.contains(c_a_c)) {
             this.f1160.addElement(c_a_c);
          }
-      } else if (c_rf instanceof C_n_C) {
-         C_g_E c_g_e = new C_g_E(c_rf.m1214(), c_rf.m1216());
+      } else if (expression instanceof OperationTerm) {
+         C_g_E c_g_e = new C_g_E(expression.getSymbol(), expression.getChildCount());
          if (!this.f1161.contains(c_g_e)) {
             this.f1161.addElement(c_g_e);
          }
       }
 
-      int j = c_rf == null ? 0 : c_rf.m1216();
+      int j = expression == null ? 0 : expression.getChildCount();
 
       for (int i = 0; i < j; i++) {
-         this.m1839(c_rf.m1217(i));
+         this.m1839(expression.getChild(i));
       }
    }
 

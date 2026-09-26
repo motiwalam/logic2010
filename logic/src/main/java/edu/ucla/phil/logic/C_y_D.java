@@ -5,34 +5,34 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Vector;
 
-class C_y_D extends C_LB implements C_n_A {
+class C_y_D extends SizedPanel implements LogicConstants {
    LPParsing f1455;
    C_f_D f1456;
    C_EB f1457;
    String f1458;
    String f1459;
-   static String[] f1460 = LogicProgram.f596;
+   static String[] f1460 = LogicProgram.symbols;
 
    C_y_D(LPParsing lpparsing) {
       this.f1455 = lpparsing;
       this.setLayout(new C_m_A());
-      C_LB c_lb;
-      this.add(c_lb = new C_LB());
-      c_lb.setLayout(new FlowLayout());
+      SizedPanel sizedpanel;
+      this.add(sizedpanel = new SizedPanel());
+      sizedpanel.setLayout(new FlowLayout());
       this.f1458 = null;
       this.f1459 = null;
-      C_LB c_lb1;
-      this.add(c_lb1 = new C_LB());
-      c_lb1.setLayout(new GridBagLayout());
+      SizedPanel sizedpanel1;
+      this.add(sizedpanel1 = new SizedPanel());
+      sizedpanel1.setLayout(new GridBagLayout());
       GridBagConstraints gridbagconstraints = new GridBagConstraints();
       gridbagconstraints.anchor = 23;
       gridbagconstraints.gridx = 0;
       gridbagconstraints.gridy = 0;
       gridbagconstraints.weighty = 1.0;
-      c_lb1.add(this.f1456 = new C_f_D(this), gridbagconstraints);
+      sizedpanel1.add(this.f1456 = new C_f_D(this), gridbagconstraints);
       gridbagconstraints.gridx = 1;
       gridbagconstraints.weightx = 1.0;
-      c_lb1.add(this.f1457 = new C_EB(lpparsing), gridbagconstraints);
+      sizedpanel1.add(this.f1457 = new C_EB(lpparsing), gridbagconstraints);
       this.f1457.setVisible(false);
    }
 
@@ -73,7 +73,7 @@ class C_y_D extends C_LB implements C_n_A {
       return this.m2192().f427 == null;
    }
 
-   C_c_B m2192() {
+   ErrorRef m2192() {
       String s = null;
       String s1 = "Correct";
       int i = this.f1456.m1809();
@@ -129,43 +129,43 @@ class C_y_D extends C_LB implements C_n_A {
          }
       }
 
-      return new C_c_B(s, C_H.m666("summary", s1));
+      return new ErrorRef(s, Message.params("summary", s1));
    }
 
-   void m2193(C_XD c_xd) {
+   void m2193(TaggedRecord taggedrecord) {
       this.m2188();
-      this.f1458 = c_xd.m1494();
+      this.f1458 = taggedrecord.getName();
       if (this.f1458 != null && !this.f1458.trim().equals("")) {
          this.f1455.titlePanel.m1821(LPParsing.trimTitle(this.f1458));
       } else {
          this.f1455.titlePanel.m1821(null);
       }
 
-      this.f1459 = LPParsing.getProblemStatement(c_xd);
+      this.f1459 = LPParsing.getProblemStatement(taggedrecord);
       if (this.f1459 == null) {
          this.f1455.titlePanel.m1823("");
       } else {
          this.f1455.titlePanel.m1823(LogicProgram.m995(this.f1459, maggie, f1460));
       }
 
-      String s = c_xd.m1483(c_xd.m1475(']'));
+      String s = taggedrecord.valueAt(taggedrecord.indexOfTag(']'));
       this.f1457.f292.m227(this.f1459);
       this.f1457.f292.m230(s);
-      s = c_xd.m1483(c_xd.m1475('['));
+      s = taggedrecord.valueAt(taggedrecord.indexOfTag('['));
       int i = C_f_D.m1812(s);
       if (i >= 0 && i < this.f1456.f1114.length) {
          this.f1456.f1114[i].setSelected(true);
       }
 
-      if ((s = c_xd.m1483(c_xd.m1475('*'))) != null) {
+      if ((s = taggedrecord.valueAt(taggedrecord.indexOfTag('*'))) != null) {
          this.f1455.noDescent = true;
          this.f1457.f292.f142.f1198 = s.charAt(0) == 'T';
          Vector vector = new Vector();
-         C_OA c_oa = new C_OA("\\,");
-         c_oa.m1132(s.substring(1));
+         DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\,");
+         delimitedtokenizer.m1132(s.substring(1));
 
          Integer integer;
-         while ((integer = LogicProgram.m1010(c_oa.m1135())) != null) {
+         while ((integer = LogicProgram.parseInteger(delimitedtokenizer.m1135())) != null) {
             vector.add(integer);
          }
 
@@ -187,16 +187,16 @@ class C_y_D extends C_LB implements C_n_A {
 
    String m2194() {
       String s = "";
-      s = s + C_XD.m1508(this.f1458, '$');
-      s = s + C_XD.m1508(this.f1459, '=');
+      s = s + TaggedRecord.m1508(this.f1458, '$');
+      s = s + TaggedRecord.m1508(this.f1459, '=');
       int i = this.f1456.m1809();
       if (i != -1) {
-         s = s + C_XD.m1508(C_f_D.m1810(i), '[');
+         s = s + TaggedRecord.m1508(C_f_D.m1810(i), '[');
       }
 
       String s1 = this.f1457.f292.m233(false);
       if (!s1.equals("0")) {
-         s = s + C_XD.m1508(s1, ']');
+         s = s + TaggedRecord.m1508(s1, ']');
       }
 
       if (this.f1455.noDescent) {
@@ -209,7 +209,7 @@ class C_y_D extends C_LB implements C_n_A {
                s2 = s2 + (k == 0 ? "" : ",") + aint[k];
             }
 
-            s = s + C_XD.m1508(s2, '*');
+            s = s + TaggedRecord.m1508(s2, '*');
          }
       }
 

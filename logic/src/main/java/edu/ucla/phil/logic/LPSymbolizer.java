@@ -24,8 +24,8 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-class LPSymbolizer extends C_U implements C_v_D {
-   int fontSize = LogicProgram.f539;
+class LPSymbolizer extends LogicModule implements C_v_D {
+   int fontSize;
    static final String workFileName = "symwork.txt";
    static final String logFileName = "symdata.txt";
    static final String keyFileName = "keywork.txt";
@@ -38,26 +38,26 @@ class LPSymbolizer extends C_U implements C_v_D {
    static Hashtable userKey = null;
    static Vector instances = new Vector();
    static C_c_C printQueue = new C_c_C("Symbolization");
-   static C_BE noDirect = null;
-   static C_BE noErrMess = null;
-   static C_BE noHints = null;
-   static C_BE noCheck = null;
-   static C_BE noPrint = null;
-   static C_BE noPrintCheck = null;
-   static C_BE noPrintErr = null;
-   static C_BE monoProbs = null;
-   static C_BE equCounts = null;
-   static C_BE addToDB = null;
-   static C_BE updateDB = null;
-   static C_BE chap1 = null;
-   static C_BE chap2 = null;
-   static C_BE chap3 = null;
-   static C_BE chap4 = null;
-   static C_BE chap5 = null;
-   static C_BE logPrint = null;
-   static C_BE logSubmit = null;
-   static C_BE needPrint = null;
-   static C_BE needSubmit = null;
+   static ProblemSelector noDirect = null;
+   static ProblemSelector noErrMess = null;
+   static ProblemSelector noHints = null;
+   static ProblemSelector noCheck = null;
+   static ProblemSelector noPrint = null;
+   static ProblemSelector noPrintCheck = null;
+   static ProblemSelector noPrintErr = null;
+   static ProblemSelector monoProbs = null;
+   static ProblemSelector equCounts = null;
+   static ProblemSelector addToDB = null;
+   static ProblemSelector updateDB = null;
+   static ProblemSelector chap1 = null;
+   static ProblemSelector chap2 = null;
+   static ProblemSelector chap3 = null;
+   static ProblemSelector chap4 = null;
+   static ProblemSelector chap5 = null;
+   static ProblemSelector logPrint = null;
+   static ProblemSelector logSubmit = null;
+   static ProblemSelector needPrint = null;
+   static ProblemSelector needSubmit = null;
    static boolean noUser = false;
    static boolean submitExam = false;
    static boolean printIncorrect = false;
@@ -80,16 +80,16 @@ class LPSymbolizer extends C_U implements C_v_D {
    static String lastUserScheme = "";
    Hashtable probOptions;
    JSplitPane splitPane;
-   C_e_E symbolized;
-   C_y_B scheme = new C_y_B();
+   StyledTextPane symbolized;
+   C_y_B scheme;
    C_d_C problem;
    C_x_C lastFocus;
    C_x_C focus;
-   static String[] kaplan = LogicProgram.f596;
+   static String[] kaplan = LogicProgram.symbols;
    static int moduleIndex = 4;
 
    static boolean getExercises() {
-      if (!C_h_E.m410()) {
+      if (!C_h_E.loadMessages()) {
          LogicProgram.m971("not001", "the symbolization messages file");
          return false;
       } else if (!getAnswers()) {
@@ -97,7 +97,7 @@ class LPSymbolizer extends C_U implements C_v_D {
          return false;
       } else {
          resetOptions();
-         readOptions(LogicProgram.m1062("options", false));
+         readOptions(LogicProgram.openDataFile("options", false));
          readOptions(LogicProgram.m1064("options"));
          logNeeds();
          if ((exercises = readExercises()) == null) {
@@ -117,21 +117,21 @@ class LPSymbolizer extends C_U implements C_v_D {
    static C_h_C readExercises(boolean flag, boolean flag1, boolean flag2) {
       C_h_C c_h_c = new C_h_C(false);
       if (!flag) {
-         C_XB c_xb = LogicProgram.m1062("symwork.txt", false);
-         if (c_xb == null) {
+         ScrambledReader scrambledreader = LogicProgram.openDataFile("symwork.txt", false);
+         if (scrambledreader == null) {
             LogicProgram.m971("not001", "the Symbolization exercise file");
             return null;
          }
 
-         if (!readProblems(c_xb, c_h_c, true)) {
+         if (!readProblems(scrambledreader, c_h_c, true)) {
             LogicProgram.m971("not002", "the Symbolization exercise file");
             return null;
          }
       }
 
       if (!flag1) {
-         C_XB c_xb1 = LogicProgram.m1065("symwork.txt", flag2);
-         if (c_xb1 != null && (flag ? !readProblems(c_xb1, c_h_c, true) : !mergeProblems(c_xb1, c_h_c, true))) {
+         ScrambledReader scrambledreader1 = LogicProgram.m1065("symwork.txt", flag2);
+         if (scrambledreader1 != null && (flag ? !readProblems(scrambledreader1, c_h_c, true) : !mergeProblems(scrambledreader1, c_h_c, true))) {
             LogicProgram.m971("not002", "the local Symbolization exercise file");
             return null;
          }
@@ -142,6 +142,8 @@ class LPSymbolizer extends C_U implements C_v_D {
 
    LPSymbolizer(boolean flag) {
       super(flag);
+      this.fontSize = LogicProgram.fontSize;
+      this.scheme = new C_y_B();
       C_c_F c_c_f = new C_c_F(this);
       c_c_f.setViewportView(this.scheme);
       c_c_f.getVerticalScrollBar().setUnitIncrement(22);
@@ -150,7 +152,7 @@ class LPSymbolizer extends C_U implements C_v_D {
       jpanel.add(c_c_f, "Center");
       this.scheme.setForeground(this.colors[0]);
       this.scheme.setBackground(this.colors[1]);
-      this.symbolized = new C_e_E();
+      this.symbolized = new StyledTextPane();
       StyledDocument styleddocument = this.symbolized.getStyledDocument();
       SimpleAttributeSet simpleattributeset = new SimpleAttributeSet();
       StyleConstants.setAlignment(simpleattributeset, 1);
@@ -208,12 +210,12 @@ class LPSymbolizer extends C_U implements C_v_D {
       this.treeScroller.repaint();
    }
 
-   static synchronized void startup(Rectangle rectangle, C_x_A c_x_a, String s) {
+   static synchronized void startup(Rectangle rectangle, BusyIndicator busyindicator, String s) {
       if (startups == null) {
          startups = new Vector();
       }
 
-      LPSymbolizer.C__A lpsymbolizer$c__a = new LPSymbolizer.C__A(c_x_a, rectangle, s);
+      LPSymbolizer.C__A lpsymbolizer$c__a = new LPSymbolizer.C__A(busyindicator, rectangle, s);
       startups.add(lpsymbolizer$c__a);
       if (startups.size() <= 1) {
          if (exercises == null) {
@@ -253,12 +255,12 @@ class LPSymbolizer extends C_U implements C_v_D {
       int i = startups.size();
 
       for (int j = 0; j < i; j++) {
-         ((C_U.C__A)startups.get(i - 1 - j)).m1310();
+         ((LogicModule.C__A)startups.get(i - 1 - j)).m1310();
       }
 
       while (!startups.isEmpty()) {
-         C_U.C__A c_u$c__a = (C_U.C__A)startups.remove(0);
-         SwingUtilities.invokeLater(c_u$c__a);
+         LogicModule.C__A logicmodule$c__a = (LogicModule.C__A)startups.remove(0);
+         SwingUtilities.invokeLater(logicmodule$c__a);
       }
    }
 
@@ -272,93 +274,93 @@ class LPSymbolizer extends C_U implements C_v_D {
       return rectangle;
    }
 
-   static void allocateSymModule(C_U.C__A c_u$c__a) {
+   static void allocateSymModule(LogicModule.C__A logicmodule$c__a) {
       LPSymbolizer lpsymbolizer = new LPSymbolizer(false);
       instances.addElement(lpsymbolizer);
-      if (c_u$c__a.f784 == null || newProblem == null) {
+      if (logicmodule$c__a.f784 == null || newProblem == null) {
          lpsymbolizer.loadProblem((String)null);
          if (newProblem == null) {
             newProblem = lpsymbolizer.saveProblem();
          }
       }
 
-      if (c_u$c__a.f784 != null) {
-         lpsymbolizer.loadProblem(c_u$c__a.f784);
-         c_u$c__a.f784 = null;
+      if (logicmodule$c__a.f784 != null) {
+         lpsymbolizer.loadProblem(logicmodule$c__a.f784);
+         logicmodule$c__a.f784 = null;
       }
 
       lpsymbolizer.setupFrame(LPInfo.programName + ": Symbolization");
-      lpsymbolizer.frame.setBounds(lpsymbolizer.fixModuleRect(c_u$c__a.f783));
+      lpsymbolizer.frame.setBounds(lpsymbolizer.fixModuleRect(logicmodule$c__a.f783));
       lpsymbolizer.frame.setVisible(true);
       lpsymbolizer.splitPane.setDividerLocation(lpsymbolizer.getVisibleRect().width / 4);
       lpsymbolizer.requestFocus();
    }
 
-   static void insertDBProbs(C_BE c_be) {
-      if (c_be != null && !c_be.m402() && C_u_C.m2101("addToDB", "developer")) {
+   static void insertDBProbs(ProblemSelector problemselector) {
+      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            C_XD c_xd = new C_XD(exercises.m1778(j));
-            String s = c_xd.m1494();
-            if (c_be.m404(s)) {
-               if (C_k_C.f1199 != null) {
-                  C_k_C.f1199.println(LogicProgram.m1079());
-                  C_k_C.f1199.println("adding " + s);
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            String s = taggedrecord.getName();
+            if (problemselector.m404(s)) {
+               if (DiagnosticsLog.out != null) {
+                  DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
+                  DiagnosticsLog.out.println("adding " + s);
                }
 
-               String s1 = getProblemStatement(c_xd);
-               String s2 = c_xd.m1483(c_xd.m1475('!'));
+               String s1 = getProblemStatement(taggedrecord);
+               String s2 = taggedrecord.valueAt(taggedrecord.indexOfTag('!'));
                if (s2 != null && s2.length() > 255) {
                   s2 = s2.substring(0, 252) + "...";
                }
 
-               String s3 = C_z_D.m2225(s1.trim());
-               String s4 = c_xd.m1483(c_xd.m1475('C'));
+               String s3 = Scrambler.md5Base64(s1.trim());
+               String s4 = taggedrecord.valueAt(taggedrecord.indexOfTag('C'));
                if (s4 == null) {
                   s4 = s;
                }
 
                String s5 = "insert into logic_problem (COMMENT,DTCREATION,PROBLEM_NAME,TPROBLEM,TPROBLEM_MD5,TWEB_FORM_PROBLEM,VERSION,SYNTAX,COMMON_NAME)";
-               s5 = s5 + " values (" + C_KC.m815(s2) + ",GETDATE()," + C_KC.m815(s) + "," + C_KC.m815(s1) + ",";
-               s5 = s5 + C_KC.m815(s3) + "," + C_KC.m815(s1) + "," + nameVersion(s) + "," + C_FB.m537() + ",";
-               s5 = s5 + C_KC.m815(s4) + ")";
-               C_KC.m814(s5);
+               s5 = s5 + " values (" + ServerConnection.m815(s2) + ",GETDATE()," + ServerConnection.m815(s) + "," + ServerConnection.m815(s1) + ",";
+               s5 = s5 + ServerConnection.m815(s3) + "," + ServerConnection.m815(s1) + "," + nameVersion(s) + "," + FormulaParser.getSyntax() + ",";
+               s5 = s5 + ServerConnection.m815(s4) + ")";
+               ServerConnection.m814(s5);
             }
          }
       }
    }
 
-   static void updateDBProbs(C_BE c_be) {
-      if (c_be != null && !c_be.m402() && C_u_C.m2101("addToDB", "developer")) {
+   static void updateDBProbs(ProblemSelector problemselector) {
+      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            C_XD c_xd = new C_XD(exercises.m1778(j));
-            String s = c_xd.m1494();
-            if (c_be.m404(s)) {
-               if (C_k_C.f1199 != null) {
-                  C_k_C.f1199.println(LogicProgram.m1079());
-                  C_k_C.f1199.println("updating " + s);
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            String s = taggedrecord.getName();
+            if (problemselector.m404(s)) {
+               if (DiagnosticsLog.out != null) {
+                  DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
+                  DiagnosticsLog.out.println("updating " + s);
                }
 
-               String s1 = getProblemStatement(c_xd);
-               String s2 = c_xd.m1483(c_xd.m1475('!'));
+               String s1 = getProblemStatement(taggedrecord);
+               String s2 = taggedrecord.valueAt(taggedrecord.indexOfTag('!'));
                if (s2 != null && s2.length() > 255) {
                   s2 = s2.substring(0, 252) + "...";
                }
 
-               String s3 = C_z_D.m2225(s1.trim());
-               String s4 = c_xd.m1483(c_xd.m1475('C'));
+               String s3 = Scrambler.md5Base64(s1.trim());
+               String s4 = taggedrecord.valueAt(taggedrecord.indexOfTag('C'));
                if (s4 == null) {
                   s4 = s;
                }
 
-               String s5 = "update logic_problem set tproblem = " + C_KC.m815(s1) + ", tproblem_md5 = " + C_KC.m815(s3);
-               s5 = s5 + ", tweb_form_problem = " + C_KC.m815(s1) + ", comment = " + C_KC.m815(s2);
-               s5 = s5 + ", version = " + nameVersion(s) + ", common_name = " + C_KC.m815(s4);
-               s5 = s5 + " where problem_name = " + C_KC.m815(s) + " and syntax = " + C_FB.m537();
-               C_KC.m814(s5);
+               String s5 = "update logic_problem set tproblem = " + ServerConnection.m815(s1) + ", tproblem_md5 = " + ServerConnection.m815(s3);
+               s5 = s5 + ", tweb_form_problem = " + ServerConnection.m815(s1) + ", comment = " + ServerConnection.m815(s2);
+               s5 = s5 + ", version = " + nameVersion(s) + ", common_name = " + ServerConnection.m815(s4);
+               s5 = s5 + " where problem_name = " + ServerConnection.m815(s) + " and syntax = " + FormulaParser.getSyntax();
+               ServerConnection.m814(s5);
             }
          }
       }
@@ -369,8 +371,8 @@ class LPSymbolizer extends C_U implements C_v_D {
    }
 
    void setupFrame(String s) {
-      this.frame = new C_0E(s);
-      this.frame.f27 = this;
+      this.frame = new ModuleFrame(s);
+      this.frame.module = this;
       this.frame.add(this, "Center");
    }
 
@@ -458,15 +460,15 @@ class LPSymbolizer extends C_U implements C_v_D {
 
    static boolean checkQuit(Hashtable hashtable, Hashtable hashtable1) {
       resetOptions();
-      readOptions(LogicProgram.m1062("options", false));
+      readOptions(LogicProgram.openDataFile("options", false));
       readOptions(LogicProgram.m1064("options"));
       logNeeds();
       if (needPrint != null && !needPrint.m402() || needSubmit != null && !needSubmit.m402()) {
          C_a_A c_a_a = new C_a_A(readWork());
          c_a_a.m1634(readExercises());
-         C_z_C.m2215(hashtable, "symdata.txt", "P", needPrint, c_a_a);
+         MainMenu.m2215(hashtable, "symdata.txt", "P", needPrint, c_a_a);
          c_a_a.m1635();
-         C_z_C.m2215(hashtable1, "symdata.txt", "S", needSubmit, c_a_a);
+         MainMenu.m2215(hashtable1, "symdata.txt", "S", needSubmit, c_a_a);
       }
 
       resetOptions();
@@ -485,7 +487,7 @@ class LPSymbolizer extends C_U implements C_v_D {
 
          while (c_a_a.hasMoreElements()) {
             String s = (String)c_a_a.nextElement();
-            if ((vector == null || !vector.contains(s)) && hasWork(new C_XD(s))) {
+            if ((vector == null || !vector.contains(s)) && hasWork(new TaggedRecord(s))) {
                vector1.add(s);
             }
          }
@@ -512,7 +514,7 @@ class LPSymbolizer extends C_U implements C_v_D {
    }
 
    @Override
-   int getProblemState(C_XD c_xd) {
+   int getProblemState(TaggedRecord taggedrecord) {
       System.out.println("LPSymbolizer.getProblemState(LPTagReader reader) should not be called!");
       return 4;
    }
@@ -559,17 +561,17 @@ class LPSymbolizer extends C_U implements C_v_D {
          if (c_h_c == null) {
             return false;
          } else {
-            if (c_h_c.f1079 && !c_h_c.m1777(LogicProgram.f533).equals(c_h_c.f1076)) {
+            if (c_h_c.f1079 && !c_h_c.m1777(LogicProgram.user).equals(c_h_c.f1076)) {
                System.out.println("Could not digest file: symwork.txt");
-               if (!C_u_C.m2101("indigestion", "instructor")) {
+               if (!UserSetup.m2101("indigestion", "instructor")) {
                   LogicProgram.m971("not003", "symwork.txt");
                   return false;
                }
             }
 
             problems = c_h_c;
-            C__C.f928 = C_f_F.m1816("symwork.txt", problems);
-            C_f_F.m1815(exercises, C__C.f928);
+            C__C.f928 = ProblemEntry.m1816("symwork.txt", problems);
+            ProblemEntry.m1815(exercises, C__C.f928);
             return true;
          }
       }
@@ -580,26 +582,26 @@ class LPSymbolizer extends C_U implements C_v_D {
          return null;
       } else {
          C_h_C c_h_c = new C_h_C(true);
-         C_XB c_xb = LogicProgram.m1062("symwork.txt", true);
-         if (!LogicProgram.f584 || c_xb instanceof C_b_D) {
-            if (c_xb == null) {
+         ScrambledReader scrambledreader = LogicProgram.openDataFile("symwork.txt", true);
+         if (!LogicProgram.f584 || scrambledreader instanceof PlainRecordReader) {
+            if (scrambledreader == null) {
                LogicProgram.m971("not001", "symwork.txt");
                return null;
             }
 
-            if (c_xb instanceof C_b_D) {
+            if (scrambledreader instanceof PlainRecordReader) {
                c_h_c.f1079 = true;
             }
 
-            if (!readProblems(c_xb, c_h_c, false)) {
+            if (!readProblems(scrambledreader, c_h_c, false)) {
                LogicProgram.m971("not002", "symwork.txt");
                return null;
             }
          }
 
-         if (!(c_xb instanceof C_b_D)) {
-            c_xb = LogicProgram.m1064("symwork.txt");
-            if (c_xb != null && !mergeProblems(c_xb, c_h_c, false)) {
+         if (!(scrambledreader instanceof PlainRecordReader)) {
+            scrambledreader = LogicProgram.m1064("symwork.txt");
+            if (scrambledreader != null && !mergeProblems(scrambledreader, c_h_c, false)) {
                LogicProgram.m971("not002", "symwork.txt");
                return null;
             }
@@ -611,8 +613,8 @@ class LPSymbolizer extends C_U implements C_v_D {
 
    static boolean getUserKey() {
       userKey = new Hashtable();
-      C_XB c_xb = LogicProgram.m1062("keywork.txt", true);
-      if (c_xb != null && c_xb instanceof C_b_D && !readAnswers(c_xb, userKey)) {
+      ScrambledReader scrambledreader = LogicProgram.openDataFile("keywork.txt", true);
+      if (scrambledreader != null && scrambledreader instanceof PlainRecordReader && !readAnswers(scrambledreader, userKey)) {
          LogicProgram.m971("not002", "keywork.txt");
          return false;
       } else {
@@ -658,72 +660,72 @@ class LPSymbolizer extends C_U implements C_v_D {
          c_h_c.f1158 = new Hashtable();
       }
 
-      return C_U.readProblems(reader, c_h_c, flag, flag1);
+      return LogicModule.readProblems(reader, c_h_c, flag, flag1);
    }
 
    String getChangedProblem() {
       String s = this.saveProblem();
       String s1 = this.problemIndex == -1 ? newProblem : problems.m1778(this.problemIndex);
-      return C_XD.m1500(s).equals(C_XD.m1500(s1)) ? null : s;
+      return TaggedRecord.m1500(s).equals(TaggedRecord.m1500(s1)) ? null : s;
    }
 
    static String getProblemStatement(String s) {
-      return getProblemStatement(new C_XD(s));
+      return getProblemStatement(new TaggedRecord(s));
    }
 
-   static String getProblemStatement(C_XD c_xd) {
-      String s = c_xd.m1483(c_xd.m1475('-'));
+   static String getProblemStatement(TaggedRecord taggedrecord) {
+      String s = taggedrecord.valueAt(taggedrecord.indexOfTag('-'));
       if (s != null) {
          return s;
       } else {
-         s = c_xd.m1483(c_xd.m1475('+'));
+         s = taggedrecord.valueAt(taggedrecord.indexOfTag('+'));
          if (s == null) {
             return null;
          } else {
-            C_OA c_oa = new C_OA("\\:");
-            c_oa.m1132(s);
-            c_oa.m1135();
-            return c_oa.m1133();
+            DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\:");
+            delimitedtokenizer.m1132(s);
+            delimitedtokenizer.m1135();
+            return delimitedtokenizer.m1133();
          }
       }
    }
 
    static String getProblemSymbol(String s) {
-      return getProblemSymbol(new C_XD(s));
+      return getProblemSymbol(new TaggedRecord(s));
    }
 
-   static String getProblemSymbol(C_XD c_xd) {
-      String s = c_xd.m1483(c_xd.m1475('+'));
+   static String getProblemSymbol(TaggedRecord taggedrecord) {
+      String s = taggedrecord.valueAt(taggedrecord.indexOfTag('+'));
       if (s == null) {
-         return c_xd.m1475('-') == -1 ? null : connSymbol[0];
+         return taggedrecord.indexOfTag('-') == -1 ? null : connSymbol[0];
       } else {
-         C_OA c_oa = new C_OA("\\:");
-         c_oa.m1132(s);
-         String s1 = c_oa.m1135();
-         return c_oa.m1133() == null ? null : s1;
+         DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\:");
+         delimitedtokenizer.m1132(s);
+         String s1 = delimitedtokenizer.m1135();
+         return delimitedtokenizer.m1133() == null ? null : s1;
       }
    }
 
-   static int getHintCount(C_XD c_xd) {
-      Integer integer = c_xd.m1485(c_xd.m1475('h'));
+   static int getHintCount(TaggedRecord taggedrecord) {
+      Integer integer = taggedrecord.m1485(taggedrecord.indexOfTag('h'));
       return integer == null ? 0 : integer;
    }
 
    static boolean hasWork(String s) {
-      return hasWork(new C_XD(s));
+      return hasWork(new TaggedRecord(s));
    }
 
-   static boolean hasWork(C_XD c_xd) {
-      return c_xd.m1475('-') == -1 ? !connSymbol[0].equals(getProblemSymbol(c_xd)) : c_xd.m1475('+') != -1;
+   static boolean hasWork(TaggedRecord taggedrecord) {
+      return taggedrecord.indexOfTag('-') == -1 ? !connSymbol[0].equals(getProblemSymbol(taggedrecord)) : taggedrecord.indexOfTag('+') != -1;
    }
 
-   static String getWork(C_XD c_xd) {
-      return c_xd.m1475('-') == -1 && connSymbol[0].equals(getProblemSymbol(c_xd)) ? "" : c_xd.m1484("+");
+   static String getWork(TaggedRecord taggedrecord) {
+      return taggedrecord.indexOfTag('-') == -1 && connSymbol[0].equals(getProblemSymbol(taggedrecord)) ? "" : taggedrecord.m1484("+");
    }
 
    static String getExerciseTitle(String s) {
       String s1;
-      return exercises != null && (s1 = exercises.m1780(s)) != null ? C_XD.m1493(s1) : null;
+      return exercises != null && (s1 = exercises.m1780(s)) != null ? TaggedRecord.m1493(s1) : null;
    }
 
    static boolean isExercise(String s) {
@@ -731,13 +733,13 @@ class LPSymbolizer extends C_U implements C_v_D {
    }
 
    static boolean isExample(String s) {
-      return exercises != null && s != null && C_XD.m1502(exercises.m1780(s));
+      return exercises != null && s != null && TaggedRecord.m1502(exercises.m1780(s));
    }
 
-   void loadExerciseInfo(C_XD c_xd) {
-      c_xd = new C_XD(exercises == null ? null : exercises.m1780(c_xd.m1494()));
-      String s = c_xd.m1494();
-      this.probOptions = c_xd.m1506('%');
+   void loadExerciseInfo(TaggedRecord taggedrecord) {
+      taggedrecord = new TaggedRecord(exercises == null ? null : exercises.m1780(taggedrecord.getName()));
+      String s = taggedrecord.getName();
+      this.probOptions = taggedrecord.m1506('%');
       this.dontChange = this.probOptions != null && this.probOptions.containsKey("eg");
       this.directEntryDisabled = LogicProgram.m1060(noDirect, s);
       this.errorMessagesDisabled = LogicProgram.m1060(this.forPrint ? noPrintErr : noErrMess, s);
@@ -796,39 +798,39 @@ class LPSymbolizer extends C_U implements C_v_D {
    static boolean getAnswers() {
       answers = new Hashtable();
       if (!LogicProgram.f584) {
-         C_XB c_xb = LogicProgram.m1062("symAnswers", false);
-         if (c_xb == null || !readAnswers(c_xb, answers)) {
+         ScrambledReader scrambledreader = LogicProgram.openDataFile("symAnswers", false);
+         if (scrambledreader == null || !readAnswers(scrambledreader, answers)) {
             return false;
          }
       }
 
-      C_XB c_xb1 = LogicProgram.m1064("symAnswers");
-      return c_xb1 == null || readAnswers(c_xb1, answers);
+      ScrambledReader scrambledreader1 = LogicProgram.m1064("symAnswers");
+      return scrambledreader1 == null || readAnswers(scrambledreader1, answers);
    }
 
    static boolean readAnswers(Reader reader, Hashtable hashtable) {
       if (reader == null) {
          return false;
       } else {
-         C_XB c_xb;
-         if (reader instanceof C_XB) {
-            c_xb = (C_XB)reader;
+         ScrambledReader scrambledreader;
+         if (reader instanceof ScrambledReader) {
+            scrambledreader = (ScrambledReader)reader;
          } else {
-            c_xb = new C_XB(reader, LogicProgram.f537);
+            scrambledreader = new ScrambledReader(reader, LogicProgram.scrambleKey);
          }
 
          try {
             String s;
-            while ((s = c_xb.readLine()) != null) {
-               if (!C_XD.m1511(s)) {
-                  String s1 = C_XD.m1493(s);
+            while ((s = scrambledreader.readLine()) != null) {
+               if (!TaggedRecord.isBlankOrComment(s)) {
+                  String s1 = TaggedRecord.m1493(s);
                   if (s1 != null && !(s1 = s1.trim()).equals("")) {
                      hashtable.put(s1, s);
                   }
                }
             }
 
-            c_xb.close();
+            scrambledreader.close();
             return true;
          } catch (IOException ioexception) {
             return false;
@@ -838,7 +840,7 @@ class LPSymbolizer extends C_U implements C_v_D {
 
    static String[] getProblemAnswers(String s) {
       String s1 = getExerciseTitle(s);
-      C_XD c_xd;
+      TaggedRecord taggedrecord;
       boolean flag;
       if (s1 == null) {
          String s2 = problems.m1780(s);
@@ -846,9 +848,9 @@ class LPSymbolizer extends C_U implements C_v_D {
             return null;
          }
 
-         c_xd = new C_XD(s2);
+         taggedrecord = new TaggedRecord(s2);
          flag = true;
-         String s3 = c_xd.m1497();
+         String s3 = taggedrecord.m1497();
          if (s3 != null) {
             return getProblemAnswers(s3);
          }
@@ -858,11 +860,11 @@ class LPSymbolizer extends C_U implements C_v_D {
             return null;
          }
 
-         c_xd = new C_XD(s4);
+         taggedrecord = new TaggedRecord(s4);
          flag = false;
       }
 
-      Vector vector = C_d_C.m1707(c_xd, flag);
+      Vector vector = C_d_C.m1707(taggedrecord, flag);
       if (vector == null) {
          return null;
       } else {
@@ -874,15 +876,15 @@ class LPSymbolizer extends C_U implements C_v_D {
 
    static String getProblemScheme(String s) {
       String s1 = getExerciseTitle(s);
-      C_XD c_xd;
+      TaggedRecord taggedrecord;
       if (s1 == null) {
          String s2 = problems.m1780(s);
          if (s2 == null) {
             return null;
          }
 
-         c_xd = new C_XD(s2);
-         String s3 = c_xd.m1497();
+         taggedrecord = new TaggedRecord(s2);
+         String s3 = taggedrecord.m1497();
          if (s3 != null) {
             return getProblemScheme(s3);
          }
@@ -892,26 +894,26 @@ class LPSymbolizer extends C_U implements C_v_D {
             return null;
          }
 
-         c_xd = new C_XD(s4);
+         taggedrecord = new TaggedRecord(s4);
       }
 
-      return c_xd.m1483(c_xd.m1475('='));
+      return taggedrecord.valueAt(taggedrecord.indexOfTag('='));
    }
 
    static void readOptions(Reader reader) {
       if (reader != null) {
-         C_XD c_xd = new C_XD(reader, true);
+         TaggedRecord taggedrecord = new TaggedRecord(reader, true);
          String s = "";
 
-         while (c_xd.m1469()) {
-            String s1 = c_xd.m1494();
+         while (taggedrecord.readNext()) {
+            String s1 = taggedrecord.getName();
             if (s1 != null && s1.trim().equalsIgnoreCase("symbolization")) {
-               int[] aint = c_xd.m1481("+?");
+               int[] aint = taggedrecord.m1481("+?");
                int i = aint.length;
 
                for (int j = 0; j < i; j++) {
-                  char c0 = c_xd.m1474(aint[j]);
-                  String s2 = c_xd.m1483(aint[j]);
+                  char c0 = taggedrecord.tagAt(aint[j]);
+                  String s2 = taggedrecord.valueAt(aint[j]);
                   if (c0 == '+') {
                      if (s2.equalsIgnoreCase("noUser")) {
                         noUser = true;
@@ -926,130 +928,130 @@ class LPSymbolizer extends C_U implements C_v_D {
                         String s3 = s2.substring(0, k).trim();
                         if (s3.equalsIgnoreCase("noDirect")) {
                            if (noDirect == null) {
-                              noDirect = new C_BE();
+                              noDirect = new ProblemSelector();
                            }
 
-                           noDirect.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noDirect.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("noErrMess")) {
                            if (noErrMess == null) {
-                              noErrMess = new C_BE();
+                              noErrMess = new ProblemSelector();
                            }
 
-                           noErrMess.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noErrMess.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("noHints")) {
                            if (noHints == null) {
-                              noHints = new C_BE();
+                              noHints = new ProblemSelector();
                            }
 
-                           noHints.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noHints.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("noCheck")) {
                            if (noCheck == null) {
-                              noCheck = new C_BE();
+                              noCheck = new ProblemSelector();
                            }
 
-                           noCheck.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("noPrint")) {
                            if (noPrint == null) {
-                              noPrint = new C_BE();
+                              noPrint = new ProblemSelector();
                            }
 
-                           noPrint.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("noPrintCheck")) {
                            if (noPrintCheck == null) {
-                              noPrintCheck = new C_BE();
+                              noPrintCheck = new ProblemSelector();
                            }
 
-                           noPrintCheck.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noPrintCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("noPrintErr")) {
                            if (noPrintErr == null) {
-                              noPrintErr = new C_BE();
+                              noPrintErr = new ProblemSelector();
                            }
 
-                           noPrintErr.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           noPrintErr.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("monoProbs")) {
                            if (monoProbs == null) {
-                              monoProbs = new C_BE();
+                              monoProbs = new ProblemSelector();
                            }
 
-                           monoProbs.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           monoProbs.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("equCounts")) {
                            if (equCounts == null) {
-                              equCounts = new C_BE();
+                              equCounts = new ProblemSelector();
                            }
 
-                           equCounts.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           equCounts.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("chap1")) {
                            if (chap1 == null) {
-                              chap1 = new C_BE();
+                              chap1 = new ProblemSelector();
                            }
 
-                           chap1.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           chap1.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("chap2")) {
                            if (chap2 == null) {
-                              chap2 = new C_BE();
+                              chap2 = new ProblemSelector();
                            }
 
-                           chap2.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           chap2.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("chap3")) {
                            if (chap3 == null) {
-                              chap3 = new C_BE();
+                              chap3 = new ProblemSelector();
                            }
 
-                           chap3.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           chap3.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("chap4")) {
                            if (chap4 == null) {
-                              chap4 = new C_BE();
+                              chap4 = new ProblemSelector();
                            }
 
-                           chap4.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           chap4.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("chap5")) {
                            if (chap5 == null) {
-                              chap5 = new C_BE();
+                              chap5 = new ProblemSelector();
                            }
 
-                           chap5.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           chap5.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("addToDB")) {
                            if (addToDB == null) {
-                              addToDB = new C_BE();
+                              addToDB = new ProblemSelector();
                            }
 
-                           addToDB.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           addToDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("updateDB")) {
                            if (updateDB == null) {
-                              updateDB = new C_BE();
+                              updateDB = new ProblemSelector();
                            }
 
-                           updateDB.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           updateDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("logPrint")) {
                            if (logPrint == null) {
-                              logPrint = new C_BE();
+                              logPrint = new ProblemSelector();
                            }
 
-                           logPrint.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           logPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("logSubmit")) {
                            if (logSubmit == null) {
-                              logSubmit = new C_BE();
+                              logSubmit = new ProblemSelector();
                            }
 
-                           logSubmit.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           logSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("needPrint")) {
                            if (needPrint == null) {
-                              needPrint = new C_BE();
+                              needPrint = new ProblemSelector();
                            }
 
-                           needPrint.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           needPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("needSubmit")) {
                            if (needSubmit == null) {
-                              needSubmit = new C_BE();
+                              needSubmit = new ProblemSelector();
                            }
 
-                           needSubmit.m395(new C_BE(s2.substring(k + 1)).m403(s));
+                           needSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
                         } else if (s3.equalsIgnoreCase("prefix")) {
                            s = s2.substring(k + 1);
                         } else if (s3.equalsIgnoreCase("termprefix")) {
-                           String s4 = C_KC.f471 + "." + C_KC.f472 + ".";
-                           if (C_KC.f474.length() > 0) {
-                              s4 = s4 + C_KC.f474 + ".";
+                           String s4 = ServerConnection.institution + "." + ServerConnection.term + ".";
+                           if (ServerConnection.ident.length() > 0) {
+                              s4 = s4 + ServerConnection.ident + ".";
                            }
 
                            s = s4 + s2.substring(k + 1);
@@ -1060,14 +1062,14 @@ class LPSymbolizer extends C_U implements C_v_D {
             }
          }
 
-         c_xd.m1470();
+         taggedrecord.close();
       }
    }
 
    static void logNeeds() {
       if (needPrint != null && !needPrint.m402()) {
          if (logPrint == null) {
-            logPrint = new C_BE();
+            logPrint = new ProblemSelector();
          }
 
          logPrint.m395(needPrint);
@@ -1075,7 +1077,7 @@ class LPSymbolizer extends C_U implements C_v_D {
 
       if (needSubmit != null && !needSubmit.m402()) {
          if (logSubmit == null) {
-            logSubmit = new C_BE();
+            logSubmit = new ProblemSelector();
          }
 
          logSubmit.m395(needSubmit);
@@ -1083,18 +1085,18 @@ class LPSymbolizer extends C_U implements C_v_D {
    }
 
    void loadProblem(String s) {
-      this.loadProblem(new C_XD(s));
+      this.loadProblem(new TaggedRecord(s));
    }
 
-   void loadProblem(C_XD c_xd) {
+   void loadProblem(TaggedRecord taggedrecord) {
       this.lastDirect = "";
       this.problemIndex = -1;
-      this.loadExerciseInfo(c_xd);
-      this.problem.m1703(c_xd);
+      this.loadExerciseInfo(taggedrecord);
+      this.problem.m1703(taggedrecord);
       this.titlePanel.m1823(this.problem.f1055 == null ? "" : this.problem.f1055);
-      this.errorCount = c_xd.m1498();
-      this.hintCount = getHintCount(c_xd);
-      this.workTime = c_xd.m1499();
+      this.errorCount = taggedrecord.m1498();
+      this.hintCount = getHintCount(taggedrecord);
+      this.workTime = taggedrecord.m1499();
       this.loadTime = 0L;
       if (this.problem.m1714() == 0) {
          this.titlePanel.m1825("Answer Not Available");
@@ -1104,7 +1106,7 @@ class LPSymbolizer extends C_U implements C_v_D {
 
       this.setProblemTitle(this.problem.f1051);
       this.scheme.m2182(this.problem.f1053);
-      this.titlePanel.m1827(c_xd.m1483(c_xd.m1475('!')));
+      this.titlePanel.m1827(taggedrecord.valueAt(taggedrecord.indexOfTag('!')));
       this.updateWorkTime();
       this.problem.f1045.f1438.requestFocus();
    }
@@ -1120,7 +1122,7 @@ class LPSymbolizer extends C_U implements C_v_D {
    }
 
    void loadUserProblem(String s) {
-      this.loadProblem(C_XD.m1509(C_XD.m1508(s, '-')));
+      this.loadProblem(TaggedRecord.m1509(TaggedRecord.m1508(s, '-')));
    }
 
    void removeWork() {
@@ -1130,118 +1132,118 @@ class LPSymbolizer extends C_U implements C_v_D {
       this.problem.f1045.f1438.requestFocus();
    }
 
-   static String removeWork(C_XD c_xd) {
-      String s = C_XD.m1508(c_xd.m1494(), '$');
-      s = s + C_XD.m1508(getProblemStatement(c_xd), '-');
-      return s + c_xd.m1484("=@%u!");
+   static String removeWork(TaggedRecord taggedrecord) {
+      String s = TaggedRecord.m1508(taggedrecord.getName(), '$');
+      s = s + TaggedRecord.m1508(getProblemStatement(taggedrecord), '-');
+      return s + taggedrecord.m1484("=@%u!");
    }
 
    static int[] getExerciseIndices() {
       if (problems != null && exercises != null) {
-         C_e_ c_e_ = new C_e_();
+         ExpressionPath expressionpath = new ExpressionPath();
          int i = problems.size();
 
          for (int j = 0; j < i; j++) {
-            if (isExercise(C_XD.m1493(problems.m1778(j)))) {
-               c_e_.m1749(j);
+            if (isExercise(TaggedRecord.m1493(problems.m1778(j)))) {
+               expressionpath.m1749(j);
             }
          }
 
-         return c_e_.m1752();
+         return expressionpath.m1752();
       } else {
          return null;
       }
    }
 
    void submitExam() {
-      if (C_u_C.m2105("Symbolization")) {
+      if (UserSetup.m2105("Symbolization")) {
          int[] aint = getExerciseIndices();
-         C_x_A c_x_a = new C_x_A(this);
-         C_0A c_0a = C_KC.m835(c_x_a);
-         if (c_0a != null) {
+         BusyIndicator busyindicator = new BusyIndicator(this);
+         Submission submission = ServerConnection.prepareSubmission(busyindicator);
+         if (submission != null) {
             if (C_WB.m1450(this, null)) {
-               submit(c_0a, aint, c_x_a);
-               C_KC.m838(c_0a, c_x_a);
-               C_j_C.m1873(c_0a);
+               submit(submission, aint, busyindicator);
+               ServerConnection.m838(submission, busyindicator);
+               AccountManager.m1873(submission);
             } else {
-               C_KC.m838(c_0a, c_x_a);
+               ServerConnection.m838(submission, busyindicator);
             }
          }
       }
    }
 
    void submitProblems() {
-      C_x_A c_x_a = new C_x_A(this);
-      C_0A c_0a = C_KC.m835(c_x_a);
-      if (c_0a != null) {
+      BusyIndicator busyindicator = new BusyIndicator(this);
+      Submission submission = ServerConnection.prepareSubmission(busyindicator);
+      if (submission != null) {
          int[] aint = C_WB.m1436(this);
          if (aint == null) {
-            C_KC.m838(c_0a, c_x_a);
+            ServerConnection.m838(submission, busyindicator);
          } else {
-            submit(c_0a, aint, c_x_a);
-            C_KC.m838(c_0a, c_x_a);
-            C_j_C.m1873(c_0a);
+            submit(submission, aint, busyindicator);
+            ServerConnection.m838(submission, busyindicator);
+            AccountManager.m1873(submission);
          }
       }
    }
 
-   static void submit(C_0A c_0a, int[] aint, C_x_A c_x_a) {
+   static void submit(Submission submission, int[] aint, BusyIndicator busyindicator) {
       synchronized (problems) {
          Vector vector = new Vector();
          Vector vector1 = new Vector();
          int i = aint.length;
 
          for (int j = 0; j < i; j++) {
-            c_0a.m1();
+            submission.m1();
             String s = problems.m1778(aint[j]);
-            C_XD c_xd = new C_XD(s);
-            String s1 = getProblemStatement(c_xd);
-            c_0a.f7 = C_z_D.m2225(s1 == null ? "" : s1.trim());
-            int k = getProblemState(s, problems, null).f1120;
-            c_0a.f6 = C__C.f1128[k];
-            c_0a.f8 = s;
-            c_0a.f9 = c_xd.m1494();
-            c_0a.f10 = moduleAbbrs[moduleIndex];
-            Integer integer = LogicProgram.m1010(c_xd.m1483(c_xd.m1475('h')));
-            c_0a.f11 = c_xd.m1498() + (integer == null ? 0 : integer);
-            c_0a.f12 = c_xd.m1499();
-            boolean flag = LogicProgram.m1060(logSubmit, getExerciseTitle(c_0a.f9));
-            if (C_KC.m836(c_0a, c_x_a)) {
-               vector.addElement(trimTitle(c_0a.f9));
+            TaggedRecord taggedrecord = new TaggedRecord(s);
+            String s1 = getProblemStatement(taggedrecord);
+            submission.problemMd5 = Scrambler.md5Base64(s1 == null ? "" : s1.trim());
+            int k = getProblemState(s, problems, null).state;
+            submission.evaluation = C__C.f1128[k];
+            submission.work = s;
+            submission.problemName = taggedrecord.getName();
+            submission.module = moduleAbbrs[moduleIndex];
+            Integer integer = LogicProgram.parseInteger(taggedrecord.valueAt(taggedrecord.indexOfTag('h')));
+            submission.helpCount = taggedrecord.m1498() + (integer == null ? 0 : integer);
+            submission.duration = taggedrecord.m1499();
+            boolean flag = LogicProgram.m1060(logSubmit, getExerciseTitle(submission.problemName));
+            if (ServerConnection.submit(submission, busyindicator)) {
+               vector.addElement(trimTitle(submission.problemName));
                if (flag) {
-                  LogicProgram.m1083("symdata.txt", "S", s, c_0a.m3());
+                  LogicProgram.m1083("symdata.txt", "S", s, submission.m3());
                }
             } else {
-               vector1.addElement(trimTitle(c_0a.f9));
+               vector1.addElement(trimTitle(submission.problemName));
                if (flag) {
                   LogicProgram.m1082("symdata.txt", "F", s);
                }
             }
          }
 
-         c_0a.m1();
-         vector.copyInto(c_0a.f15 = new String[vector.size()]);
-         vector1.copyInto(c_0a.f16 = new String[vector1.size()]);
+         submission.m1();
+         vector.copyInto(submission.f15 = new String[vector.size()]);
+         vector1.copyInto(submission.f16 = new String[vector1.size()]);
       }
    }
 
    void uploadProblems() {
-      C_x_A c_x_a = new C_x_A(this);
-      C_LD c_ld = C_KC.m840(c_x_a);
+      BusyIndicator busyindicator = new BusyIndicator(this);
+      C_LD c_ld = ServerConnection.m840(busyindicator);
       if (c_ld != null) {
-         c_ld.f520 = C_h_E.m412("symnot009");
+         c_ld.f520 = C_h_E.getText("symnot009");
          int[] aint = C_WB.m1437(this);
          if (aint == null) {
-            C_KC.m843(c_ld, c_x_a);
+            ServerConnection.m843(c_ld, busyindicator);
          } else {
-            upload(c_ld, aint, c_x_a);
-            C_KC.m843(c_ld, c_x_a);
-            C_j_C.m1875(c_ld);
+            upload(c_ld, aint, busyindicator);
+            ServerConnection.m843(c_ld, busyindicator);
+            AccountManager.m1875(c_ld);
          }
       }
    }
 
-   static void upload(C_LD c_ld, int[] aint, C_x_A c_x_a) {
+   static void upload(C_LD c_ld, int[] aint, BusyIndicator busyindicator) {
       synchronized (problems) {
          Vector vector = new Vector();
          Vector vector1 = new Vector();
@@ -1250,16 +1252,16 @@ class LPSymbolizer extends C_U implements C_v_D {
          for (int j = 0; j < i; j++) {
             c_ld.m944();
             String s = problems.m1778(aint[j]);
-            C_XD c_xd = new C_XD(s);
-            String s1 = getProblemStatement(c_xd);
-            c_ld.f510 = c_xd.m1494();
+            TaggedRecord taggedrecord = new TaggedRecord(s);
+            String s1 = getProblemStatement(taggedrecord);
+            c_ld.f510 = taggedrecord.getName();
             c_ld.f511 = s1;
             c_ld.f512 = s1;
             c_ld.f514 = getProblemScheme(c_ld.f510);
             c_ld.f513 = moduleAbbrs[moduleIndex];
             c_ld.f515 = getProblemAnswers(c_ld.f510);
             stripUploadAnswers(c_ld.f515);
-            if (c_ld.f515 != null && c_ld.f515.length > 0 && !isExercise(c_ld.f510) && C_KC.m841(c_ld, c_x_a)) {
+            if (c_ld.f515 != null && c_ld.f515.length > 0 && !isExercise(c_ld.f510) && ServerConnection.m841(c_ld, busyindicator)) {
                vector.addElement(trimTitle(c_ld.f510));
             } else {
                vector1.addElement(trimTitle(c_ld.f510));
@@ -1275,8 +1277,8 @@ class LPSymbolizer extends C_U implements C_v_D {
       int i = astring == null ? 0 : astring.length;
 
       for (int j = 0; j < i; j++) {
-         C_XD c_xd = new C_XD(astring[j]);
-         astring[j] = c_xd.m1484("+");
+         TaggedRecord taggedrecord = new TaggedRecord(astring[j]);
+         astring[j] = taggedrecord.m1484("+");
       }
    }
 
@@ -1298,13 +1300,13 @@ class LPSymbolizer extends C_U implements C_v_D {
          s = s + this.workTime + "`t";
       }
 
-      return C_XD.m1509(s);
+      return TaggedRecord.m1509(s);
    }
 
    static boolean saveProblems(int i) {
       if (i != -1) {
          C__C c__c = (C__C)problems.m1779(i);
-         getProblemState(c__c.f1119, problems, c__c);
+         getProblemState(c__c.name, problems, c__c);
       }
 
       return saveProblems();
@@ -1315,7 +1317,7 @@ class LPSymbolizer extends C_U implements C_v_D {
          return false;
       } else {
          try {
-            writeProblems(problems, new FileWriter(new File(LogicProgram.f555, "symwork.txt")));
+            writeProblems(problems, new FileWriter(new File(LogicProgram.workDir, "symwork.txt")));
             writeUserKey();
             return true;
          } catch (IOException ioexception) {
@@ -1366,7 +1368,7 @@ class LPSymbolizer extends C_U implements C_v_D {
                }
 
                this.setProblemTitle(s2);
-               C__C c__c = new C__C(C_XD.m1495(s, s2), problems, false);
+               C__C c__c = new C__C(TaggedRecord.m1495(s, s2), problems, false);
                this.problemIndex = problems.m1771(c__c, false);
                this.problemIndex = this.problemIndex == -1 ? problems.size() : this.problemIndex + 1;
                problems.insertElementAt(c__c, this.problemIndex);
@@ -1396,14 +1398,14 @@ class LPSymbolizer extends C_U implements C_v_D {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         C_f_F c_f_f = problems.m1779(aint[j]);
-         C_XD c_xd = new C_XD(c_f_f.f1119);
-         String s = c_xd.m1494();
-         String s1 = getProblemStatement(c_xd);
-         String s2 = c_xd.m1483(c_xd.m1475('='));
+         ProblemEntry problementry = problems.m1779(aint[j]);
+         TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
+         String s = taggedrecord.getName();
+         String s1 = getProblemStatement(taggedrecord);
+         String s2 = taggedrecord.valueAt(taggedrecord.indexOfTag('='));
          if (s2 == null) {
-            c_xd = new C_XD(exercises.m1780(s));
-            s2 = c_xd.m1483(c_xd.m1475('='));
+            taggedrecord = new TaggedRecord(exercises.m1780(s));
+            s2 = taggedrecord.valueAt(taggedrecord.indexOfTag('='));
          }
 
          if (s2 == null) {
@@ -1430,17 +1432,17 @@ class LPSymbolizer extends C_U implements C_v_D {
       for (int j = 0; j < i; j++) {
          String s = "";
          String s1 = exercises.m1778(aint[j]);
-         C_XD c_xd = new C_XD(s1);
-         String s2 = c_xd.m1494();
+         TaggedRecord taggedrecord = new TaggedRecord(s1);
+         String s2 = taggedrecord.getName();
          s = s + trimTitle(s2) + "\n";
-         String s3 = getProblemStatement(c_xd);
+         String s3 = getProblemStatement(taggedrecord);
          s = s + s3 + "\n";
-         String s4 = c_xd.m1483(c_xd.m1475('='));
+         String s4 = taggedrecord.valueAt(taggedrecord.indexOfTag('='));
          if (s4 != null) {
             s = s + s4 + "\n";
          }
 
-         String s5 = c_xd.m1483(c_xd.m1475('!'));
+         String s5 = taggedrecord.valueAt(taggedrecord.indexOfTag('!'));
          if (s5 != null) {
             s = s + s5 + "\n";
          }
@@ -1473,17 +1475,17 @@ class LPSymbolizer extends C_U implements C_v_D {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         C_f_F c_f_f = problems.m1779(aint[j]);
-         int k = c_f_f.f1120;
-         C_XD c_xd = new C_XD(c_f_f.f1119);
-         String s = c_xd.m1494();
+         ProblemEntry problementry = problems.m1779(aint[j]);
+         int k = problementry.state;
+         TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
+         String s = taggedrecord.getName();
          if (!printIncorrect || k == 1) {
-            String s1 = getProblemStatement(c_xd);
+            String s1 = getProblemStatement(taggedrecord);
             String s2 = exercises.m1780(s);
             String s3 = null;
             if (s2 != null) {
-               C_XD c_xd1 = new C_XD(s2);
-               s3 = c_xd1.m1483(c_xd1.m1475('='));
+               TaggedRecord taggedrecord1 = new TaggedRecord(s2);
+               s3 = taggedrecord1.valueAt(taggedrecord1.indexOfTag('='));
             }
 
             if (s3 == null) {
@@ -1491,8 +1493,8 @@ class LPSymbolizer extends C_U implements C_v_D {
             }
 
             LPSymbolizer lpsymbolizer = new LPSymbolizer(true);
-            lpsymbolizer.loadProblem(c_xd);
-            String s4 = C_OA.m1139(lpsymbolizer.problem.toString(), "\\");
+            lpsymbolizer.loadProblem(taggedrecord);
+            String s4 = DelimitedTokenizer.m1139(lpsymbolizer.problem.toString(), "\\");
             JPanel jpanel = new JPanel();
             jpanel.setLayout(new C_u_(null, 2, new int[]{20, dimension.width - 20}));
             C_f_E c_f_e = new C_f_E(C__C.f1128[k]);
@@ -1506,7 +1508,7 @@ class LPSymbolizer extends C_U implements C_v_D {
          }
 
          if (LogicProgram.m1060(logPrint, getExerciseTitle(s))) {
-            LogicProgram.m1082("symdata.txt", "R", c_f_f.f1119);
+            LogicProgram.m1082("symdata.txt", "R", problementry.name);
          }
       }
 
@@ -1518,27 +1520,27 @@ class LPSymbolizer extends C_U implements C_v_D {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         C_f_F c_f_f = problems.m1779(aint[j]);
-         int k = c_f_f.f1120;
-         C_XD c_xd = new C_XD(c_f_f.f1119);
-         String s = c_xd.m1494();
+         ProblemEntry problementry = problems.m1779(aint[j]);
+         int k = problementry.state;
+         TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
+         String s = taggedrecord.getName();
          if (!printIncorrect || k == 1) {
             LPSymbolizer lpsymbolizer = new LPSymbolizer(true);
-            lpsymbolizer.loadProblem(c_xd);
+            lpsymbolizer.loadProblem(taggedrecord);
             Vector vector1 = new Vector(2);
-            String s1 = getProblemStatement(c_xd);
+            String s1 = getProblemStatement(taggedrecord);
             String s2 = exercises.m1780(s);
             String s3 = null;
             if (s2 != null) {
-               C_XD c_xd1 = new C_XD(s2);
-               s3 = c_xd1.m1483(c_xd1.m1475('='));
+               TaggedRecord taggedrecord1 = new TaggedRecord(s2);
+               s3 = taggedrecord1.valueAt(taggedrecord1.indexOfTag('='));
             }
 
             if (s3 == null) {
                s3 = "";
             }
 
-            String s4 = C_OA.m1139(lpsymbolizer.problem.toString(), "\\");
+            String s4 = DelimitedTokenizer.m1139(lpsymbolizer.problem.toString(), "\\");
             JPanel jpanel = new JPanel();
             jpanel.setLayout(new C_u_(null, 2, new int[]{20, dimension.width - 20}));
             C_f_E c_f_e = new C_f_E(C__C.f1128[k]);
@@ -1561,7 +1563,7 @@ class LPSymbolizer extends C_U implements C_v_D {
          }
 
          if (LogicProgram.m1060(logPrint, getExerciseTitle(s))) {
-            LogicProgram.m1082("symdata.txt", "P", c_f_f.f1119);
+            LogicProgram.m1082("symdata.txt", "P", problementry.name);
          }
       }
 
@@ -1578,11 +1580,11 @@ class LPSymbolizer extends C_U implements C_v_D {
       return (LPSymbolizer)object1;
    }
 
-   static class C__A extends C_U.C__A {
+   static class C__A extends LogicModule.C__A {
       boolean f528 = false;
 
-      C__A(C_x_A c_x_a, Rectangle rectangle, String s) {
-         super(c_x_a, rectangle, s);
+      C__A(BusyIndicator busyindicator, Rectangle rectangle, String s) {
+         super(busyindicator, rectangle, s);
       }
 
       @Override

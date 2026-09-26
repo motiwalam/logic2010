@@ -2,13 +2,13 @@ package edu.ucla.phil.logic;
 
 import java.util.Vector;
 
-class C_w_C extends C_i_A {
+class C_w_C extends SchematicLetter {
    String f1426;
    int f1427;
    Vector f1428;
 
-   C_w_C(C_q_A c_q_a) {
-      this(c_q_a.f739, c_q_a.f741);
+   C_w_C(AtomicFormula atomicformula) {
+      this(atomicformula.symbol, atomicformula.childCount);
    }
 
    C_w_C(String s, int i) {
@@ -37,7 +37,7 @@ class C_w_C extends C_i_A {
       if (this.f1427 == 0) {
          return this.f1426;
       } else {
-         return this.f1427 == 1 && C_q_A.m2030(this.f1426) ? this.f1426 + m1853(0) : this.f1426 + "(" + m1854(0, this.f1427) + ")";
+         return this.f1427 == 1 && AtomicFormula.m2030(this.f1426) ? this.f1426 + m1853(0) : this.f1426 + "(" + m1854(0, this.f1427) + ")";
       }
    }
 
@@ -52,14 +52,14 @@ class C_w_C extends C_i_A {
    }
 
    @Override
-   public C_RF m1175() {
-      C_q_A c_q_a = new C_q_A(this.f1426);
+   public Expression m1175() {
+      AtomicFormula atomicformula = new AtomicFormula(this.f1426);
 
       for (int i = 0; i < this.f1427; i++) {
-         c_q_a.m1215(new C_i_(m1853(i)));
+         atomicformula.addChild(new SimpleTerm(m1853(i)));
       }
 
-      return c_q_a;
+      return atomicformula;
    }
 
    @Override
@@ -72,15 +72,15 @@ class C_w_C extends C_i_A {
    }
 
    @Override
-   public C_i_A m1177(Vector vector) {
-      return m2158(!C_q_A.m2030(this.f1426), this.f1427, vector);
+   public SchematicLetter m1177(Vector vector) {
+      return m2158(!AtomicFormula.m2030(this.f1426), this.f1427, vector);
    }
 
-   static C_i_A m2157(int i, Vector vector) {
+   static SchematicLetter m2157(int i, Vector vector) {
       return m2158(false, i, vector);
    }
 
-   static C_i_A m2158(boolean flag, int i, Vector vector) {
+   static SchematicLetter m2158(boolean flag, int i, Vector vector) {
       C_CF c_cf = new C_CF(LogicProgram.m1021(i != 0 && !flag ? LogicProgram.f600 : LogicProgram.f599));
 
       while (c_cf.hasMoreElements()) {

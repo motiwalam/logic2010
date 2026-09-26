@@ -68,8 +68,8 @@ class C_v_A extends JComponent implements ActionListener {
             ((C_ZD)this.f1417).m1547(flag);
          }
 
-         if (this instanceof C__) {
-            C_M c_m = ((C__)this).f915.scrollPanel;
+         if (this instanceof DerivationBox) {
+            C_M c_m = ((DerivationBox)this).f915.scrollPanel;
             c_m.revalidate();
             c_m.repaint();
          }
@@ -189,8 +189,8 @@ class C_v_A extends JComponent implements ActionListener {
       if (actionevent.getSource() == this.f1417) {
          Object object = null;
          this.m2123(!this.f1418);
-         if (this instanceof C__) {
-            ((C__)this).f915.setWidths(true);
+         if (this instanceof DerivationBox) {
+            ((DerivationBox)this).f915.setWidths(true);
          }
       }
    }

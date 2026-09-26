@@ -7,7 +7,7 @@ class C_OB extends JMenuItem {
 
    C_OB(String s) {
       super(LogicProgram.m1004(s));
-      this.setFont(LogicProgram.m1029(LogicProgram.f539 * 3 / 4));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize * 3 / 4));
    }
 
    void m1141(String s) {

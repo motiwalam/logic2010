@@ -12,15 +12,15 @@ class C_NF extends JRadioButton implements C_LC {
       super(s, new C_n_B());
       this.setBackground(null);
       this.setForeground(null);
-      this.setSize(LogicProgram.f539 - 1, LogicProgram.f539 - 1);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setSize(LogicProgram.fontSize - 1, LogicProgram.fontSize - 1);
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
    }
 
    C_NF(Component component) {
       this.setBackground(null);
       this.setForeground(null);
-      this.setSize(LogicProgram.f539 - 1, LogicProgram.f539 - 1);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setSize(LogicProgram.fontSize - 1, LogicProgram.fontSize - 1);
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
       this.add(component);
    }
 

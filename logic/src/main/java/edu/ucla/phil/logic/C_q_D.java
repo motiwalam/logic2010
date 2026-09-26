@@ -8,7 +8,7 @@ class C_q_D extends C__D {
 
    C_q_D(C_JF c_jf, String s) {
       super(s);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
       this.setBorder(new C_BB(0));
       this.setMargin(new Insets(1, 1, 1, 1));
       this.setFocusable(false);

@@ -3,7 +3,7 @@ package edu.ucla.phil.logic;
 import java.awt.Frame;
 import javax.swing.JComponent;
 
-class C_AC extends C_UA implements C_TD {
+class C_AC extends MessageDialog implements C_TD {
    C_AC(Frame frame, String s, JComponent jcomponent, String[] astring) {
       super(frame, s, jcomponent, astring);
    }

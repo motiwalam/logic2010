@@ -3,32 +3,32 @@ package edu.ucla.phil.logic;
 import java.util.Vector;
 
 class C_o_D {
-   C_RF f1325;
-   C_RF f1326;
-   C_i_[] f1327;
+   Expression f1325;
+   Expression f1326;
+   SimpleTerm[] f1327;
 
-   C_o_D(C_RF c_rf, C_RF c_rf1, Vector vector) {
-      this.f1325 = c_rf;
-      this.f1326 = c_rf1;
+   C_o_D(Expression expression, Expression expression1, Vector vector) {
+      this.f1325 = expression;
+      this.f1326 = expression1;
       this.f1327 = m2007(vector);
    }
 
-   static C_i_[] m2007(Vector vector) {
+   static SimpleTerm[] m2007(Vector vector) {
       int i = vector == null ? 0 : vector.size();
-      C_i_[] ac_i_ = i == 0 ? null : new C_i_[i];
+      SimpleTerm[] asimpleterm = i == 0 ? null : new SimpleTerm[i];
       if (i != 0) {
-         vector.copyInto(ac_i_ = new C_i_[i]);
+         vector.copyInto(asimpleterm = new SimpleTerm[i]);
       }
 
-      return ac_i_;
+      return asimpleterm;
    }
 
-   static Vector m2008(C_i_[] ac_i_) {
+   static Vector m2008(SimpleTerm[] asimpleterm) {
       Vector vector = new Vector();
-      int i = ac_i_ == null ? 0 : ac_i_.length;
+      int i = asimpleterm == null ? 0 : asimpleterm.length;
 
       for (int j = 0; j < i; j++) {
-         vector.addElement(ac_i_[j]);
+         vector.addElement(asimpleterm[j]);
       }
 
       return vector;
@@ -41,14 +41,14 @@ class C_o_D {
       } else {
          C_o_D c_o_d1 = (C_o_D)object;
          if (this.f1325 == c_o_d1.f1325 && this.f1326 == c_o_d1.f1326) {
-            C_i_[] ac_i_ = c_o_d1.f1327;
+            SimpleTerm[] asimpleterm = c_o_d1.f1327;
             int i = this.f1327 == null ? 0 : this.f1327.length;
-            int j = ac_i_ == null ? 0 : ac_i_.length;
+            int j = asimpleterm == null ? 0 : asimpleterm.length;
             if (i != j) {
                return false;
             } else {
                for (int k = 0; k < i; k++) {
-                  if (this.f1327[k] != ac_i_[k]) {
+                  if (this.f1327[k] != asimpleterm[k]) {
                      return false;
                   }
                }

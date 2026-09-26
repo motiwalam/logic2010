@@ -10,7 +10,7 @@ import java.awt.event.MouseListener;
 import java.util.Collections;
 import javax.swing.SwingUtilities;
 
-class C_x_E extends C_e_E implements C_v_D, KeyListener, FocusListener, MouseListener {
+class C_x_E extends StyledTextPane implements C_v_D, KeyListener, FocusListener, MouseListener {
    C_x_C f1444 = null;
    boolean f1445 = true;
 
@@ -214,7 +214,7 @@ class C_x_E extends C_e_E implements C_v_D, KeyListener, FocusListener, MouseLis
          return null;
       } else {
          if (flag) {
-            C_p_A.m2024(this.getText());
+            EditableTextPane.m2024(this.getText());
          }
 
          return this.f1444.f1437.m1690(i, true);

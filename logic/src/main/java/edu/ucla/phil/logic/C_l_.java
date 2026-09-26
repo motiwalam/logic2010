@@ -1,6 +1,6 @@
 package edu.ucla.phil.logic;
 
-class C_l_ extends C_HD {
+class C_l_ extends Justification {
    static final int f1223 = 2;
    int f1224;
 
@@ -10,23 +10,23 @@ class C_l_ extends C_HD {
    }
 
    @Override
-   boolean m600(C_a_ c_a_) {
-      if (!c_a_.f939.equals(this.f384) && !c_a_.f939.equals("PR")) {
+   boolean m600(DerivationLineChecker derivationlinechecker) {
+      if (!derivationlinechecker.f939.equals(this.f384) && !derivationlinechecker.f939.equals("PR")) {
          return false;
       } else {
-         c_a_.getClass();
-         if ((c_a_.f944 || c_a_.f945) && c_a_.f938 != 0) {
+         derivationlinechecker.getClass();
+         if ((derivationlinechecker.f944 || derivationlinechecker.f945) && derivationlinechecker.f938 != 0) {
             return false;
          } else {
-            C_RF[] ac_rf = c_a_.f935.f317.f915.premises;
-            if (this.f1224 >= ac_rf.length) {
+            Expression[] aexpression = derivationlinechecker.f935.f317.f915.premises;
+            if (this.f1224 >= aexpression.length) {
                return false;
             } else {
-               c_a_.f942 = ac_rf[this.f1224];
-               if (c_a_.f944 && !c_a_.m1609(true)) {
+               derivationlinechecker.f942 = aexpression[this.f1224];
+               if (derivationlinechecker.f944 && !derivationlinechecker.m1609(true)) {
                   return false;
                } else {
-                  c_a_.m1631(0);
+                  derivationlinechecker.m1631(0);
                   return true;
                }
             }

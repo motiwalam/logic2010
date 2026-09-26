@@ -16,7 +16,7 @@ abstract class C_CA extends C_l_B implements Printable {
    C_CA(C_c_C c_c_c, int[] aint) {
       super(c_c_c);
       this.f249 = aint;
-      this.f251 = Box.createVerticalStrut(LogicProgram.f539);
+      this.f251 = Box.createVerticalStrut(LogicProgram.fontSize);
    }
 
    @Override
@@ -33,7 +33,7 @@ abstract class C_CA extends C_l_B implements Printable {
          }
 
          C_t_B c_t_b = null;
-         if (LogicProgram.f533 != null) {
+         if (LogicProgram.user != null) {
             c_t_b = C_t_B.m2084();
          }
 

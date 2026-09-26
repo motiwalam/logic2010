@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 
-class C_ZE extends JLabel implements C_TE, C_LC, C_AF {
+class C_ZE extends JLabel implements C_TE, C_LC, CellRenderable {
    boolean f910 = false;
    Color f911 = null;
    Color f912 = null;
@@ -18,7 +18,7 @@ class C_ZE extends JLabel implements C_TE, C_LC, C_AF {
       this.setBackground(null);
       this.setForeground(null);
       this.enableEvents(8L);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
       this.setBorder(new EmptyBorder(1, 1, 0, 1));
       this.setOpaque(true);
    }
@@ -28,7 +28,7 @@ class C_ZE extends JLabel implements C_TE, C_LC, C_AF {
       this.setBackground(null);
       this.setForeground(null);
       this.enableEvents(8L);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
       this.setBorder(new EmptyBorder(1, 1, 0, 1));
       this.setOpaque(true);
    }
@@ -38,7 +38,7 @@ class C_ZE extends JLabel implements C_TE, C_LC, C_AF {
       this.setBackground(null);
       this.setForeground(null);
       this.enableEvents(8L);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
       this.setBorder(new EmptyBorder(1, 1, 0, 1));
       this.setOpaque(true);
    }
@@ -49,7 +49,7 @@ class C_ZE extends JLabel implements C_TE, C_LC, C_AF {
       this.setForeground(null);
       this.setVerticalAlignment(j);
       this.enableEvents(8L);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
       this.setBorder(new EmptyBorder(1, 1, 0, 1));
       this.setOpaque(true);
    }

@@ -1,6 +1,6 @@
 package edu.ucla.phil.logic;
 
-class C_e_C extends C_SF {
+class C_e_C extends Institution {
    String f1071;
    String[] f1072;
    String[] f1073;
@@ -49,7 +49,7 @@ class C_e_C extends C_SF {
             i++;
          }
 
-         Integer integer = LogicProgram.m1010(s.substring(0, i));
+         Integer integer = LogicProgram.parseInteger(s.substring(0, i));
          int k = LogicProgram.m1051(this.f1072, s.substring(i).toUpperCase());
          return integer != null && k != -1 ? new C_P(integer, k) : null;
       }

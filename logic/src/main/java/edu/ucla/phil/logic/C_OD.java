@@ -40,21 +40,21 @@ class C_OD extends Hashtable {
       int j;
       while (s != null && (j = s.indexOf("=")) != -1) {
          String s2 = s.substring(0, j).trim();
-         C_OA c_oa = new C_OA("\\\",");
-         c_oa.m1132(s.substring(j + 1).trim());
-         String s1 = c_oa.m1135().trim();
-         if (c_oa.m1134() == '"') {
-            C_OA c_oa1 = new C_OA("\\\"");
-            c_oa1.m1132(c_oa.m1133());
-            s1 = c_oa1.m1135();
-            c_oa.m1132(c_oa1.m1133());
+         DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\\",");
+         delimitedtokenizer.m1132(s.substring(j + 1).trim());
+         String s1 = delimitedtokenizer.m1135().trim();
+         if (delimitedtokenizer.m1134() == '"') {
+            DelimitedTokenizer delimitedtokenizer1 = new DelimitedTokenizer("\\\"");
+            delimitedtokenizer1.m1132(delimitedtokenizer.m1133());
+            s1 = delimitedtokenizer1.m1135();
+            delimitedtokenizer.m1132(delimitedtokenizer1.m1133());
 
             do {
-               c_oa.m1135();
-            } while (c_oa.m1134() == '"');
+               delimitedtokenizer.m1135();
+            } while (delimitedtokenizer.m1134() == '"');
          }
 
-         s = c_oa.m1133();
+         s = delimitedtokenizer.m1133();
          this.put(s2.toLowerCase(), s1);
       }
    }

@@ -3,7 +3,7 @@ package edu.ucla.phil.logic;
 import java.awt.Component;
 import java.awt.event.WindowEvent;
 
-class C_BA extends C_T {
+class C_BA extends KeypadDialog {
    C_l_E f235;
    boolean f236;
 
@@ -35,8 +35,8 @@ class C_BA extends C_T {
 
    @Override
    public String m375(String s) {
-      C_G c_g = this.f235.f1258;
-      boolean flag = c_g.f324 == this.f235;
+      DerivationLine derivationline = this.f235.f1258;
+      boolean flag = derivationline.f324 == this.f235;
       if (s == null) {
          return null;
       } else {
@@ -46,45 +46,45 @@ class C_BA extends C_T {
          } else if (s.equals("space")) {
             s = " ";
          } else if (s.equals("tab")) {
-            if (c_g.f323 != null && c_g.f324 != null && c_g.m564() == null) {
-               c_g.f317.f915.requestAid = true;
-               c_g.m22(!flag);
+            if (derivationline.f323 != null && derivationline.f324 != null && derivationline.m564() == null) {
+               derivationline.f317.f915.requestAid = true;
+               derivationline.m22(!flag);
             }
 
             s = null;
          } else if (s.equals("enter")) {
             if (!flag) {
-               c_g.m564();
+               derivationline.m564();
             }
 
-            if (c_g.f317.f915.commandMode) {
-               if (c_g.f317.f915.focus != c_g.f324) {
-                  c_g.m586();
+            if (derivationline.f317.f915.commandMode) {
+               if (derivationline.f317.f915.focus != derivationline.f324) {
+                  derivationline.m586();
                }
 
-               c_g.m563(c_g.f323 != null);
+               derivationline.m563(derivationline.f323 != null);
             }
 
-            C_G c_g1 = c_g.m18();
-            if (c_g1 != null) {
-               c_g.f317.f915.requestAid = true;
-               c_g1.m22(flag);
+            DerivationLine derivationline1 = derivationline.m18();
+            if (derivationline1 != null) {
+               derivationline.f317.f915.requestAid = true;
+               derivationline1.m22(flag);
             }
 
             s = null;
          } else if (s.equals("up")) {
-            C_0B c_0b = c_g.m24(true);
-            if (c_0b != null) {
-               c_g.f317.f915.requestAid = true;
-               c_0b.m22(flag);
+            DerivationNode derivationnode = derivationline.m24(true);
+            if (derivationnode != null) {
+               derivationline.f317.f915.requestAid = true;
+               derivationnode.m22(flag);
             }
 
             s = null;
          } else if (s.equals("down")) {
-            C_0B c_0b1 = c_g.m23(true);
-            if (c_0b1 != null) {
-               c_g.f317.f915.requestAid = true;
-               c_0b1.m22(flag);
+            DerivationNode derivationnode1 = derivationline.m23(true);
+            if (derivationnode1 != null) {
+               derivationline.f317.f915.requestAid = true;
+               derivationnode1.m22(flag);
             }
 
             s = null;
@@ -95,30 +95,30 @@ class C_BA extends C_T {
             this.f235.f1258.m567();
             s = null;
          } else if (s.equals("delete line")) {
-            if (c_g.f317.f915.problem.f917 != c_g) {
-               C_0B c_0b2 = c_g.m23(false);
-               if (c_0b2 == null) {
-                  c_0b2 = c_g.m24(true);
+            if (derivationline.f317.f915.problem.f917 != derivationline) {
+               DerivationNode derivationnode2 = derivationline.m23(false);
+               if (derivationnode2 == null) {
+                  derivationnode2 = derivationline.m24(true);
                }
 
-               c_g.m19(false);
-               c_g.f317.f915.requestAid = true;
-               c_0b2.m22(flag);
+               derivationline.m19(false);
+               derivationline.f317.f915.requestAid = true;
+               derivationnode2.m22(flag);
             }
 
             s = null;
          } else if (s.equals("Show/Unshow")) {
             if (!flag) {
-               C_0B c_0b3 = c_g.m570();
-               if (c_0b3 != null) {
-                  this.f235 = c_0b3.m14();
+               DerivationNode derivationnode3 = derivationline.m570();
+               if (derivationnode3 != null) {
+                  this.f235 = derivationnode3.m14();
                }
 
                s = null;
             }
          } else if (s.equals("Box/Unbox")) {
             if (flag) {
-               c_g.m573();
+               derivationline.m573();
                s = null;
             }
          } else if (s.equals("Show Unneg")) {
@@ -130,17 +130,17 @@ class C_BA extends C_T {
          } else if (s.equals("Show NegDisj")) {
             s = s + " ";
          } else if (s.startsWith("Show ")) {
-            String s1 = c_g.m7(false);
+            String s1 = derivationline.m7(false);
             if (flag && s1 != null && s1.equals("") && this.f235.getText().equals("")) {
-               c_g.m8(s);
-               if (c_g.f317.f915.commandMode) {
-                  c_g.m563(c_g.f323 != null);
+               derivationline.m8(s);
+               if (derivationline.f317.f915.commandMode) {
+                  derivationline.m563(derivationline.f323 != null);
                }
 
-               C_G c_g2 = c_g.m18();
-               if (c_g2 != null) {
-                  c_g.f317.f915.requestAid = true;
-                  c_g2.m22(flag);
+               DerivationLine derivationline2 = derivationline.m18();
+               if (derivationline2 != null) {
+                  derivationline.f317.f915.requestAid = true;
+                  derivationline2.m22(flag);
                }
 
                s = null;

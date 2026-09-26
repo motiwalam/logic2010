@@ -3,7 +3,7 @@ package edu.ucla.phil.logic;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-class C_YC extends C_p_A implements KeyListener {
+class C_YC extends EditableTextPane implements KeyListener {
    LPRecognition f904;
 
    C_YC(LPRecognition lprecognition) {
@@ -17,7 +17,7 @@ class C_YC extends C_p_A implements KeyListener {
       int j = keyevent.getModifiers();
       if (c0 == '\n') {
          if (this.f904.checkDisabled) {
-            C_UA.m1328("Feature Disabled", "Checking is disabled for this problem.", null, null);
+            MessageDialog.showMessage("Feature Disabled", "Checking is disabled for this problem.", null, null);
          } else {
             this.f904.checkProblem();
          }

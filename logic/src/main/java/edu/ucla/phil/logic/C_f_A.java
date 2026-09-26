@@ -30,10 +30,10 @@ class C_f_A extends C_g_C implements ActionListener, C_v_D {
    }
 
    void m1804() {
-      C_H c_h = m1806(this.f1106, this.f1107, this.f1108, this.f1109);
-      this.f1104 = c_h.f370;
-      this.f1105 = C_H.m661(c_h.f372, m1805(this.f1106, this.f1107, this.f1108, this.f1109));
-      this.f1110 = new C_RE(c_h.f373);
+      Message message = m1806(this.f1106, this.f1107, this.f1108, this.f1109);
+      this.f1104 = message.id;
+      this.f1105 = Message.substitute(message.text, m1805(this.f1106, this.f1107, this.f1108, this.f1109));
+      this.f1110 = new C_RE(message.buttons);
    }
 
    static Hashtable m1805(C_d_C c_d_c, C_d_C c_d_c1, Vector vector, Vector vector1) {
@@ -41,16 +41,16 @@ class C_f_A extends C_g_C implements ActionListener, C_v_D {
       String s1 = c_d_c.m1728();
       String s2 = m1807(c_d_c1.m1682(), vector1, vector);
       String s3 = c_d_c1.m1729(vector1, vector);
-      Hashtable hashtable = C_H.m669("wrong statement", s, "wrong type", s1, "right statement", s2, "right type", s3);
+      Hashtable hashtable = Message.params("wrong statement", s, "wrong type", s1, "right statement", s2, "right type", s3);
       if (c_d_c.m1726()) {
-         C_H.m664(hashtable, "bound var", c_d_c.m1684());
+         Message.putParam(hashtable, "bound var", c_d_c.m1684());
       }
 
       return hashtable;
    }
 
-   static C_H m1806(C_d_C c_d_c, C_d_C c_d_c1, Vector vector, Vector vector1) {
-      C_H c_h;
+   static Message m1806(C_d_C c_d_c, C_d_C c_d_c1, Vector vector, Vector vector1) {
+      Message message;
       if (c_d_c1.f1048 == 11 && c_d_c.f1048 == 11) {
          String s = c_d_c.m1684();
          String s1 = c_d_c1.m1684();
@@ -61,19 +61,19 @@ class C_f_A extends C_g_C implements ActionListener, C_v_D {
          }
 
          if (s1 == null) {
-            c_h = C_h_E.m411("symerr003");
+            message = C_h_E.get("symerr003");
          } else if (s1.equals(s)) {
-            c_h = C_h_E.m411("symerr002");
+            message = C_h_E.get("symerr002");
          } else {
-            c_h = C_h_E.m411("symerr001");
+            message = C_h_E.get("symerr001");
          }
       } else if (c_d_c1.f1048 == c_d_c.f1048 && c_d_c1.m1726()) {
-         c_h = C_h_E.m411("symerr002");
+         message = C_h_E.get("symerr002");
       } else {
-         c_h = C_h_E.m411("symerr001");
+         message = C_h_E.get("symerr001");
       }
 
-      return c_h;
+      return message;
    }
 
    static String m1807(String s, Vector vector, Vector vector1) {
@@ -88,13 +88,13 @@ class C_f_A extends C_g_C implements ActionListener, C_v_D {
          }
       }
 
-      return C_H.m662(s, hashtable, null);
+      return Message.m662(s, hashtable, null);
    }
 
    @Override
    public void actionPerformed(ActionEvent actionevent) {
       if (this.f1106.f1044.hintsDisabled) {
-         C_UA.m1328("Feature Disabled", "Hints are disabled for this problem.", null, null);
+         MessageDialog.showMessage("Feature Disabled", "Hints are disabled for this problem.", null, null);
       } else {
          this.m1804();
          this.f1106.f1045.f1438.requestFocus();

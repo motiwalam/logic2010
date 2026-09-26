@@ -2,7 +2,7 @@ package edu.ucla.phil.logic;
 
 import java.util.Hashtable;
 
-class C_BF extends C_H {
+class C_BF extends Message {
    static Hashtable f247 = null;
    static String f248 = "recMessages";
 
@@ -10,29 +10,29 @@ class C_BF extends C_H {
       super(s);
    }
 
-   static boolean m410() {
-      C_XB c_xb = LogicProgram.m1062(f248, false);
-      if (c_xb == null) {
+   static boolean loadMessages() {
+      ScrambledReader scrambledreader = LogicProgram.openDataFile(f248, false);
+      if (scrambledreader == null) {
          return false;
       } else {
-         f247 = m658(new C_XD(c_xb, true));
+         f247 = parseMessages(new TaggedRecord(scrambledreader, true));
          return f247 != null;
       }
    }
 
-   static C_H m411(String s) {
-      C_H c_h = f247 == null ? null : (C_H)f247.get(s.toLowerCase());
-      if (c_h == null) {
-         c_h = new C_H(s);
-         c_h.f371 = "bad error id";
-         c_h.f372 = "The program has encountered an unknown error id.  Please report this: " + c_h.f370;
-         c_h.f374 = true;
+   static Message get(String s) {
+      Message message = f247 == null ? null : (Message)f247.get(s.toLowerCase());
+      if (message == null) {
+         message = new Message(s);
+         message.title = "bad error id";
+         message.text = "The program has encountered an unknown error id.  Please report this: " + message.id;
+         message.isError = true;
       }
 
-      return c_h;
+      return message;
    }
 
-   static String m412(String s) {
-      return m659(m411(s));
+   static String getText(String s) {
+      return m659(get(s));
    }
 }

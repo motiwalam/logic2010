@@ -2,7 +2,7 @@ package edu.ucla.phil.logic;
 
 import java.util.Hashtable;
 
-class C_f_C extends C_f_F {
+class C_f_C extends ProblemEntry {
    static Hashtable f1111 = null;
 
    C_f_C(String s, boolean flag) {

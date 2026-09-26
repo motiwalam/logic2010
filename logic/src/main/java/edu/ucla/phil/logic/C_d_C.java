@@ -10,7 +10,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import javax.swing.Box;
 
-class C_d_C extends C_LB implements C_v_D {
+class C_d_C extends SizedPanel implements C_v_D {
    public static final int f1041 = 0;
    public static final int f1042 = 1;
    public static final int f1043 = 2;
@@ -29,7 +29,7 @@ class C_d_C extends C_LB implements C_v_D {
    Vector f1056;
    Vector f1057;
    boolean f1058;
-   static String[] f1059 = LogicProgram.f596;
+   static String[] f1059 = LogicProgram.symbols;
 
    C_d_C(LPSymbolizer lpsymbolizer, int i) {
       this.f1044 = lpsymbolizer;
@@ -133,7 +133,7 @@ class C_d_C extends C_LB implements C_v_D {
       }
 
       if (i == 0) {
-         s = C_OA.m1139(s, "\\{") + C_e_.m1753(this.f1050) + this.f1049;
+         s = DelimitedTokenizer.m1139(s, "\\{") + ExpressionPath.m1753(this.f1050) + this.f1049;
       }
 
       return s;
@@ -249,9 +249,9 @@ class C_d_C extends C_LB implements C_v_D {
             aint = connArgTypes[i];
             break;
          case 11:
-            C_OA c_oa = new C_OA("\\{");
+            DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\{");
             if (s == null) {
-               s = c_oa.m1137(C_WB.m1452("", "Atomic Expression:", this));
+               s = delimitedtokenizer.m1137(C_WB.m1452("", "Atomic Expression:", this));
             }
 
             if (s != null) {
@@ -262,18 +262,18 @@ class C_d_C extends C_LB implements C_v_D {
                return this;
             }
 
-            c_oa.m1132(s);
-            s = c_oa.m1135().trim();
+            delimitedtokenizer.m1132(s);
+            s = delimitedtokenizer.m1135().trim();
             j = 0;
             aint = null;
             boolean flag1 = false;
-            if (c_oa.m1134() == '{') {
-               String s1 = "{" + c_oa.m1133();
+            if (delimitedtokenizer.m1134() == '{') {
+               String s1 = "{" + delimitedtokenizer.m1133();
                int k = s1.indexOf(125);
                if (k != -1) {
                   try {
                      j = Integer.parseInt(s1.substring(k + 1));
-                     aint = C_e_.m1755(s1.substring(0, k + 1));
+                     aint = ExpressionPath.m1755(s1.substring(0, k + 1));
                      if (aint != null) {
                         flag1 = true;
                      }
@@ -284,11 +284,11 @@ class C_d_C extends C_LB implements C_v_D {
 
             if (!flag1) {
                try {
-                  C_RF c_rf = LogicProgram.m1008(s, true, false);
-                  j = c_rf instanceof C_X ? 1 : 0;
-               } catch (C_k_B c_k_b) {
+                  Expression expression = LogicProgram.m1008(s, true, false);
+                  j = expression instanceof Term ? 1 : 0;
+               } catch (FormulaParseException formulaparseexception) {
                   if (flag) {
-                     C_WB.m1429("symnot010", C_H.m664(null, "source", s));
+                     C_WB.m1429("symnot010", Message.putParam(null, "source", s));
                   }
 
                   return null;
@@ -314,7 +314,7 @@ class C_d_C extends C_LB implements C_v_D {
                      }
 
                      if (flag) {
-                        C_WB.m1429("symnot011", C_H.m664(null, "type", s2.toLowerCase()));
+                        C_WB.m1429("symnot011", Message.putParam(null, "type", s2.toLowerCase()));
                      }
 
                      return null;
@@ -528,13 +528,13 @@ class C_d_C extends C_LB implements C_v_D {
       return this.f1048;
    }
 
-   C_RF m1698() {
+   Expression m1698() {
       if (this.m1717()) {
          return null;
       } else {
          try {
             return LogicProgram.m1006(LogicProgram.m995(this.toString(), f1059, maggie));
-         } catch (C_k_B c_k_b) {
+         } catch (FormulaParseException formulaparseexception) {
             return null;
          }
       }
@@ -587,17 +587,17 @@ class C_d_C extends C_LB implements C_v_D {
       String s = "";
       String s1 = this.m1682();
       if (flag) {
-         s = s + C_XD.m1508(this.f1051, '$');
-         s = s + C_XD.m1508(this.f1055, '-');
-         s = s + C_XD.m1508(this.f1052, 'o');
+         s = s + TaggedRecord.m1508(this.f1051, '$');
+         s = s + TaggedRecord.m1508(this.f1055, '-');
+         s = s + TaggedRecord.m1508(this.f1052, 'o');
          if (this.f1058 && this.f1052 == null) {
-            s = s + C_XD.m1508(this.f1053, '=');
-            s = s + C_XD.m1508(this.f1054, '@');
+            s = s + TaggedRecord.m1508(this.f1053, '=');
+            s = s + TaggedRecord.m1508(this.f1054, '@');
          }
       }
 
       if (!flag || this.f1048 != 0 || !s1.equals(C_x_C.m2166(this.f1055))) {
-         s = s + C_XD.m1508(C_OA.m1139(this.m1683(), "\\:") + ":" + s1, '+');
+         s = s + TaggedRecord.m1508(DelimitedTokenizer.m1139(this.m1683(), "\\:") + ":" + s1, '+');
       }
 
       int i = connArgTypes[this.f1048].length;
@@ -641,12 +641,12 @@ class C_d_C extends C_LB implements C_v_D {
          i++;
       }
 
-      s = C_XD.m1495(s, s1);
+      s = TaggedRecord.m1495(s, s1);
       LPSymbolizer.userKey.put(s1, s);
       if (this.f1054 != null && this.f1054 != "") {
-         this.f1054 = this.f1054 + "." + C_OA.m1139(s1, "\\.");
+         this.f1054 = this.f1054 + "." + DelimitedTokenizer.m1139(s1, "\\.");
       } else {
-         this.f1054 = C_OA.m1139(s1, "\\.");
+         this.f1054 = DelimitedTokenizer.m1139(s1, "\\.");
       }
 
       if (this.f1056 == null) {
@@ -658,11 +658,11 @@ class C_d_C extends C_LB implements C_v_D {
 
    void m1702() {
       if (this.f1054 != null && this.f1058 && this.f1052 == null) {
-         C_OA c_oa = new C_OA("\\.");
-         c_oa.m1132(this.f1054);
+         DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\.");
+         delimitedtokenizer.m1132(this.f1054);
 
          while (true) {
-            String s = c_oa.m1135();
+            String s = delimitedtokenizer.m1135();
             if (s == null) {
                this.f1054 = null;
                break;
@@ -675,33 +675,33 @@ class C_d_C extends C_LB implements C_v_D {
       }
    }
 
-   void m1703(C_XD c_xd) {
-      this.m1704(c_xd, true);
+   void m1703(TaggedRecord taggedrecord) {
+      this.m1704(taggedrecord, true);
    }
 
-   void m1704(C_XD c_xd, boolean flag) {
-      this.m1705(c_xd, flag, true);
+   void m1704(TaggedRecord taggedrecord, boolean flag) {
+      this.m1705(taggedrecord, flag, true);
    }
 
-   void m1705(C_XD c_xd, boolean flag, boolean flag1) {
+   void m1705(TaggedRecord taggedrecord, boolean flag, boolean flag1) {
       if (flag1) {
          this.m1689();
       }
 
-      this.f1055 = LPSymbolizer.getProblemStatement(c_xd);
-      int[] aint = c_xd.m1477('+');
+      this.f1055 = LPSymbolizer.getProblemStatement(taggedrecord);
+      int[] aint = taggedrecord.m1477('+');
       if (flag) {
          if (aint.length == 0 && this.f1055 != null) {
-            int i = c_xd.m1482();
-            c_xd.m1491('+', C_OA.m1139(connSymbol[0], "\\:") + ":" + this.f1055, i);
+            int i = taggedrecord.m1482();
+            taggedrecord.m1491('+', DelimitedTokenizer.m1139(connSymbol[0], "\\:") + ":" + this.f1055, i);
             aint = new int[]{i};
          }
 
-         this.f1051 = c_xd.m1494();
-         this.f1052 = c_xd.m1483(c_xd.m1475('o'));
+         this.f1051 = taggedrecord.getName();
+         this.f1052 = taggedrecord.valueAt(taggedrecord.indexOfTag('o'));
       }
 
-      this.m1706(aint, 0, c_xd);
+      this.m1706(aint, 0, taggedrecord);
       if (flag && (LPSymbolizer.exercises != null || LPSymbolizer.problems != null) && (this.f1051 != null || this.f1052 != null)) {
          String s2 = null;
          Hashtable hashtable = null;
@@ -717,19 +717,19 @@ class C_d_C extends C_LB implements C_v_D {
             s2 = LPSymbolizer.problems.m1780(this.f1052 == null ? this.f1051 : this.f1052);
             hashtable = LPSymbolizer.problems.f1158;
             if (s2 == null) {
-               s2 = c_xd.toString();
+               s2 = taggedrecord.toString();
             }
          }
 
          if (s2 != null) {
-            c_xd = new C_XD(s2);
+            taggedrecord = new TaggedRecord(s2);
             String s;
-            if (this.f1052 == null || (s = LPSymbolizer.getProblemStatement(c_xd)) != null && s.equals(this.f1055)) {
-               this.f1053 = c_xd.m1483(c_xd.m1475('='));
-               this.f1054 = c_xd.m1483(c_xd.m1475('@'));
+            if (this.f1052 == null || (s = LPSymbolizer.getProblemStatement(taggedrecord)) != null && s.equals(this.f1055)) {
+               this.f1053 = taggedrecord.valueAt(taggedrecord.indexOfTag('='));
+               this.f1054 = taggedrecord.valueAt(taggedrecord.indexOfTag('@'));
                this.f1056 = m1708(this.f1054, this.f1058);
                if (hashtable != null) {
-                  String s1 = c_xd.m1483(c_xd.m1475('g'));
+                  String s1 = taggedrecord.valueAt(taggedrecord.indexOfTag('g'));
                   if (s1 != null) {
                      this.f1057 = (Vector)hashtable.get(s1);
                   }
@@ -741,23 +741,23 @@ class C_d_C extends C_LB implements C_v_D {
       }
    }
 
-   int m1706(int[] aint, int i, C_XD c_xd) {
+   int m1706(int[] aint, int i, TaggedRecord taggedrecord) {
       if (aint != null && aint.length != 0) {
          String s1 = null;
          this.f1049 = 0;
 
          String s;
          try {
-            s = c_xd.m1483(aint[i]);
+            s = taggedrecord.valueAt(aint[i]);
             i++;
          } catch (IndexOutOfBoundsException indexoutofboundsexception) {
             System.out.println("invalid symbolization node index: " + i);
             return -1;
          }
 
-         C_OA c_oa = new C_OA("\\:");
-         c_oa.m1132(s);
-         String s2 = c_oa.m1135().trim();
+         DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\:");
+         delimitedtokenizer.m1132(s);
+         String s2 = delimitedtokenizer.m1135().trim();
          if (s2 == null) {
             System.out.println("invalid symbolization node: " + s);
             return -1;
@@ -776,7 +776,7 @@ class C_d_C extends C_LB implements C_v_D {
                return -1;
             } else {
                this.m1691(j, s1, false);
-               this.m1680(c_oa.m1133());
+               this.m1680(delimitedtokenizer.m1133());
                this.f1045.m2164();
                int k = connArgTypes[j].length;
 
@@ -786,7 +786,7 @@ class C_d_C extends C_LB implements C_v_D {
                      return -1;
                   }
 
-                  i = c_d_c1.m1706(aint, i, c_xd);
+                  i = c_d_c1.m1706(aint, i, taggedrecord);
                   if (i == -1) {
                      break;
                   }
@@ -800,8 +800,8 @@ class C_d_C extends C_LB implements C_v_D {
       }
    }
 
-   static Vector m1707(C_XD c_xd, boolean flag) {
-      String s = c_xd.m1483(c_xd.m1475('@'));
+   static Vector m1707(TaggedRecord taggedrecord, boolean flag) {
+      String s = taggedrecord.valueAt(taggedrecord.indexOfTag('@'));
       return m1708(s, flag);
    }
 
@@ -813,12 +813,12 @@ class C_d_C extends C_LB implements C_v_D {
          if (hashtable == null) {
             return null;
          } else {
-            C_OA c_oa = new C_OA("\\.");
-            c_oa.m1132(s);
+            DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\.");
+            delimitedtokenizer.m1132(s);
             Vector vector = new Vector();
 
             while (true) {
-               String s1 = c_oa.m1135();
+               String s1 = delimitedtokenizer.m1135();
                if (s1 == null) {
                   return vector;
                }
@@ -835,39 +835,39 @@ class C_d_C extends C_LB implements C_v_D {
    }
 
    void m1709(String s) {
-      C_RF c_rf;
+      Expression expression;
       try {
-         c_rf = LogicProgram.m1006(s);
-      } catch (C_k_B c_k_b) {
+         expression = LogicProgram.m1006(s);
+      } catch (FormulaParseException formulaparseexception) {
          String s1 = "\\l" + s + "\\l is not a well formed expression";
-         C_UA.m1328("Badly Formed Expression", s1, null, null);
+         MessageDialog.showMessage("Badly Formed Expression", s1, null, null);
          return;
       }
 
       this.m1690(0, false);
-      this.m1710(c_rf);
+      this.m1710(expression);
       this.f1045.requestFocus();
    }
 
-   void m1710(C_RF c_rf) {
-      if (c_rf != null) {
+   void m1710(Expression expression) {
+      if (expression != null) {
          String s = null;
-         int i = c_rf.f741;
-         int j = LogicProgram.m1051(connSymbol, c_rf.f739);
+         int i = expression.childCount;
+         int j = LogicProgram.m1051(connSymbol, expression.symbol);
          if (m1727(j)) {
-            this.m1691(j, c_rf.m1217(0).f739, true);
-            this.m1686(0).m1710(c_rf.m1217(1));
+            this.m1691(j, expression.getChild(0).symbol, true);
+            this.m1686(0).m1710(expression.getChild(1));
          } else {
             if (j == -1) {
                j = 11;
-               s = C_OA.m1139(c_rf.toString(), "\\{");
+               s = DelimitedTokenizer.m1139(expression.toString(), "\\{");
                i = 0;
             }
 
             this.m1691(j, s, true);
 
             for (int k = 0; k < i; k++) {
-               this.m1686(k).m1710(c_rf.m1217(k));
+               this.m1686(k).m1710(expression.getChild(k));
             }
          }
       }
@@ -893,7 +893,7 @@ class C_d_C extends C_LB implements C_v_D {
 
             for (int l = 0; l < k; l++) {
                C_d_C c_d_c1 = new C_d_C(null);
-               c_d_c1.m1703(new C_XD((String)c_wd.f861.elementAt(l)));
+               c_d_c1.m1703(new TaggedRecord((String)c_wd.f861.elementAt(l)));
                if (c_d_c1.m1717()) {
                   System.out.println(c_d_c1.f1051 + " is incomplete.");
                } else if (this.m1722(c_d_c1, null)) {
@@ -911,22 +911,22 @@ class C_d_C extends C_LB implements C_v_D {
    int m1713() {
       Vector vector = this.m1711();
       int i = vector.size();
-      C_RF c_rf = this.m1698();
-      if (i != 0 && c_rf != null) {
+      Expression expression = this.m1698();
+      if (i != 0 && expression != null) {
          for (int j = 0; j < i; j++) {
             C_WD c_wd = (C_WD)vector.elementAt(j);
             int k = c_wd.f861 == null ? 0 : c_wd.f861.size();
 
             for (int l = 0; l < k; l++) {
                C_d_C c_d_c1 = new C_d_C(null);
-               c_d_c1.m1703(new C_XD((String)c_wd.f861.elementAt(l)));
+               c_d_c1.m1703(new TaggedRecord((String)c_wd.f861.elementAt(l)));
                if (c_d_c1.m1717()) {
                   System.out.println(c_d_c1.f1051 + " is incomplete.");
                } else {
-                  C_RF c_rf1 = c_d_c1.m1698();
-                  if (c_rf1 == null) {
+                  Expression expression1 = c_d_c1.m1698();
+                  if (expression1 == null) {
                      System.out.println(c_d_c1.f1051 + " could not be parsed.");
-                  } else if (m1716(c_rf, c_rf1)) {
+                  } else if (m1716(expression, expression1)) {
                      return j;
                   }
                }
@@ -967,7 +967,7 @@ class C_d_C extends C_LB implements C_v_D {
 
             for (int i1 = 0; i1 < l; i1++) {
                C_d_C c_d_c2 = new C_d_C(null);
-               c_d_c2.m1703(new C_XD((String)c_wd.f861.elementAt(i1)));
+               c_d_c2.m1703(new TaggedRecord((String)c_wd.f861.elementAt(i1)));
                int j1 = this.m1721(c_d_c2);
                if (c_d_c1 == null || j1 > j) {
                   c_d_c1 = c_d_c2;
@@ -980,12 +980,12 @@ class C_d_C extends C_LB implements C_v_D {
       return c_d_c1;
    }
 
-   static boolean m1716(C_RF c_rf, C_RF c_rf1) {
-      if (c_rf instanceof C_y_A && c_rf1 instanceof C_y_A) {
-         C_q_F c_q_f = new C_q_F("<->");
-         c_q_f.m1215(c_rf);
-         c_q_f.m1215(c_rf1);
-         return new C_HA(c_q_f.m1248()).m680();
+   static boolean m1716(Expression expression, Expression expression1) {
+      if (expression instanceof Formula && expression1 instanceof Formula) {
+         ConnectiveFormula connectiveformula = new ConnectiveFormula("<->");
+         connectiveformula.addChild(expression);
+         connectiveformula.addChild(expression1);
+         return new C_HA(connectiveformula.m1248()).m680();
       } else {
          return false;
       }
@@ -1035,7 +1035,7 @@ class C_d_C extends C_LB implements C_v_D {
          for (int l = 0; l < k; l++) {
             if (l != j) {
                C__C c__c = (C__C)c_h_c.m1772(((C_WD)this.f1057.elementAt(l)).f860);
-               if (c__c != null && c__c.f1120 == 2 && c__c.f927 == i) {
+               if (c__c != null && c__c.state == 2 && c__c.f927 == i) {
                   return l;
                }
             }
@@ -1151,7 +1151,7 @@ class C_d_C extends C_LB implements C_v_D {
       return m1731(s, vector, vector1, null);
    }
 
-   static String m1731(String s, Vector vector, Vector vector1, C_e_ c_e_) {
+   static String m1731(String s, Vector vector, Vector vector1, ExpressionPath expressionpath) {
       String s1 = s;
       int i = vector == null ? -1 : vector.lastIndexOf(s);
       if (i != -1) {
@@ -1163,8 +1163,8 @@ class C_d_C extends C_LB implements C_v_D {
       }
 
       if (vector1 != null && vector1.lastIndexOf(s1) != i) {
-         if (c_e_ != null) {
-            c_e_.m1749(vector1.lastIndexOf(s1));
+         if (expressionpath != null) {
+            expressionpath.m1749(vector1.lastIndexOf(s1));
          }
 
          return null;
@@ -1177,41 +1177,41 @@ class C_d_C extends C_LB implements C_v_D {
       return m1733(s, vector, vector1, null);
    }
 
-   static String m1733(String s, Vector vector, Vector vector1, C_e_ c_e_) {
-      C_RF c_rf;
+   static String m1733(String s, Vector vector, Vector vector1, ExpressionPath expressionpath) {
+      Expression expression;
       try {
-         c_rf = LogicProgram.m1008(s, true, false);
-      } catch (C_k_B c_k_b) {
+         expression = LogicProgram.m1008(s, true, false);
+      } catch (FormulaParseException formulaparseexception) {
          return s;
       }
 
-      c_rf = m1734(c_rf, vector, vector1, c_e_);
-      return c_rf == null ? null : c_rf.toString();
+      expression = m1734(expression, vector, vector1, expressionpath);
+      return expression == null ? null : expression.toString();
    }
 
-   static C_RF m1734(C_RF object, Vector vector, Vector vector1, C_e_ c_e_) {
+   static Expression m1734(Expression object, Vector vector, Vector vector1, ExpressionPath expressionpath) {
       if (object == null) {
          return null;
       } else {
          int j = vector == null ? 0 : vector.size();
          if (vector1 == null ? j == 0 : vector1.size() == j) {
             for (int i = j - 1; i >= 0; i--) {
-               C_o_A c_o_a = new C_o_A("@");
-               c_o_a.m1215(new C_i_((String)vector.elementAt(i)));
-               c_o_a.m1215((C_RF)object);
-               object = c_o_a;
+               QuantifiedFormula quantifiedformula = new QuantifiedFormula("@");
+               quantifiedformula.addChild(new SimpleTerm((String)vector.elementAt(i)));
+               quantifiedformula.addChild((Expression)object);
+               object = quantifiedformula;
             }
 
-            ((C_RF)object).m1257();
-            ((C_RF)object).m1241(vector1);
-            if (m1735((C_RF)object, c_e_)) {
+            ((Expression)object).m1257();
+            ((Expression)object).m1241(vector1);
+            if (m1735((Expression)object, expressionpath)) {
                return null;
             } else {
                for (int k = 0; k < j; k++) {
-                  object = ((C_RF)object).m1217(1);
+                  object = ((Expression)object).getChild(1);
                }
 
-               return ((C_RF)object).m1237();
+               return ((Expression)object).copy();
             }
          } else {
             return null;
@@ -1219,21 +1219,21 @@ class C_d_C extends C_LB implements C_v_D {
       }
    }
 
-   static boolean m1735(C_RF c_rf, C_e_ c_e_) {
-      Vector vector = c_rf.m1259();
+   static boolean m1735(Expression expression, ExpressionPath expressionpath) {
+      Vector vector = expression.m1259();
       if (vector == null) {
          return false;
       } else {
-         if (c_e_ != null) {
+         if (expressionpath != null) {
             int i = vector.size();
 
             for (int j = 0; j < i; j++) {
-               C_RF c_rf1 = c_rf;
-               C_RF c_rf2 = ((C_RF[])vector.elementAt(j))[0];
+               Expression expression1 = expression;
+               Expression expression2 = ((Expression[])vector.elementAt(j))[0];
 
-               for (int k = 0; c_rf1 instanceof C_o_A; c_rf1 = c_rf1.m1217(1)) {
-                  if (c_rf1 == c_rf2) {
-                     c_e_.m1749(k);
+               for (int k = 0; expression1 instanceof QuantifiedFormula; expression1 = expression1.getChild(1)) {
+                  if (expression1 == expression2) {
+                     expressionpath.m1749(k);
                      break;
                   }
 
@@ -1253,18 +1253,18 @@ class C_d_C extends C_LB implements C_v_D {
    }
 
    boolean m1737(String s, String s1, Vector vector, Vector vector1) {
-      C_RF c_rf;
-      C_RF c_rf1;
+      Expression expression;
+      Expression expression1;
       try {
-         c_rf = LogicProgram.m1007(s, true);
-         c_rf1 = LogicProgram.m1007(s1, true);
-      } catch (C_k_B c_k_b) {
-         c_rf = null;
-         c_rf1 = null;
+         expression = LogicProgram.m1007(s, true);
+         expression1 = LogicProgram.m1007(s1, true);
+      } catch (FormulaParseException formulaparseexception) {
+         expression = null;
+         expression1 = null;
       }
 
-      c_rf1 = m1734(c_rf1, vector1, vector, null);
-      return c_rf1 == null ? s.equals(s1) : c_rf1.m1236(c_rf, new C_MB());
+      expression1 = m1734(expression1, vector1, vector, null);
+      return expression1 == null ? s.equals(s1) : expression1.m1236(expression, new C_MB());
    }
 
    static boolean m1738(String s, Vector vector, Vector vector1) {
@@ -1289,16 +1289,16 @@ class C_d_C extends C_LB implements C_v_D {
          c__c = new C__C(s, c_h_c, true);
       }
 
-      new C_d_C(null).m1741(new C_XD(s), c_h_c, c__c);
+      new C_d_C(null).m1741(new TaggedRecord(s), c_h_c, c__c);
       return c__c;
    }
 
-   void m1741(C_XD c_xd, C_h_C c_h_c, C__C c__c) {
+   void m1741(TaggedRecord taggedrecord, C_h_C c_h_c, C__C c__c) {
       if (c__c != null) {
-         if (!LPSymbolizer.hasWork(c_xd)) {
+         if (!LPSymbolizer.hasWork(taggedrecord)) {
             c__c.m1582();
          } else {
-            this.m1703(c_xd);
+            this.m1703(taggedrecord);
             if (this.m1717()) {
                c__c.f927 = -1;
             } else if ((c__c.f927 = this.m1712()) == -1 && LPSymbolizer.equivalentCounts(this.f1051)) {
@@ -1306,9 +1306,9 @@ class C_d_C extends C_LB implements C_v_D {
             }
 
             if (c__c.f927 != -1 && this.m1720(c__c.f927, c_h_c) == -1) {
-               c__c.f1120 = 2;
+               c__c.state = 2;
             } else {
-               c__c.f1120 = 1;
+               c__c.state = 1;
             }
          }
       }

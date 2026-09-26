@@ -2,9 +2,9 @@ package edu.ucla.phil.logic;
 
 import java.util.Vector;
 
-class C_DD implements C_n_A {
+class C_DD implements LogicConstants {
    C_DD f277 = null;
-   C_RF f278;
+   Expression f278;
    boolean f279 = false;
    int f280 = 0;
    Vector f281 = null;
@@ -17,21 +17,21 @@ class C_DD implements C_n_A {
    static final String[] f288 = new String[]{"(", ")", " "};
    static final String[] f289 = new String[]{"", "", ""};
 
-   C_DD(C_RF c_rf, boolean flag, int i) {
-      this.f278 = c_rf;
+   C_DD(Expression expression, boolean flag, int i) {
+      this.f278 = expression;
       this.f279 = flag;
       this.f280 = i;
-      if (c_rf != null) {
-         c_rf.m1211(this);
+      if (expression != null) {
+         expression.m1211(this);
       }
    }
 
-   C_DD(C_RF c_rf, boolean flag) {
-      this(c_rf, flag, 0);
+   C_DD(Expression expression, boolean flag) {
+      this(expression, flag, 0);
    }
 
-   C_DD(C_RF c_rf) {
-      this(c_rf, false);
+   C_DD(Expression expression) {
+      this(expression, false);
    }
 
    C_DD(String s) {
@@ -39,13 +39,13 @@ class C_DD implements C_n_A {
       this.f284 = s;
    }
 
-   static C_RF m454(String s) {
+   static Expression m454(String s) {
       if (s == null) {
          return null;
       } else {
          try {
             return LogicProgram.m1008(s, true, false);
-         } catch (C_k_B c_k_b) {
+         } catch (FormulaParseException formulaparseexception) {
             return null;
          }
       }
@@ -55,7 +55,7 @@ class C_DD implements C_n_A {
       return this.f277;
    }
 
-   C_RF m456() {
+   Expression m456() {
       return this.f278;
    }
 
@@ -71,7 +71,7 @@ class C_DD implements C_n_A {
       C_DD c_dd1 = this.m471(true);
       return this.f278 == null
          ? new int[]{0, this.f284.length()}
-         : m486(c_dd1.f286, c_dd1.f287, this.m466(), this.f283, this.f278 instanceof C_q_F && this.f278.m1216() > 1);
+         : m486(c_dd1.f286, c_dd1.f287, this.m466(), this.f283, this.f278 instanceof ConnectiveFormula && this.f278.getChildCount() > 1);
    }
 
    void m460(Vector vector) {
@@ -81,7 +81,7 @@ class C_DD implements C_n_A {
       }
 
       for (int j = 0; j < i; j++) {
-         this.f285.addElement(m462(this.m474((C_i_A)vector.elementAt(j))));
+         this.f285.addElement(m462(this.m474((SchematicLetter)vector.elementAt(j))));
       }
    }
 
@@ -92,7 +92,7 @@ class C_DD implements C_n_A {
       }
 
       for (int j = 0; j < i; j++) {
-         this.f285.addElement(m462(this.m476(C_i_A.m1853(j))));
+         this.f285.addElement(m462(this.m476(SchematicLetter.m1853(j))));
       }
    }
 
@@ -103,7 +103,7 @@ class C_DD implements C_n_A {
       for (int j = 0; j < i; j++) {
          C_DD c_dd = (C_DD)vector.elementAt(j);
          int[] aint = c_dd.m459();
-         aint[1] = aint[0] + c_dd.f278.f739.length();
+         aint[1] = aint[0] + c_dd.f278.symbol.length();
          c_n_f.m1987(aint);
       }
 
@@ -193,15 +193,15 @@ class C_DD implements C_n_A {
       }
    }
 
-   C_DD m472(C_RF c_rf) {
-      if (this.f278 == c_rf) {
+   C_DD m472(Expression expression) {
+      if (this.f278 == expression) {
          return this;
       } else {
          int i = this.m457();
 
          for (int j = 0; j < i; j++) {
             C_DD c_dd1;
-            if ((c_dd1 = this.m458(j).m472(c_rf)) != null) {
+            if ((c_dd1 = this.m458(j).m472(expression)) != null) {
                return c_dd1;
             }
          }
@@ -210,31 +210,31 @@ class C_DD implements C_n_A {
       }
    }
 
-   C_e_ m473() {
+   ExpressionPath m473() {
       if (this.f277 == null) {
-         return new C_e_();
+         return new ExpressionPath();
       } else {
-         C_e_ c_e_ = this.f277.m473();
-         c_e_.m1749(this.f277.f281.indexOf(this));
-         return c_e_;
+         ExpressionPath expressionpath = this.f277.m473();
+         expressionpath.m1749(this.f277.f281.indexOf(this));
+         return expressionpath;
       }
    }
 
-   Vector m474(C_i_A c_i_a) {
+   Vector m474(SchematicLetter schematicletter) {
       Vector vector = new Vector();
-      this.m475(c_i_a, vector);
+      this.m475(schematicletter, vector);
       return vector;
    }
 
-   void m475(C_i_A c_i_a, Vector vector) {
-      if (c_i_a.equals(this.f278.m1272())) {
+   void m475(SchematicLetter schematicletter, Vector vector) {
+      if (schematicletter.equals(this.f278.getSchematicLetter())) {
          vector.addElement(this);
       }
 
       int i = this.m457();
 
       for (int j = 0; j < i; j++) {
-         this.m458(j).m475(c_i_a, vector);
+         this.m458(j).m475(schematicletter, vector);
       }
    }
 
@@ -245,7 +245,7 @@ class C_DD implements C_n_A {
    }
 
    void m477(String s, Vector vector) {
-      if (this.f278 instanceof C_i_ && ((C_i_)this.f278).m1262() && s.equals(this.f278.f739)) {
+      if (this.f278 instanceof SimpleTerm && ((SimpleTerm)this.f278).m1262() && s.equals(this.f278.symbol)) {
          vector.addElement(this);
       }
 
@@ -480,8 +480,8 @@ class C_DD implements C_n_A {
          if (i < 0) {
             return false;
          } else {
-            if (!this.f278.f739.equals("->") && !this.f278.f739.equals("<->")) {
-               if (!this.f278.f739.equals("&") && !this.f278.f739.equals("|")) {
+            if (!this.f278.symbol.equals("->") && !this.f278.symbol.equals("<->")) {
+               if (!this.f278.symbol.equals("&") && !this.f278.symbol.equals("|")) {
                   if (i != 0) {
                      return false;
                   }
@@ -489,8 +489,8 @@ class C_DD implements C_n_A {
                   if (i > 1) {
                      return false;
                   }
-               } else if (!this.f277.f278.f739.equals("->") && !this.f277.f278.f739.equals("<->")) {
-                  if (this.f277.f278.f739.equals(this.f278.f739) && this.f277.m458(0) == this) {
+               } else if (!this.f277.f278.symbol.equals("->") && !this.f277.f278.symbol.equals("<->")) {
+                  if (this.f277.f278.symbol.equals(this.f278.symbol) && this.f277.m458(0) == this) {
                      if (i > 1) {
                         return false;
                      }

@@ -17,7 +17,7 @@ class C__D extends JButton implements ActionListener, MouseListener {
       this.addActionListener(this);
       this.addMouseListener(this);
       this.setText(LogicProgram.m1004(s));
-      this.setFont(LogicProgram.m1030(LogicProgram.f539, 1));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize, 1));
    }
 
    C__D(String s, Action action) {

@@ -20,12 +20,12 @@ public class C_n_B implements Icon, UIResource, Serializable {
       ButtonModel buttonmodel = jradiobutton.getModel();
       boolean flag = buttonmodel.isSelected();
       Color color = component.getBackground();
-      Object object = C_n_A.bruinBlack;
+      Object object = LogicConstants.bruinBlack;
       ColorUIResource coloruiresource = MetalLookAndFeel.getControlShadow();
-      Object object1 = C_n_A.bruinBlack;
+      Object object1 = LogicConstants.bruinBlack;
       ColorUIResource coloruiresource1 = MetalLookAndFeel.getControlHighlight();
       ColorUIResource coloruiresource2 = MetalLookAndFeel.getControlHighlight();
-      Object object2 = C_n_A.bruinWhite;
+      Object object2 = LogicConstants.bruinWhite;
       if (!buttonmodel.isEnabled()) {
          object = coloruiresource;
          object1 = coloruiresource;
@@ -53,10 +53,10 @@ public class C_n_B implements Icon, UIResource, Serializable {
 
    @Override
    public int getIconWidth() {
-      if (LogicProgram.f539 < 8) {
-         return LogicProgram.f539;
+      if (LogicProgram.fontSize < 8) {
+         return LogicProgram.fontSize;
       } else {
-         return LogicProgram.f539 < 12 ? 8 : LogicProgram.f539 * 2 / 3;
+         return LogicProgram.fontSize < 12 ? 8 : LogicProgram.fontSize * 2 / 3;
       }
    }
 

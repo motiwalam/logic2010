@@ -53,18 +53,18 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.StyledDocument;
 
-public class LogicProgram implements C_n_A {
+public class LogicProgram implements LogicConstants {
    static C_V f529 = null;
-   static C_t_A f530 = null;
-   static C_w_B f531 = null;
-   static C_w_B f532 = null;
-   static C_OE f533;
-   static C_z_B f534 = null;
-   static Hashtable f535 = null;
-   static Hashtable f536 = null;
-   static String f537 = null;
+   static OverrideSettings overrides = null;
+   static PreferencesFile prefs = null;
+   static PreferencesFile workPrefs = null;
+   static UserInfo user;
+   static RuleTable f534 = null;
+   static Hashtable links = null;
+   static Hashtable coreInfo = null;
+   static String scrambleKey = null;
    static final int f538 = 16;
-   static int f539 = C_SD.m1288();
+   static int fontSize = ProgressDialog.m1288();
    static Font[] f540;
    static Dimension f541 = Toolkit.getDefaultToolkit().getScreenSize();
    static final int f542 = 0;
@@ -75,18 +75,18 @@ public class LogicProgram implements C_n_A {
    static final int f547 = 5;
    static final int f548 = 0;
    static final int f549 = 2;
-   static File f550;
+   static File configDir;
    static File f551;
-   static File f552;
-   static File f553;
+   static File linkDir;
+   static File progDir;
    static File f554;
-   static File f555;
+   static File workDir;
    static File f556;
    static File f557;
    static File f558;
-   static File f559;
+   static File userFile;
    static File f560;
-   static File f561;
+   static File ruleDir;
    static File f562;
    static File f563;
    static String f564;
@@ -94,14 +94,14 @@ public class LogicProgram implements C_n_A {
    static int f566 = 1;
    static String f567 = null;
    static String f568 = null;
-   static String f569 = null;
-   static String f570 = null;
+   static String codeVersion = null;
+   static String arch = null;
    static boolean f571 = true;
-   static boolean f572 = false;
-   static boolean f573 = true;
-   static boolean f574 = false;
-   static boolean f575 = false;
-   static boolean f576 = false;
+   static boolean debug = false;
+   static boolean printingEnabled = true;
+   static boolean overheadColors = false;
+   static boolean remote = false;
+   static boolean noNetwork = false;
    static boolean f577 = false;
    static boolean f578 = false;
    static boolean f579 = true;
@@ -111,17 +111,17 @@ public class LogicProgram implements C_n_A {
    static boolean f583 = true;
    static boolean f584 = false;
    static boolean f585 = false;
-   static C_z_C f586 = null;
-   static C_m_ f587 = null;
+   static MainMenu mainMenu = null;
+   static SingleInstanceGuard instanceGuard = null;
    static Integer f588 = null;
    static boolean f589 = false;
    static boolean f590 = false;
    static boolean f591 = false;
-   static C_OE f592;
+   static UserInfo f592;
    static String f593 = null;
    static ArrayList<Image> f594 = null;
-   static Hashtable f595 = null;
-   static String[] f596 = kaplan1;
+   static Hashtable credentials = null;
+   static String[] symbols = kaplan1;
    static String[] f597 = kaplan5;
    static String[] f598 = html1;
    static String f599 = "PQRSTUVWXYZ";
@@ -144,7 +144,7 @@ public class LogicProgram implements C_n_A {
       SwingUtilities.invokeLater(new LogicProgram.C__A());
    }
 
-   static void m960() {
+   static void loadIconsAndFonts() {
       int[] aint = new int[]{256, 128, 48, 32, 24, 16};
       f594 = new ArrayList<>(aint.length);
       Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -174,20 +174,20 @@ public class LogicProgram implements C_n_A {
       }
    }
 
-   static int m961() {
+   static int initialize() {
       if (!f591) {
          String s = System.getProperty("config.dir");
          if (s == null) {
             s = System.getProperty("user.dir");
          }
 
-         f550 = m1074(s);
-         f556 = new File(f550, "override.txt");
-         f557 = new File(f550, "prefs.txt");
-         f555 = new File(f550, "work");
-         f558 = new File(f555, "prefs.txt");
-         if (!m965(f550)) {
-            C_UA.m1328(
+         configDir = canonicalFile(s);
+         f556 = new File(configDir, "override.txt");
+         f557 = new File(configDir, "prefs.txt");
+         workDir = new File(configDir, "work");
+         f558 = new File(workDir, "prefs.txt");
+         if (!m965(configDir)) {
+            MessageDialog.showMessage(
                "Permission Error",
                "Cannot write to the installation location.\nThe program must be installed in a folder\nto which you can write.\n\nTry installing again either in the default\ndirectory or on the Desktop or in your\nDownloads directory.",
                null,
@@ -196,62 +196,62 @@ public class LogicProgram implements C_n_A {
             return 1;
          }
 
-         f559 = new File(f555, "user.txt");
-         f552 = m1074(System.getProperty("link.dir"));
-         f553 = m1074(System.getProperty("prog.dir"));
-         f554 = m1074(System.getProperty("root.dir"));
+         userFile = new File(workDir, "user.txt");
+         linkDir = canonicalFile(System.getProperty("link.dir"));
+         progDir = canonicalFile(System.getProperty("prog.dir"));
+         f554 = canonicalFile(System.getProperty("root.dir"));
          String s1 = System.getProperty("from.ide");
          if ("1".equals(s1)) {
             f580 = true;
          }
 
-         f563 = new File(f553, "trash");
-         f560 = f553 == null ? null : new File(f553, "loadinfo.txt");
-         f551 = m1074(System.getProperty("copy.dir"));
+         f563 = new File(progDir, "trash");
+         f560 = progDir == null ? null : new File(progDir, "loadinfo.txt");
+         f551 = canonicalFile(System.getProperty("copy.dir"));
          f564 = System.getProperty("com.ms.windir");
          f565 = System.getProperty("fail.dir");
          if (f560.exists()) {
             Hashtable hashtable = m966();
             String s2 = (String)hashtable.get("linkDir");
             if (s2 != null) {
-               f552 = m1074((String)hashtable.get("linkDir"));
+               linkDir = canonicalFile((String)hashtable.get("linkDir"));
             }
          }
 
-         f530 = new C_t_A();
+         overrides = new OverrideSettings();
          if (f556.exists()) {
             try {
-               f530.m2083(new FileReader(f556));
+               overrides.m2083(new FileReader(f556));
             } catch (Exception exception) {
                System.out.println(exception.getMessage());
             }
          }
 
-         f531 = new C_w_B();
-         f531.m2153(f557);
-         f532 = new C_w_B();
-         f532.m2153(f558);
+         prefs = new PreferencesFile();
+         prefs.load(f557);
+         workPrefs = new PreferencesFile();
+         workPrefs.load(f558);
       }
 
-      C_SD c_sd = new C_SD(LPInfo.programName, "Starting the program...", false);
-      c_sd.m1284(30, 20);
-      C_FB.m205();
-      if ((f536 = m1071()) == null) {
-         c_sd.dispose();
-         C_UA.m1328("No Core Information", "Could not read core information file.", null, null);
+      ProgressDialog progressdialog = new ProgressDialog(LPInfo.programName, "Starting the program...", false);
+      progressdialog.m1284(30, 20);
+      FormulaParser.disableTracing();
+      if ((coreInfo = readCoreInfo()) == null) {
+         progressdialog.dispose();
+         MessageDialog.showMessage("No Core Information", "Could not read core information file.", null, null);
          return 1;
       } else {
-         f569 = m1076(f536, "version", "").trim();
-         f570 = m1076(f536, "arch", "noarch").trim();
-         if (f570.equalsIgnoreCase("noarch")) {
-            c_sd.dispose();
-            C_UA.m1328("No Core Architecture", "Could not determine core architecture.", null, null);
+         codeVersion = getValue(coreInfo, "version", "").trim();
+         arch = getValue(coreInfo, "arch", "noarch").trim();
+         if (arch.equalsIgnoreCase("noarch")) {
+            progressdialog.dispose();
+            MessageDialog.showMessage("No Core Architecture", "Could not determine core architecture.", null, null);
             return 1;
          } else {
             File file3 = null;
 
-            while ((f535 = m1072(f552, true)) != null) {
-               f562 = new File(f561, "text");
+            while ((links = readLinks(linkDir, true)) != null) {
+               f562 = new File(ruleDir, "text");
                if (!f562.exists()) {
                   f562 = null;
                } else {
@@ -261,121 +261,121 @@ public class LogicProgram implements C_n_A {
                   }
                }
 
-               if (!C_H.m410()) {
-                  c_sd.dispose();
+               if (!Message.loadMessages()) {
+                  progressdialog.dispose();
                   JOptionPane.showMessageDialog(null, "Could not open the program messages file.", "No Messages", 0);
                   return 1;
                }
 
-               if (file3 == null && (!f591 || C_KC.f481) && !f560.exists()) {
-                  String s3 = m1078("adminDir");
-                  File file1 = s3 == null ? null : C_KC.m877(f550, s3);
-                  s3 = m1078("nonetDir");
-                  File file2 = s3 == null ? null : C_KC.m877(f550, s3);
-                  if ((file3 = C_u_C.m2108(file1, file2)) != null) {
-                     f552 = file3;
+               if (file3 == null && (!f591 || ServerConnection.f481) && !f560.exists()) {
+                  String s3 = getLink("adminDir");
+                  File file1 = s3 == null ? null : ServerConnection.resolvePath(configDir, s3);
+                  s3 = getLink("nonetDir");
+                  File file2 = s3 == null ? null : ServerConnection.resolvePath(configDir, s3);
+                  if ((file3 = UserSetup.m2108(file1, file2)) != null) {
+                     linkDir = file3;
                   }
 
-                  C_KC.f481 = false;
+                  ServerConnection.f481 = false;
                } else {
                   file3 = null;
                }
 
                if (file3 == null) {
                   if (f565 != null) {
-                     c_sd.dispose();
-                     JOptionPane.showMessageDialog(null, "Could not set directory to " + C_OA.m1139(f565, "\\") + ".", "No Work Directory", 0);
+                     progressdialog.dispose();
+                     JOptionPane.showMessageDialog(null, "Could not set directory to " + DelimitedTokenizer.m1139(f565, "\\") + ".", "No Work Directory", 0);
                      return 1;
                   }
 
                   m969();
-                  if (!f555.exists()) {
-                     f555.mkdir();
-                  } else if (f555.isFile()) {
-                     c_sd.dispose();
-                     JOptionPane.showMessageDialog(null, C_OA.m1139(f555 + "", "\\") + " is not a directory.", "No User Directory", 0);
+                  if (!workDir.exists()) {
+                     workDir.mkdir();
+                  } else if (workDir.isFile()) {
+                     progressdialog.dispose();
+                     JOptionPane.showMessageDialog(null, DelimitedTokenizer.m1139(workDir + "", "\\") + " is not a directory.", "No User Directory", 0);
                      return 1;
                   }
 
-                  m1055();
-                  C_XB c_xb = m1062("options", false);
-                  if (c_xb == null) {
-                     c_sd.dispose();
-                     C_UA.m1328("No Options", "Could not read option file.", null, null);
+                  resetOptions();
+                  ScrambledReader scrambledreader = openDataFile("options", false);
+                  if (scrambledreader == null) {
+                     progressdialog.dispose();
+                     MessageDialog.showMessage("No Options", "Could not read option file.", null, null);
                      return 1;
                   }
 
-                  m1056(c_xb);
-                  m1056(m1065("options", false));
-                  if (f574) {
+                  readOptions(scrambledreader);
+                  readOptions(m1065("options", false));
+                  if (overheadColors) {
                      f607 = f606;
                   }
 
-                  if (f572) {
+                  if (debug) {
                      m978();
                   }
 
                   m1058();
                   m1059();
                   m1057();
-                  if (!f570.equalsIgnoreCase("macos") && !f530.m2082("SoloCheck", "yes").equalsIgnoreCase("no")) {
-                     if (f587 != null && f587.f1264 != f588) {
-                        f587.m1937();
-                        f587 = null;
+                  if (!arch.equalsIgnoreCase("macos") && !overrides.m2082("SoloCheck", "yes").equalsIgnoreCase("no")) {
+                     if (instanceGuard != null && instanceGuard.f1264 != f588) {
+                        instanceGuard.m1937();
+                        instanceGuard = null;
                      }
 
-                     if (f587 == null && f588 != null) {
-                        f587 = new C_m_(f588, "cogito");
+                     if (instanceGuard == null && f588 != null) {
+                        instanceGuard = new SingleInstanceGuard(f588, "cogito");
                      }
 
-                     if (f587 != null && !f587.isAlive() && !f587.m1933()) {
-                        c_sd.dispose();
+                     if (instanceGuard != null && !instanceGuard.isAlive() && !instanceGuard.m1933()) {
+                        progressdialog.dispose();
                         JOptionPane.showMessageDialog(null, "There is already a copy of Logic 2010\nrunning on this computer.", "Logic 2010 Running", 1);
                         return 1;
                      }
                   }
 
-                  if (!C_KC.m802()) {
-                     c_sd.dispose();
+                  if (!ServerConnection.readDatabaseLinks()) {
+                     progressdialog.dispose();
                      JOptionPane.showMessageDialog(null, "Could not read database link file.", "No Database Links", 0);
                      return 1;
                   }
 
-                  if (C_KC.f483) {
+                  if (ServerConnection.demoMode) {
                      f567 = null;
                      f568 = null;
                   }
 
-                  c_sd.dispose();
-                  C_KC.m880();
+                  progressdialog.dispose();
+                  ServerConnection.m880();
                   return 0;
                }
             }
 
-            c_sd.dispose();
+            progressdialog.dispose();
             JOptionPane.showMessageDialog(null, "Could not read link file.", "No Links", 0);
             return 1;
          }
       }
    }
 
-   static int m962() {
+   static int initializeUser() {
       try {
          while (true) {
-            f533 = null;
-            if (f559.exists()) {
-               if ((f533 = C_OE.m1145(false)) == null) {
-                  if (C_u_C.m2111()) {
+            user = null;
+            if (userFile.exists()) {
+               if ((user = UserInfo.load(false)) == null) {
+                  if (UserSetup.m2111()) {
                      continue;
                   }
 
                   return 1;
                }
 
-               if (f575) {
+               if (remote) {
                   if (!f591) {
                      if (!f560.exists()) {
-                        Boolean obool = C_u_C.m2110(f533);
+                        Boolean obool = UserSetup.m2110(user);
                         if (obool == null) {
                            continue;
                         }
@@ -384,7 +384,7 @@ public class LogicProgram implements C_n_A {
                            return 1;
                         }
 
-                        obool = C_u_C.m2107(f533, false, false);
+                        obool = UserSetup.m2107(user, false, false);
                         if (obool == null) {
                            continue;
                         }
@@ -393,11 +393,11 @@ public class LogicProgram implements C_n_A {
                            return 1;
                         }
 
-                        if (f533.f662) {
-                           f533.m684();
+                        if (user.dirty) {
+                           user.save();
                         }
 
-                        obool = C_j_C.m1872(f533);
+                        obool = AccountManager.m1872(user);
                         if (obool == null) {
                            continue;
                         }
@@ -411,11 +411,11 @@ public class LogicProgram implements C_n_A {
                   }
 
                   int i;
-                  if ((i = C_KC.m862(f533)) != 0) {
+                  if ((i = ServerConnection.m862(user)) != 0) {
                      return i;
                   }
-               } else if (m1040("exam") != null) {
-                  Boolean obool2 = C_u_C.m2107(f533, true, false);
+               } else if (getCredentials("exam") != null) {
+                  Boolean obool2 = UserSetup.m2107(user, true, false);
                   if (obool2 == null) {
                      continue;
                   }
@@ -424,11 +424,11 @@ public class LogicProgram implements C_n_A {
                      return 1;
                   }
 
-                  if (f533.f662) {
-                     f533.m684();
+                  if (user.dirty) {
+                     user.save();
                   }
-               } else if (C_KC.f480) {
-                  Boolean obool3 = C_u_C.m2107(f533, false, true);
+               } else if (ServerConnection.f480) {
+                  Boolean obool3 = UserSetup.m2107(user, false, true);
                   if (obool3 == null) {
                      continue;
                   }
@@ -439,30 +439,30 @@ public class LogicProgram implements C_n_A {
                }
             } else {
                f583 = false;
-               if (f575) {
+               if (remote) {
                   Object object;
                   if (f591) {
                      object = f592;
                   } else {
-                     object = new C_HB();
-                     if ((!f560.exists() || !m967((C_OE)object)) && C_j_C.m1863((C_OE)object, "not027", true, false) == null) {
+                     object = new NewUserInfo();
+                     if ((!f560.exists() || !m967((UserInfo)object)) && AccountManager.m1863((UserInfo)object, "not027", true, false) == null) {
                         return 1;
                      }
                   }
 
                   int j;
-                  if ((j = C_KC.m862((C_OE)object)) != 0) {
+                  if ((j = ServerConnection.m862((UserInfo)object)) != 0) {
                      return j;
                   }
                }
 
-               if (C_KC.f483) {
-                  f533 = C_OE.m1166();
-                  if (f533.f662) {
-                     f533.m684();
+               if (ServerConnection.demoMode) {
+                  user = UserInfo.createDemoUser();
+                  if (user.dirty) {
+                     user.save();
                   }
 
-                  Boolean obool4 = C_u_C.m2107(f533, false, true);
+                  Boolean obool4 = UserSetup.m2107(user, false, true);
                   if (obool4 == null) {
                      continue;
                   }
@@ -471,54 +471,54 @@ public class LogicProgram implements C_n_A {
                      return 1;
                   }
                } else {
-                  if (!C_u_C.m2114(f568, f567, m1040("exam") == null)) {
+                  if (!UserSetup.m2114(f568, f567, getCredentials("exam") == null)) {
                      return 1;
                   }
 
-                  if (f559.exists()) {
-                     if ((f533 = C_OE.m1145(false)) == null) {
-                        if (C_u_C.m2111()) {
+                  if (userFile.exists()) {
+                     if ((user = UserInfo.load(false)) == null) {
+                        if (UserSetup.m2111()) {
                            continue;
                         }
 
                         return 1;
                      }
 
-                     if (f575) {
-                        if (!m968(f533)) {
+                     if (remote) {
+                        if (!m968(user)) {
                            return 1;
                         }
 
                         int k;
-                        if ((k = C_KC.m862(f533)) != 0) {
+                        if ((k = ServerConnection.m862(user)) != 0) {
                            return k;
                         }
                      }
                   } else {
                      boolean flag = false;
-                     if (f575) {
-                        C_HB c_hb = C_j_C.m1869();
-                        if (c_hb == null) {
+                     if (remote) {
+                        NewUserInfo newuserinfo = AccountManager.m1869();
+                        if (newuserinfo == null) {
                            return 1;
                         }
 
-                        Boolean obool1 = C_KC.m897(f568, f567, c_hb);
+                        Boolean obool1 = ServerConnection.m897(f568, f567, newuserinfo);
                         if (obool1 == null) {
                            return 1;
                         }
 
                         if (obool1) {
-                           if (C_u_C.m2112(c_hb)) {
+                           if (UserSetup.m2112(newuserinfo)) {
                               return 1;
                            }
 
-                           C_KC.m903(false);
-                           if (!C_KC.m899(f568, f567, c_hb)) {
+                           ServerConnection.m903(false);
+                           if (!ServerConnection.m899(f568, f567, newuserinfo)) {
                               return 1;
                            }
 
-                           if ((f533 = C_OE.m1145(false)) == null) {
-                              if (C_u_C.m2111()) {
+                           if ((user = UserInfo.load(false)) == null) {
+                              if (UserSetup.m2111()) {
                                  continue;
                               }
 
@@ -527,7 +527,7 @@ public class LogicProgram implements C_n_A {
 
                            flag = true;
                         } else {
-                           Boolean obool8 = C_u_C.m2113(c_hb);
+                           Boolean obool8 = UserSetup.m2113(newuserinfo);
                            if (obool8 == null) {
                               return 1;
                            }
@@ -536,34 +536,34 @@ public class LogicProgram implements C_n_A {
                               continue;
                            }
 
-                           f533 = new C_OE(c_hb.m1153());
+                           user = new UserInfo(newuserinfo.getStudentId());
                         }
                      } else {
-                        f533 = new C_OE();
+                        user = new UserInfo();
                      }
 
-                     while (!f533.m683()) {
-                        if (!f533.m1170()) {
+                     while (!user.m683()) {
+                        if (!user.m1170()) {
                            return 1;
                         }
                      }
 
-                     if (f533.f662) {
-                        f533.m684();
+                     if (user.dirty) {
+                        user.save();
                      }
 
-                     if (f575) {
+                     if (remote) {
                         if (flag) {
-                           if (!m968(f533)) {
+                           if (!m968(user)) {
                               return 1;
                            }
 
                            int l;
-                           if ((l = C_KC.m862(f533)) != 0) {
+                           if ((l = ServerConnection.m862(user)) != 0) {
                               return l;
                            }
                         } else {
-                           Boolean obool6 = C_j_C.m1872(f533);
+                           Boolean obool6 = AccountManager.m1872(user);
                            if (obool6 == null) {
                               continue;
                            }
@@ -573,14 +573,14 @@ public class LogicProgram implements C_n_A {
                            }
 
                            int i1;
-                           if ((i1 = C_KC.m862(f533)) != 0) {
+                           if ((i1 = ServerConnection.m862(user)) != 0) {
                               return i1;
                            }
                         }
                      }
                   }
 
-                  Boolean obool5 = C_u_C.m2107(f533, false, true);
+                  Boolean obool5 = UserSetup.m2107(user, false, true);
                   if (obool5 == null) {
                      continue;
                   }
@@ -591,27 +591,27 @@ public class LogicProgram implements C_n_A {
                }
             }
 
-            if (f575) {
-               if (m1040("exam") != null) {
-                  if (f533.m1160()) {
-                     if (C_KC.m849()) {
-                        if (C_u_C.m2117("not097")) {
+            if (remote) {
+               if (getCredentials("exam") != null) {
+                  if (user.m1160()) {
+                     if (ServerConnection.m849()) {
+                        if (UserSetup.m2117("not097")) {
                            continue;
                         }
 
                         return 1;
                      }
 
-                     f533.m1162(f567);
-                  } else if (!f533.m1161().equalsIgnoreCase(f567)) {
-                     if (C_u_C.m2117("not098")) {
+                     user.m1162(f567);
+                  } else if (!user.m1161().equalsIgnoreCase(f567)) {
+                     if (UserSetup.m2117("not098")) {
                         continue;
                      }
 
                      return 1;
                   }
-               } else if (!f533.m1160()) {
-                  if (C_u_C.m2117("not096")) {
+               } else if (!user.m1160()) {
+                  if (UserSetup.m2117("not096")) {
                      continue;
                   }
 
@@ -619,20 +619,20 @@ public class LogicProgram implements C_n_A {
                }
 
                if ("work".equalsIgnoreCase(f567)) {
-                  C_r_A c_r_a = new C_r_A(LPInfo.programName, "Checking database for user...");
-                  Boolean obool7 = C_KC.m888(f533, f567, c_r_a);
+                  NetworkTask networktask = new NetworkTask(LPInfo.programName, "Checking database for user...");
+                  Boolean obool7 = ServerConnection.m888(user, f567, networktask);
                   if (obool7 != null) {
                      if (!obool7) {
-                        C_UA.m1329(C_H.m411("not059"), null, null, null);
+                        MessageDialog.showMessage(Message.get("not059"), null, null, null);
                         return 1;
                      }
 
-                     C_UA.m1329(C_H.m411("not058"), null, null, null);
+                     MessageDialog.showMessage(Message.get("not058"), null, null, null);
                   }
-               } else if (!C_KC.f483) {
-                  C_r_A c_r_a1 = new C_r_A(LPInfo.programName, "Checking database for user...");
-                  if (!C_KC.m885(f533, "student", c_r_a1)) {
-                     C_UA.m1329(C_H.m411("not059"), null, null, null);
+               } else if (!ServerConnection.demoMode) {
+                  NetworkTask networktask1 = new NetworkTask(LPInfo.programName, "Checking database for user...");
+                  if (!ServerConnection.m885(user, "student", networktask1)) {
+                     MessageDialog.showMessage(Message.get("not059"), null, null, null);
                      return 1;
                   }
                }
@@ -647,54 +647,54 @@ public class LogicProgram implements C_n_A {
       }
    }
 
-   static boolean m963() {
-      C_SD c_sd = new C_SD(LPInfo.programName, "Reading rules and theorems...", false);
-      c_sd.m1284(20, 10);
-      C_XB c_xb = m1062("theorems", false);
-      if (c_xb == null) {
-         c_sd.dispose();
+   static boolean loadRulesAndTheorems() {
+      ProgressDialog progressdialog = new ProgressDialog(LPInfo.programName, "Reading rules and theorems...", false);
+      progressdialog.m1284(20, 10);
+      ScrambledReader scrambledreader = openDataFile("theorems", false);
+      if (scrambledreader == null) {
+         progressdialog.dispose();
          m971("not001", "the theorems file");
          return false;
       } else {
-         C_z_ c_z_ = C_z_.m2198(c_xb);
-         c_xb = m1062("rules", false);
-         if (c_xb == null) {
-            c_sd.dispose();
+         TheoremTable theoremtable = TheoremTable.m2198(scrambledreader);
+         scrambledreader = openDataFile("rules", false);
+         if (scrambledreader == null) {
+            progressdialog.dispose();
             m971("not001", "the rules file");
             return false;
          } else {
-            f534 = C_z_B.m2201(c_xb, c_z_);
-            if (c_z_ != null && f534 != null) {
-               c_sd.dispose();
-               if (m1040("instructor") != null) {
-                  C_c_B c_c_b = m1040("exam") == null ? C_u_C.m2102("instructor", null) : C_u_C.m2102(null, "Instructor");
-                  if (c_c_b != null) {
-                     String s = c_c_b.m716();
+            f534 = RuleTable.m2201(scrambledreader, theoremtable);
+            if (theoremtable != null && f534 != null) {
+               progressdialog.dispose();
+               if (getCredentials("instructor") != null) {
+                  ErrorRef errorref = getCredentials("exam") == null ? UserSetup.m2102("instructor", null) : UserSetup.m2102(null, "Instructor");
+                  if (errorref != null) {
+                     String s = errorref.m716();
                      if (s != null) {
-                        C_UA.m1329(C_H.m411(s), c_c_b.f428, null, null);
+                        MessageDialog.showMessage(Message.get(s), errorref.f428, null, null);
                      }
 
                      return false;
                   }
-               } else if (m1040("exam") != null) {
-                  C_c_B c_c_b1 = C_u_C.m2102("exam", null);
-                  if (c_c_b1 != null) {
-                     String s1 = c_c_b1.m716();
+               } else if (getCredentials("exam") != null) {
+                  ErrorRef errorref1 = UserSetup.m2102("exam", null);
+                  if (errorref1 != null) {
+                     String s1 = errorref1.m716();
                      if (s1 != null) {
-                        C_UA.m1329(C_H.m411(s1), c_c_b1.f428, null, null);
+                        MessageDialog.showMessage(Message.get(s1), errorref1.f428, null, null);
                      }
 
                      return false;
                   }
 
-                  if (!f576 && !m964()) {
+                  if (!noNetwork && !m964()) {
                      return false;
                   }
                }
 
                return true;
             } else {
-               c_sd.dispose();
+               progressdialog.dispose();
                m971("not002", "theorems and/or rules file");
                return false;
             }
@@ -703,26 +703,26 @@ public class LogicProgram implements C_n_A {
    }
 
    static boolean m964() {
-      C_0C c_0c = C_KC.m829(null);
-      if (f533.f664 == null) {
-         Boolean obool = C_KC.m906(c_0c, f533, null, null);
+      ServerSession serversession = ServerConnection.openSession(null);
+      if (user.f664 == null) {
+         Boolean obool = ServerConnection.m906(serversession, user, null, null);
          if (obool == null || !obool) {
-            C_KC.m832(c_0c, null);
+            ServerConnection.m832(serversession, null);
             return false;
          }
       }
 
-      int i = f533.f665 == null ? 40 : f533.f665;
-      C_0A c_0a = new C_0A(i, f533.f664, c_0c, "password");
-      c_0a.f7 = C_z_D.m2225("");
-      c_0a.f6 = "X";
-      c_0a.f8 = "none";
-      c_0a.f9 = "exam start";
-      c_0a.f10 = "nul";
-      c_0a.f11 = 0;
-      c_0a.f12 = 0L;
-      boolean flag = C_KC.m836(c_0a, null);
-      C_KC.m838(c_0a, null);
+      int i = user.f665 == null ? 40 : user.f665;
+      Submission submission = new Submission(i, user.f664, serversession, "password");
+      submission.problemMd5 = Scrambler.md5Base64("");
+      submission.evaluation = "X";
+      submission.work = "none";
+      submission.problemName = "exam start";
+      submission.module = "nul";
+      submission.helpCount = 0;
+      submission.duration = 0L;
+      boolean flag = ServerConnection.submit(submission, null);
+      ServerConnection.m838(submission, null);
       return flag;
    }
 
@@ -845,7 +845,7 @@ public class LogicProgram implements C_n_A {
       return hashtable;
    }
 
-   static boolean m967(C_OE c_oe) {
+   static boolean m967(UserInfo userinfo) {
       Hashtable hashtable = m966();
       if (hashtable == null) {
          return false;
@@ -854,15 +854,15 @@ public class LogicProgram implements C_n_A {
          if ((s = (String)hashtable.get("institution")) == null) {
             return false;
          } else {
-            c_oe.put("institution", s);
+            userinfo.put("institution", s);
             if ((s = (String)hashtable.get("term")) == null) {
                return false;
             } else {
-               c_oe.put("term", s);
+               userinfo.put("term", s);
                if ((s = (String)hashtable.get("course")) == null) {
                   return false;
                } else {
-                  c_oe.put("className", s);
+                  userinfo.put("className", s);
                   return true;
                }
             }
@@ -870,24 +870,24 @@ public class LogicProgram implements C_n_A {
       }
    }
 
-   static boolean m968(C_OE c_oe) {
-      C_MF c_mf = c_oe.m1163();
-      C_MF c_mf1 = C_KC.m861();
-      if (c_mf == null) {
-         if (C_j_C.m1863(c_oe, "not045", true, false) == null) {
+   static boolean m968(UserInfo userinfo) {
+      CourseInfo courseinfo = userinfo.m1163();
+      CourseInfo courseinfo1 = ServerConnection.m861();
+      if (courseinfo == null) {
+         if (AccountManager.m1863(userinfo, "not045", true, false) == null) {
             return false;
          }
 
-         if (c_oe.f662) {
-            c_oe.m684();
+         if (userinfo.dirty) {
+            userinfo.save();
          }
-      } else if (c_mf1 != null && !c_mf.f623.equals(c_mf1.f623)) {
-         if (C_j_C.m1863(c_oe, "not080", true, true) == null) {
+      } else if (courseinfo1 != null && !courseinfo.f623.equals(courseinfo1.f623)) {
+         if (AccountManager.m1863(userinfo, "not080", true, true) == null) {
             return false;
          }
 
-         if (c_oe.f662) {
-            c_oe.m684();
+         if (userinfo.dirty) {
+            userinfo.save();
          }
       }
 
@@ -895,9 +895,9 @@ public class LogicProgram implements C_n_A {
    }
 
    static void m969() {
-      File file1 = new File(f550, "logic");
+      File file1 = new File(configDir, "logic");
       if (file1.isDirectory()) {
-         file1.renameTo(f555);
+         file1.renameTo(workDir);
       }
    }
 
@@ -906,13 +906,13 @@ public class LogicProgram implements C_n_A {
    }
 
    static void m971(String s, String s1) {
-      Hashtable hashtable = C_H.m667("file name", s1, "user name", f533.m1169());
-      C_UA.m1329(C_H.m411(s), hashtable, null, null);
+      Hashtable hashtable = Message.params("file name", s1, "user name", user.getFullName());
+      MessageDialog.showMessage(Message.get(s), hashtable, null, null);
    }
 
    static void m972(String s, String s1) {
-      Hashtable hashtable = C_H.m666("problem name", s1);
-      C_UA.m1329(C_H.m411(s), hashtable, null, null);
+      Hashtable hashtable = Message.params("problem name", s1);
+      MessageDialog.showMessage(Message.get(s), hashtable, null, null);
    }
 
    static String m973() {
@@ -925,21 +925,21 @@ public class LogicProgram implements C_n_A {
       try {
          throw new Throwable(s);
       } catch (Throwable throwable) {
-         if (C_k_C.f1199 == null) {
+         if (DiagnosticsLog.out == null) {
             throwable.printStackTrace();
          } else {
-            throwable.printStackTrace(C_k_C.f1199);
+            throwable.printStackTrace(DiagnosticsLog.out);
             System.out.println("see diagnostics: " + s);
          }
       }
    }
 
    static boolean m975() {
-      if (f555.exists() && !f555.isFile()) {
+      if (workDir.exists() && !workDir.isFile()) {
          return true;
       } else {
-         Hashtable hashtable = C_H.m666("user dir", C_OA.m1139(f555 + "", "\\"));
-         C_UA.m1329(C_H.m411("not009"), hashtable, null, null);
+         Hashtable hashtable = Message.params("user dir", DelimitedTokenizer.m1139(workDir + "", "\\"));
+         MessageDialog.showMessage(Message.get("not009"), hashtable, null, null);
          return false;
       }
    }
@@ -948,22 +948,22 @@ public class LogicProgram implements C_n_A {
       if (!m975()) {
          return false;
       } else {
-         C_OE c_oe = C_OE.m1145(false);
-         String s = c_oe == null ? null : c_oe.m1146();
-         String s1 = f533 == null ? null : f533.m1146();
+         UserInfo userinfo = UserInfo.load(false);
+         String s = userinfo == null ? null : userinfo.m1146();
+         String s1 = user == null ? null : user.m1146();
          if (s != null && s1 != null && s.equals(s1)) {
             return true;
          } else {
-            Hashtable hashtable = C_H.m666("user name", f533.m1169());
-            C_UA.m1329(C_H.m411("not010"), hashtable, null, null);
+            Hashtable hashtable = Message.params("user name", user.getFullName());
+            MessageDialog.showMessage(Message.get("not010"), hashtable, null, null);
             return false;
          }
       }
    }
 
-   static void m977() {
-      if (f587 != null) {
-         f587.m1937();
+   static void exit() {
+      if (instanceGuard != null) {
+         instanceGuard.m1937();
       }
 
       if (f571 && f560 != null && f560.exists()) {
@@ -975,25 +975,25 @@ public class LogicProgram implements C_n_A {
    }
 
    static void m978() {
-      if (f572) {
+      if (debug) {
          try {
-            f529 = new C_V(new FileOutputStream(new File(f555, "errors.txt")), true);
+            f529 = new C_V(new FileOutputStream(new File(workDir, "errors.txt")), true);
          } catch (IOException ioexception1) {
             f529 = null;
             ioexception1.printStackTrace(System.out);
          }
 
          try {
-            C_k_C.f1199 = new PrintWriter(new FileWriter(new File(f555, "diagnostics.txt")), true);
+            DiagnosticsLog.out = new PrintWriter(new FileWriter(new File(workDir, "diagnostics.txt")), true);
          } catch (IOException ioexception) {
-            C_k_C.f1199 = null;
+            DiagnosticsLog.out = null;
             ioexception.printStackTrace(System.out);
          }
       }
    }
 
    static void m979() {
-      if (f572) {
+      if (debug) {
          if (f529 != null) {
             try {
                f529.close();
@@ -1002,10 +1002,10 @@ public class LogicProgram implements C_n_A {
             }
          }
 
-         if (C_k_C.f1199 != null) {
+         if (DiagnosticsLog.out != null) {
             try {
-               C_k_C.f1199.close();
-               C_k_C.f1199 = null;
+               DiagnosticsLog.out.close();
+               DiagnosticsLog.out = null;
             } catch (Exception exception) {
             }
          }
@@ -1038,22 +1038,22 @@ public class LogicProgram implements C_n_A {
       }
    }
 
-   static C_p_A m981(String s) {
+   static EditableTextPane m981(String s) {
       return m984(s, 0, 2147483647, false);
    }
 
-   static C_p_A m982(String s, boolean flag) {
+   static EditableTextPane m982(String s, boolean flag) {
       return m984(s, 0, 2147483647, flag);
    }
 
-   static C_p_A m983(String s, int i, boolean flag) {
+   static EditableTextPane m983(String s, int i, boolean flag) {
       return m984(s, i, i, flag);
    }
 
-   static C_p_A m984(String s, int i, int j, boolean flag) {
-      C_p_A c_p_a = new C_p_A(m995(s, maggie, f596), i, j, flag);
-      c_p_a.setEditable(false);
-      return c_p_a;
+   static EditableTextPane m984(String s, int i, int j, boolean flag) {
+      EditableTextPane editabletextpane = new EditableTextPane(m995(s, maggie, symbols), i, j, flag);
+      editabletextpane.setEditable(false);
+      return editabletextpane;
    }
 
    static C_M m985(String s, int i) {
@@ -1083,26 +1083,26 @@ public class LogicProgram implements C_n_A {
    static C_M m991(String s, int i, int j, int k, C_CB c_cb) {
       C_M c_m = new C_M();
       c_m.setLayout(new FlowLayout(0, 0, 0));
-      StyledDocument styleddocument = m998(s, maggie, f596, c_cb == null ? null : c_cb.m415());
-      C_p_A c_p_a = new C_p_A(styleddocument, j, k, false);
-      c_p_a.setEditable(false);
+      StyledDocument styleddocument = m998(s, maggie, symbols, c_cb == null ? null : c_cb.m415());
+      EditableTextPane editabletextpane = new EditableTextPane(styleddocument, j, k, false);
+      editabletextpane.setEditable(false);
       c_m.add(new C_M(i));
-      c_m.add(c_p_a);
+      c_m.add(editabletextpane);
       c_m.add(new C_M(i));
       return c_m;
    }
 
    static C_ZE m992(String s) {
-      s = m995(s, maggie, f596);
+      s = m995(s, maggie, symbols);
       return new C_ZE(s);
    }
 
    static String m993(String s) {
-      return m995(s, maggie, f596);
+      return m995(s, maggie, symbols);
    }
 
    static StyledDocument m994(String s, C_CB c_cb) {
-      return m998(s, maggie, f596, c_cb);
+      return m998(s, maggie, symbols, c_cb);
    }
 
    static String m995(String s, String[] astring, String[] astring1) {
@@ -1267,7 +1267,7 @@ public class LogicProgram implements C_n_A {
       int i;
       while ((i = s.indexOf("\\")) != -1) {
          if (flag) {
-            s1 = s1 + m995(s.substring(0, i), maggie, f596);
+            s1 = s1 + m995(s.substring(0, i), maggie, symbols);
          } else {
             s1 = s1 + s.substring(0, i);
          }
@@ -1288,7 +1288,7 @@ public class LogicProgram implements C_n_A {
       }
 
       if (flag) {
-         s1 = s1 + m995(s, maggie, f596);
+         s1 = s1 + m995(s, maggie, symbols);
       } else {
          s1 = s1 + s;
       }
@@ -1308,73 +1308,73 @@ public class LogicProgram implements C_n_A {
       return s1 + s;
    }
 
-   static C_RF m1006(String s) throws C_k_B {
+   static Expression m1006(String s) throws FormulaParseException {
       return m1009(s, false, false, false);
    }
 
-   static C_RF m1007(String s, boolean flag) throws C_k_B {
+   static Expression m1007(String s, boolean flag) throws FormulaParseException {
       return m1009(s, flag, false, false);
    }
 
-   static C_RF m1008(String s, boolean flag, boolean flag1) throws C_k_B {
+   static Expression m1008(String s, boolean flag, boolean flag1) throws FormulaParseException {
       return m1009(s, flag, flag1, false);
    }
 
-   static C_RF m1009(String s, boolean flag, boolean flag1, boolean flag2) throws C_k_B {
+   static Expression m1009(String s, boolean flag, boolean flag1, boolean flag2) throws FormulaParseException {
       try {
          if (s != null && !s.trim().equals("")) {
-            C_FB.m195(new StringReader(s + "\n"));
-            C_RF c_rf = C_FB.m114();
-            if (c_rf != null) {
-               c_rf.m1257();
+            FormulaParser.reinit(new StringReader(s + "\n"));
+            Expression expression = FormulaParser.parse();
+            if (expression != null) {
+               expression.m1257();
             }
 
             String s1;
             if (!flag1 && (s1 = m1015(s)) != null) {
-               throw new C_k_B("Parse error, column " + (s.indexOf(s1) + 1) + ".");
+               throw new FormulaParseException("Parse error, column " + (s.indexOf(s1) + 1) + ".");
             } else {
                String s4;
                if (!flag2 && (s4 = m1023(s)) != null) {
-                  throw new C_k_B("Parse error, column " + (s.indexOf(s4) + 1) + ".");
+                  throw new FormulaParseException("Parse error, column " + (s.indexOf(s4) + 1) + ".");
                } else {
-                  C_DD c_dd = new C_DD(c_rf);
+                  C_DD c_dd = new C_DD(expression);
                   c_dd.f284 = s;
                   if (!c_dd.m490()) {
-                     throw new C_k_B(s + " is not well formed");
-                  } else if (!flag && c_rf instanceof C_X) {
-                     throw new C_k_B("Syntax error: expected Formula but found Term");
+                     throw new FormulaParseException(s + " is not well formed");
+                  } else if (!flag && expression instanceof Term) {
+                     throw new FormulaParseException("Syntax error: expected Formula but found Term");
                   } else {
-                     return c_rf;
+                     return expression;
                   }
                }
             }
          } else {
             return null;
          }
-      } catch (C_k_B c_k_b) {
-         String s3 = c_k_b.getMessage();
+      } catch (FormulaParseException formulaparseexception) {
+         String s3 = formulaparseexception.getMessage();
          int j = m1024(s3);
          if (j != -1) {
             int[] aint1 = new int[]{j};
-            m996(s, maggie, f596, aint1);
-            throw new C_k_B("Parse error at position " + aint1[0] + ".");
+            m996(s, maggie, symbols, aint1);
+            throw new FormulaParseException("Parse error at position " + aint1[0] + ".");
          } else {
-            throw c_k_b;
+            throw formulaparseexception;
          }
-      } catch (C_IC c_ic) {
-         String s2 = c_ic.getMessage();
+      } catch (FormulaLexerError formulalexererror) {
+         String s2 = formulalexererror.getMessage();
          int i = m1024(s2);
          if (i != -1) {
             int[] aint = new int[]{i};
-            m996(s, maggie, f596, aint);
-            throw new C_k_B("Lexical error at position " + aint[0] + ".");
+            m996(s, maggie, symbols, aint);
+            throw new FormulaParseException("Lexical error at position " + aint[0] + ".");
          } else {
-            throw new C_k_B(s2);
+            throw new FormulaParseException(s2);
          }
       }
    }
 
-   static Integer m1010(String s) {
+   static Integer parseInteger(String s) {
       return m1011(s, 10);
    }
 
@@ -1569,11 +1569,11 @@ public class LogicProgram implements C_n_A {
       return -1;
    }
 
-   static C_QE m1025(Integer integer) {
+   static Theorem m1025(Integer integer) {
       return f534 == null ? null : f534.m2204(integer);
    }
 
-   static C_VB m1026(String s) {
+   static Rule m1026(String s) {
       return f534 == null ? null : f534.m2205(s);
    }
 
@@ -1595,22 +1595,22 @@ public class LogicProgram implements C_n_A {
             c_n_f.m1975(new C_n_F(s1));
          } else {
             Integer integer;
-            if ((integer = C_LF.m1366(s1)) != null) {
+            if ((integer = SchematicRule.m1366(s1)) != null) {
                c_n_f.m1975(C_n_F.m1970(integer));
             } else {
-               C_VB c_vb;
-               if ((c_vb = m1026(s1)) != null) {
+               Rule rule;
+               if ((rule = m1026(s1)) != null) {
                   if (flag) {
-                     C_LF[] ac_lf = c_vb.m1374();
-                     int j = ac_lf.length;
+                     SchematicRule[] aschematicrule = rule.m1374();
+                     int j = aschematicrule.length;
 
                      for (int k = 0; k < j; k++) {
-                        if (!vector.contains(ac_lf[k].f820)) {
-                           vector.addElement(ac_lf[k].f820);
+                        if (!vector.contains(aschematicrule[k].f820)) {
+                           vector.addElement(aschematicrule[k].f820);
                         }
                      }
-                  } else if (!vector.contains(c_vb.f820)) {
-                     vector.addElement(c_vb.f820);
+                  } else if (!vector.contains(rule.f820)) {
+                     vector.addElement(rule.f820);
                   }
                } else {
                   System.out.println("unknown rule: " + s1);
@@ -1623,17 +1623,17 @@ public class LogicProgram implements C_n_A {
    static int m1028(String s) {
       int i = s.indexOf("/");
       if (i >= 0) {
-         Integer integer = m1010(s.substring(0, i));
-         Integer integer1 = m1010(s.substring(i + 1));
+         Integer integer = parseInteger(s.substring(0, i));
+         Integer integer1 = parseInteger(s.substring(i + 1));
          if (integer != null && integer1 != null) {
             int j = integer;
             int k = integer1;
             if (j != 0 && k != 0) {
-               return C_SD.m1288() * j / k;
+               return ProgressDialog.m1288() * j / k;
             }
          }
       } else {
-         Integer integer2 = m1010(s);
+         Integer integer2 = parseInteger(s);
          if (integer2 != null) {
             int l = integer2;
             if (l != 0) {
@@ -1642,22 +1642,22 @@ public class LogicProgram implements C_n_A {
          }
       }
 
-      return f539;
+      return fontSize;
    }
 
-   static Font m1029(int i) {
-      return m1030(i, 1);
+   static Font getFont(int i) {
+      return getFont(i, 1);
    }
 
-   static Font m1030(int i, int j) {
+   static Font getFont(int i, int j) {
       Font font;
       return f540 != null && j <= 1 && (font = f540[j]) != null ? font.deriveFont((float)i) : new Font("SanSerif", j, i);
    }
 
-   static String m1031(C_0E c_0e, String s, String s1) {
-      FileDialog filedialog = new FileDialog(c_0e, s);
+   static String m1031(ModuleFrame moduleframe, String s, String s1) {
+      FileDialog filedialog = new FileDialog(moduleframe, s);
       Dimension dimension = new Dimension(400, 250);
-      filedialog.setLocation(C_UA.m1321(dimension));
+      filedialog.setLocation(MessageDialog.m1321(dimension));
       if (s1 != null) {
          filedialog.setDirectory(s1);
       }
@@ -1669,10 +1669,10 @@ public class LogicProgram implements C_n_A {
       return s2 == null ? null : s3 + s2;
    }
 
-   static String m1032(C_0E c_0e, String s, String s1) {
-      FileDialog filedialog = new FileDialog(c_0e, s, 1);
+   static String m1032(ModuleFrame moduleframe, String s, String s1) {
+      FileDialog filedialog = new FileDialog(moduleframe, s, 1);
       Dimension dimension = new Dimension(400, 250);
-      filedialog.setLocation(C_UA.m1321(dimension));
+      filedialog.setLocation(MessageDialog.m1321(dimension));
       if (s1 != null) {
          filedialog.setDirectory(s1);
       }
@@ -1773,16 +1773,16 @@ public class LogicProgram implements C_n_A {
       return new Rectangle(insets.left, insets.top, dimension.width - insets.left - insets.right, dimension.height - insets.top - insets.bottom);
    }
 
-   static void m1039(C_p_D c_p_d) {
-      if (f595 == null) {
-         f595 = new Hashtable();
+   static void addCredentials(Credentials credentials) {
+      if (credentials == null) {
+         credentials = new Hashtable();
       }
 
-      f595.put(c_p_d.f1334.toLowerCase(), c_p_d);
+      credentials.put(credentialsx.user.toLowerCase(), credentialsx);
    }
 
-   static C_p_D m1040(String s) {
-      return f595 != null && s != null ? (C_p_D)f595.get(s.toLowerCase()) : null;
+   static Credentials getCredentials(String s) {
+      return credentials != null && s != null ? (Credentials)credentials.get(s.toLowerCase()) : null;
    }
 
    static Dialog m1041(Component object) {
@@ -1936,14 +1936,14 @@ public class LogicProgram implements C_n_A {
    }
 
    static void m1053(boolean flag) {
-      String s = m1078("word");
-      String s1 = m1078("headlines");
-      String s2 = m1078("headVers");
+      String s = getLink("word");
+      String s1 = getLink("headlines");
+      String s2 = getLink("headVers");
       if (s != null && s1 != null && (!flag || s2 != null)) {
          if (s2 != null) {
-            if (s2.compareTo(f533.m1149("headVers", "")) > 0) {
-               f533.put("headVers", s2);
-               f533.m684();
+            if (s2.compareTo(user.getField("headVers", "")) > 0) {
+               user.put("headVers", s2);
+               user.save();
             } else if (flag) {
                return;
             }
@@ -1959,26 +1959,26 @@ public class LogicProgram implements C_n_A {
    }
 
    static String m1054() {
-      C_0E c_0e = new C_0E();
+      ModuleFrame moduleframe = new ModuleFrame();
       JScrollPane jscrollpane = new JScrollPane();
-      C_s_D c_s_d = new C_s_D(true);
+      FormulaTextPane formulatextpane = new FormulaTextPane(true);
       String[] astring = new String[]{"Submit", "Cancel"};
-      jscrollpane.setViewportView(c_s_d);
-      C_UA c_ua = new C_UA(c_0e, "Feedback", jscrollpane, astring);
+      jscrollpane.setViewportView(formulatextpane);
+      MessageDialog messagedialog = new MessageDialog(moduleframe, "Feedback", jscrollpane, astring);
       Dimension dimension = new Dimension(700, 500);
-      c_ua.setSize(dimension);
-      c_s_d.requestFocus();
-      c_ua.m1323(C_UA.m1321(dimension), true);
-      c_0e.dispose();
-      return c_ua.f790 == 0 ? m995(c_s_d.getText(), f596, maggie) : null;
+      messagedialog.setSize(dimension);
+      formulatextpane.requestFocus();
+      messagedialog.m1323(MessageDialog.m1321(dimension), true);
+      moduleframe.dispose();
+      return messagedialog.f790 == 0 ? m995(formulatextpane.getText(), symbols, maggie) : null;
    }
 
-   static void m1055() {
-      f572 = false;
-      f573 = true;
-      f574 = false;
-      f575 = false;
-      f576 = false;
+   static void resetOptions() {
+      debug = false;
+      printingEnabled = true;
+      overheadColors = false;
+      remote = false;
+      noNetwork = false;
       f577 = false;
       f584 = false;
       f585 = false;
@@ -1988,38 +1988,38 @@ public class LogicProgram implements C_n_A {
       f588 = null;
       f589 = false;
       f593 = null;
-      f595 = null;
+      credentials = null;
    }
 
-   static boolean m1056(Reader reader) {
+   static boolean readOptions(Reader reader) {
       if (reader == null) {
          return false;
       } else {
-         C_XD c_xd = new C_XD(reader, true);
+         TaggedRecord taggedrecord = new TaggedRecord(reader, true);
 
-         while (c_xd.m1469()) {
-            String s = c_xd.m1494();
+         while (taggedrecord.readNext()) {
+            String s = taggedrecord.getName();
             if (s != null && s.trim().equalsIgnoreCase("logic")) {
-               int[] aint = c_xd.m1481("+ufcbrpo");
+               int[] aint = taggedrecord.m1481("+ufcbrpo");
                int i = aint.length;
 
                for (int j = 0; j < i; j++) {
-                  char c0 = c_xd.m1474(aint[j]);
-                  String s1 = c_xd.m1483(aint[j]).trim();
+                  char c0 = taggedrecord.tagAt(aint[j]);
+                  String s1 = taggedrecord.valueAt(aint[j]).trim();
                   if (c0 == '+') {
                      if (s1.equalsIgnoreCase("debug")) {
-                        f572 = true;
+                        debug = true;
                      } else if (s1.equalsIgnoreCase("noprint")) {
-                        f573 = false;
+                        printingEnabled = false;
                      } else if (s1.equalsIgnoreCase("altsymbols")) {
                         f585 = true;
-                        f596 = C_FB.m537() == 2 ? kaplan1 : kaplan2;
+                        symbols = FormulaParser.getSyntax() == 2 ? kaplan1 : kaplan2;
                      } else if (s1.equalsIgnoreCase("overhead")) {
-                        f574 = true;
+                        overheadColors = true;
                      } else if (s1.equalsIgnoreCase("remote")) {
-                        f575 = true;
+                        remote = true;
                      } else if (s1.equalsIgnoreCase("nonet")) {
-                        f576 = true;
+                        noNetwork = true;
                      } else if (s1.equalsIgnoreCase("hidden")) {
                         f577 = true;
                      } else if (s1.equalsIgnoreCase("noCoreProbs")) {
@@ -2030,18 +2030,18 @@ public class LogicProgram implements C_n_A {
                         f590 = true;
                      }
                   } else if (c0 == 'u') {
-                     C_p_D c_p_d = new C_p_D(s1);
-                     if (c_p_d.f1335 != null) {
-                        c_p_d.f1335 = C_z_D.m2219(new String(new C_o_B(c_p_d.f1335).m2000()));
+                     Credentials credentialsx = new Credentials(s1);
+                     if (credentialsx.password != null) {
+                        credentialsx.password = Scrambler.unscramble(new String(new Base64Codec(credentialsx.password).m2000()));
                      }
 
-                     m1039(c_p_d);
+                     addCredentials(credentialsx);
                   } else if (c0 == 'f') {
-                     f539 = m1028(s1);
-                     C_SD.m1285(f539);
-                     UIManager.put("ToolTip.font", m1029(f539 * 3 / 4));
+                     fontSize = m1028(s1);
+                     ProgressDialog.m1285(fontSize);
+                     UIManager.put("ToolTip.font", getFont(fontSize * 3 / 4));
                   } else if (c0 == 'c') {
-                     Integer integer = m1010(s1);
+                     Integer integer = parseInteger(s1);
                      if (integer != null) {
                         f566 = integer;
                      }
@@ -2050,7 +2050,7 @@ public class LogicProgram implements C_n_A {
                   } else if (c0 == 'r') {
                      f568 = s1;
                   } else if (c0 == 'p') {
-                     f588 = m1010(s1);
+                     f588 = parseInteger(s1);
                   } else if (c0 == 'o') {
                      f593 = s1;
                   }
@@ -2058,90 +2058,90 @@ public class LogicProgram implements C_n_A {
             }
          }
 
-         if (f576) {
-            f575 = false;
+         if (noNetwork) {
+            remote = false;
          }
 
-         c_xd.m1470();
+         taggedrecord.close();
          return true;
       }
    }
 
    static void m1057() {
-      String s = (String)f530.get("FontSize");
+      String s = (String)overrides.get("FontSize");
       if (s != null) {
-         f539 = m1028(s);
-         C_SD.m1285(f539);
-         UIManager.put("ToolTip.font", m1029(f539 * 3 / 4));
+         fontSize = m1028(s);
+         ProgressDialog.m1285(fontSize);
+         UIManager.put("ToolTip.font", getFont(fontSize * 3 / 4));
       }
    }
 
    static void m1058() {
-      String s = f531.m2150("font size");
+      String s = prefs.get("font size");
       if (s != null) {
-         f539 = m1028(s);
-         C_SD.m1285(f539);
-         UIManager.put("ToolTip.font", m1029(f539 * 3 / 4));
+         fontSize = m1028(s);
+         ProgressDialog.m1285(fontSize);
+         UIManager.put("ToolTip.font", getFont(fontSize * 3 / 4));
       }
    }
 
    static void m1059() {
-      String s = f532.m2150("monochrome");
+      String s = workPrefs.get("monochrome");
       f603 = "true".equalsIgnoreCase(s);
       f607 = f603 ? f606 : f604;
    }
 
-   static boolean m1060(C_BE c_be, String s) {
-      return c_be != null && (s == null ? c_be.m405('u') : c_be.m404(s));
+   static boolean m1060(ProblemSelector problemselector, String s) {
+      return problemselector != null && (s == null ? problemselector.m405('u') : problemselector.m404(s));
    }
 
-   static void m1061(int i) {
-      C_FB.m536(i);
-      i = C_FB.m537();
+   static void setSyntax(int i) {
+      FormulaParser.setSyntax(i);
+      i = FormulaParser.getSyntax();
       switch (i) {
          case 1:
-            f596 = kaplan1;
+            symbols = kaplan1;
             f597 = kaplan5;
             f598 = html1;
             f599 = "PQRSTUVWXYZ";
             f600 = "FGHIJKLMNO";
             f601 = "ABCDE";
             f602 = "abcdefghijklmnopqrstuvwxyz";
-            f561 = new File(f550, "syntax1");
+            ruleDir = new File(configDir, "syntax1");
             break;
          case 2:
-            f596 = kaplan2;
+            symbols = kaplan2;
             f597 = kaplan6;
             f598 = html2;
             f599 = "PQRSTUVWXYZ";
             f600 = "FGHIJKLMNOABCDE";
             f601 = "abcdefgh";
             f602 = "ijklmnopqrstuvwxyz";
-            f561 = new File(f550, "syntax2");
+            ruleDir = new File(configDir, "syntax2");
       }
    }
 
-   static C_XB m1062(String s, boolean flag) {
+   static ScrambledReader openDataFile(String s, boolean flag) {
       return m1063(s, flag, true);
    }
 
-   static C_XB m1063(String s, boolean flag, boolean flag1) {
+   static ScrambledReader m1063(String s, boolean flag, boolean flag1) {
       Object object = null;
       if (flag) {
          try {
-            return new C_b_D(new FileReader(new File(f555, s)));
+            return new PlainRecordReader(new FileReader(new File(workDir, s)));
          } catch (IOException ioexception1) {
          }
       }
 
-      if ((object = m1078(s)) != null) {
+      if ((object = getLink(s)) != null) {
          try {
             File file1 = new File((String)object);
             if (!file1.exists()) {
-               file1 = C_KC.m877(f550, (String)object);
+               file1 = ServerConnection.resolvePath(configDir, (String)object);
             }
 
-            return new C_XB(new FileReader(file1), flag1 ? f537 : null);
+            return new ScrambledReader(new FileReader(file1), flag1 ? scrambleKey : null);
          } catch (IOException ioexception) {
          }
       }
@@ -2149,22 +2149,22 @@ public class LogicProgram implements C_n_A {
       return null;
    }
 
-   static C_XB m1064(String s) {
+   static ScrambledReader m1064(String s) {
       return m1066(s, false, true);
    }
 
-   static C_XB m1065(String s, boolean flag) {
+   static ScrambledReader m1065(String s, boolean flag) {
       return m1066(s, flag, true);
    }
 
-   static C_XB m1066(String s, boolean flag, boolean flag1) {
-      String s1 = m1078(s);
-      File file1 = flag ? C_KC.f466 : C_KC.f467;
+   static ScrambledReader m1066(String s, boolean flag, boolean flag1) {
+      String s1 = getLink(s);
+      File file1 = flag ? ServerConnection.f466 : ServerConnection.f467;
       if (s1 != null && file1 != null) {
          s1 = new File(file1, new File(s1).getName()).getPath();
 
          try {
-            return new C_XB(new FileReader(s1), flag1 ? f537 : null);
+            return new ScrambledReader(new FileReader(s1), flag1 ? scrambleKey : null);
          } catch (IOException ioexception) {
             return null;
          }
@@ -2173,16 +2173,16 @@ public class LogicProgram implements C_n_A {
       }
    }
 
-   static C_XB m1067(String s, boolean flag, boolean flag1) {
-      String s1 = m1078(s);
+   static ScrambledReader m1067(String s, boolean flag, boolean flag1) {
+      String s1 = getLink(s);
       if (s1 == null) {
          return null;
       } else {
-         File file1 = flag ? new File(f550, "local") : f561;
+         File file1 = flag ? new File(configDir, "local") : ruleDir;
          s1 = new File(file1, new File(s1).getName()).getPath();
 
          try {
-            return new C_XB(new FileReader(s1), flag1 ? f537 : null);
+            return new ScrambledReader(new FileReader(s1), flag1 ? scrambleKey : null);
          } catch (IOException ioexception) {
             return null;
          }
@@ -2193,12 +2193,12 @@ public class LogicProgram implements C_n_A {
       Object object = null;
       if (flag1) {
          try {
-            return new FileWriter(new File(f555, s).getPath(), flag);
+            return new FileWriter(new File(workDir, s).getPath(), flag);
          } catch (IOException ioexception1) {
          }
       }
 
-      if ((object = m1078(s)) != null) {
+      if ((object = getLink(s)) != null) {
          try {
             return new FileWriter((String)object, flag);
          } catch (IOException ioexception) {
@@ -2212,12 +2212,12 @@ public class LogicProgram implements C_n_A {
       Object object = null;
       if (flag) {
          try {
-            return new RandomAccessFile(new File(f555, s), s1);
+            return new RandomAccessFile(new File(workDir, s), s1);
          } catch (IOException ioexception1) {
          }
       }
 
-      if ((object = m1078(s)) != null) {
+      if ((object = getLink(s)) != null) {
          try {
             return new RandomAccessFile((String)object, s1);
          } catch (IOException ioexception) {
@@ -2228,18 +2228,18 @@ public class LogicProgram implements C_n_A {
    }
 
    static void m1070(String s) {
-      C_i_B.m1861(new File(s), f550);
+      HttpDownloader.m1861(new File(s), configDir);
    }
 
-   static Hashtable m1071() {
-      C_XB c_xb = null;
+   static Hashtable readCoreInfo() {
+      ScrambledReader scrambledreader = null;
       Hashtable hashtable = null;
       String s = null;
 
       try {
-         File file1 = new File(f550, "coreinfo.txt");
+         File file1 = new File(configDir, "coreinfo.txt");
          if (!file1.exists()) {
-            file1 = new File(f550, "spirit.txt");
+            file1 = new File(configDir, "spirit.txt");
             if (!file1.exists()) {
                return null;
             }
@@ -2247,66 +2247,66 @@ public class LogicProgram implements C_n_A {
             s = "the Logic Program is protected by international copyright law";
          }
 
-         c_xb = new C_XB(new FileReader(file1), s);
+         scrambledreader = new ScrambledReader(new FileReader(file1), s);
          hashtable = new Hashtable();
 
          String s1;
-         while ((s1 = c_xb.readLine()) != null) {
+         while ((s1 = scrambledreader.readLine()) != null) {
             int i;
-            if (!C_XD.m1511(s1) && (i = s1.indexOf(":")) != -1) {
+            if (!TaggedRecord.isBlankOrComment(s1) && (i = s1.indexOf(":")) != -1) {
                hashtable.put(s1.substring(0, i).trim().toUpperCase(), s1.substring(i + 1).trim());
             }
          }
       } catch (IOException ioexception1) {
          hashtable = null;
       } finally {
-         if (c_xb != null) {
+         if (scrambledreader != null) {
             try {
-               c_xb.close();
+               scrambledreader.close();
             } catch (IOException ioexception) {
             }
          }
       }
 
-      if (f536 == null && hashtable != null) {
-         f537 = s;
+      if (coreInfo == null && hashtable != null) {
+         scrambleKey = s;
       }
 
       return hashtable;
    }
 
-   static Hashtable m1072(File file1, boolean flag) {
-      C_XB c_xb = null;
+   static Hashtable readLinks(File file1, boolean flag) {
+      ScrambledReader scrambledreader = null;
       Hashtable hashtable = null;
-      if (file1 != null && f553 != null) {
+      if (file1 != null && progDir != null) {
          Object object;
          try {
             File file2;
-            if (f537 == null) {
+            if (scrambleKey == null) {
                file2 = new File(file1, "links.txt");
             } else {
                file2 = new File(file1, "ghost.txt");
             }
 
             if (file2.exists()) {
-               c_xb = new C_XB(new FileReader(file2), f537);
+               scrambledreader = new ScrambledReader(new FileReader(file2), scrambleKey);
                hashtable = new Hashtable();
 
-               while ((s = c_xb.readLine()) != null) {
+               while ((s = scrambledreader.readLine()) != null) {
                   int i;
-                  if (!C_XD.m1511(s) && (i = s.indexOf(":")) != -1) {
+                  if (!TaggedRecord.isBlankOrComment(s) && (i = s.indexOf(":")) != -1) {
                      hashtable.put(s.substring(0, i).trim().toUpperCase(), s.substring(i + 1).trim());
                   }
                }
 
                if (flag) {
-                  Integer integer = m1010((String)hashtable.get("SYNTAX"));
-                  m1061(integer != null ? integer : 1);
+                  Integer integer = parseInteger((String)hashtable.get("SYNTAX"));
+                  setSyntax(integer != null ? integer : 1);
                }
 
-               m1073(hashtable, "PROGDIR", f553 + "");
+               m1073(hashtable, "PROGDIR", progDir + "");
                m1073(hashtable, "LINKDIR", file1 + "");
-               m1073(hashtable, "RULEDIR", f561 + "");
+               m1073(hashtable, "RULEDIR", ruleDir + "");
                return hashtable;
             }
 
@@ -2314,9 +2314,9 @@ public class LogicProgram implements C_n_A {
          } catch (IOException ioexception1) {
             return null;
          } finally {
-            if (c_xb != null) {
+            if (scrambledreader != null) {
                try {
-                  c_xb.close();
+                  scrambledreader.close();
                } catch (IOException ioexception) {
                }
             }
@@ -2345,7 +2345,7 @@ public class LogicProgram implements C_n_A {
       }
    }
 
-   static File m1074(String s) {
+   static File canonicalFile(String s) {
       return s == null ? null : m1075(new File(s));
    }
 
@@ -2361,7 +2361,7 @@ public class LogicProgram implements C_n_A {
       }
    }
 
-   static String m1076(Hashtable hashtable, String s, String s1) {
+   static String getValue(Hashtable hashtable, String s, String s1) {
       if (hashtable != null && s != null) {
          String s2 = (String)hashtable.get(s.trim().toUpperCase());
          return s2 == null ? s1 : s2;
@@ -2370,20 +2370,20 @@ public class LogicProgram implements C_n_A {
       }
    }
 
-   static String m1077(String s, String s1) {
-      return m1076(f535, s, s1);
+   static String getLink(String s, String s1) {
+      return getValue(links, s, s1);
    }
 
-   static String m1078(String s) {
-      String s1 = m1076(f535, s, null);
+   static String getLink(String s) {
+      String s1 = getValue(links, s, null);
       if (s.trim().toLowerCase().equals("feedback")) {
          try {
-            s1 = s1 + "?name=" + URLEncoder.encode(f533.m1150() + " " + f533.m1152(), "UTF-8");
-            s1 = s1 + "&email=" + URLEncoder.encode(f533.m1155(), "UTF-8");
-            s1 = s1 + "&institution=" + URLEncoder.encode(f533.m1156(), "UTF-8");
-            s1 = s1 + "&term=" + URLEncoder.encode(f533.m1157(), "UTF-8");
-            s1 = s1 + "&ident=" + URLEncoder.encode(f533.m1158(), "UTF-8");
-            s1 = s1 + "&class=" + URLEncoder.encode(f533.m1159(), "UTF-8");
+            s1 = s1 + "?name=" + URLEncoder.encode(user.getFirstName() + " " + user.getLastName(), "UTF-8");
+            s1 = s1 + "&email=" + URLEncoder.encode(user.getEmail(), "UTF-8");
+            s1 = s1 + "&institution=" + URLEncoder.encode(user.getInstitution(), "UTF-8");
+            s1 = s1 + "&term=" + URLEncoder.encode(user.getTerm(), "UTF-8");
+            s1 = s1 + "&ident=" + URLEncoder.encode(user.getIdent(), "UTF-8");
+            s1 = s1 + "&class=" + URLEncoder.encode(user.getClassName(), "UTF-8");
          } catch (UnsupportedEncodingException unsupportedencodingexception) {
          }
       }
@@ -2391,7 +2391,7 @@ public class LogicProgram implements C_n_A {
       return s1;
    }
 
-   static String m1079() {
+   static String utcTimestamp() {
       SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       simpledateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
       return "UTC: " + simpledateformat.format(new Date());
@@ -2424,23 +2424,23 @@ public class LogicProgram implements C_n_A {
    static boolean m1083(String s, String s1, String s2, String s3) {
       boolean flag = true;
       BufferedWriter bufferedwriter = null;
-      String s4 = C_XD.m1493(s2);
+      String s4 = TaggedRecord.m1493(s2);
       if (s4 == null) {
          return false;
       } else {
          String s5 = m1080();
-         String s6 = C_z_D.m2225(s2);
-         String s7 = C_XD.m1508(s4, '$');
-         s7 = s7 + C_XD.m1508(s1, 'a');
-         s7 = s7 + C_XD.m1508(s5, 'd');
-         s7 = s7 + C_XD.m1508(s6, 'w');
+         String s6 = Scrambler.md5Base64(s2);
+         String s7 = TaggedRecord.m1508(s4, '$');
+         s7 = s7 + TaggedRecord.m1508(s1, 'a');
+         s7 = s7 + TaggedRecord.m1508(s5, 'd');
+         s7 = s7 + TaggedRecord.m1508(s6, 'w');
          if (s3 != null) {
-            s7 = s7 + C_XD.m1508(s3, 'x');
+            s7 = s7 + TaggedRecord.m1508(s3, 'x');
          }
 
          try {
-            bufferedwriter = new BufferedWriter(new FileWriter(new File(f555, s).getPath(), true));
-            bufferedwriter.write(C_z_D.m2217(C_XD.m1509(s7)));
+            bufferedwriter = new BufferedWriter(new FileWriter(new File(workDir, s).getPath(), true));
+            bufferedwriter.write(Scrambler.scramble(TaggedRecord.m1509(s7)));
             bufferedwriter.newLine();
          } catch (IOException ioexception1) {
             flag = false;
@@ -2457,13 +2457,13 @@ public class LogicProgram implements C_n_A {
       }
    }
 
-   static Hashtable m1084(String s, String s1, C_BE c_be, C_a_A c_a_a) {
-      if (c_be != null && !c_be.m402() && c_a_a != null) {
+   static Hashtable m1084(String s, String s1, ProblemSelector problemselector, C_a_A c_a_a) {
+      if (problemselector != null && !problemselector.m402() && c_a_a != null) {
          Vector vector = new Vector();
 
          while (c_a_a.hasMoreElements()) {
             String s2 = (String)c_a_a.nextElement();
-            if (c_be.m404(C_XD.m1493(s2))) {
+            if (problemselector.m404(TaggedRecord.m1493(s2))) {
                vector.addElement(s2);
             }
          }
@@ -2474,17 +2474,19 @@ public class LogicProgram implements C_n_A {
             Hashtable hashtable = new Hashtable();
 
             try {
-               C_XD c_xd = new C_XD(new C_XB(new FileReader(new File(f555, s)), "the Logic Program is protected by international copyright law"), true);
+               TaggedRecord taggedrecord = new TaggedRecord(
+                  new ScrambledReader(new FileReader(new File(workDir, s)), "the Logic Program is protected by international copyright law"), true
+               );
 
-               while (c_xd.m1469()) {
-                  String s3 = c_xd.m1494();
-                  String s4 = c_xd.m1483(c_xd.m1475('a'));
-                  if (c_be.m404(s3) && s1.equals(s4)) {
-                     hashtable.put(s3, c_xd.m1483(c_xd.m1475('w')));
+               while (taggedrecord.readNext()) {
+                  String s3 = taggedrecord.getName();
+                  String s4 = taggedrecord.valueAt(taggedrecord.indexOfTag('a'));
+                  if (problemselector.m404(s3) && s1.equals(s4)) {
+                     hashtable.put(s3, taggedrecord.valueAt(taggedrecord.indexOfTag('w')));
                   }
                }
 
-               c_xd.m1470();
+               taggedrecord.close();
             } catch (IOException ioexception) {
             }
 
@@ -2495,10 +2497,10 @@ public class LogicProgram implements C_n_A {
 
             for (int j = 0; j < i; j++) {
                String s6 = (String)vector.elementAt(j);
-               String s5 = (String)hashtable.get(C_XD.m1493(s6));
+               String s5 = (String)hashtable.get(TaggedRecord.m1493(s6));
                if (s5 == null) {
                   vector1.addElement(s6);
-               } else if (!s5.equals(C_z_D.m2225(s6))) {
+               } else if (!s5.equals(Scrambler.md5Base64(s6))) {
                   vector2.addElement(s6);
                } else {
                   vector3.addElement(s6);
@@ -2560,8 +2562,8 @@ public class LogicProgram implements C_n_A {
    }
 
    static {
-      C_SD.m1285(f539);
-      UIManager.put("ToolTip.font", m1029(f539 * 3 / 4));
+      ProgressDialog.m1285(fontSize);
+      UIManager.put("ToolTip.font", getFont(fontSize * 3 / 4));
    }
 
    static class C__A implements Runnable {
@@ -2585,33 +2587,33 @@ public class LogicProgram implements C_n_A {
          }
 
          RepaintManager.currentManager(null).setDoubleBufferingEnabled(true);
-         LogicProgram.m960();
+         LogicProgram.loadIconsAndFonts();
 
          while (true) {
             int j;
             do {
-               j = LogicProgram.m961();
+               j = LogicProgram.initialize();
                if (j == 1) {
-                  LogicProgram.m977();
+                  LogicProgram.exit();
                   break;
                }
             } while (j == 2);
 
-            int i = LogicProgram.m962();
+            int i = LogicProgram.initializeUser();
             if (i != 1 && i != 3) {
                if (i == 0) {
-                  if (!LogicProgram.m963()) {
-                     LogicProgram.m977();
+                  if (!LogicProgram.loadRulesAndTheorems()) {
+                     LogicProgram.exit();
                   }
 
-                  C_UA.m1312();
-                  C_KC.f489 = null;
-                  LogicProgram.f586 = C_z_C.m2207(null);
+                  MessageDialog.m1312();
+                  ServerConnection.f489 = null;
+                  LogicProgram.mainMenu = MainMenu.m2207(null);
                   LogicProgram.m1053(true);
                   return;
                }
             } else {
-               LogicProgram.m977();
+               LogicProgram.exit();
             }
          }
       }

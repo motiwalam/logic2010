@@ -2,17 +2,17 @@ package edu.ucla.phil.logic;
 
 import java.util.Vector;
 
-class C_GA extends C_HD {
+class C_GA extends Justification {
    static final int f342 = 4;
-   C_e_ f343 = null;
+   ExpressionPath f343 = null;
    boolean f344 = false;
    boolean f345 = false;
    C_HF f346 = null;
-   C_G f347 = null;
+   DerivationLine f347 = null;
    Integer f348 = null;
-   C_j_D f349 = null;
+   SchemeInstantiation f349 = null;
    C__B f350 = null;
-   C_G f351 = null;
+   DerivationLine f351 = null;
    Integer f352 = null;
    C_PF f353 = null;
    boolean f354 = false;
@@ -21,94 +21,110 @@ class C_GA extends C_HD {
       super("IE");
    }
 
-   C_GA(C_e_ c_e_, boolean flag, C_HF c_hf) {
-      this(c_e_, flag, c_hf, false, null);
+   C_GA(ExpressionPath expressionpath, boolean flag, C_HF c_hf) {
+      this(expressionpath, flag, c_hf, false, null);
    }
 
-   C_GA(C_e_ c_e_, boolean flag, C_HF c_hf, boolean flag1, C_LF c_lf) {
+   C_GA(ExpressionPath expressionpath, boolean flag, C_HF c_hf, boolean flag1, SchematicRule schematicrule) {
       this();
-      this.f343 = c_e_;
+      this.f343 = expressionpath;
       this.f344 = flag;
       this.f346 = c_hf;
-      this.m599(flag1, c_lf);
+      this.m599(flag1, schematicrule);
    }
 
-   C_GA(C_e_ c_e_, boolean flag, C_G c_g, C_j_D c_j_d, C__B c__b) {
-      this(c_e_, flag, c_g, c_j_d, c__b, false, null);
+   C_GA(ExpressionPath expressionpath, boolean flag, DerivationLine derivationline, SchemeInstantiation schemeinstantiation, C__B c__b) {
+      this(expressionpath, flag, derivationline, schemeinstantiation, c__b, false, null);
    }
 
-   C_GA(C_e_ c_e_, boolean flag, C_G c_g, C_j_D c_j_d, C__B c__b, boolean flag1, C_LF c_lf) {
+   C_GA(
+      ExpressionPath expressionpath,
+      boolean flag,
+      DerivationLine derivationline,
+      SchemeInstantiation schemeinstantiation,
+      C__B c__b,
+      boolean flag1,
+      SchematicRule schematicrule
+   ) {
       this();
-      this.f343 = c_e_;
+      this.f343 = expressionpath;
       this.f344 = flag;
-      this.f347 = c_g;
-      this.f349 = c_j_d;
+      this.f347 = derivationline;
+      this.f349 = schemeinstantiation;
       this.f350 = c__b;
-      this.m599(flag1, c_lf);
+      this.m599(flag1, schematicrule);
    }
 
-   C_GA(C_e_ c_e_, boolean flag, Integer integer, C_j_D c_j_d, C__B c__b) {
-      this(c_e_, flag, integer, c_j_d, c__b, false, null);
+   C_GA(ExpressionPath expressionpath, boolean flag, Integer integer, SchemeInstantiation schemeinstantiation, C__B c__b) {
+      this(expressionpath, flag, integer, schemeinstantiation, c__b, false, null);
    }
 
-   C_GA(C_e_ c_e_, boolean flag, Integer integer, C_j_D c_j_d, C__B c__b, boolean flag1, C_LF c_lf) {
+   C_GA(
+      ExpressionPath expressionpath,
+      boolean flag,
+      Integer integer,
+      SchemeInstantiation schemeinstantiation,
+      C__B c__b,
+      boolean flag1,
+      SchematicRule schematicrule
+   ) {
       this();
-      this.f343 = c_e_;
+      this.f343 = expressionpath;
       this.f344 = flag;
       this.f348 = integer;
-      this.f349 = c_j_d;
+      this.f349 = schemeinstantiation;
       this.f350 = c__b;
-      this.m599(flag1, c_lf);
+      this.m599(flag1, schematicrule);
    }
 
-   void m599(boolean flag, C_LF c_lf) {
+   void m599(boolean flag, SchematicRule schematicrule) {
       this.f354 = flag;
-      if (c_lf instanceof C_l_F) {
-         this.f351 = ((C_l_F)c_lf).f1263;
+      if (schematicrule instanceof C_l_F) {
+         this.f351 = ((C_l_F)schematicrule).f1263;
          this.f352 = null;
          this.f353 = null;
-      } else if (c_lf instanceof C_OF) {
+      } else if (schematicrule instanceof C_OF) {
          this.f351 = null;
-         this.f352 = ((C_OF)c_lf).f667;
+         this.f352 = ((C_OF)schematicrule).f667;
          this.f353 = null;
-      } else if (c_lf instanceof C_PF) {
+      } else if (schematicrule instanceof C_PF) {
          this.f351 = null;
          this.f352 = null;
-         this.f353 = (C_PF)c_lf;
+         this.f353 = (C_PF)schematicrule;
       }
    }
 
    @Override
-   boolean m600(C_a_ c_a_) {
+   boolean m600(DerivationLineChecker derivationlinechecker) {
       boolean flag = this.f351 == null && this.f352 == null && this.f353 == null;
       String s = flag ? "IE" : "CIE";
-      if (!c_a_.f939.equals(s)) {
+      if (!derivationlinechecker.f939.equals(s)) {
          return false;
       } else {
-         c_a_.getClass();
-         if (!c_a_.f944 && !c_a_.f945 ? c_a_.f938 >= 1 : c_a_.f938 == 1) {
-            if (c_a_.m1628(-1).m1220(this.f343) == null) {
+         derivationlinechecker.getClass();
+         if (!derivationlinechecker.f944 && !derivationlinechecker.f945 ? derivationlinechecker.f938 >= 1 : derivationlinechecker.f938 == 1) {
+            if (derivationlinechecker.m1628(-1).m1220(this.f343) == null) {
                return false;
             } else {
                if (this.f346 != null) {
-                  if (!m631(c_a_, this.f346.f391, flag)) {
+                  if (!m631(derivationlinechecker, this.f346.f391, flag)) {
                      return false;
                   }
 
-                  if (!m602(this.f346, c_a_, this.f343, this.m622(c_a_))) {
+                  if (!m602(this.f346, derivationlinechecker, this.f343, this.m622(derivationlinechecker))) {
                      return false;
                   }
                } else if (this.f347 != null) {
-                  LPDerivation lpderivation = c_a_.f935.f317.f915;
+                  LPDerivation lpderivation = derivationlinechecker.f935.f317.f915;
                   if (lpderivation.problem.m32(this.f347.m30()) != this.f347.m25()) {
                      return false;
                   }
 
-                  if (!c_a_.f935.m565(this.f347)) {
+                  if (!derivationlinechecker.f935.m565(this.f347)) {
                      return false;
                   }
 
-                  if (!m603(this.f347, c_a_, this.f343, flag)) {
+                  if (!m603(this.f347, derivationlinechecker, this.f343, flag)) {
                      return false;
                   }
                } else {
@@ -117,29 +133,29 @@ class C_GA extends C_HD {
                   }
 
                   int i = this.f348;
-                  LPDerivation lpderivation1 = c_a_.f935.f317.f915;
+                  LPDerivation lpderivation1 = derivationlinechecker.f935.f317.f915;
                   if (lpderivation1.premises == null || i < 0 || i >= lpderivation1.premises.length) {
                      return false;
                   }
 
-                  if (!m604(this.f348, c_a_, this.f343, flag)) {
+                  if (!m604(this.f348, derivationlinechecker, this.f343, flag)) {
                      return false;
                   }
                }
 
-               if (c_a_.m1615(-1) != null) {
-                  c_a_.f935.f317.f922 = false;
+               if (derivationlinechecker.m1615(-1) != null) {
+                  derivationlinechecker.f935.f317.f922 = false;
                }
 
-               C_RF c_rf = this.m618(c_a_);
-               if (!c_rf.m1235(c_a_.m1628(-1))) {
+               Expression expression = this.m618(derivationlinechecker);
+               if (!expression.m1235(derivationlinechecker.m1628(-1))) {
                   return false;
                } else {
-                  c_a_.f942 = this.m620(c_a_);
-                  if (c_a_.f944 && !c_a_.m1609(true)) {
+                  derivationlinechecker.f942 = this.m620(derivationlinechecker);
+                  if (derivationlinechecker.f944 && !derivationlinechecker.m1609(true)) {
                      return false;
                   } else {
-                     c_a_.m1631(1);
+                     derivationlinechecker.m1631(1);
                      return true;
                   }
                }
@@ -150,87 +166,87 @@ class C_GA extends C_HD {
       }
    }
 
-   static boolean m601(C_a_ c_a_, C_e_ c_e_, C_LF c_lf) {
-      return c_lf == null || m617(c_a_.m1628(-1), c_lf.f527, c_e_).m1259() == null;
+   static boolean m601(DerivationLineChecker derivationlinechecker, ExpressionPath expressionpath, SchematicRule schematicrule) {
+      return schematicrule == null || m617(derivationlinechecker.m1628(-1), schematicrule.conclusion, expressionpath).m1259() == null;
    }
 
-   static boolean m602(C_HF c_hf, C_a_ c_a_, C_e_ c_e_, C_LF c_lf) {
-      C_LF c_lf1 = c_hf.m688();
-      String s = c_lf == null ? "notConditional" : "notConditionalBC";
-      if (LogicProgram.f534.f1472 != null && LogicProgram.f534.f1472.hasProperty(c_lf1, s)) {
-         c_a_.m1622("dererr098", C_H.m666("inner rule name", c_lf1.f820));
+   static boolean m602(C_HF c_hf, DerivationLineChecker derivationlinechecker, ExpressionPath expressionpath, SchematicRule schematicrule) {
+      SchematicRule schematicrule1 = c_hf.m688();
+      String s = schematicrule == null ? "notConditional" : "notConditionalBC";
+      if (LogicProgram.f534.f1472 != null && LogicProgram.f534.f1472.hasProperty(schematicrule1, s)) {
+         derivationlinechecker.m1622("dererr098", Message.params("inner rule name", schematicrule1.f820));
          return false;
-      } else if (!m601(c_a_, c_e_, c_lf)) {
-         c_a_.m1622("dererr099", C_H.m666("condition name", c_lf.f820));
+      } else if (!m601(derivationlinechecker, expressionpath, schematicrule)) {
+         derivationlinechecker.m1622("dererr099", Message.params("condition name", schematicrule.f820));
          return false;
       } else {
          return true;
       }
    }
 
-   static boolean m603(C_G c_g, C_a_ c_a_, C_e_ c_e_, boolean flag) {
-      C_RF c_rf;
+   static boolean m603(DerivationLine derivationline, DerivationLineChecker derivationlinechecker, ExpressionPath expressionpath, boolean flag) {
+      Expression expression;
       if (flag) {
-         c_rf = C_r_D.m2062(c_g.f332, false);
+         expression = RuleProperties.m2062(derivationline.f332, false);
       } else {
-         c_rf = C_r_D.m2065(c_g.f332);
+         expression = RuleProperties.m2065(derivationline.f332);
       }
 
-      if (c_rf == null) {
-         c_a_.m1622("dererr086", C_H.m666("remote line number", c_g.m30() + ""));
+      if (expression == null) {
+         derivationlinechecker.m1622("dererr086", Message.params("remote line number", derivationline.m30() + ""));
          return false;
-      } else if (m617(c_a_.m1628(-1), c_g.f332, c_e_).m1259() != null) {
-         c_a_.m1622("dererr087", C_H.m666("remote line number", c_g.m30() + ""));
+      } else if (m617(derivationlinechecker.m1628(-1), derivationline.f332, expressionpath).m1259() != null) {
+         derivationlinechecker.m1622("dererr087", Message.params("remote line number", derivationline.m30() + ""));
          return false;
       } else {
          return true;
       }
    }
 
-   static boolean m604(Integer integer, C_a_ c_a_, C_e_ c_e_, boolean flag) {
+   static boolean m604(Integer integer, DerivationLineChecker derivationlinechecker, ExpressionPath expressionpath, boolean flag) {
       int i = integer;
-      LPDerivation lpderivation = c_a_.f935.f317.f915;
-      C_RF c_rf;
+      LPDerivation lpderivation = derivationlinechecker.f935.f317.f915;
+      Expression expression;
       if (flag) {
-         c_rf = C_r_D.m2062(lpderivation.premises[i], false);
+         expression = RuleProperties.m2062(lpderivation.premises[i], false);
       } else {
-         c_rf = C_r_D.m2065(lpderivation.premises[i]);
+         expression = RuleProperties.m2065(lpderivation.premises[i]);
       }
 
-      if (c_rf == null) {
-         c_a_.m1622("dererr088", C_H.m666("premise index", i + 1 + ""));
+      if (expression == null) {
+         derivationlinechecker.m1622("dererr088", Message.params("premise index", i + 1 + ""));
          return false;
-      } else if (m617(c_a_.m1628(-1), lpderivation.premises[i], c_e_).m1259() != null) {
-         c_a_.m1622("dererr089", C_H.m666("premise index", i + 1 + ""));
+      } else if (m617(derivationlinechecker.m1628(-1), lpderivation.premises[i], expressionpath).m1259() != null) {
+         derivationlinechecker.m1622("dererr089", Message.params("premise index", i + 1 + ""));
          return false;
       } else {
          return true;
       }
    }
 
-   static C_j_D m605(C_RF c_rf) {
-      C_j_D c_j_d = new C_j_D();
-      c_rf.m1266(null, c_j_d);
+   static SchemeInstantiation m605(Expression expression) {
+      SchemeInstantiation schemeinstantiation = new SchemeInstantiation();
+      expression.m1266(null, schemeinstantiation);
       boolean flag = false;
-      int i = c_j_d.f1189.size();
+      int i = schemeinstantiation.f1189.size();
 
       for (int j = 0; j < i; j++) {
-         C_i_A c_i_a = (C_i_A)c_j_d.f1189.elementAt(0);
-         C_RF c_rf1 = c_i_a.m1175();
-         c_j_d.m1880(c_i_a, new C_GF(c_rf1, c_rf1));
+         SchematicLetter schematicletter = (SchematicLetter)schemeinstantiation.f1189.elementAt(0);
+         Expression expression1 = schematicletter.m1175();
+         schemeinstantiation.m1880(schematicletter, new LetterReplacement(expression1, expression1));
       }
 
-      return c_j_d;
+      return schemeinstantiation;
    }
 
-   C_e_B m606(C_a_ c_a_) {
-      return this.m607(c_a_, true);
+   C_e_B m606(DerivationLineChecker derivationlinechecker) {
+      return this.m607(derivationlinechecker, true);
    }
 
-   C_e_B m607(C_a_ c_a_, boolean flag) {
+   C_e_B m607(DerivationLineChecker derivationlinechecker, boolean flag) {
       if (this.f346 == null) {
-         C_e_B c_e_b = this.m608(this.m619(c_a_, true)).m463();
-         C_e_B c_e_b1 = this.m608(this.m621(c_a_, true)).m463();
+         C_e_B c_e_b = this.m608(this.m619(derivationlinechecker, true)).m463();
+         C_e_B c_e_b1 = this.m608(this.m621(derivationlinechecker, true)).m463();
          if (flag && !c_e_b.m1765(c_e_b1)) {
             return c_e_b1;
          } else {
@@ -243,8 +259,8 @@ class C_GA extends C_HD {
       }
    }
 
-   C_DD m608(C_RF c_rf) {
-      C_DD c_dd = new C_DD(c_rf, true, -1);
+   C_DD m608(Expression expression) {
+      C_DD c_dd = new C_DD(expression, true, -1);
       c_dd.m460(this.f349.f1189);
       c_dd.m461(this.f350);
       return c_dd;
@@ -309,18 +325,18 @@ class C_GA extends C_HD {
    }
 
    static C_GA m611(String s, LPDerivation lpderivation) {
-      int i = C_XD.m1480(s.indexOf("?>"), s.indexOf("?<"));
+      int i = TaggedRecord.m1480(s.indexOf("?>"), s.indexOf("?<"));
       String s1 = i == -1 ? null : s.substring(i + 1);
       if (i != -1) {
          s = s.substring(0, i);
       }
 
-      i = C_XD.m1480(s.indexOf(">"), s.indexOf("<"));
+      i = TaggedRecord.m1480(s.indexOf(">"), s.indexOf("<"));
       if (i == -1) {
          return null;
       } else {
          C_GA c_ga = new C_GA();
-         c_ga.f343 = i == 0 ? null : C_e_.m1746(C_e_.m1755(s.substring(0, i)));
+         c_ga.f343 = i == 0 ? null : ExpressionPath.m1746(ExpressionPath.m1755(s.substring(0, i)));
          c_ga.f344 = s.charAt(i) == '<';
          s = s.substring(i + 1);
          if ((c_ga.f346 = C_HF.m699(s)) == null && (c_ga.f347 = m612(s, lpderivation)) == null && (c_ga.f348 = m613(s, lpderivation)) != null) {
@@ -342,21 +358,21 @@ class C_GA extends C_HD {
       }
    }
 
-   static C_G m612(String s, LPDerivation lpderivation) {
+   static DerivationLine m612(String s, LPDerivation lpderivation) {
       int i = s.indexOf(",");
       if (i != -1 || (i = s.indexOf(";")) != -1) {
          s = s.substring(0, i);
       }
 
-      Integer integer = LogicProgram.m1010(s);
+      Integer integer = LogicProgram.parseInteger(s);
       if (integer == null) {
          return null;
       } else {
-         C_0B c_0b = lpderivation.problem.m32(integer);
-         if (c_0b == null) {
+         DerivationNode derivationnode = lpderivation.problem.m32(integer);
+         if (derivationnode == null) {
             return null;
          } else {
-            return c_0b instanceof C_G ? (C_G)c_0b : ((C__)c_0b).f917;
+            return derivationnode instanceof DerivationLine ? (DerivationLine)derivationnode : ((DerivationBox)derivationnode).f917;
          }
       }
    }
@@ -373,7 +389,7 @@ class C_GA extends C_HD {
          if (!s.startsWith("#")) {
             return null;
          } else {
-            Integer integer = LogicProgram.m1010(s.substring(1));
+            Integer integer = LogicProgram.parseInteger(s.substring(1));
             if (integer == null) {
                return null;
             } else {
@@ -384,7 +400,7 @@ class C_GA extends C_HD {
       }
    }
 
-   static C_j_D m614(String s) {
+   static SchemeInstantiation m614(String s) {
       int i = s.indexOf(",");
       if (i == -1) {
          return null;
@@ -394,7 +410,7 @@ class C_GA extends C_HD {
             s = s.substring(0, i);
          }
 
-         return C_j_D.m1897(s);
+         return SchemeInstantiation.m1897(s);
       }
    }
 
@@ -407,181 +423,183 @@ class C_GA extends C_HD {
       return !s.startsWith("#") ? null : C_PF.m1183(s.substring(1));
    }
 
-   static C_RF m617(C_RF c_rf, C_RF c_rf1, C_e_ c_e_) {
-      c_rf1 = c_rf1.m1237();
-      if (c_e_.f1062 == 0) {
-         return c_rf1;
+   static Expression m617(Expression expression, Expression expression1, ExpressionPath expressionpath) {
+      expression1 = expression1.copy();
+      if (expressionpath.depth == 0) {
+         return expression1;
       } else {
-         c_rf = c_rf.m1237();
-         c_rf.m1222(c_e_.f1063, 0, c_e_.f1062 - 1, null).f740.setElementAt(c_rf1, c_e_.f1063[c_e_.f1062 - 1]);
-         return c_rf;
+         expression = expression.copy();
+         expression.m1222(expressionpath.indexes, 0, expressionpath.depth - 1, null)
+            .children
+            .setElementAt(expression1, expressionpath.indexes[expressionpath.depth - 1]);
+         return expression;
       }
    }
 
-   C_RF m618(C_a_ c_a_) {
-      return this.m619(c_a_, false);
+   Expression m618(DerivationLineChecker derivationlinechecker) {
+      return this.m619(derivationlinechecker, false);
    }
 
-   C_RF m619(C_a_ c_a_, boolean flag) {
+   Expression m619(DerivationLineChecker derivationlinechecker, boolean flag) {
       boolean flag1 = this.f351 == null && this.f352 == null && this.f353 == null;
-      C_RF c_rf1;
+      Expression expression1;
       if (this.f346 != null) {
          C_MB c_mb = new C_MB();
-         C_RF c_rf;
+         Expression expression;
          if (flag1) {
-            c_rf = C_r_D.m2073(this.f346.f391, this.f344);
+            expression = RuleProperties.m2073(this.f346.f391, this.f344);
          } else {
-            c_rf = C_r_D.m2074(this.f346.f391, this.f354, this.f344);
+            expression = RuleProperties.m2074(this.f346.f391, this.f354, this.f344);
          }
 
-         if (c_rf == null) {
+         if (expression == null) {
             return null;
          }
 
-         c_rf1 = c_rf.m1239(this.f346.f393, c_mb);
-         if (!this.f346.f394.m1574(c_rf, c_rf1, c_mb, flag ? null : c_a_)) {
+         expression1 = expression.m1239(this.f346.f393, c_mb);
+         if (!this.f346.f394.m1574(expression, expression1, c_mb, flag ? null : derivationlinechecker)) {
             return null;
          }
       } else {
          if (this.f347 != null) {
-            c_rf1 = this.f347.f332;
+            expression1 = this.f347.f332;
          } else if (this.f348 != null) {
-            c_rf1 = c_a_.f935.f317.f915.premises[this.f348];
+            expression1 = derivationlinechecker.f935.f317.f915.premises[this.f348];
          } else {
-            c_rf1 = null;
+            expression1 = null;
          }
 
-         C_RF c_rf2;
+         Expression expression2;
          if (flag1) {
-            c_rf2 = C_r_D.m2064(c_rf1, false, this.f344 ? 1 : 0);
+            expression2 = RuleProperties.m2064(expression1, false, this.f344 ? 1 : 0);
          } else {
-            c_rf2 = C_r_D.m2066(c_rf1, this.f354 ? 0 : 1, this.f344 ? 1 : 0);
+            expression2 = RuleProperties.m2066(expression1, this.f354 ? 0 : 1, this.f344 ? 1 : 0);
          }
 
-         if (c_rf2 == null) {
+         if (expression2 == null) {
             return null;
          }
 
          C_MB c_mb1 = new C_MB();
-         c_rf1 = c_rf2.m1239(this.f349, c_mb1);
+         expression1 = expression2.m1239(this.f349, c_mb1);
          if (this.f350 != null) {
-            this.f350.m1574(c_rf2, c_rf1, c_mb1, flag ? null : c_a_);
+            this.f350.m1574(expression2, expression1, c_mb1, flag ? null : derivationlinechecker);
          }
       }
 
-      return m617(c_a_.m1628(-1), c_rf1, this.f343).m1257();
+      return m617(derivationlinechecker.m1628(-1), expression1, this.f343).m1257();
    }
 
-   C_RF m620(C_a_ c_a_) {
-      return this.m621(c_a_, false);
+   Expression m620(DerivationLineChecker derivationlinechecker) {
+      return this.m621(derivationlinechecker, false);
    }
 
-   C_RF m621(C_a_ c_a_, boolean flag) {
+   Expression m621(DerivationLineChecker derivationlinechecker, boolean flag) {
       boolean flag1 = this.f351 == null && this.f352 == null && this.f353 == null;
-      C_RF c_rf1;
+      Expression expression1;
       if (this.f346 != null) {
          C_MB c_mb = new C_MB();
-         C_RF c_rf;
+         Expression expression;
          if (flag1) {
-            c_rf = C_r_D.m2075(this.f346.f391, this.f344);
+            expression = RuleProperties.m2075(this.f346.f391, this.f344);
          } else {
-            c_rf = C_r_D.m2076(this.f346.f391, this.f354, this.f344);
+            expression = RuleProperties.m2076(this.f346.f391, this.f354, this.f344);
          }
 
-         if (c_rf == null) {
+         if (expression == null) {
             return null;
          }
 
-         c_rf1 = c_rf.m1239(this.f346.f393, c_mb);
-         if (!this.f346.f394.m1574(c_rf, c_rf1, c_mb, flag ? null : c_a_)) {
+         expression1 = expression.m1239(this.f346.f393, c_mb);
+         if (!this.f346.f394.m1574(expression, expression1, c_mb, flag ? null : derivationlinechecker)) {
             return null;
          }
       } else {
          if (this.f347 != null) {
-            c_rf1 = this.f347.f332;
+            expression1 = this.f347.f332;
          } else if (this.f348 != null) {
-            c_rf1 = c_a_.f935.f317.f915.premises[this.f348];
+            expression1 = derivationlinechecker.f935.f317.f915.premises[this.f348];
          } else {
-            c_rf1 = null;
+            expression1 = null;
          }
 
-         C_RF c_rf2;
+         Expression expression2;
          if (flag1) {
-            c_rf2 = C_r_D.m2064(c_rf1, false, this.f344 ? 0 : 1);
+            expression2 = RuleProperties.m2064(expression1, false, this.f344 ? 0 : 1);
          } else {
-            c_rf2 = C_r_D.m2066(c_rf1, this.f354 ? 0 : 1, this.f344 ? 0 : 1);
+            expression2 = RuleProperties.m2066(expression1, this.f354 ? 0 : 1, this.f344 ? 0 : 1);
          }
 
-         if (c_rf2 == null) {
+         if (expression2 == null) {
             return null;
          }
 
          C_MB c_mb1 = new C_MB();
-         c_rf1 = c_rf2.m1239(this.f349, c_mb1);
-         if (this.f350 != null && !this.f350.m1574(c_rf2, c_rf1, c_mb1, flag ? null : c_a_)) {
+         expression1 = expression2.m1239(this.f349, c_mb1);
+         if (this.f350 != null && !this.f350.m1574(expression2, expression1, c_mb1, flag ? null : derivationlinechecker)) {
             return null;
          }
       }
 
-      return m617(c_a_.m1628(-1), c_rf1, this.f343).m1257();
+      return m617(derivationlinechecker.m1628(-1), expression1, this.f343).m1257();
    }
 
-   C_LF m622(C_a_ c_a_) {
+   SchematicRule m622(DerivationLineChecker derivationlinechecker) {
       if (this.f351 != null) {
          return new C_l_F(this.f351);
       } else if (this.f352 != null) {
-         return new C_OF(c_a_.f935.f317.f915, this.f352 + 1);
+         return new C_OF(derivationlinechecker.f935.f317.f915, this.f352 + 1);
       } else {
          return this.f353 != null ? this.f353 : null;
       }
    }
 
-   static C_RF m623(C_j_D c_j_d, C_RF c_rf, C_RF c_rf1) {
-      c_j_d = (C_j_D)c_j_d.clone();
-      c_rf.m1266(null, c_j_d);
-      Vector vector = c_j_d.m1893(c_rf1).f1189;
-      c_rf = c_rf.m1238(c_j_d);
-      int i = m630(c_rf);
-      int j = m630(c_rf1);
+   static Expression m623(SchemeInstantiation schemeinstantiation, Expression expression, Expression expression1) {
+      schemeinstantiation = (SchemeInstantiation)schemeinstantiation.clone();
+      expression.m1266(null, schemeinstantiation);
+      Vector vector = schemeinstantiation.m1893(expression1).f1189;
+      expression = expression.instantiate(schemeinstantiation);
+      int i = m630(expression);
+      int j = m630(expression1);
       if (j < i) {
          return null;
       } else if (j == i) {
-         return c_rf1;
+         return expression1;
       } else {
          Vector vector1 = new Vector();
 
          do {
-            vector1.addElement(c_rf1.m1217(0).m1237());
-            c_rf1 = c_rf1.m1217(1);
+            vector1.addElement(expression1.getChild(0).copy());
+            expression1 = expression1.getChild(1);
          } while (--j > i);
 
-         C_j_D c_j_d1 = new C_j_D();
+         SchemeInstantiation schemeinstantiation1 = new SchemeInstantiation();
          int k = vector1.size();
 
          for (int l = 0; l < k; l++) {
-            C_RF c_rf2 = (C_RF)vector1.elementAt(l);
-            Vector vector2 = c_rf1.m1223(c_rf2);
+            Expression expression2 = (Expression)vector1.elementAt(l);
+            Vector vector2 = expression1.m1223(expression2);
             int i1 = vector2.size();
 
             for (int j1 = 0; j1 < i1; j1++) {
-               C_RF c_rf3 = c_rf.m1220((C_e_)vector2.elementAt(j1));
-               if (c_rf3 != null && !m629(c_rf3, vector) && !c_j_d1.m1881(c_rf2, c_rf3)) {
+               Expression expression3 = expression.m1220((ExpressionPath)vector2.elementAt(j1));
+               if (expression3 != null && !m629(expression3, vector) && !schemeinstantiation1.m1881(expression2, expression3)) {
                   return null;
                }
             }
          }
 
-         return c_rf1.m1238(c_j_d1);
+         return expression1.instantiate(schemeinstantiation1);
       }
    }
 
-   C_LF m624(C_a_ c_a_) {
+   SchematicRule m624(DerivationLineChecker derivationlinechecker) {
       if (this.f346 != null) {
          return this.f346.m688();
       } else if (this.f347 != null) {
          return new C_l_F(this.f347);
       } else {
-         return this.f348 != null ? new C_OF(c_a_.f935.f317.f915, this.f348 + 1) : null;
+         return this.f348 != null ? new C_OF(derivationlinechecker.f935.f317.f915, this.f348 + 1) : null;
       }
    }
 
@@ -589,222 +607,246 @@ class C_GA extends C_HD {
       if (this.f346 == null) {
          return null;
       } else {
-         C_LF c_lf = new C_LF(this.f346.f391.f820);
-         boolean flag = this.f346.f391.f526.length == 0;
-         C_RF c_rf;
+         SchematicRule schematicrule = new SchematicRule(this.f346.f391.f820);
+         boolean flag = this.f346.f391.premises.length == 0;
+         Expression expression;
          if (this.f351 == null && this.f352 == null && this.f353 == null) {
             if (!flag) {
                return this.f346;
             }
 
-            c_rf = C_r_D.m2061(this.f346.f391.f527);
+            expression = RuleProperties.m2061(this.f346.f391.conclusion);
          } else if (flag) {
-            c_rf = C_r_D.m2065(this.f346.f391.f527);
-            if (c_rf != null) {
-               c_rf = c_rf.m1217(this.f354 ? 0 : 1);
+            expression = RuleProperties.m2065(this.f346.f391.conclusion);
+            if (expression != null) {
+               expression = expression.getChild(this.f354 ? 0 : 1);
             }
          } else {
-            c_rf = this.f346.f391.f527;
+            expression = this.f346.f391.conclusion;
          }
 
-         if (c_rf == null) {
+         if (expression == null) {
             return null;
          } else {
-            c_lf.f526 = new C_RF[]{c_rf.m1217(this.f344 ? 1 : 0)};
-            c_lf.f527 = c_rf.m1217(this.f344 ? 0 : 1);
-            return new C_HF(c_lf, new int[]{0}, this.f346.f393, this.f346.f394);
+            schematicrule.premises = new Expression[]{expression.getChild(this.f344 ? 1 : 0)};
+            schematicrule.conclusion = expression.getChild(this.f344 ? 0 : 1);
+            return new C_HF(schematicrule, new int[]{0}, this.f346.f393, this.f346.f394);
          }
       }
    }
 
-   static Vector m626(C_a_ c_a_, C_e_ c_e_, C_VB c_vb, C_LF c_lf) {
-      C_RF c_rf = c_a_.m1628(-1).m1220(c_e_).m1237();
-      C_RF c_rf1 = c_a_.f944 && !c_a_.f946 ? c_a_.f941 : null;
-      if (c_rf1 != null) {
-         c_rf1 = c_rf1.m1220(c_e_).m1237();
+   static Vector m626(DerivationLineChecker derivationlinechecker, ExpressionPath expressionpath, Rule rule, SchematicRule schematicrule) {
+      Expression expression = derivationlinechecker.m1628(-1).m1220(expressionpath).copy();
+      Expression expression1 = derivationlinechecker.f944 && !derivationlinechecker.f946 ? derivationlinechecker.f941 : null;
+      if (expression1 != null) {
+         expression1 = expression1.m1220(expressionpath).copy();
       }
 
-      C_r_D c_r_d = LogicProgram.f534.f1472;
-      String s = c_lf == null ? "notConditional" : "notConditionalBC";
-      C_LF[] ac_lf = c_vb.m1373(c_r_d, s);
-      LPDerivation lpderivation = c_a_.f935.f317.f915;
-      String s1 = c_a_.f946 ? "manualOrDisabled" : "disabled";
-      C_LF[] ac_lf1 = c_vb.m1373(lpderivation, s1);
+      RuleProperties ruleproperties = LogicProgram.f534.f1472;
+      String s = schematicrule == null ? "notConditional" : "notConditionalBC";
+      SchematicRule[] aschematicrule = rule.m1373(ruleproperties, s);
+      LPDerivation lpderivation = derivationlinechecker.f935.f317.f915;
+      String s1 = derivationlinechecker.f946 ? "manualOrDisabled" : "disabled";
+      SchematicRule[] aschematicrule1 = rule.m1373(lpderivation, s1);
       Vector vector = new Vector();
       Vector vector1 = new Vector();
 
-      for (C_LF c_lf1 : ac_lf) {
+      for (SchematicRule schematicrule1 : aschematicrule) {
          Vector vector2 = vector;
-         if (LogicProgram.m1051(ac_lf1, c_lf1) == -1) {
+         if (LogicProgram.m1051(aschematicrule1, schematicrule1) == -1) {
             vector2 = vector1;
-         } else if (!m631(c_a_, c_lf1, c_lf == null)) {
+         } else if (!m631(derivationlinechecker, schematicrule1, schematicrule == null)) {
             vector2 = vector1;
          }
 
-         C_RF c_rf2;
-         C_RF c_rf3;
+         Expression expression2;
+         Expression expression3;
          boolean flag;
          int[] aint;
-         C_RF c_rf4;
-         if (c_lf1.f526.length == 0) {
-            if (c_lf == null) {
-               c_rf4 = C_r_D.m2061(c_lf1.f527);
+         Expression expression4;
+         if (schematicrule1.premises.length == 0) {
+            if (schematicrule == null) {
+               expression4 = RuleProperties.m2061(schematicrule1.conclusion);
             } else {
-               c_rf4 = C_r_D.m2065(c_lf1.f527);
+               expression4 = RuleProperties.m2065(schematicrule1.conclusion);
             }
 
-            c_rf2 = c_rf4.m1217(0);
-            c_rf3 = c_rf4.m1217(1);
-            flag = c_rf4.f739.equals("<->");
+            expression2 = expression4.getChild(0);
+            expression3 = expression4.getChild(1);
+            flag = expression4.symbol.equals("<->");
             aint = new int[0];
          } else {
-            c_rf4 = null;
-            c_rf2 = c_lf1.f526[0];
-            c_rf3 = c_lf1.f527;
+            expression4 = null;
+            expression2 = schematicrule1.premises[0];
+            expression3 = schematicrule1.conclusion;
             flag = false;
             aint = new int[]{0};
          }
 
-         if (c_lf == null) {
-            if (c_lf1 instanceof C_l_F) {
-               if (c_rf4 != null && flag) {
-                  C_G c_g = ((C_l_F)c_lf1).f1263;
-                  C_j_D c_j_d = m605(c_lf1.f527);
-                  C__B c__b = m627(c_j_d, c_rf2, c_rf3, c_rf, c_rf1);
+         if (schematicrule == null) {
+            if (schematicrule1 instanceof C_l_F) {
+               if (expression4 != null && flag) {
+                  DerivationLine derivationline = ((C_l_F)schematicrule1).f1263;
+                  SchemeInstantiation schemeinstantiation = m605(schematicrule1.conclusion);
+                  C__B c__b = m627(schemeinstantiation, expression2, expression3, expression, expression1);
                   if (c__b != null) {
-                     vector2.addElement(new C_GA(c_e_, false, c_g, c_j_d, c__b));
+                     vector2.addElement(new C_GA(expressionpath, false, derivationline, schemeinstantiation, c__b));
                   }
 
-                  c_j_d = m605(c_lf1.f527);
-                  c__b = m627(c_j_d, c_rf3, c_rf2, c_rf, c_rf1);
+                  schemeinstantiation = m605(schematicrule1.conclusion);
+                  c__b = m627(schemeinstantiation, expression3, expression2, expression, expression1);
                   if (c__b != null) {
-                     vector2.addElement(new C_GA(c_e_, true, c_g, c_j_d, c__b));
+                     vector2.addElement(new C_GA(expressionpath, true, derivationline, schemeinstantiation, c__b));
                   }
                }
-            } else if (c_lf1 instanceof C_OF) {
-               if (c_rf4 != null && flag) {
-                  Integer integer = ((C_OF)c_lf1).f667;
-                  C_j_D c_j_d1 = m605(c_lf1.f527);
-                  C__B c__b1 = m627(c_j_d1, c_rf2, c_rf3, c_rf, c_rf1);
+            } else if (schematicrule1 instanceof C_OF) {
+               if (expression4 != null && flag) {
+                  Integer integer = ((C_OF)schematicrule1).f667;
+                  SchemeInstantiation schemeinstantiation1 = m605(schematicrule1.conclusion);
+                  C__B c__b1 = m627(schemeinstantiation1, expression2, expression3, expression, expression1);
                   if (c__b1 != null) {
-                     vector2.addElement(new C_GA(c_e_, false, integer, c_j_d1, c__b1));
+                     vector2.addElement(new C_GA(expressionpath, false, integer, schemeinstantiation1, c__b1));
                   }
 
-                  c_j_d1 = m605(c_lf1.f527);
-                  c__b1 = m627(c_j_d1, c_rf3, c_rf2, c_rf, c_rf1);
+                  schemeinstantiation1 = m605(schematicrule1.conclusion);
+                  c__b1 = m627(schemeinstantiation1, expression3, expression2, expression, expression1);
                   if (c__b1 != null) {
-                     vector2.addElement(new C_GA(c_e_, true, integer, c_j_d1, c__b1));
+                     vector2.addElement(new C_GA(expressionpath, true, integer, schemeinstantiation1, c__b1));
                   }
                }
             } else {
-               C_j_D c_j_d2 = new C_j_D();
-               C__B c__b2 = m627(c_j_d2, c_rf2, c_rf3, c_rf, c_rf1);
+               SchemeInstantiation schemeinstantiation2 = new SchemeInstantiation();
+               C__B c__b2 = m627(schemeinstantiation2, expression2, expression3, expression, expression1);
                if (c__b2 != null) {
-                  C_HF c_hf = new C_HF(c_lf1, aint, c_j_d2, c__b2);
-                  vector2.addElement(new C_GA(c_e_, false, c_hf));
+                  C_HF c_hf = new C_HF(schematicrule1, aint, schemeinstantiation2, c__b2);
+                  vector2.addElement(new C_GA(expressionpath, false, c_hf));
                }
 
                if (flag) {
-                  c_j_d2 = new C_j_D();
-                  c__b2 = m627(c_j_d2, c_rf3, c_rf2, c_rf, c_rf1);
+                  schemeinstantiation2 = new SchemeInstantiation();
+                  c__b2 = m627(schemeinstantiation2, expression3, expression2, expression, expression1);
                   if (c__b2 != null) {
-                     C_HF c_hf1 = new C_HF(c_lf1, aint, c_j_d2, c__b2);
-                     vector2.addElement(new C_GA(c_e_, true, c_hf1));
+                     C_HF c_hf1 = new C_HF(schematicrule1, aint, schemeinstantiation2, c__b2);
+                     vector2.addElement(new C_GA(expressionpath, true, c_hf1));
                   }
                }
             }
-         } else if (c_lf1 instanceof C_l_F) {
-            if (c_rf4 != null) {
-               C_G c_g1 = ((C_l_F)c_lf1).f1263;
-               if (c_rf3.f739.equals("<->")) {
-                  C_j_D c_j_d3 = m605(c_lf1.f527);
-                  C__B c__b3 = m628(c_j_d3, c_rf3.m1217(0), c_rf3.m1217(1), c_rf2, c_rf, c_rf1, c_lf.f527);
+         } else if (schematicrule1 instanceof C_l_F) {
+            if (expression4 != null) {
+               DerivationLine derivationline1 = ((C_l_F)schematicrule1).f1263;
+               if (expression3.symbol.equals("<->")) {
+                  SchemeInstantiation schemeinstantiation3 = m605(schematicrule1.conclusion);
+                  C__B c__b3 = m628(
+                     schemeinstantiation3, expression3.getChild(0), expression3.getChild(1), expression2, expression, expression1, schematicrule.conclusion
+                  );
                   if (c__b3 != null) {
-                     vector2.addElement(new C_GA(c_e_, false, c_g1, c_j_d3, c__b3, false, c_lf));
+                     vector2.addElement(new C_GA(expressionpath, false, derivationline1, schemeinstantiation3, c__b3, false, schematicrule));
                   }
 
-                  c_j_d3 = m605(c_lf1.f527);
-                  c__b3 = m628(c_j_d3, c_rf3.m1217(1), c_rf3.m1217(0), c_rf2, c_rf, c_rf1, c_lf.f527);
+                  schemeinstantiation3 = m605(schematicrule1.conclusion);
+                  c__b3 = m628(
+                     schemeinstantiation3, expression3.getChild(1), expression3.getChild(0), expression2, expression, expression1, schematicrule.conclusion
+                  );
                   if (c__b3 != null) {
-                     vector2.addElement(new C_GA(c_e_, true, c_g1, c_j_d3, c__b3, false, c_lf));
+                     vector2.addElement(new C_GA(expressionpath, true, derivationline1, schemeinstantiation3, c__b3, false, schematicrule));
                   }
                }
 
-               if (flag && c_rf2.f739.equals("<->")) {
-                  C_j_D c_j_d4 = m605(c_lf1.f527);
-                  C__B c__b4 = m628(c_j_d4, c_rf2.m1217(0), c_rf2.m1217(1), c_rf3, c_rf, c_rf1, c_lf.f527);
+               if (flag && expression2.symbol.equals("<->")) {
+                  SchemeInstantiation schemeinstantiation4 = m605(schematicrule1.conclusion);
+                  C__B c__b4 = m628(
+                     schemeinstantiation4, expression2.getChild(0), expression2.getChild(1), expression3, expression, expression1, schematicrule.conclusion
+                  );
                   if (c__b4 != null) {
-                     vector2.addElement(new C_GA(c_e_, false, c_g1, c_j_d4, c__b4, true, c_lf));
+                     vector2.addElement(new C_GA(expressionpath, false, derivationline1, schemeinstantiation4, c__b4, true, schematicrule));
                   }
 
-                  c_j_d4 = m605(c_lf1.f527);
-                  c__b4 = m628(c_j_d4, c_rf2.m1217(1), c_rf2.m1217(0), c_rf3, c_rf, c_rf1, c_lf.f527);
+                  schemeinstantiation4 = m605(schematicrule1.conclusion);
+                  c__b4 = m628(
+                     schemeinstantiation4, expression2.getChild(1), expression2.getChild(0), expression3, expression, expression1, schematicrule.conclusion
+                  );
                   if (c__b4 != null) {
-                     vector2.addElement(new C_GA(c_e_, true, c_g1, c_j_d4, c__b4, true, c_lf));
+                     vector2.addElement(new C_GA(expressionpath, true, derivationline1, schemeinstantiation4, c__b4, true, schematicrule));
                   }
                }
             }
-         } else if (c_lf1 instanceof C_OF) {
-            if (c_rf4 != null) {
-               Integer integer1 = ((C_OF)c_lf1).f667;
-               if (c_rf3.f739.equals("<->")) {
-                  C_j_D c_j_d5 = m605(c_lf1.f527);
-                  C__B c__b5 = m628(c_j_d5, c_rf3.m1217(0), c_rf3.m1217(1), c_rf2, c_rf, c_rf1, c_lf.f527);
+         } else if (schematicrule1 instanceof C_OF) {
+            if (expression4 != null) {
+               Integer integer1 = ((C_OF)schematicrule1).f667;
+               if (expression3.symbol.equals("<->")) {
+                  SchemeInstantiation schemeinstantiation5 = m605(schematicrule1.conclusion);
+                  C__B c__b5 = m628(
+                     schemeinstantiation5, expression3.getChild(0), expression3.getChild(1), expression2, expression, expression1, schematicrule.conclusion
+                  );
                   if (c__b5 != null) {
-                     vector2.addElement(new C_GA(c_e_, false, integer1, c_j_d5, c__b5, false, c_lf));
+                     vector2.addElement(new C_GA(expressionpath, false, integer1, schemeinstantiation5, c__b5, false, schematicrule));
                   }
 
-                  c_j_d5 = m605(c_lf1.f527);
-                  c__b5 = m628(c_j_d5, c_rf3.m1217(1), c_rf3.m1217(0), c_rf2, c_rf, c_rf1, c_lf.f527);
+                  schemeinstantiation5 = m605(schematicrule1.conclusion);
+                  c__b5 = m628(
+                     schemeinstantiation5, expression3.getChild(1), expression3.getChild(0), expression2, expression, expression1, schematicrule.conclusion
+                  );
                   if (c__b5 != null) {
-                     vector2.addElement(new C_GA(c_e_, true, integer1, c_j_d5, c__b5, false, c_lf));
+                     vector2.addElement(new C_GA(expressionpath, true, integer1, schemeinstantiation5, c__b5, false, schematicrule));
                   }
                }
 
-               if (flag && c_rf2.f739.equals("<->")) {
-                  C_j_D c_j_d6 = m605(c_lf1.f527);
-                  C__B c__b6 = m628(c_j_d6, c_rf2.m1217(0), c_rf2.m1217(1), c_rf3, c_rf, c_rf1, c_lf.f527);
+               if (flag && expression2.symbol.equals("<->")) {
+                  SchemeInstantiation schemeinstantiation6 = m605(schematicrule1.conclusion);
+                  C__B c__b6 = m628(
+                     schemeinstantiation6, expression2.getChild(0), expression2.getChild(1), expression3, expression, expression1, schematicrule.conclusion
+                  );
                   if (c__b6 != null) {
-                     vector2.addElement(new C_GA(c_e_, false, integer1, c_j_d6, c__b6, true, c_lf));
+                     vector2.addElement(new C_GA(expressionpath, false, integer1, schemeinstantiation6, c__b6, true, schematicrule));
                   }
 
-                  c_j_d6 = m605(c_lf1.f527);
-                  c__b6 = m628(c_j_d6, c_rf2.m1217(1), c_rf2.m1217(0), c_rf3, c_rf, c_rf1, c_lf.f527);
+                  schemeinstantiation6 = m605(schematicrule1.conclusion);
+                  c__b6 = m628(
+                     schemeinstantiation6, expression2.getChild(1), expression2.getChild(0), expression3, expression, expression1, schematicrule.conclusion
+                  );
                   if (c__b6 != null) {
-                     vector2.addElement(new C_GA(c_e_, true, integer1, c_j_d6, c__b6, true, c_lf));
+                     vector2.addElement(new C_GA(expressionpath, true, integer1, schemeinstantiation6, c__b6, true, schematicrule));
                   }
                }
             }
          } else {
-            if (c_rf3.f739.equals("<->")) {
-               C_j_D c_j_d7 = new C_j_D();
-               C__B c__b7 = m628(c_j_d7, c_rf3.m1217(0), c_rf3.m1217(1), c_rf2, c_rf, c_rf1, c_lf.f527);
+            if (expression3.symbol.equals("<->")) {
+               SchemeInstantiation schemeinstantiation7 = new SchemeInstantiation();
+               C__B c__b7 = m628(
+                  schemeinstantiation7, expression3.getChild(0), expression3.getChild(1), expression2, expression, expression1, schematicrule.conclusion
+               );
                if (c__b7 != null) {
-                  C_HF c_hf2 = new C_HF(c_lf1, aint, c_j_d7, c__b7);
-                  vector2.addElement(new C_GA(c_e_, false, c_hf2, false, c_lf));
+                  C_HF c_hf2 = new C_HF(schematicrule1, aint, schemeinstantiation7, c__b7);
+                  vector2.addElement(new C_GA(expressionpath, false, c_hf2, false, schematicrule));
                }
 
-               c_j_d7 = new C_j_D();
-               c__b7 = m628(c_j_d7, c_rf3.m1217(1), c_rf3.m1217(0), c_rf2, c_rf, c_rf1, c_lf.f527);
+               schemeinstantiation7 = new SchemeInstantiation();
+               c__b7 = m628(
+                  schemeinstantiation7, expression3.getChild(1), expression3.getChild(0), expression2, expression, expression1, schematicrule.conclusion
+               );
                if (c__b7 != null) {
-                  C_HF c_hf3 = new C_HF(c_lf1, aint, c_j_d7, c__b7);
-                  vector2.addElement(new C_GA(c_e_, true, c_hf3, false, c_lf));
+                  C_HF c_hf3 = new C_HF(schematicrule1, aint, schemeinstantiation7, c__b7);
+                  vector2.addElement(new C_GA(expressionpath, true, c_hf3, false, schematicrule));
                }
             }
 
-            if (flag && c_rf2.f739.equals("<->")) {
-               C_j_D c_j_d8 = new C_j_D();
-               C__B c__b8 = m628(c_j_d8, c_rf2.m1217(0), c_rf2.m1217(1), c_rf3, c_rf, c_rf1, c_lf.f527);
+            if (flag && expression2.symbol.equals("<->")) {
+               SchemeInstantiation schemeinstantiation8 = new SchemeInstantiation();
+               C__B c__b8 = m628(
+                  schemeinstantiation8, expression2.getChild(0), expression2.getChild(1), expression3, expression, expression1, schematicrule.conclusion
+               );
                if (c__b8 != null) {
-                  C_HF c_hf4 = new C_HF(c_lf1, aint, c_j_d8, c__b8);
-                  vector2.addElement(new C_GA(c_e_, false, c_hf4, true, c_lf));
+                  C_HF c_hf4 = new C_HF(schematicrule1, aint, schemeinstantiation8, c__b8);
+                  vector2.addElement(new C_GA(expressionpath, false, c_hf4, true, schematicrule));
                }
 
-               c_j_d8 = new C_j_D();
-               c__b8 = m628(c_j_d8, c_rf2.m1217(1), c_rf2.m1217(0), c_rf3, c_rf, c_rf1, c_lf.f527);
+               schemeinstantiation8 = new SchemeInstantiation();
+               c__b8 = m628(
+                  schemeinstantiation8, expression2.getChild(1), expression2.getChild(0), expression3, expression, expression1, schematicrule.conclusion
+               );
                if (c__b8 != null) {
-                  C_HF c_hf5 = new C_HF(c_lf1, aint, c_j_d8, c__b8);
-                  vector2.addElement(new C_GA(c_e_, true, c_hf5, true, c_lf));
+                  C_HF c_hf5 = new C_HF(schematicrule1, aint, schemeinstantiation8, c__b8);
+                  vector2.addElement(new C_GA(expressionpath, true, c_hf5, true, schematicrule));
                }
             }
          }
@@ -813,56 +855,64 @@ class C_GA extends C_HD {
       return vector1.isEmpty() && vector.isEmpty() ? null : vector;
    }
 
-   static C__B m627(C_j_D c_j_d, C_RF c_rf, C_RF c_rf1, C_RF c_rf2, C_RF c_rf3) {
-      return m628(c_j_d, c_rf, c_rf1, null, c_rf2, c_rf3, null);
+   static C__B m627(SchemeInstantiation schemeinstantiation, Expression expression, Expression expression1, Expression expression2, Expression expression3) {
+      return m628(schemeinstantiation, expression, expression1, null, expression2, expression3, null);
    }
 
-   static C__B m628(C_j_D c_j_d, C_RF c_rf, C_RF c_rf1, C_RF c_rf2, C_RF c_rf3, C_RF c_rf4, C_RF c_rf5) {
+   static C__B m628(
+      SchemeInstantiation schemeinstantiation,
+      Expression expression,
+      Expression expression1,
+      Expression expression2,
+      Expression expression3,
+      Expression expression4,
+      Expression expression5
+   ) {
       C_MB c_mb = new C_MB();
-      if (!c_rf.m1267(c_rf3, c_j_d, c_mb)) {
+      if (!expression.m1267(expression3, schemeinstantiation, c_mb)) {
          return null;
-      } else if (!c_rf1.m1267(c_rf4, c_j_d, c_mb)) {
+      } else if (!expression1.m1267(expression4, schemeinstantiation, c_mb)) {
          return null;
       } else {
-         if (c_rf5 != null) {
-            c_rf5 = m623(c_j_d, c_rf2, c_rf5);
-            if (c_rf5 == null) {
+         if (expression5 != null) {
+            expression5 = m623(schemeinstantiation, expression2, expression5);
+            if (expression5 == null) {
                return null;
             }
          }
 
-         if (c_rf2 != null && !c_rf2.m1267(c_rf5, c_j_d, c_mb)) {
+         if (expression2 != null && !expression2.m1267(expression5, schemeinstantiation, c_mb)) {
             return null;
          } else {
             C__B c__b = new C__B();
-            if (!c__b.m1572(c_rf, c_rf3, c_mb)) {
+            if (!c__b.m1572(expression, expression3, c_mb)) {
                return null;
-            } else if (!c__b.m1572(c_rf1, c_rf4, c_mb)) {
+            } else if (!c__b.m1572(expression1, expression4, c_mb)) {
                return null;
-            } else if (c_rf2 != null && !c__b.m1572(c_rf2, c_rf5, c_mb)) {
+            } else if (expression2 != null && !c__b.m1572(expression2, expression5, c_mb)) {
                return null;
             } else {
                c_mb = new C_MB();
-               C_RF c_rf6 = c_rf.m1239(c_j_d, c_mb);
-               C_RF c_rf7 = c_rf1.m1239(c_j_d, c_mb);
-               C_RF c_rf8 = c_rf2 == null ? null : c_rf2.m1239(c_j_d, c_mb);
-               if (!c__b.m1574(c_rf, c_rf6, c_mb, null)) {
+               Expression expression6 = expression.m1239(schemeinstantiation, c_mb);
+               Expression expression7 = expression1.m1239(schemeinstantiation, c_mb);
+               Expression expression8 = expression2 == null ? null : expression2.m1239(schemeinstantiation, c_mb);
+               if (!c__b.m1574(expression, expression6, c_mb, null)) {
                   return null;
-               } else if (!c__b.m1574(c_rf1, c_rf7, c_mb, null)) {
+               } else if (!c__b.m1574(expression1, expression7, c_mb, null)) {
                   return null;
                } else {
-                  return c_rf2 != null && !c__b.m1574(c_rf2, c_rf8, c_mb, null) ? null : c__b;
+                  return expression2 != null && !c__b.m1574(expression2, expression8, c_mb, null) ? null : c__b;
                }
             }
          }
       }
    }
 
-   static boolean m629(C_RF c_rf, Vector vector) {
+   static boolean m629(Expression expression, Vector vector) {
       int i = vector == null ? 0 : vector.size();
 
       for (int j = 0; j < i; j++) {
-         if (!c_rf.m1225((C_i_A)vector.elementAt(j)).isEmpty()) {
+         if (!expression.m1225((SchematicLetter)vector.elementAt(j)).isEmpty()) {
             return true;
          }
       }
@@ -870,41 +920,41 @@ class C_GA extends C_HD {
       return false;
    }
 
-   static int m630(C_RF c_rf) {
-      C_RF c_rf1 = c_rf;
+   static int m630(Expression expression) {
+      Expression expression1 = expression;
 
       int i;
-      for (i = 0; c_rf1.f739.equals("@"); c_rf1 = c_rf1.m1217(1)) {
+      for (i = 0; expression1.symbol.equals("@"); expression1 = expression1.getChild(1)) {
          i++;
       }
 
       return i;
    }
 
-   static boolean m631(C_a_ c_a_, C_LF c_lf, boolean flag) {
-      if (c_lf instanceof C_OF) {
+   static boolean m631(DerivationLineChecker derivationlinechecker, SchematicRule schematicrule, boolean flag) {
+      if (schematicrule instanceof C_OF) {
          return true;
-      } else if (c_lf instanceof C_l_F) {
-         return c_a_.f935.m565(((C_l_F)c_lf).f1263);
+      } else if (schematicrule instanceof C_l_F) {
+         return derivationlinechecker.f935.m565(((C_l_F)schematicrule).f1263);
       } else {
-         LPDerivation lpderivation = c_a_.f935.f317.f915;
-         String s = c_a_.f946 ? "manualOrDisabled" : "disabled";
-         if (lpderivation.hasProperty(c_lf, s)) {
+         LPDerivation lpderivation = derivationlinechecker.f935.f317.f915;
+         String s = derivationlinechecker.f946 ? "manualOrDisabled" : "disabled";
+         if (lpderivation.hasProperty(schematicrule, s)) {
             return false;
-         } else if (!c_lf.m952(lpderivation)) {
+         } else if (!schematicrule.m952(lpderivation)) {
             lpderivation.proofMissing = true;
             return false;
          } else if (!flag) {
             return true;
          } else {
-            C_r_D c_r_d = LogicProgram.f534.f1472;
-            Vector vector = c_r_d.m2067(c_lf);
+            RuleProperties ruleproperties = LogicProgram.f534.f1472;
+            Vector vector = ruleproperties.m2067(schematicrule);
             int i = vector == null ? 0 : vector.size();
 
             for (int j = 0; j < i; j++) {
-               C_VB c_vb = LPDerivation.getRule((String)vector.elementAt(j));
-               if (c_vb instanceof C_LF && !lpderivation.hasProperty(c_vb, s)) {
-                  if (c_vb.m952(lpderivation)) {
+               Rule rule = LPDerivation.getRule((String)vector.elementAt(j));
+               if (rule instanceof SchematicRule && !lpderivation.hasProperty(rule, s)) {
+                  if (rule.m952(lpderivation)) {
                      return true;
                   }
 

@@ -26,6 +26,6 @@ class C__F {
    }
 
    static String m1588(JPasswordField jpasswordfield) {
-      return jpasswordfield == null ? null : C_z_D.m2225(new String(jpasswordfield.getPassword()));
+      return jpasswordfield == null ? null : Scrambler.md5Base64(new String(jpasswordfield.getPassword()));
    }
 }

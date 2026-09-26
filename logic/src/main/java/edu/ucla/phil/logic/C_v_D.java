@@ -1,6 +1,6 @@
 package edu.ucla.phil.logic;
 
-public interface C_v_D extends C_XC {
+public interface C_v_D extends ModuleConstants {
    int NONE = 0;
    int NEGATION = 1;
    int IMPLICATION = 2;

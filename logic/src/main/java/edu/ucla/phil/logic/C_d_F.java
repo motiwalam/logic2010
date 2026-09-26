@@ -3,7 +3,7 @@ package edu.ucla.phil.logic;
 import java.awt.Component;
 import java.awt.Frame;
 
-class C_d_F extends C_UA {
+class C_d_F extends MessageDialog {
    C_d_F(Frame frame, String s, Component component, String[] astring) {
       super(frame, s, component, astring);
       this.setDefaultCloseOperation(2);

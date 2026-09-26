@@ -27,15 +27,15 @@ class C_IE {
          if (i == -1) {
             return null;
          } else {
-            Integer integer = LogicProgram.m1010(s.substring(0, i));
+            Integer integer = LogicProgram.parseInteger(s.substring(0, i));
             if (integer == null) {
                return null;
             } else {
                int j = integer;
                s = s.substring(i + 1);
-               C_OA c_oa = new C_OA("\\{,");
-               c_oa.m1132(s);
-               if (c_oa.m1135().trim().equals("")) {
+               DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\{,");
+               delimitedtokenizer.m1132(s);
+               if (delimitedtokenizer.m1135().trim().equals("")) {
                   C_a_C c_a_c = new C_a_C();
                   c_a_c.f422 = s1;
                   c_a_c.f423 = j;

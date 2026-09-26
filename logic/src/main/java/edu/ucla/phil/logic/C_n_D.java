@@ -5,8 +5,8 @@ import java.awt.Point;
 import java.util.Vector;
 import javax.swing.JPanel;
 
-class C_n_D extends C_M implements C_s_, C_n_A {
-   static String[] f1302 = LogicProgram.f596;
+class C_n_D extends C_M implements C_s_, LogicConstants {
+   static String[] f1302 = LogicProgram.symbols;
    int f1303;
    Vector f1304;
 
@@ -26,7 +26,7 @@ class C_n_D extends C_M implements C_s_, C_n_A {
       for (int k = 0; k < j; k++) {
          C_ZE c_ze = new C_ZE("");
          this.f1304.addElement(c_ze);
-         jpanel.add(new C_ZE(C_i_A.m1853(k) + ": "), new Point(0, k));
+         jpanel.add(new C_ZE(SchematicLetter.m1853(k) + ": "), new Point(0, k));
          jpanel.add(c_ze, new Point(1, k));
       }
    }
@@ -38,7 +38,7 @@ class C_n_D extends C_M implements C_s_, C_n_A {
    }
 
    @Override
-   public C_c_B m1965(int i, C_RF c_rf) {
+   public ErrorRef m1965(int i, Expression expression) {
       return null;
    }
 }

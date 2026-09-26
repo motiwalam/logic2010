@@ -5,22 +5,22 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 class C_UE implements DocumentListener {
-   C_UA f811;
+   MessageDialog f811;
    int f812;
    JPasswordField f813;
    JPasswordField f814;
    JPasswordField f815;
 
-   C_UE(C_UA c_ua, int i, JPasswordField jpasswordfield) {
-      this(c_ua, i, jpasswordfield, null, null);
+   C_UE(MessageDialog messagedialog, int i, JPasswordField jpasswordfield) {
+      this(messagedialog, i, jpasswordfield, null, null);
    }
 
-   C_UE(C_UA c_ua, int i, JPasswordField jpasswordfield, JPasswordField jpasswordfield1) {
-      this(c_ua, i, jpasswordfield, jpasswordfield1, null);
+   C_UE(MessageDialog messagedialog, int i, JPasswordField jpasswordfield, JPasswordField jpasswordfield1) {
+      this(messagedialog, i, jpasswordfield, jpasswordfield1, null);
    }
 
-   C_UE(C_UA c_ua, int i, JPasswordField jpasswordfield, JPasswordField jpasswordfield1, JPasswordField jpasswordfield2) {
-      this.f811 = c_ua;
+   C_UE(MessageDialog messagedialog, int i, JPasswordField jpasswordfield, JPasswordField jpasswordfield1, JPasswordField jpasswordfield2) {
+      this.f811 = messagedialog;
       this.f812 = i;
       this.m1356(this.f813 = jpasswordfield);
       this.m1356(this.f814 = jpasswordfield1);

@@ -8,7 +8,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-class C_CB implements C_n_A {
+class C_CB implements LogicConstants {
    static final char f252 = '̀';
    static final Color[] f253 = new Color[]{null, dialogRed, dialogGreen, dialogBlue, dialogOrange};
    int[] f254;

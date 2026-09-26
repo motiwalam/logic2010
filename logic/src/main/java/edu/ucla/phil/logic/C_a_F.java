@@ -11,37 +11,37 @@ class C_a_F {
       this.f980 = i;
    }
 
-   static C_a_F m1642(C_0C c_0c, C_OE c_oe, C_x_A c_x_a, int i) {
-      String s = c_oe instanceof C_HB ? "not051" : "not052";
-      return m1643(c_0c, c_oe, c_x_a, s, i);
+   static C_a_F m1642(ServerSession serversession, UserInfo userinfo, BusyIndicator busyindicator, int i) {
+      String s = userinfo instanceof NewUserInfo ? "not051" : "not052";
+      return m1643(serversession, userinfo, busyindicator, s, i);
    }
 
-   static C_a_F m1643(C_0C c_0c, C_OE c_oe, C_x_A c_x_a, String s, int i) {
-      C__F c__f = new C__F(C_j_C.m1864(c_0c, c_oe, c_x_a));
+   static C_a_F m1643(ServerSession serversession, UserInfo userinfo, BusyIndicator busyindicator, String s, int i) {
+      C__F c__f = new C__F(AccountManager.m1864(serversession, userinfo, busyindicator));
       if (c__f.f932 == null) {
          return null;
       } else {
-         Hashtable hashtable = C_H.m667("site", c_oe.m1156(), "sid", c_oe.m1153());
-         if (!(c_oe instanceof C_HB)) {
-            C_H.m664(hashtable, "name", c_oe.m1169());
+         Hashtable hashtable = Message.params("site", userinfo.getInstitution(), "sid", userinfo.getStudentId());
+         if (!(userinfo instanceof NewUserInfo)) {
+            Message.putParam(hashtable, "name", userinfo.getFullName());
          }
 
-         String s1 = C_H.m661(C_H.m412(s), hashtable);
-         if (c_x_a != null) {
-            c_x_a.m2162(true);
+         String s1 = Message.substitute(Message.getText(s), hashtable);
+         if (busyindicator != null) {
+            busyindicator.m2162(true);
          }
 
-         Integer integer = C_KC.m908(c_0c, c_oe, c__f, s1, i);
-         if (c_x_a != null) {
-            c_x_a.m2162(false);
+         Integer integer = ServerConnection.m908(serversession, userinfo, c__f, s1, i);
+         if (busyindicator != null) {
+            busyindicator.m2162(false);
          }
 
          if (integer == null) {
             return null;
          } else {
-            c_oe.f664 = integer;
-            if (c_oe instanceof C_HB) {
-               ((C_HB)c_oe).f381 = c__f.f932;
+            userinfo.f664 = integer;
+            if (userinfo instanceof NewUserInfo) {
+               ((NewUserInfo)userinfo).f381 = c__f.f932;
             }
 
             return new C_a_F(c__f.f932, integer);

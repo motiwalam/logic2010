@@ -2,12 +2,12 @@ package edu.ucla.phil.logic;
 
 import java.util.Vector;
 
-class C_PB extends C_i_A {
+class C_PB extends SchematicLetter {
    String f672;
    Vector f673;
 
-   C_PB(C_i_ c_i_) {
-      this(c_i_.f739);
+   C_PB(SimpleTerm simpleterm) {
+      this(simpleterm.symbol);
    }
 
    C_PB(String s) {
@@ -46,8 +46,8 @@ class C_PB extends C_i_A {
    }
 
    @Override
-   public C_RF m1175() {
-      return new C_i_(this.f672);
+   public Expression m1175() {
+      return new SimpleTerm(this.f672);
    }
 
    @Override
@@ -60,11 +60,11 @@ class C_PB extends C_i_A {
    }
 
    @Override
-   public C_i_A m1177(Vector vector) {
+   public SchematicLetter m1177(Vector vector) {
       return m1178(vector);
    }
 
-   static C_i_A m1178(Vector vector) {
+   static SchematicLetter m1178(Vector vector) {
       C_CF c_cf = new C_CF(LogicProgram.f602);
 
       while (c_cf.hasMoreElements()) {

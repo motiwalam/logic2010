@@ -7,7 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.BorderFactory;
 
-class C_VF extends C_TA implements C_n_A, C_LC {
+class C_VF extends CellPanel implements LogicConstants, C_LC {
    C_VF parent = null;
    C_VF f841 = null;
    C_VF f842 = null;
@@ -72,7 +72,7 @@ class C_VF extends C_TA implements C_n_A, C_LC {
          this.f844 = c_dd;
          this.m1398(this.f845 = new C_BC(this, c_dd));
          this.add(this.f845);
-         if (c_dd.f278 instanceof C_q_F) {
+         if (c_dd.f278 instanceof ConnectiveFormula) {
             i = c_dd.m457();
 
             for (int k = 0; k < i; k++) {
@@ -326,13 +326,13 @@ class C_VF extends C_TA implements C_n_A, C_LC {
       this.f845.f241.m1649(i);
    }
 
-   C_RF m1415() {
+   Expression m1415() {
       return this.f844 == null ? null : this.f844.f278;
    }
 
    String m1416() {
-      C_RF c_rf = this.m1415();
-      return c_rf == null ? null : c_rf.m1214();
+      Expression expression = this.m1415();
+      return expression == null ? null : expression.getSymbol();
    }
 
    char m1417() {

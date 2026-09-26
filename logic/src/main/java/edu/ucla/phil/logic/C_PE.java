@@ -8,7 +8,7 @@ import javax.swing.InputMap;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-class C_PE extends C_TA {
+class C_PE extends CellPanel {
    LPDerivation f674;
 
    C_PE(LPDerivation lpderivation) {
@@ -57,11 +57,11 @@ class C_PE extends C_TA {
                C_KB.m777(C_PE.this.f674);
             }
          };
-         if (LogicProgram.m1040("workEntry") != null) {
+         if (LogicProgram.getCredentials("workEntry") != null) {
             abstractaction = new AbstractAction() {
                @Override
                public void actionPerformed(ActionEvent actionevent) {
-                  if (LogicProgram.m1040("workEntry") != null && C_u_C.m2101("workEntry", "instructor")) {
+                  if (LogicProgram.getCredentials("workEntry") != null && UserSetup.m2101("workEntry", "instructor")) {
                      C_KB.m775(C_PE.this.f674);
                   }
                }
@@ -77,15 +77,15 @@ class C_PE extends C_TA {
       abstractaction = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            C_x_A c_x_a = new C_x_A(C_PE.this.f674);
-            C_KB.m798(C_PE.this.f674, c_x_a);
+            BusyIndicator busyindicator = new BusyIndicator(C_PE.this.f674);
+            C_KB.m798(C_PE.this.f674, busyindicator);
          }
       };
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            C_x_A c_x_a = new C_x_A(C_PE.this.f674);
-            C_KB.m798(null, c_x_a);
+            BusyIndicator busyindicator = new BusyIndicator(C_PE.this.f674);
+            C_KB.m798(null, busyindicator);
          }
       };
       jpanel.add(c__d = new C__D("Rules", abstractaction1, abstractaction));
@@ -94,7 +94,7 @@ class C_PE extends C_TA {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
             if (C_PE.this.f674.checkDisabled) {
-               C_UA.m1328("Feature Disabled", "Checking is disabled for this problem.", null, null);
+               MessageDialog.showMessage("Feature Disabled", "Checking is disabled for this problem.", null, null);
             } else {
                C_PE.this.f674.checkProblem();
             }
@@ -149,7 +149,7 @@ class C_PE extends C_TA {
       };
       jpanel.add(c__d = new C__D("Delete", abstractaction1, abstractaction));
       c__d.m1583("Right Click to Delete multiple problems");
-      if (!LogicProgram.f576) {
+      if (!LogicProgram.noNetwork) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {
@@ -161,7 +161,7 @@ class C_PE extends C_TA {
          c__d.m1583("Submit");
       }
 
-      if (LogicProgram.f573 && !LPDerivation.submitExam) {
+      if (LogicProgram.printingEnabled && !LPDerivation.submitExam) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {
@@ -178,7 +178,7 @@ class C_PE extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            LogicProgram.f586.showInFront();
+            LogicProgram.mainMenu.showInFront();
          }
       };
       jpanel.add(new C__D("Menu", abstractaction1));
@@ -198,7 +198,7 @@ class C_PE extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("feedback");
+            String s = LogicProgram.getLink("feedback");
             C_Q.m1184(s);
          }
       };
@@ -206,36 +206,36 @@ class C_PE extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("derStart");
-            C_Q.m1186(LogicProgram.f550, s);
+            String s = LogicProgram.getLink("derStart");
+            C_Q.m1186(LogicProgram.configDir, s);
          }
       };
       jpanel1.add(new C__D("Starting", abstractaction1));
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("derHelp");
-            C_Q.m1186(LogicProgram.f550, s);
+            String s = LogicProgram.getLink("derHelp");
+            C_Q.m1186(LogicProgram.configDir, s);
          }
       };
       jpanel1.add(new C__D("Help", abstractaction1));
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("derFAQ");
-            C_Q.m1186(LogicProgram.f550, s);
+            String s = LogicProgram.getLink("derFAQ");
+            C_Q.m1186(LogicProgram.configDir, s);
          }
       };
       jpanel1.add(new C__D("FAQ", abstractaction1));
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("derTips");
-            C_Q.m1186(LogicProgram.f550, s);
+            String s = LogicProgram.getLink("derTips");
+            C_Q.m1186(LogicProgram.configDir, s);
          }
       };
       jpanel1.add(new C__D("Advice", abstractaction1));
-      if (C_KC.f480 && !LogicProgram.f576 && C_KC.f451 != null) {
+      if (ServerConnection.f480 && !LogicProgram.noNetwork && ServerConnection.uploadUrl != null) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {

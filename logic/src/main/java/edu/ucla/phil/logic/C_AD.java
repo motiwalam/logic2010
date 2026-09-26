@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import javax.swing.border.EtchedBorder;
 
-class C_AD extends C_TA {
+class C_AD extends CellPanel {
    C_AD parent = null;
    C_YF f140;
    C_DD f141 = null;

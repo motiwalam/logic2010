@@ -2,13 +2,13 @@ package edu.ucla.phil.logic;
 
 import java.util.Vector;
 
-class C_W extends C_i_A {
+class C_W extends SchematicLetter {
    String f850;
    int f851;
    Vector f852;
 
-   C_W(C_n_C c_n_c) {
-      this(c_n_c.f739, c_n_c.f741);
+   C_W(OperationTerm operationterm) {
+      this(operationterm.symbol, operationterm.childCount);
    }
 
    C_W(String s, int i) {
@@ -48,14 +48,14 @@ class C_W extends C_i_A {
    }
 
    @Override
-   public C_RF m1175() {
-      C_n_C c_n_c = new C_n_C(this.f850);
+   public Expression m1175() {
+      OperationTerm operationterm = new OperationTerm(this.f850);
 
       for (int i = 0; i < this.f851; i++) {
-         c_n_c.m1215(new C_i_(m1853(i)));
+         operationterm.addChild(new SimpleTerm(m1853(i)));
       }
 
-      return c_n_c;
+      return operationterm;
    }
 
    @Override
@@ -68,11 +68,11 @@ class C_W extends C_i_A {
    }
 
    @Override
-   public C_i_A m1177(Vector vector) {
+   public SchematicLetter m1177(Vector vector) {
       return m1423(this.f851, vector);
    }
 
-   static C_i_A m1423(int i, Vector vector) {
+   static SchematicLetter m1423(int i, Vector vector) {
       C_CF c_cf = new C_CF(LogicProgram.m1021(LogicProgram.f601));
 
       while (c_cf.hasMoreElements()) {

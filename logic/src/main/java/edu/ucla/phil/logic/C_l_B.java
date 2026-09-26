@@ -23,7 +23,7 @@ import javax.swing.SwingUtilities;
 abstract class C_l_B implements Runnable {
    static Properties f1230 = new Properties();
    static final int f1231 = 10;
-   static double f1232 = 10.0 / LogicProgram.f539;
+   static double f1232 = 10.0 / LogicProgram.fontSize;
    static int f1233 = 36;
    C_c_C f1234;
    boolean f1235 = false;

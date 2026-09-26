@@ -8,7 +8,7 @@ import javax.swing.InputMap;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-class C_b_B extends C_TA {
+class C_b_B extends CellPanel {
    LPSymbolizer f995;
 
    C_b_B(LPSymbolizer lpsymbolizer) {
@@ -57,11 +57,11 @@ class C_b_B extends C_TA {
                C_WB.m1442(C_b_B.this.f995);
             }
          };
-         if (LogicProgram.m1040("workEntry") != null) {
+         if (LogicProgram.getCredentials("workEntry") != null) {
             abstractaction = new AbstractAction() {
                @Override
                public void actionPerformed(ActionEvent actionevent) {
-                  if (LogicProgram.m1040("workEntry") != null && C_u_C.m2101("workEntry", "instructor")) {
+                  if (LogicProgram.getCredentials("workEntry") != null && UserSetup.m2101("workEntry", "instructor")) {
                      C_WB.m1440(C_b_B.this.f995);
                   }
                }
@@ -86,7 +86,7 @@ class C_b_B extends C_TA {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
             if (C_b_B.this.f995.checkDisabled) {
-               C_UA.m1328("Feature Disabled", "Checking is disabled for this problem.", null, null);
+               MessageDialog.showMessage("Feature Disabled", "Checking is disabled for this problem.", null, null);
             } else {
                C_b_B.this.f995.checkProblem();
             }
@@ -146,7 +146,7 @@ class C_b_B extends C_TA {
       };
       jpanel.add(c__d = new C__D("Delete", abstractaction1, abstractaction));
       c__d.m1583("Right Click to Delete multiple problems");
-      if (!LogicProgram.f576) {
+      if (!LogicProgram.noNetwork) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {
@@ -158,7 +158,7 @@ class C_b_B extends C_TA {
          c__d.m1583("Submit");
       }
 
-      if (LogicProgram.f573 && !LPSymbolizer.submitExam) {
+      if (LogicProgram.printingEnabled && !LPSymbolizer.submitExam) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {
@@ -166,11 +166,11 @@ class C_b_B extends C_TA {
                C_b_B.this.f995.requestFocus();
             }
          };
-         if (LogicProgram.m1040("symAnswerPrint") != null) {
+         if (LogicProgram.getCredentials("symAnswerPrint") != null) {
             abstractaction = new AbstractAction() {
                @Override
                public void actionPerformed(ActionEvent actionevent) {
-                  if (LogicProgram.m1040("symAnswerPrint") != null && C_u_C.m2101("symAnswerPrint", "instructor")) {
+                  if (LogicProgram.getCredentials("symAnswerPrint") != null && UserSetup.m2101("symAnswerPrint", "instructor")) {
                      C_PD.m1179(C_WB.m1448(C_b_B.this.f995.frame));
                   }
 
@@ -191,7 +191,7 @@ class C_b_B extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            LogicProgram.f586.showInFront();
+            LogicProgram.mainMenu.showInFront();
          }
       };
       jpanel.add(new C__D("Menu", abstractaction1));
@@ -208,7 +208,7 @@ class C_b_B extends C_TA {
       JPanel jpanel1 = new JPanel();
       jpanel1.setLayout(new C_b_C(1, 0, i / 4, i / 8));
       this.add(jpanel1);
-      if (C_KC.f480) {
+      if (ServerConnection.f480) {
          C_F c_f = new C_F() {
             @Override
             public void m514(C_b_A c_b_a1, int j, int j) {
@@ -235,7 +235,7 @@ class C_b_B extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("feedback");
+            String s = LogicProgram.getLink("feedback");
             C_Q.m1184(s);
          }
       };
@@ -243,20 +243,20 @@ class C_b_B extends C_TA {
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("symHelp");
-            C_Q.m1186(LogicProgram.f550, s);
+            String s = LogicProgram.getLink("symHelp");
+            C_Q.m1186(LogicProgram.configDir, s);
          }
       };
       jpanel1.add(new C__D("Help", abstractaction1));
       abstractaction1 = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            String s = LogicProgram.m1078("symSamp");
-            C_Q.m1186(LogicProgram.f550, s);
+            String s = LogicProgram.getLink("symSamp");
+            C_Q.m1186(LogicProgram.configDir, s);
          }
       };
       jpanel1.add(new C__D("Examples", abstractaction1));
-      if (C_KC.f480 && !LogicProgram.f576 && C_KC.f451 != null) {
+      if (ServerConnection.f480 && !LogicProgram.noNetwork && ServerConnection.uploadUrl != null) {
          abstractaction1 = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent actionevent) {

@@ -10,16 +10,16 @@ import java.util.Vector;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
-class C_RE extends C_D implements C_v_D {
-   static String[] f737 = LogicProgram.f596;
+class C_RE extends DialogHandler implements C_v_D {
+   static String[] f737 = LogicProgram.symbols;
 
    C_RE(String s) {
       super(s);
    }
 
    @Override
-   boolean m451(C_UA c_ua) {
-      String s = this.m450(c_ua);
+   boolean m451(MessageDialog messagedialog) {
+      String s = this.m450(messagedialog);
       if (s == null) {
          return true;
       } else if (!s.equalsIgnoreCase("up")) {
@@ -45,7 +45,7 @@ class C_RE extends C_D implements C_v_D {
             Vector vector2 = (Vector)this.m449("targetBinders");
             Vector vector4 = (Vector)this.m449("answerBinders");
             String s2 = c_d_c5.f1048 == 11 ? c_d_c5.m1685().f837.getText() : null;
-            s2 = C_OA.m1139(C_d_C.m1732(LogicProgram.m995(s2, f737, maggie), vector4, vector2), "\\{");
+            s2 = DelimitedTokenizer.m1139(C_d_C.m1732(LogicProgram.m995(s2, f737, maggie), vector4, vector2), "\\{");
             c_d_c2.m1691(c_d_c5.f1048, s2, true);
             return false;
          } else {
@@ -69,24 +69,24 @@ class C_RE extends C_D implements C_v_D {
                vector1.setSize(vector1.size() - 1);
             }
 
-            C_H c_h = C_h_E.m411("symnot001");
+            Message message = C_h_E.get("symnot001");
             Hashtable hashtable = C_CD.m425(c_d_c1, vector, vector1);
-            String s1 = LogicProgram.m1004(C_H.m661(c_h.f372, hashtable));
-            if (c_ua.f792 instanceof JScrollPane) {
-               JViewport jviewport = ((JScrollPane)c_ua.f792).getViewport();
+            String s1 = LogicProgram.m1004(Message.substitute(message.text, hashtable));
+            if (messagedialog.f792 instanceof JScrollPane) {
+               JViewport jviewport = ((JScrollPane)messagedialog.f792).getViewport();
                if (jviewport != null) {
                   Component component = jviewport.getView();
-                  if (component instanceof C_s_D) {
-                     ((C_s_D)component).setText(s1);
+                  if (component instanceof FormulaTextPane) {
+                     ((FormulaTextPane)component).setText(s1);
                   }
                }
             }
 
             Rectangle rectangle = LogicProgram.m1035(c_d_c.f1045.f1438, null);
-            Dimension dimension = c_ua.getSize();
+            Dimension dimension = messagedialog.getSize();
             Point point = new Point(rectangle.x + rectangle.width / 2 - dimension.width / 2, rectangle.y + rectangle.height);
-            c_ua.setLocation(point);
-            c_ua.setResizable(true);
+            messagedialog.setLocation(point);
+            messagedialog.setResizable(true);
          } else {
             Toolkit.getDefaultToolkit().beep();
          }

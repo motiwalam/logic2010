@@ -1,11 +1,11 @@
 package edu.ucla.phil.logic;
 
 abstract class C_o_ extends Thread {
-   C_r_A f1317;
+   NetworkTask f1317;
    Object f1318;
 
-   C_o_(C_r_A c_r_a, Object object) {
-      this.f1317 = c_r_a;
+   C_o_(NetworkTask networktask, Object object) {
+      this.f1317 = networktask;
       this.f1318 = object;
    }
 

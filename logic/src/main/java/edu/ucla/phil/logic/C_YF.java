@@ -13,8 +13,8 @@ class C_YF extends FlowLayout {
    C_j_F f907 = null;
 
    C_YF() {
-      this.setHgap(3 * LogicProgram.f539 / 4);
-      this.setVgap(3 * LogicProgram.f539 / 4);
+      this.setHgap(3 * LogicProgram.fontSize / 4);
+      this.setVgap(3 * LogicProgram.fontSize / 4);
    }
 
    @Override

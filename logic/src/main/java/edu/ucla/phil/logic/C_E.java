@@ -9,7 +9,7 @@ class C_E extends JLabel {
       this.setText("");
       this.setBorder(new EmptyBorder(1, 3, 1, 3));
       this.m492(flag);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
    }
 
    public void m492(boolean flag) {

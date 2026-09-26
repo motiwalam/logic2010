@@ -2,7 +2,7 @@ package edu.ucla.phil.logic;
 
 import java.util.Vector;
 
-class C_DB extends C_LF {
+class C_DB extends SchematicRule {
    String f274;
 
    C_DB(String s) {
@@ -25,8 +25,8 @@ class C_DB extends C_LF {
    }
 
    void m453(String s) {
-      C_XD c_xd = new C_XD(LPDerivation.problems.m1780(s));
-      this.f274 = c_xd.m1494();
-      this.m948(LPDerivation.getProblemStatement(c_xd));
+      TaggedRecord taggedrecord = new TaggedRecord(LPDerivation.problems.m1780(s));
+      this.f274 = taggedrecord.getName();
+      this.m948(LPDerivation.getProblemStatement(taggedrecord));
    }
 }

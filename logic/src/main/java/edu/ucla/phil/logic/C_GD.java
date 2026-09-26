@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JToggleButton;
 import javax.swing.border.BevelBorder;
 
-class C_GD extends JToggleButton implements C_n_A {
+class C_GD extends JToggleButton implements LogicConstants {
    String f357;
    C_k_E f358;
    Point f359;
@@ -20,7 +20,7 @@ class C_GD extends JToggleButton implements C_n_A {
       super("");
       this.f358 = c_k_e;
       this.f359 = point;
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
       this.f362 = false;
       this.f360 = new C_VF(this, false);
       this.f361 = new C_VF(this, true);

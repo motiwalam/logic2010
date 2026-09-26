@@ -27,18 +27,18 @@ class C_JE extends C_v_A implements Printable {
    }
 
    static C_JE m726(Reader reader, int i) {
-      return reader == null ? null : m727(new C_XD(reader), i);
+      return reader == null ? null : m727(new TaggedRecord(reader), i);
    }
 
-   static C_JE m727(C_XD c_xd, int i) {
+   static C_JE m727(TaggedRecord taggedrecord, int i) {
       C_JE c_je = null;
       C_JE c_je1 = null;
-      int j = c_xd.m1482();
+      int j = taggedrecord.m1482();
       String s = "";
 
       for (int k = 0; k < j; k++) {
-         char c0 = c_xd.m1474(k);
-         String s1 = c_xd.m1483(k);
+         char c0 = taggedrecord.tagAt(k);
+         String s1 = taggedrecord.valueAt(k);
          if (c0 == '$') {
             s = s + s1;
          } else if (c0 == '+' || c0 == '-') {
@@ -113,7 +113,7 @@ class C_JE extends C_v_A implements Printable {
          this.m731();
          this.m728(dimension.width);
          Frame frame = new Frame("This is necessary because AFC is offscreen challenged");
-         frame.setFont(LogicProgram.m1029(b0 * 10 / 72));
+         frame.setFont(LogicProgram.getFont(b0 * 10 / 72));
          frame.setForeground(Color.black);
          frame.setBackground(Color.white);
          frame.setLocation(0, -1024);
@@ -158,7 +158,7 @@ class C_JE extends C_v_A implements Printable {
          l = vector1.size();
 
          for (int j2 = 1; j2 <= l; j2++) {
-            if (LogicProgram.f573) {
+            if (LogicProgram.printingEnabled) {
                c_t_b.f1374.setName("Page " + j2 + " of " + l);
                c_t_b.invalidate();
                graphics2d.setClip(0, 0, dimension.width, j);
@@ -169,7 +169,7 @@ class C_JE extends C_v_A implements Printable {
                graphics2d.setClip(rectangle1);
                this.paint(graphics2d);
                RepaintManager.currentManager((JComponent)this).setDoubleBufferingEnabled(true);
-            } else if (LogicProgram.f572) {
+            } else if (LogicProgram.debug) {
                System.out.println("Page number:     " + j2);
                System.out.println("Page dimensions: " + dimension.width + "x" + dimension.height);
                System.out.println("Page resolution: " + b0 + " dpi");
@@ -178,7 +178,7 @@ class C_JE extends C_v_A implements Printable {
          }
 
          frame.dispose();
-         return LogicProgram.f573 ? 0 : 1;
+         return LogicProgram.printingEnabled ? 0 : 1;
       }
    }
 

@@ -2,7 +2,7 @@ package edu.ucla.phil.logic;
 
 import java.awt.BorderLayout;
 
-class C_B extends C_TA implements C_LC {
+class C_B extends CellPanel implements C_LC {
    C_VF f145;
    C_VF f146;
    C_CC f147;
@@ -22,7 +22,7 @@ class C_B extends C_TA implements C_LC {
       }
 
       if (c_vf != null && c_vf1 != null) {
-         this.add(this.f147 = new C_CC(20, 2, false, C_n_A.bruinGold), "Center");
+         this.add(this.f147 = new C_CC(20, 2, false, LogicConstants.bruinGold), "Center");
       }
 
       if ((this.f146 = c_vf1) != null) {

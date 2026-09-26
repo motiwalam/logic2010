@@ -9,8 +9,8 @@ import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-class C_BC extends C_LB implements PropertyChangeListener, C_n_A, C_j_F {
-   static String[] f237 = LogicProgram.f596;
+class C_BC extends SizedPanel implements PropertyChangeListener, LogicConstants, C_j_F {
+   static String[] f237 = LogicProgram.symbols;
    C_VF f238;
    C_DD f239;
    C_NC f240;
@@ -59,7 +59,7 @@ class C_BC extends C_LB implements PropertyChangeListener, C_n_A, C_j_F {
             C_n_F c_n_f1 = this.m388(c_n_f2.m1974(true));
             return c_n_f2.m1981(-c_n_f1.f1316[0]);
          } else {
-            C_n_F c_n_f = this.f239.f278 instanceof C_q_F ? this.f239.m469() : this.f239.m468();
+            C_n_F c_n_f = this.f239.f278 instanceof ConnectiveFormula ? this.f239.m469() : this.f239.m468();
             C_DD.m487(c_dd.f286, c_dd.f287, c_n_f, false);
             return c_n_f.m1981(-this.f239.m459()[0]);
          }
@@ -108,7 +108,7 @@ class C_BC extends C_LB implements PropertyChangeListener, C_n_A, C_j_F {
          return null;
       } else {
          C_DD c_dd = this.f239.m471(true);
-         C_n_F c_n_f = this.f239.f278 instanceof C_q_F ? this.f239.m469() : this.f239.m468();
+         C_n_F c_n_f = this.f239.f278 instanceof ConnectiveFormula ? this.f239.m469() : this.f239.m468();
          C_DD.m487(c_dd.f286, c_dd.f287, c_n_f, false);
          return c_n_f;
       }

@@ -2,7 +2,7 @@ package edu.ucla.phil.logic;
 
 import java.awt.BorderLayout;
 
-class C_f_E extends C_LB {
+class C_f_E extends SizedPanel {
    C_s_B f1118;
 
    C_f_E(String s) {

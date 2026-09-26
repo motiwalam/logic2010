@@ -9,6 +9,6 @@ class C_NE extends JCheckBox {
 
    C_NE(String s) {
       super(s, new C_g_F());
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
    }
 }

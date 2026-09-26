@@ -5,7 +5,7 @@ import java.util.Vector;
 class C_y_E {
    Vector f1461 = null;
    C_n_F f1462 = null;
-   C_BE f1463 = null;
+   ProblemSelector f1463 = null;
 
    C_y_E() {
    }
@@ -23,10 +23,10 @@ class C_y_E {
 
       if (i == -1) {
          ((C_RD)object).m1204(s, this.f1461 = new Vector(), this.f1462 = new C_n_F(), flag);
-         this.f1463 = new C_BE().m401();
+         this.f1463 = new ProblemSelector().m401();
       } else {
          ((C_RD)object).m1204(s.substring(0, i), this.f1461 = new Vector(), this.f1462 = new C_n_F(), flag);
-         this.f1463 = new C_BE(s.substring(i + 1));
+         this.f1463 = new ProblemSelector(s.substring(i + 1));
       }
    }
 

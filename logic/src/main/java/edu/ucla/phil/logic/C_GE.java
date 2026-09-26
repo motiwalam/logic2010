@@ -81,7 +81,7 @@ class C_GE {
    }
 
    static int[] m649(String s) {
-      C_e_ c_e_ = new C_e_();
+      ExpressionPath expressionpath = new ExpressionPath();
       int i = s.length();
       int j = 0;
 
@@ -89,7 +89,7 @@ class C_GE {
          char c0 = s.charAt(k);
          if (!Character.isDigit(c0)) {
             if (k > j) {
-               m650(c_e_, s.substring(j, k));
+               m650(expressionpath, s.substring(j, k));
             }
 
             j = k + 1;
@@ -97,16 +97,16 @@ class C_GE {
       }
 
       if (i > j) {
-         m650(c_e_, s.substring(j, i));
+         m650(expressionpath, s.substring(j, i));
       }
 
-      return c_e_.m1752();
+      return expressionpath.m1752();
    }
 
-   private static void m650(C_e_ c_e_, String s) {
+   private static void m650(ExpressionPath expressionpath, String s) {
       int i = Integer.parseInt(s);
       if (i >= 0 && i <= 255) {
-         c_e_.m1749(i);
+         expressionpath.m1749(i);
       } else {
          throw new IllegalArgumentException();
       }

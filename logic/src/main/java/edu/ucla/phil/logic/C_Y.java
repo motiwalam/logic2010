@@ -5,8 +5,8 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 class C_Y extends C_h_F {
-   C_Y(C_RF c_rf, int i, Frame frame, Hashtable hashtable) {
-      super(c_rf, i, frame, 1, hashtable);
+   C_Y(Expression expression, int i, Frame frame, Hashtable hashtable) {
+      super(expression, i, frame, 1, hashtable);
    }
 
    @Override

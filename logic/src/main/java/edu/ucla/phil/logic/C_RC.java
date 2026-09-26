@@ -4,7 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class C_RC extends C_TA implements ActionListener, C_LC {
+class C_RC extends CellPanel implements ActionListener, C_LC {
    int f733;
    C_ZE f734;
    C_g_C f735;
@@ -32,18 +32,18 @@ class C_RC extends C_TA implements ActionListener, C_LC {
    public void actionPerformed(ActionEvent actionevent) {
       if (actionevent.getSource() == this.f735) {
          if (this.f733 == 0) {
-            C_c_B c_c_b = this.f736.f1203.m1957();
-            if (this.f736.f1203.f1290 = c_c_b.f427 == null) {
+            ErrorRef errorref = this.f736.f1203.m1957();
+            if (this.f736.f1203.f1290 = errorref.f427 == null) {
                this.f736.f1203.m1951();
             } else if (!this.f736.f1200.checkMessagesDisabled) {
-               C_UA.m1329(C_FE.m411(c_c_b.f427), c_c_b.f428, null, null);
+               MessageDialog.showMessage(C_FE.get(errorref.f427), errorref.f428, null, null);
             }
          } else if (this.f733 == 1) {
-            C_c_B c_c_b1 = this.f736.f1203.m1956();
-            if (this.f736.f1219 = c_c_b1.f427 == null) {
+            ErrorRef errorref1 = this.f736.f1203.m1956();
+            if (this.f736.f1219 = errorref1.f427 == null) {
                this.f736.m1911();
             } else if (!this.f736.f1200.checkMessagesDisabled) {
-               C_UA.m1329(C_FE.m411(c_c_b1.f427), c_c_b1.f428, null, null);
+               MessageDialog.showMessage(C_FE.get(errorref1.f427), errorref1.f428, null, null);
             }
          }
       }

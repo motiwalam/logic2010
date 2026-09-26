@@ -57,7 +57,7 @@ class C_b_A extends JButton implements ActionListener, MenuKeyListener {
          this.setMargin(new Insets(0, 0, 0, 0));
       }
 
-      this.setFont(LogicProgram.m1030(LogicProgram.f539, 1));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize, 1));
       this.f986 = null;
       this.f987 = null;
       this.f993 = false;

@@ -4,26 +4,26 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import javax.swing.border.EmptyBorder;
 
-class C_SA extends C_LB implements C_h_B, C_F {
-   static String[] f744 = LogicProgram.f596;
+class C_SA extends SizedPanel implements C_h_B, C_F {
+   static String[] f744 = LogicProgram.symbols;
    LPInvalidation f745;
-   C_LB f746;
-   C_LB f747;
-   C_LB f748;
-   C_LB f749;
-   C_LB f750;
-   C_LB f751;
-   C_IF f752;
+   SizedPanel f746;
+   SizedPanel f747;
+   SizedPanel f748;
+   SizedPanel f749;
+   SizedPanel f750;
+   SizedPanel f751;
+   FormulaEntryField f752;
    C_b_A f753;
    C_ZE f754;
    C_ZE f755;
 
    C_SA(LPInvalidation lpinvalidation) {
       this.f745 = lpinvalidation;
-      this.add(this.f746 = new C_LB(), "North");
-      this.f746.add(this.f747 = new C_LB(), "Center");
-      this.f746.add(this.f748 = new C_LB(), "South");
-      this.f747.add(this.f751 = new C_LB(), "West");
+      this.add(this.f746 = new SizedPanel(), "North");
+      this.f746.add(this.f747 = new SizedPanel(), "Center");
+      this.f746.add(this.f748 = new SizedPanel(), "South");
+      this.f747.add(this.f751 = new SizedPanel(), "West");
       this.f751.setLayout(new FlowLayout(0, 0, 0));
       this.f751.setBorder(new EmptyBorder(2, 0, 0, 0));
       this.f751.add(this.f754 = new C_ZE("Size of the Universe: "));
@@ -32,11 +32,11 @@ class C_SA extends C_LB implements C_h_B, C_F {
       this.f753.m1659(this);
       this.f748.add(this.f755 = new C_ZE(), "West");
       this.f755.setBorder(new EmptyBorder(0, 0, 2, 0));
-      this.add(this.f749 = new C_LB(), "Center");
-      this.f749.add(this.f752 = new C_IF(true), "North");
+      this.add(this.f749 = new SizedPanel(), "Center");
+      this.f749.add(this.f752 = new FormulaEntryField(true), "North");
       this.f752.setBackground(bruinWhite);
       this.f752.setForeground(bruinBlack);
-      this.f749.add(this.f750 = new C_LB(), "Center");
+      this.f749.add(this.f750 = new SizedPanel(), "Center");
       this.f750.setLayout(new C_m_A());
       this.f750.setBorder(new EmptyBorder(2, 0, 2, 0));
       this.m1279();

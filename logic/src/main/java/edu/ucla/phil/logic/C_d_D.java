@@ -5,11 +5,11 @@ import javax.swing.JLabel;
 class C_d_D extends JLabel {
    C_d_D(String s) {
       super(s);
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
    }
 
    C_d_D(String s, int i) {
       super(s);
-      this.setFont(LogicProgram.m1030(LogicProgram.f539, i));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize, i));
    }
 }

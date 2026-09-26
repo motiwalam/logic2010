@@ -21,7 +21,7 @@ public class C_a_B extends JTextField {
       this.setBackground(null);
       this.setForeground(null);
       this.setBorder(BorderFactory.createEmptyBorder());
-      this.setFont(LogicProgram.m1029(LogicProgram.f539));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize));
       this.getDocument().addUndoableEditListener(this.f968 = new UndoManager());
       this.enableEvents(8L);
    }

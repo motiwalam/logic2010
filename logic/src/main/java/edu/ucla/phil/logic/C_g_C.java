@@ -9,7 +9,7 @@ class C_g_C extends JButton {
       super(s);
       this.setBackground(null);
       this.setForeground(null);
-      this.setFont(LogicProgram.m1030(LogicProgram.f539, 1));
+      this.setFont(LogicProgram.getFont(LogicProgram.fontSize, 1));
       this.setBorder(new BevelBorder(0));
       this.setMaximumSize(new Dimension(2147483647, 0));
    }

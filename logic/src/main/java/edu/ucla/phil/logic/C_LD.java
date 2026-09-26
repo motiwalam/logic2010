@@ -2,8 +2,8 @@ package edu.ucla.phil.logic;
 
 import java.util.Hashtable;
 
-class C_LD implements C_v_ {
-   C_0C f506;
+class C_LD implements ResponseHandler {
+   ServerSession f506;
    int f507;
    int f508;
    int f509;
@@ -19,8 +19,8 @@ class C_LD implements C_v_ {
    String[] f519;
    String f520;
 
-   public C_LD(C_0C c_0c, int i, int j, int k) {
-      this.f506 = c_0c;
+   public C_LD(ServerSession serversession, int i, int j, int k) {
+      this.f506 = serversession;
       this.f507 = i;
       this.f508 = j;
       this.f509 = k;
@@ -42,7 +42,7 @@ class C_LD implements C_v_ {
    }
 
    @Override
-   public C_c_B m5() {
+   public ErrorRef m5() {
       return this.f506.m5();
    }
 }

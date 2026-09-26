@@ -4,14 +4,14 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.util.Vector;
 
-class C_VE extends C_LB implements C_v_D {
+class C_VE extends SizedPanel implements C_v_D {
    int f835;
    String f836;
    C_ZE f837;
    C_f_A f838;
    C_d_C parent;
    Container f839;
-   static String[] f840 = LogicProgram.f596;
+   static String[] f840 = LogicProgram.symbols;
 
    C_VE(C_d_C c_d_c, int i) {
       this(c_d_c, i, null, null);
@@ -65,13 +65,13 @@ class C_VE extends C_LB implements C_v_D {
          this.f839.setEnabled(true);
          this.revalidate();
          if (c_d_c1.f1048 == 11) {
-            C_e_ c_e_ = new C_e_();
-            if (C_d_C.m1733(c_d_c1.m1684(), vector1, vector, c_e_) == null) {
-               for (int i = 0; i < c_e_.f1062; i++) {
+            ExpressionPath expressionpath = new ExpressionPath();
+            if (C_d_C.m1733(c_d_c1.m1684(), vector1, vector, expressionpath) == null) {
+               for (int i = 0; i < expressionpath.depth; i++) {
                   C_d_C c_d_c2 = c_d_c;
                   C_d_C c_d_c3 = c_d_c1;
                   int j = vector.size();
-                  int k = c_e_.f1063[i];
+                  int k = expressionpath.indexes[i];
 
                   while (j > k && (c_d_c2 = c_d_c2.m1688()) != null) {
                      c_d_c3 = c_d_c3.m1688();

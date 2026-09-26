@@ -3,15 +3,15 @@ package edu.ucla.phil.logic;
 import java.io.File;
 
 class C_s_E extends C_o_ {
-   C_p_ f1368;
+   ServerUrl f1368;
    File f1369;
-   C_i_B f1370;
+   HttpDownloader f1370;
 
-   C_s_E(C_p_ c_p_, File file1, C_i_B c_i_b, C_r_A c_r_a) {
-      super(c_r_a, new Boolean(false));
-      this.f1368 = c_p_;
+   C_s_E(ServerUrl serverurl, File file1, HttpDownloader httpdownloader, NetworkTask networktask) {
+      super(networktask, new Boolean(false));
+      this.f1368 = serverurl;
       this.f1369 = file1;
-      this.f1370 = c_i_b;
+      this.f1370 = httpdownloader;
    }
 
    @Override

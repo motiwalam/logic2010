@@ -205,7 +205,7 @@ class C_MA extends JPopupMenu implements ActionListener, C_v_D {
          int j = c_x_e1.getSelectionEnd();
          if (j > i1) {
             if (s.equals(editMenu[0])) {
-               C_p_A.m2024(c_x_e1.getSelectedText());
+               EditableTextPane.m2024(c_x_e1.getSelectedText());
             }
 
             String s1 = c_x_e1.getText();
@@ -218,13 +218,13 @@ class C_MA extends JPopupMenu implements ActionListener, C_v_D {
       } else if (s.equals(editMenu[1])) {
          String s2 = this.f609.f1438.getSelectedText();
          if (s2 != null && s2.length() > 0) {
-            C_p_A.m2024(s2);
+            EditableTextPane.m2024(s2);
          } else {
             Toolkit.getDefaultToolkit().beep();
          }
       } else if (s.equals(editMenu[2])) {
          C_x_E c_x_e = this.f609.f1438;
-         String s3 = C_p_A.m2025();
+         String s3 = EditableTextPane.m2025();
          if (s3 == null) {
             s3 = "";
          }

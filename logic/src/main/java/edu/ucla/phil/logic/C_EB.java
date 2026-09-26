@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import javax.swing.Box;
 
-class C_EB extends C_TA implements C_LC {
+class C_EB extends CellPanel implements C_LC {
    C_ZE f291;
    C_AD f292;
    LPParsing f293;

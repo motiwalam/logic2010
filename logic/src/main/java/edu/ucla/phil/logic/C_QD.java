@@ -2,18 +2,18 @@ package edu.ucla.phil.logic;
 
 import java.util.Vector;
 
-class C_QD extends C_D implements C_v_D {
-   static String[] f699 = LogicProgram.f596;
+class C_QD extends DialogHandler implements C_v_D {
+   static String[] f699 = LogicProgram.symbols;
 
    C_QD(String s) {
       super(s);
    }
 
    @Override
-   boolean m451(C_UA c_ua) {
-      String s = this.m450(c_ua);
+   boolean m451(MessageDialog messagedialog) {
+      String s = this.m450(messagedialog);
       LPSymbolizer lpsymbolizer = (LPSymbolizer)this.m449("symbolizer");
-      C_YA c_ya = (C_YA)this.m449("list");
+      ProblemListView problemlistview = (ProblemListView)this.m449("list");
       if (lpsymbolizer == null) {
          return true;
       } else if (s == null) {
@@ -21,33 +21,33 @@ class C_QD extends C_D implements C_v_D {
       } else if (s.equalsIgnoreCase("ok")) {
          return true;
       } else if (s.equalsIgnoreCase("add")) {
-         return this.m1188(lpsymbolizer, c_ya);
+         return this.m1188(lpsymbolizer, problemlistview);
       } else if (s.equalsIgnoreCase("load")) {
-         int[] aint = c_ya.m1533(null);
+         int[] aint = problemlistview.m1533(null);
          if (aint.length != 1) {
             return false;
          } else {
-            C_XD c_xd = new C_XD((String)lpsymbolizer.problem.f1056.elementAt(aint[0]));
-            lpsymbolizer.problem.m1705(c_xd, false, false);
+            TaggedRecord taggedrecord = new TaggedRecord((String)lpsymbolizer.problem.f1056.elementAt(aint[0]));
+            lpsymbolizer.problem.m1705(taggedrecord, false, false);
             return true;
          }
       } else if (s.equalsIgnoreCase("delete")) {
-         return this.m1189(lpsymbolizer, c_ya);
+         return this.m1189(lpsymbolizer, problemlistview);
       } else if (s.equalsIgnoreCase("replace")) {
-         this.m1189(lpsymbolizer, c_ya);
-         return this.m1188(lpsymbolizer, c_ya);
+         this.m1189(lpsymbolizer, problemlistview);
+         return this.m1188(lpsymbolizer, problemlistview);
       } else if (s.equalsIgnoreCase("warn")) {
-         C_UA.m1329(C_h_E.m411("symnot006"), null, null, null);
+         MessageDialog.showMessage(C_h_E.get("symnot006"), null, null, null);
          return false;
       } else if (s.equalsIgnoreCase("help")) {
-         C_UA.m1329(C_h_E.m411("symnot007"), null, null, null);
+         MessageDialog.showMessage(C_h_E.get("symnot007"), null, null, null);
          return false;
       } else {
          return false;
       }
    }
 
-   private boolean m1188(LPSymbolizer lpsymbolizer, C_YA c_ya) {
+   private boolean m1188(LPSymbolizer lpsymbolizer, ProblemListView problemlistview) {
       if (lpsymbolizer.problem.f1051 != null || lpsymbolizer.saveProblems(lpsymbolizer.saveProblem()) && lpsymbolizer.problem.f1051 != null) {
          int i = 1;
 
@@ -65,9 +65,9 @@ class C_QD extends C_D implements C_v_D {
          lpsymbolizer.problem.f1058 = flag;
          LPSymbolizer.userKey.put(s, s2);
          if (lpsymbolizer.problem.f1054 != null && lpsymbolizer.problem.f1054 != "") {
-            lpsymbolizer.problem.f1054 = lpsymbolizer.problem.f1054 + "." + C_OA.m1139(s, "\\.");
+            lpsymbolizer.problem.f1054 = lpsymbolizer.problem.f1054 + "." + DelimitedTokenizer.m1139(s, "\\.");
          } else {
-            lpsymbolizer.problem.f1054 = C_OA.m1139(s, "\\.");
+            lpsymbolizer.problem.f1054 = DelimitedTokenizer.m1139(s, "\\.");
          }
 
          if (lpsymbolizer.problem.f1056 == null) {
@@ -79,8 +79,8 @@ class C_QD extends C_D implements C_v_D {
          C_QC c_qc = new C_QC(s3, 2);
          c_qc.m1187(s3);
          c_qc.setOpaque(true);
-         c_ya.m1526(c_qc);
-         c_ya.validate();
+         problemlistview.m1526(c_qc);
+         problemlistview.validate();
          m1190(lpsymbolizer);
          if (lpsymbolizer.problem.m1714() == 0) {
             lpsymbolizer.titlePanel.m1825("Answer Not Available");
@@ -94,26 +94,26 @@ class C_QD extends C_D implements C_v_D {
       }
    }
 
-   private boolean m1189(LPSymbolizer lpsymbolizer, C_YA c_ya) {
-      int[] aint = c_ya.m1533(null);
+   private boolean m1189(LPSymbolizer lpsymbolizer, ProblemListView problemlistview) {
+      int[] aint = problemlistview.m1533(null);
       int i = aint.length;
 
       for (int j = i - 1; j >= 0; j--) {
-         c_ya.f901.remove(aint[j]);
+         problemlistview.f901.remove(aint[j]);
          lpsymbolizer.problem.f1056.removeElementAt(aint[j]);
       }
 
-      C_OA c_oa = new C_OA("\\.");
-      c_oa.m1132(lpsymbolizer.problem.f1054);
+      DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\.");
+      delimitedtokenizer.m1132(lpsymbolizer.problem.f1054);
       int k = 0;
       int l = 0;
       String s = null;
 
       while (true) {
-         String s1 = c_oa.m1135();
+         String s1 = delimitedtokenizer.m1135();
          if (s1 == null) {
             lpsymbolizer.problem.f1054 = s;
-            c_ya.validate();
+            problemlistview.validate();
             m1190(lpsymbolizer);
             if (lpsymbolizer.problem.m1714() == 0) {
                lpsymbolizer.titlePanel.m1825("Answer Not Available");

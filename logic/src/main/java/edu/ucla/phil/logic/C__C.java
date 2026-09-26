@@ -2,7 +2,7 @@ package edu.ucla.phil.logic;
 
 import java.util.Hashtable;
 
-class C__C extends C_f_F {
+class C__C extends ProblemEntry {
    int f927 = -1;
    static Hashtable f928 = null;
 
@@ -14,7 +14,7 @@ class C__C extends C_f_F {
    }
 
    void m1582() {
-      this.f1120 = 0;
+      this.state = 0;
       this.f927 = -1;
    }
 

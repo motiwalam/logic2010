@@ -2,21 +2,21 @@ package edu.ucla.phil.logic;
 
 import java.util.Hashtable;
 
-class C_XA implements C_v_ {
+class C_XA implements ResponseHandler {
    String f864 = C_GE.m644(".");
    int f865;
    String f866;
-   C_0C f867;
+   ServerSession f867;
    String f868;
    String f869;
    String f870;
    int f871;
    C_w_D[] f872;
 
-   C_XA(int i, C_0C c_0c, String s) {
+   C_XA(int i, ServerSession serversession, String s) {
       this.f865 = i;
       this.f866 = s;
-      this.f867 = c_0c;
+      this.f867 = serversession;
       this.m1461();
    }
 
@@ -114,16 +114,16 @@ class C_XA implements C_v_ {
       }
    }
 
-   boolean m1468(int i, C_x_A c_x_a, C_r_A c_r_a) {
+   boolean m1468(int i, BusyIndicator busyindicator, NetworkTask networktask) {
       boolean flag = true;
       int j = this.m1463();
-      if (c_x_a != null) {
-         c_x_a.m2162(true);
+      if (busyindicator != null) {
+         busyindicator.m2162(true);
       }
 
       while (j > i) {
          flag = false;
-         if (!this.m1467() || !C_KC.m893(this, c_x_a, c_r_a) || !this.m1465()) {
+         if (!this.m1467() || !ServerConnection.m893(this, busyindicator, networktask) || !this.m1465()) {
             break;
          }
 
@@ -131,8 +131,8 @@ class C_XA implements C_v_ {
          j--;
       }
 
-      if (c_x_a != null) {
-         c_x_a.m2162(false);
+      if (busyindicator != null) {
+         busyindicator.m2162(false);
       }
 
       return flag;
@@ -144,7 +144,7 @@ class C_XA implements C_v_ {
    }
 
    @Override
-   public C_c_B m5() {
+   public ErrorRef m5() {
       return this.f867.m5();
    }
 }

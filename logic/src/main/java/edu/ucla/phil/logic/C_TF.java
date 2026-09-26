@@ -34,7 +34,7 @@ class C_TF implements C_v_D {
 
       for (int j = 0; j < i; j++) {
          if (aint[j] == 2 || this.f780[j] == 2 || this.f780[j] == aint[j]) {
-            c_d_c.m1686(j).m1704(new C_XD(this.f781[j]), false);
+            c_d_c.m1686(j).m1704(new TaggedRecord(this.f781[j]), false);
          }
       }
    }
