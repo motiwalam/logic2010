@@ -16,7 +16,7 @@ export JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore=$INSTALL/certs/truststore.j
 # Offline by default (the copied prefs identify the real user; don't let experiments
 # talk to the course server). LOGIC_ONLINE=1 to allow network access.
 if [ -z "${LOGIC_ONLINE:-}" ]; then
-    JAVA_TOOL_OPTIONS+=" -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=9 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=9"
+    JAVA_TOOL_OPTIONS+=" -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=9 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=9 -DsocksProxyHost=127.0.0.1 -DsocksProxyPort=9"
 fi
 exec java -Droot.dir="$ROOT" -Dprog.dir="$ROOT/Contents/Java" \
      -Dconfig.dir="$ROOT/Contents/Resources" -Dlink.dir="$ROOT/Contents/Resources" \
