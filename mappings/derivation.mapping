@@ -1,0 +1,500 @@
+# derivation.mapping -- names for the Derivation module (LPDerivation) and its UI.
+# Class lines use the ORIGINAL obfuscated name; the current placeholder is in the comment above.
+
+## ---------------------------------------------------------------- derivation tree
+
+# DerivationNode (C_0B): common interface of DerivationBox (a subderivation) and DerivationLine (one row)
+m6 setFormulaText
+m7 getFormulaText
+m8 setAnnotationText
+m9 getAnnotationText
+m10 setMessageText
+m11 showMessage
+m12 showMessage
+m13 clearMessage
+m14 getFormulaEditor
+m15 getAnnotationEditor
+m16 getIndexInBox
+m17 getEnclosingBox
+m18 insertLineAfter
+m19 deleteNode
+m20 moveIntoPreviousBox
+m21 moveOutOfBox
+m22 focusEditor
+m23 getNextNode
+m24 getPreviousNode
+m25 getHeadNode
+m26 isShowLine
+m27 isCancelLine
+m28 areEnclosingBoxesExpanded
+m29 expandEnclosingBoxes
+m30 getLineNumber
+m31 getBoundsInProblemPanel
+m32 findLine
+m33 renumberLines
+m34 layoutColumns
+m35 applyColors
+m36 getMaxBoxDepth
+m37 getBoxDepth
+m38 countLines
+m39 addReferrer
+m40 removeReferrer
+m41 detachReferrers
+m42 retargetReferrers
+m43 checkSyntax
+m44 getFormula
+m45 refreshReferenceNumbers
+m46 verify
+m47 encodeWork
+m48 encodeMessages
+
+# DerivationBox (C__): a (sub)derivation: a Show line, body nodes, and optionally a box-and-cancel line
+f915 module
+f916 parentBox
+f917 showLine
+f918 cancelLine
+f919 bracketBounds
+f920 assumptionType
+f921 boxVariables
+f922 strategyConsistent
+f923 assumedSide
+f924 DEBUG
+m1549 drawBracket
+m1552 drawBracket
+m1550 expandAll
+m1551 highlightShowLabel
+m1556 insertLine
+m1557 insertBox
+m1558 renumberAll
+m1559 resetVariables
+m1560 getNode
+m1561 showMessage
+m1562 clearMessage
+m1563 indexOfChild
+m1564 ensureFocusVisible
+m1565 addShowVariablesToModule
+m1566 exportVariablesToParent
+m1567 isUniversalVariableFree
+
+# DerivationLine (C_G): one row: line number, formula editor, annotation editor, message area
+f317 box
+f318 rowPanel
+f319 formulaRow
+f320 annotationRow
+f321 messageRow
+f322 showLabel
+f323 formulaEditor
+f324 annotationEditor
+f325 messagePane
+f326 messageButton
+f327 numberLabel
+f328 references
+f329 referrers
+f330 lineNumber
+f331 messagePhase
+f332 formula
+f333 syntaxOk
+f334 readyToCancel
+f335 errorHighlighted
+f336 justifications
+f337 message
+f338 unusedFlag
+f339 messageText
+f340 commandLog
+f341 SYMBOLS
+m545 isDerivationLine
+m546 stripComment
+m548 countLinesBelow
+m549 showMessage
+m550 showMessage
+m551 showMessage
+m552 showMessage
+m553 showMessage
+m554 showMessage
+m555 flagEnclosingBox
+m556 setMessageButtonParam
+m557 clearMessage
+m558 getEditorSelectionStart
+m559 getEditorSelectionEnd
+m560 getEditorCaretPosition
+m561 setEditorSelection
+m562 setEditorCaretPosition
+m563 commitEdit
+m564 applyShowPrefix
+m565 canUse
+m566 indentIntoOpenBox
+m567 outdentFollowingLines
+m568 suppressEditorFocusLoss
+m569 restoreEditorFocusLoss
+m570 toggleShow
+m571 makeShowLine
+m572 makePlainLine
+m573 toggleBoxAndCancel
+m574 boxAndCancel
+m575 uncancel
+m576 isLastInBox
+m577 deleteFollowingLines
+m578 updateFont
+m579 updateColors
+m580 isShowLineOfFocusedBox
+m581 setLineNumber
+m582 getRelativeNode
+m583 getRelativeNode
+m584 isOperatorChar
+m585 resolveRelativeReferences
+m586 parseReferences
+m587 parseReferences
+m588 addReference
+m589 addReference
+m590 addReference
+m591 removeReference
+m592 clearReferences
+m593 checkRedundantShow
+m594 parseFormula
+m595 checkLine
+m596 collectVariables
+m597 checkNotAtTopLevel
+m598 encodeJustifications
+
+# C_AA: a line-number reference inside an annotation (source line -> cited node)
+class AA LineReference
+f116 offset
+f117 length
+f118 target
+f119 source
+
+# C_k_A: something that can supply values for <param> placeholders in derivation messages
+class kA MessageParamSource
+m547 getParamValue
+
+# C_DF: layout of a DerivationBox; also computes the box bracket rectangle
+class DF DerivationBoxLayout
+f290 indentGap
+
+# C_ZD: small arrow button that expands/collapses a collapsible container (C_v_A)
+class ZD ExpandToggleButton
+f909 target
+m1545 isExpanded
+m1546 getTarget
+m1547 setExpanded
+
+# C_g_B: expand/collapse button of a DerivationBox
+class gB BoxToggleButton
+
+# C_t_E: "Show"/"Problem:" label and line-number label; can be struck through (canceled)
+class tE LineLabel
+f1377 canceled
+f1378 line
+f1379 instanceCount
+f1380 serial
+m2089 copyLabel
+m2090 setCanceled
+m2091 drawStrikeout
+
+# C_M: SizedPanel used throughout the derivation view; paints the box bracket beside empty cells
+class M LinePanel
+f608 line
+m1087 paintBoxBracket
+
+## ---------------------------------------------------------------- editing
+
+# C_l_E: the text editor for a line's formula or annotation; handles navigation/edit keys
+class lE DerivationLineEditor
+f1255 savedSelectionStart
+f1256 savedSelectionEnd
+f1257 savedCaretPosition
+f1258 line
+f1259 ignoreFocusLoss
+f1260 unusedCounter
+f1261 UNUSED_FLAG
+m1928 handleKeyTyped
+m1929 handleKeyPressed
+m1930 saveSelection
+m1931 restoreSelection
+m1932 adjustSavedSelection
+f1262 outer
+
+# C_BA: symbol/command keypad popup for a DerivationLineEditor
+class BA DerivationKeypad
+f235 editor
+f236 unusedFlag
+m374 getTitleFor
+
+# C_JF: grid of keypad buttons; also the static caret-movement helpers on a KeypadTarget
+class JF KeypadGrid
+f439 target
+f440 SYMBOLS
+m732 setToolTips
+m733 moveCaretHome
+m734 moveCaretEnd
+m735 moveCaretRight
+m736 moveCaretLeft
+m737 selectAllText
+m738 insertText
+m739 insertText
+m740 deleteBackward
+m741 deleteForward
+
+# C_q_D: one keypad button
+class qD KeypadKey
+f1342 grid
+
+# C_SB: the "?" button next to a line message; opens the explanation dialog
+class SB MessageDetailsButton
+f756 explanation
+f757 line
+f758 dialogBounds
+f759 handler
+m1281 prepareExplanation
+m1282 setHandlerParam
+m1283 reset
+
+## ---------------------------------------------------------------- substitution queries (term selection)
+
+# C_h_F: read-only formula field in which the user highlights term occurrences and presses Alt+1
+class hF TermOccurrenceSelector
+f1164 placeholderCount
+f1165 undoStack
+f1166 selectedTerms
+f1167 selectionCounts
+f1168 listeners
+f1169 messageParams
+f1170 SYMBOLS
+m927 reportNotWellFormed
+m928 reportNotATerm
+m929 reportNotStandaloneTerm
+m930 reportBoundOccurrence
+m931 reportDifferentTerm
+m1843 reportNothingSelected
+m1845 addSubstitutionListener
+m1846 removeSubstitutionListener
+m1847 onFocusGained
+f1171 outer
+
+# C_b_: term selector for EG (generalization) queries
+class b GeneralizationTermSelector
+
+# C_j_E: term selector for LL1/LL2 (Leibniz law) queries
+class jE Leibniz12TermSelector
+f1192 extraParams
+
+# C_KE: term selector for LL3/LL4 (Leibniz law) queries
+class KE Leibniz34TermSelector
+f498 extraParams
+f499 ruleLetter
+
+# C_Y: term selector for EL (Euler) queries
+class Y EulerTermSelector
+
+# C_s_: listener told about placeholder values chosen in a TermOccurrenceSelector
+class s SubstitutionListener
+m1964 setPlaceholderValue
+m1965 validatePlaceholderValue
+
+# C_n_D: panel showing the current value of each placeholder ({1}: term ...)
+class nD SubstitutionValuesPanel
+f1302 SYMBOLS
+f1303 placeholderCount
+f1304 valueLabels
+
+# C_OC: one undoable placeholder insertion in a TermOccurrenceSelector
+class OC PlaceholderEdit
+f654 placeholderIndex
+f655 position
+f656 replacedText
+
+## ---------------------------------------------------------------- dialogs
+
+# C_KB: static helper with all derivation dialogs (problem choosing, rule queries, advice, rule list)
+class KB DerivationDialogs
+f444 SYMBOLS
+m759 showMessage
+m760 showMessage
+m761 showMessage
+m762 showMessage
+m763 showMessage
+m764 showMessage
+m765 showMessage
+m766 confirmSaveChanges
+m767 confirmDeleteProblem
+m768 confirmDeleteWork
+m769 openNextProblem
+m770 chooseProblem
+m771 chooseProblemsToSubmit
+m772 chooseProblemsToUpload
+m773 deleteProblemsDialog
+m774 chooseProblemsToPrint
+m775 enterSubmittedProblem
+m776 createProblemList
+m777 enterUserProblem
+m778 chooseFormula
+m779 showProgramHelp
+m780 chooseRuleInstance
+m781 chooseSideToShow
+m782 instanceSchemeQuery
+m783 generalizationTermQuery
+m784 existentialVarQuery
+m785 universalTermQuery
+m786 dummyVarQuery
+m787 termSelectionQuery
+m788 leibniz12TermQuery
+m789 leibniz34TermQuery
+m790 eulerTermQuery
+m791 interchangeFormulaQuery
+m792 interchangeRuleQuery
+m793 applyInterchangeRule
+m794 applyInterchangeRule
+m795 cieRuleQuery
+m796 askProblemName
+m797 showStrategicAdvice
+m798 showInferenceRules
+m799 addRuleRows
+m800 addTheoremRows
+m801 wrapInCell
+
+# C_d_F: the non-modal "Inference Rules" window (LPDerivation.ruleQuery)
+class dF RuleListDialog
+
+# C_q_B: panel of stacked labels, one per text line
+class qB MultiLineLabel
+f1341 focusableFlag
+m2031 create
+m2032 create
+m2033 setLabelFont
+m2034 setLabelForeground
+m2035 setLabelBackground
+m2036 setLabelsEnabled
+m2037 setLines
+
+# C_z_E: panel that puts every radio button added to it into one ButtonGroup
+class zE RadioGroupPanel
+f1494 buttonGroup
+f1495 unusedBorder
+m2232 registerButton
+m2233 unregisterButton
+
+# C_HC: row with a radio button and an arbitrary component (a formatted choice)
+class HC RadioOptionRow
+f382 radioButton
+f383 content
+m685 setOptionSelected
+
+# C_NA: radio button whose Enter key is forwarded to the enclosing MessageDialog
+class NA DialogRadioButton
+
+# C_JB: container for the Strategic Advice page; reflows it when resized
+class JB AdvicePanel
+f432 scrollPane
+f433 page
+m722 fitToWidth
+
+## ---------------------------------------------------------------- module chrome
+
+# C_PE: button bar at the bottom of a derivation window (Select, User, Check, Print, Rules ...)
+class PE DerivationToolbar
+f674 module
+m1180 create
+m1181 buildButtons
+f675 outer
+f676 outer
+f677 outer
+f678 outer
+f679 outer
+f680 outer
+f681 outer
+f682 outer
+f683 outer
+f684 outer
+f685 outer
+f686 outer
+f687 outer
+f688 outer
+f689 outer
+f690 outer
+f691 outer
+f692 outer
+f693 outer
+f694 outer
+f695 outer
+
+# C_R: the derivation window's Problem/Program menus
+class R DerivationMenuBar
+f713 module
+m1199 createMenuBar
+
+# C_l_A: the centered user comment strip above the derivation (also used by ProblemTitlePanel)
+class lA CommentPanel
+f1225 leftSpacer
+f1226 rightSpacer
+f1227 textHolder
+f1228 textPane
+f1229 columnLayout
+m1916 setComment
+m1917 getComment
+m1918 setTextAlignmentY
+m1919 setCommentColors
+m1920 setColumnWidths
+m1921 setColumnWidths
+
+# LPDerivation$C__A: startup runnable for the derivation module
+class LPDerivation$_A DerivationStartupTask
+
+## ---------------------------------------------------------------- problems, messages, rules
+
+# C_MD: derivation ProblemSet; also indexes which problems prove which rules/theorems
+class MD DerivationProblemSet
+f618 ruleProofIndex
+m1097 indexRuleProofs
+m1100 rebuildUserRules
+
+# C_EE: derivation ProblemEntry
+class EE DerivationProblemEntry
+f297 workProblemNames
+
+# C_n_: derivation message catalogue (derMessages, dererrNNN/dernotNNN/derdlgNNN ids)
+class n DerivationMessage
+f1299 messages
+f1300 linkName
+m1960 format
+m1961 format
+m1962 format
+
+# C_RD: callback that lists the rules/theorems a problem may use
+class RD RuleLister
+m1204 listRules
+
+# C_TB: RuleLister backed by LPDerivation.listRules
+class TB DerivationRuleLister
+
+# C_DB: a user rule ("UR..." problem) whose schema is the problem's argument
+class DB UserRule
+f274 problemName
+m452 getSourceProblems
+m453 loadFromProblem
+
+# C_l_F: a SchematicRule whose conclusion is an earlier derivation line
+class lF LineRule
+f1263 line
+
+# C_ZA: a named formula taken from a derivation line (unused)
+class ZA LineFormula
+f908 line
+
+## ---------------------------------------------------------------- printing
+
+# C_MC: print job for derivation problems with work
+class MC DerivationProblemsPage
+m1096 printProblems
+
+# C_Z: print job for derivation results (Print Results)
+class Z DerivationResultsPage
+m1544 printResults
+
+# C_g_A: print job for the problem list (Print List)
+class gA DerivationStatementsPage
+m1819 printStatements
+
+# C_v_B: print job for a text file such as the Strategic Advice tips
+class vB TextFilePrintJob
+f1420 record
+m2130 printRecord

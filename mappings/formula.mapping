@@ -1,0 +1,744 @@
+# formula.mapping -- formula trees, scheme matching/instantiation, and the two JavaCC parsers.
+# Class lines use the ORIGINAL obfuscated name (see "# classes" in ids.txt).
+
+## ================================================================ expression tree
+
+# Expression (C_RF): abstract n-ary formula/term node (kind, symbol, children); printing, paths, matching
+f742 displayAsInequality
+m1205 format
+m1206 toCanonicalString
+m1207 formatMinimal
+m1208 toFullyParenthesizedString
+m1209 formatFull
+m1210 usesArgumentParens
+m1211 layoutDisplayTree
+m1218 indexOfChildSymbol
+m1219 indexOfChildSymbol
+m1220 getSubexpression
+m1221 getSubexpression
+m1222 getSubexpression
+m1223 findOccurrences
+m1224 findOccurrences
+m1225 findLetterOccurrences
+m1226 findLetterOccurrences
+m1227 findSymbolOccurrences
+m1228 findSymbolOccurrences
+m1229 findBoundVariableOccurrences
+m1230 findBoundVariableOccurrences
+m1231 getDifferencePath
+m1232 commonPathPrefix
+m1233 findDifferences
+m1234 findDifferences
+m1235 isIdentical
+m1236 isAlphaEquivalent
+m1239 instantiate
+m1241 renameBoundVariables
+m1242 renameBoundVariables
+m1243 getBinders
+m1244 collectBinders
+m1245 getSchematicLetters
+m1246 collectSchematicLetters
+m1247 abstractQuantifiers
+m1248 toTruthFunctionalForm
+m1249 expandOutermostQuantifier
+m1250 expandQuantifiers
+m1251 expandQuantifiers
+m1252 containsVariableBoundBy
+m1253 collectTermSymbols
+m1254 getBoundVariableNames
+m1255 isNegationOf
+m1257 linkVariables
+m1258 linkVariables
+m1259 findMislinkedVariables
+m1260 findMislinkedVariables
+m1261 isArgumentPlaceholder
+m1262 isBoundVariable
+m1263 bindsArguments
+m1264 linkArgumentPlaceholders
+m1265 hasUndeclaredPlaceholder
+m1266 match
+m1267 match
+m1268 match
+m1269 matchLetter
+m1270 checkReplacementType
+m1271 buildReplacement
+m1273 addPendingLetters
+m1274 isFullyInstantiated
+m1277 collectFreeVariables
+
+# ExpressionKinds (C_a_D): Expression.kind codes 0..7
+f970 KIND_ATOMIC
+f971 KIND_QUANTIFIED
+f972 KIND_CONNECTIVE
+f973 KIND_SIMPLE_TERM
+f974 KIND_OPERATION_TERM
+f975 KIND_DESCRIPTION_TERM
+f976 KIND_IDENTITY
+f977 KIND_MEMBERSHIP
+
+# AtomicFormula (C_q_A): kind 0, sentence/predicate letter applied to argument terms
+f1340 wrappedFormula
+m2028 addArgument
+m2029 getWrappedFormula
+m2030 isPredicateLetter
+
+# QuantifiedFormula (C_o_A): kind 1, @x / !x with children (variable, body)
+m1991 setVariable
+m1992 setBody
+m1993 getVariable
+m1994 getBody
+m1995 formatScope
+
+# ConnectiveFormula (C_q_F): kind 2, ~ & | -> <-> with one or two operands
+m2040 setLeft
+m2041 setRight
+m2042 getLeft
+m2043 getRight
+m2044 formatOperand
+m2045 markAsInequality
+
+# SimpleTerm (C_i_): kind 3, variable or name; linked to the binder (quantifier/description/argument owner) that binds it
+f1172 binder
+m1848 setBinder
+m1849 hasBinder
+m1850 getBinder
+m1851 isSimpleTerm
+m1852 isSimpleTerm
+
+# OperationTerm (C_n_C): kind 4, operation letter applied to argument terms
+m1963 addArgument
+
+# DescriptionTerm (C_WE): kind 5, definite description %x with children (variable, body)
+f862 variable
+f863 body
+m1455 setVariable
+m1456 setBody
+m1457 getVariable
+m1458 getBody
+m1459 formatScope
+
+# IdentityFormula (C_x_D): kind 6, t1 = t2
+m2176 setLeft
+m2177 setRight
+
+# MembershipFormula (C_t_D): kind 7, t1 [m] t2
+m2087 setElement
+m2088 setSet
+
+# ExpressionPath (C_e_): list of child indexes addressing a subexpression; text form "{i,j,k}"
+m1746 fromArray
+m1747 append
+m1748 append
+m1749 push
+m1750 indexOf
+m1751 commonPrefixLength
+m1752 toArray
+m1753 format
+m1754 format
+m1755 parse
+
+# C_JD: Hashtable with shadowing (a stack of bindings per key); maps variable symbol -> binder while linking
+class JD VariableScope
+f435 shadowed
+m723 push
+m724 pop
+m725 getShadowed
+
+# C_L: Vector of bound-variable names in binder order; text form "x.y.z."
+class L BoundVariableNames
+m932 encode
+m933 decode
+
+# C_CF: Enumeration of fresh letters from an alphabet: a, b, ..., a0, b0, ..., a1, ...
+class CF LetterGenerator
+f266 letters
+f267 letterCount
+f268 position
+f269 suffix
+
+# C_VD: an expression with a human-readable label ("Premise 3", "Line 7")
+class VD LabeledExpression
+f833 label
+f834 expression
+
+# C_KF: LabeledExpression for a derivation problem's premise
+class KF PremiseExpression
+f500 premiseIndex
+
+## ================================================================ parser front end
+
+# FormulaParser (C_FB): static front end over the syntax-1 and syntax-2 JavaCC parsers
+f303 syntaxCount
+
+## ================================================================ schemes
+
+# SchematicLetter (C_i_A): key of a SchemeInstantiation: a term, operation or predicate letter with its arity
+m1173 getLetter
+m1174 getArity
+m1175 toExpression
+m1176 getDeferredMatches
+m1177 freshLetter
+m1853 placeholder
+m1854 placeholders
+
+# C_PB: schematic letter for a free SimpleTerm (variable or name)
+class PB TermLetter
+f672 letter
+f673 deferredMatches
+m1178 freshTermLetter
+
+# C_W: schematic letter for an operation letter of a given arity
+class W OperationLetter
+f850 letter
+f851 arity
+f852 deferredMatches
+m1423 freshOperationLetter
+
+# C_w_C: schematic letter for a sentence/predicate letter of a given arity
+class wC PredicateLetter
+f1426 letter
+f1427 arity
+f1428 deferredMatches
+m2157 freshPredicateLetter
+m2158 freshPredicateLetter
+
+# LetterReplacement (C_GF): pattern (letter applied to placeholders) -> replacement expression, or a validation error
+f367 pattern
+f368 replacement
+f369 error
+m656 sameReplacementAs
+
+# SchemeInstantiation (C_j_D): SchematicLetter -> LetterReplacement, plus pending letters and the last error
+f1189 pendingLetters
+f1190 errorId
+f1191 errorParams
+m1877 mergeFrom
+m1878 getReplacement
+m1879 checkDeferredMatches
+m1880 putReplacement
+m1881 addReplacement
+m1882 addReplacement
+m1883 parseReplacement
+m1884 validateReplacement
+m1885 addPendingLetter
+m1886 addPendingLetter
+m1887 deferMatch
+m1888 deferMatch
+m1889 getPendingLetters
+m1890 hasNoDeferredMatches
+m1891 pendingLettersToString
+m1892 collectUsedLetters
+m1893 assignFreshLetters
+m1894 getErrorId
+m1895 getErrorParams
+m1896 encode
+m1897 decode
+
+# C_m_B: a match postponed until its schematic letter is instantiated
+class mB DeferredMatch
+f1276 pattern
+f1277 instance
+f1278 binderMap
+f1279 contextTerms
+
+# C_MB: Hashtable BinderKey -> corresponding binder in the other expression (alpha-equivalence bookkeeping)
+class MB BinderMap
+m1091 getCounterpart
+m1092 getCounterpart
+m1093 putCounterpart
+m1094 putCounterpart
+m1095 getBinderCorrespondence
+
+# C_o_D: key of BinderMap: (scheme application context, binder, stack of placeholder terms being expanded)
+class oD BinderKey
+f1325 context
+f1326 binder
+f1327 contextTerms
+m2007 toArray
+m2008 toVector
+
+# C_f_: dialog panel listing a SchemeInstantiation's substitutions and letting the user fill in pending ones
+class f SchemeSubstitutionPanel
+f1095 scrollPane
+f1096 patternLabels
+f1097 replacementFields
+f1098 initialFocusField
+f1099 errorId
+f1100 errorParams
+f1101 assignedCount
+f1102 pendingCount
+f1103 displaySymbols
+m1801 setMessageDialog
+m1802 readInstantiation
+m1803 getPendingFields
+
+## ================================================================ pkgA: JavaCC parser for syntax 2
+# pkgA/Syntax2Constants: JavaCC token-kind constants (EOF, EOL, VAR, PRED, SEN, OP, UNK) and tokenImage
+f99 EOF
+f100 EOL
+f101 VAR
+f102 PRED
+f103 SEN
+f104 OP
+f105 UNK
+f106 DEFAULT
+f107 tokenImage
+# pkgA/Syntax2Token: JavaCC Token: kind, begin/end line/column, image, next
+f108 kind
+f109 beginLine
+f110 beginColumn
+f111 endLine
+f112 endColumn
+f113 image
+f114 next
+f115 specialToken
+m212 newToken
+# pkgA/Syntax2TokenMgrError: JavaCC TokenMgrError: lexical error (extends FormulaLexerError)
+f50 LEXICAL_ERROR
+f51 STATIC_LEXER_ERROR
+f52 INVALID_LEXICAL_STATE
+f53 LOOP_DETECTED
+f54 errorCode
+m93 addEscapes
+m94 LexicalError
+# pkgA/Syntax2ParseException: JavaCC ParseException (extends FormulaParseException)
+f30 specialConstructor
+f31 currentToken
+f32 expectedTokenSequences
+f33 tokenImage
+f34 eol
+m72 add_escapes
+# pkgA/Syntax2CharStream: JavaCC static SimpleCharStream (ASCII_CharStream): ring buffer with line/column tracking
+f35 staticFlag
+f36 bufsize
+f37 available
+f38 tokenBegin
+f39 bufpos
+f40 bufline
+f41 bufcolumn
+f42 column
+f43 line
+f44 prevCharIsCR
+f45 prevCharIsLF
+f46 inputStream
+f47 buffer
+f48 maxNextCharInd
+f49 inBuf
+m73 ExpandBuff
+m74 FillBuff
+m75 BeginToken
+m76 UpdateLineColumn
+m77 readChar
+m78 getColumn
+m79 getLine
+m80 getEndColumn
+m81 getEndLine
+m82 getBeginColumn
+m83 getBeginLine
+m84 backup
+m85 ReInit
+m86 ReInit
+m87 ReInit
+m88 ReInit
+m89 GetImage
+m90 GetSuffix
+m91 Done
+m92 adjustBeginLineColumn
+# pkgA/Syntax2TokenManager: JavaCC token manager: string-literal DFA + NFA for letters/variables
+f55 jjnextStates
+f56 jjstrLiteralImages
+f57 lexStateNames
+f58 jjtoToken
+f59 jjtoSkip
+f60 input_stream
+f61 jjrounds
+f62 jjstateSet
+f63 curChar
+f64 curLexState
+f65 defaultLexState
+f66 jjnewStateCnt
+f67 jjround
+f68 jjmatchedPos
+f69 jjmatchedKind
+m95 jjStopStringLiteralDfa_0
+m96 jjStartNfa_0
+m97 jjStopAtPos
+m98 jjStartNfaWithStates_0
+m99 jjMoveStringLiteralDfa0_0
+m100 jjMoveStringLiteralDfa1_0
+m101 jjMoveStringLiteralDfa2_0
+m102 jjCheckNAdd
+m103 jjAddStates
+m104 jjCheckNAddTwoStates
+m105 jjCheckNAddStates
+m106 jjCheckNAddStates
+m107 jjMoveNfa_0
+m108 ReInit
+m109 ReInitRounds
+m110 ReInit
+m111 SwitchTo
+m112 jjFillToken
+m113 getNextToken
+# pkgA/Syntax2Parser: JavaCC recursive-descent parser for one formula per line; builds Expression trees
+f70 binders
+f71 jj_initialized_once
+f72 token_source
+f73 jj_input_stream
+f74 token
+f75 jj_nt
+f76 jj_ntk
+f77 jj_scanpos
+f78 jj_lastpos
+f79 jj_la
+f80 lookingAhead
+f81 jj_semLA
+f82 jj_gen
+f83 jj_la1
+f84 jj_la1_0
+f85 jj_2_rtns
+f86 jj_rescan
+f87 jj_gc
+f88 jj_expentries
+f89 jj_expentry
+f90 jj_kind
+f91 jj_lasttokens
+f92 jj_endpos
+f93 trace_indent
+f94 trace_enabled
+m115 one_line
+m116 formula
+m117 conjexp
+m118 equation
+m119 member
+m120 unary
+m121 primary
+m122 term
+m123 jj_2_1
+m124 jj_2_2
+m125 jj_2_3
+m126 jj_2_4
+m127 jj_2_5
+m128 jj_2_6
+m129 jj_2_7
+m130 jj_2_8
+m131 jj_2_9
+m132 jj_2_10
+m133 jj_2_11
+m134 jj_2_12
+m135 jj_2_13
+m136 jj_2_14
+m137 jj_2_15
+m138 jj_2_16
+m139 jj_2_17
+m140 jj_2_18
+m141 jj_2_19
+m142 jj_2_20
+m143 jj_2_21
+m144 jj_2_22
+m145 jj_2_23
+m146 jj_2_24
+m147 jj_2_25
+m148 jj_2_26
+m149 jj_2_27
+m150 jj_2_28
+m151 jj_2_29
+m152 jj_2_30
+m153 jj_2_31
+m154 jj_2_32
+m155 jj_3R_1
+m156 jj_3_23
+m157 jj_3_4
+m158 jj_3_29
+m159 jj_3R_2
+m160 jj_3_3
+m161 jj_3_20
+m162 jj_3_22
+m163 jj_3_21
+m164 jj_3_27
+m165 jj_3_2
+m166 jj_3_26
+m167 jj_3_19
+m168 jj_3_1
+m169 jj_3_25
+m170 jj_3_18
+m171 jj_3_17
+m172 jj_3R_3
+m173 jj_3_24
+m174 jj_3_16
+m175 jj_3_15
+m176 jj_3_14
+m177 jj_3R_4
+m178 jj_3_13
+m179 jj_3R_5
+m180 jj_3_12
+m181 jj_3R_6
+m182 jj_3_11
+m183 jj_3_10
+m184 jj_3_9
+m185 jj_3_8
+m186 jj_3_7
+m187 jj_3R_7
+m188 jj_3_28
+m189 jj_3_32
+m190 jj_3_6
+m191 jj_3_31
+m192 jj_3_5
+m193 jj_3_30
+m194 ReInit
+m196 ReInit
+m197 jj_consume_token
+m198 jj_scan_token
+m199 getNextToken
+m200 getToken
+m201 jj_ntk
+m202 jj_add_error_token
+m203 generateParseException
+m204 enable_tracing
+m206 trace_call
+m207 trace_return
+m208 trace_token
+m209 trace_scan
+m210 jj_rescan_token
+m211 jj_save
+# pkgA/Syntax2Parser$C__A: JavaCC JJCalls lookahead-memo record
+class A/E$_A JJCalls
+f95 gen
+f96 first
+f97 arg
+f98 next
+
+## ================================================================ pkgB: JavaCC parser for syntax 1
+# pkgB/Syntax1Constants: JavaCC token-kind constants (EOF, EOL, VAR, PRED, SEN, OP, UNK) and tokenImage
+f218 EOF
+f219 EOL
+f220 VAR
+f221 PRED
+f222 SEN
+f223 OP
+f224 UNK
+f225 DEFAULT
+f226 tokenImage
+# pkgB/Syntax1Token: JavaCC Token: kind, begin/end line/column, image, next
+f227 kind
+f228 beginLine
+f229 beginColumn
+f230 endLine
+f231 endColumn
+f232 image
+f233 next
+f234 specialToken
+m373 newToken
+# pkgB/Syntax1TokenMgrError: JavaCC TokenMgrError: lexical error (extends FormulaLexerError)
+f169 LEXICAL_ERROR
+f170 STATIC_LEXER_ERROR
+f171 INVALID_LEXICAL_STATE
+f172 LOOP_DETECTED
+f173 errorCode
+m257 addEscapes
+m258 LexicalError
+# pkgB/Syntax1ParseException: JavaCC ParseException (extends FormulaParseException)
+f149 specialConstructor
+f150 currentToken
+f151 expectedTokenSequences
+f152 tokenImage
+f153 eol
+m236 add_escapes
+# pkgB/Syntax1CharStream: JavaCC static SimpleCharStream (ASCII_CharStream): ring buffer with line/column tracking
+f154 staticFlag
+f155 bufsize
+f156 available
+f157 tokenBegin
+f158 bufpos
+f159 bufline
+f160 bufcolumn
+f161 column
+f162 line
+f163 prevCharIsCR
+f164 prevCharIsLF
+f165 inputStream
+f166 buffer
+f167 maxNextCharInd
+f168 inBuf
+m237 ExpandBuff
+m238 FillBuff
+m239 BeginToken
+m240 UpdateLineColumn
+m241 readChar
+m242 getColumn
+m243 getLine
+m244 getEndColumn
+m245 getEndLine
+m246 getBeginColumn
+m247 getBeginLine
+m248 backup
+m249 ReInit
+m250 ReInit
+m251 ReInit
+m252 ReInit
+m253 GetImage
+m254 GetSuffix
+m255 Done
+m256 adjustBeginLineColumn
+# pkgB/Syntax1TokenManager: JavaCC token manager: string-literal DFA + NFA for letters/variables
+f174 jjnextStates
+f175 jjstrLiteralImages
+f176 lexStateNames
+f177 jjtoToken
+f178 jjtoSkip
+f179 input_stream
+f180 jjrounds
+f181 jjstateSet
+f182 curChar
+f183 curLexState
+f184 defaultLexState
+f185 jjnewStateCnt
+f186 jjround
+f187 jjmatchedPos
+f188 jjmatchedKind
+m259 jjStopStringLiteralDfa_0
+m260 jjStartNfa_0
+m261 jjStopAtPos
+m262 jjStartNfaWithStates_0
+m263 jjMoveStringLiteralDfa0_0
+m264 jjMoveStringLiteralDfa1_0
+m265 jjMoveStringLiteralDfa2_0
+m266 jjCheckNAdd
+m267 jjAddStates
+m268 jjCheckNAddTwoStates
+m269 jjCheckNAddStates
+m270 jjCheckNAddStates
+m271 jjMoveNfa_0
+m272 ReInit
+m273 ReInitRounds
+m274 ReInit
+m275 SwitchTo
+m276 jjFillToken
+m277 getNextToken
+# pkgB/Syntax1Parser: JavaCC recursive-descent parser for one formula per line; builds Expression trees
+f189 binders
+f190 jj_initialized_once
+f191 token_source
+f192 jj_input_stream
+f193 token
+f194 jj_nt
+f195 jj_ntk
+f196 jj_scanpos
+f197 jj_lastpos
+f198 jj_la
+f199 lookingAhead
+f200 jj_semLA
+f201 jj_gen
+f202 jj_la1
+f203 jj_la1_0
+f204 jj_2_rtns
+f205 jj_rescan
+f206 jj_gc
+f207 jj_expentries
+f208 jj_expentry
+f209 jj_kind
+f210 jj_lasttokens
+f211 jj_endpos
+f212 trace_indent
+f213 trace_enabled
+m278 one_line
+m279 formula
+m280 conjexp
+m281 equation
+m282 member
+m283 unary
+m284 primary
+m285 term
+m286 jj_2_1
+m287 jj_2_2
+m288 jj_2_3
+m289 jj_2_4
+m290 jj_2_5
+m291 jj_2_6
+m292 jj_2_7
+m293 jj_2_8
+m294 jj_2_9
+m295 jj_2_10
+m296 jj_2_11
+m297 jj_2_12
+m298 jj_2_13
+m299 jj_2_14
+m300 jj_2_15
+m301 jj_2_16
+m302 jj_2_17
+m303 jj_2_18
+m304 jj_2_19
+m305 jj_2_20
+m306 jj_2_21
+m307 jj_2_22
+m308 jj_2_23
+m309 jj_2_24
+m310 jj_2_25
+m311 jj_2_26
+m312 jj_2_27
+m313 jj_2_28
+m314 jj_2_29
+m315 jj_2_30
+m316 jj_2_31
+m317 jj_2_32
+m318 jj_3R_1
+m319 jj_3_23
+m320 jj_3_4
+m321 jj_3_29
+m322 jj_3R_2
+m323 jj_3_3
+m324 jj_3_20
+m325 jj_3_22
+m326 jj_3_21
+m327 jj_3_27
+m328 jj_3_2
+m329 jj_3_26
+m330 jj_3_19
+m331 jj_3_1
+m332 jj_3_25
+m333 jj_3_18
+m334 jj_3_17
+m335 jj_3R_3
+m336 jj_3_24
+m337 jj_3_16
+m338 jj_3_15
+m339 jj_3_14
+m340 jj_3R_4
+m341 jj_3_13
+m342 jj_3R_5
+m343 jj_3_12
+m344 jj_3R_6
+m345 jj_3_11
+m346 jj_3_10
+m347 jj_3_9
+m348 jj_3_8
+m349 jj_3_7
+m350 jj_3R_7
+m351 jj_3_28
+m352 jj_3_32
+m353 jj_3_6
+m354 jj_3_31
+m355 jj_3_5
+m356 jj_3_30
+m357 ReInit
+m358 ReInit
+m359 jj_consume_token
+m360 jj_scan_token
+m361 getNextToken
+m362 getToken
+m363 jj_ntk
+m364 jj_add_error_token
+m365 generateParseException
+m366 enable_tracing
+m367 trace_call
+m368 trace_return
+m369 trace_token
+m370 trace_scan
+m371 jj_rescan_token
+m372 jj_save
+# pkgB/Syntax1Parser$C__A: JavaCC JJCalls lookahead-memo record
+class B/E$_A JJCalls
+f214 gen
+f215 first
+f216 arg
+f217 next
+
