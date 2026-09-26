@@ -1,0 +1,492 @@
+# rules.mapping -- inference rules, theorems, rule-application matching,
+# derivation line checking, and the Recognition module.
+# Class lines use the ORIGINAL obfuscated name; current placeholder in the comment.
+
+## ---------------------------------------------------------------- rules and theorems
+
+# Rule (C_VB): a named rule. Compound rules ("DN = DNE.DNI") hold component rules; leaves are SchematicRules
+f820 name
+f821 components
+f822 sourceTheorem
+f823 error
+m1366 parseTheoremNumber
+m1367 parseTheoremRuleNumber
+m1368 findComponent
+m1369 getRuleName
+m1370 addComponent
+m1371 getComponentCount
+m1372 getComponent
+m1193 testProperty
+m952 isProven
+m953 isAnyFormProven
+m955 collectForms
+m1373 getForms
+m1374 getAllForms
+m1375 includes
+m1376 isMutuallyIncludedWithAny
+m1377 fromTheorem
+m1378 attachTheorem
+m1379 splitConjuncts
+m1380 collectConjuncts
+m1381 getError
+m958 format
+
+# SchematicRule (C_LF): one rule form -- premise schemata .: conclusion schema
+m948 parseForm
+m949 getPremises
+m950 getConclusion
+m951 copyRule
+m954 getProofProblems
+m956 indexByName
+m957 formatInOrder
+
+# Theorem (C_QE): numbered theorem "Tn", a premise-less SchematicRule
+f700 number
+m1191 getNumber
+m1192 getFormula
+
+# RuleTable (C_z_B): all rules from the rules file (banshee.txt), keyed by upper-case name
+f1468 theorems
+f1469 ruleNames
+f1470 theoremRuleCache
+f1471 headings
+f1472 properties
+m2200 addRuleLine
+m2201 read
+m2202 addRule
+m2203 getRule
+m2204 getTheorem
+m2205 findRule
+m2206 removeRule
+
+# TheoremTable (C_z_): all theorems from the theorems file (fiend.txt), keyed by Integer
+f1464 theoremNumbers
+f1465 headings
+m2197 addTheoremLine
+m2198 read
+m2199 getTheorem
+
+# RuleProperties (C_r_D): structural rule properties (notConditional, biconditional, hasConverse) and the converse table
+m2061 getEquivalenceOrConditional
+m2062 getEquivalence
+m2063 getEquivalenceSide
+m2064 getEquivalenceSide
+m2065 getConditionalEquivalence
+m2066 getConditionalEquivalencePart
+m2067 getConverses
+m2068 registerConverses
+m2069 isConversePair
+m2070 addConverse
+m2071 getRulesWithConverse
+m2072 getTheoremsWithConverse
+m2073 getFromSide
+m2074 getConditionalFromSide
+m2075 getToSide
+m2076 getConditionalToSide
+
+# C_w_E: source of named rule properties ("disabled", "manual", "weakAss", ...) and of proofs of rules/theorems
+class wE RulePropertySource
+
+# ArgumentParser (C_VC): parses "P . Q .: R"; also matches an argument against a rule (Recognition)
+f824 source
+f825 premiseTexts
+f826 conclusionText
+f827 premises
+f828 conclusion
+f829 conclusionOnly
+f830 premiseMatches
+f831 fullMatches
+f832 ERROR_MESSAGES
+m1382 parse
+m1383 normalizeDots
+m1384 getUnparsedText
+m1385 getErrorCode
+m1386 getErrorCode
+m1387 describeError
+m1388 describeError
+m1389 matchRule
+m1390 toConditional
+m1391 format
+
+# C_XE: iterates over all permutations of 0..n-1 (used to try premises in every order)
+class XE PermutationIterator
+f879 size
+f880 counters
+f881 permutation
+m1512 current
+m1513 next
+m1514 previous
+m1515 getCounters
+m1516 setCounters
+m1517 reset
+m1518 reversePrefix
+m1519 rotatePrefix
+
+# C_OF: pseudo-rule whose conclusion is a problem premise (for IE/CIE citing "PRn")
+class OF PremiseRule
+f667 premiseIndex
+
+# C_PF: pseudo-rule "Instance of X": instantiated, universally closed conclusion of a rule (CIE condition)
+class PF RuleInstance
+f696 baseRule
+f697 instantiation
+m1182 encode
+m1183 decode
+
+# C_y_E: rule cross-reference option: rule names + theorem numbers applied to the problems a ProblemSelector picks
+class yE RuleCrossReference
+f1461 ruleNames
+f1462 theoremNumbers
+f1463 selector
+m2195 withPrefix
+m2196 applyTo
+
+# C_o_F: default C_RD rule-list resolver (delegates to LogicProgram)
+class oF DefaultRuleListResolver
+
+## ---------------------------------------------------------------- scheme matching helpers
+
+# C__B: maps bound variables of a schema to bound variables of an instance
+class _B BoundVariableMap
+f925 clashes
+f926 freshCount
+m1569 lookup
+m1570 assign
+m1571 assign
+m1572 matchBinders
+m1573 matchBinders
+m1574 renameBinders
+m1575 renameBinders
+m1576 matches
+m1577 highlightLetters
+m1578 coversBinders
+m1579 binderVariable
+m1580 encode
+m1581 decode
+
+# C_n_F: set of ints stored as sorted interval boundaries (plus complement flag)
+class nF IntervalSet
+f1313 inverted
+f1314 count
+f1315 cursor
+f1316 boundaries
+m1970 singleton
+m1971 range
+m1972 atLeast
+m1973 greaterThan
+m1974 copy
+m1975 union
+m1976 subtract
+m1977 intersect
+m1978 advance
+m1979 clear
+m1980 complement
+m1981 shift
+m1982 isEmpty
+m1983 contains
+m1984 selectChars
+m1985 elements
+m1986 toggleBoundary
+m1987 toggleBoundaries
+m1988 ensureCapacity
+
+# C_CB: colors ranges of a string (one IntervalSet per color index) into a StyledDocument
+class CB TextHighlighter
+f252 MARK_CHAR
+f253 COLORS
+f254 colorIndexes
+f255 ranges
+m415 copy
+m416 size
+m417 applyColor
+m418 createDocument
+m419 createDocument
+m420 fromRanges
+
+# C_e_B: text plus highlight layers (Vector of IntervalSet)
+class eB HighlightedText
+f1069 text
+f1070 layers
+m1757 length
+m1758 layerCount
+m1759 copy
+m1760 append
+m1761 append
+m1762 substring
+m1763 substring
+m1764 hasHighlights
+m1765 sharesHighlightLayer
+
+# C_FD: display form of a RuleApplication (premises .: conclusion with instantiated letters highlighted)
+class FD RuleApplicationDisplay
+f311 application
+f312 displayInstantiation
+f313 premiseDisplays
+f314 conclusionDisplay
+m541 createDisplay
+m542 toHighlightedText
+m543 toHighlightedText
+
+## ---------------------------------------------------------------- justifications (cached per derivation line)
+
+# Justification (C_HD): cached, serializable result of one justification step ("<type>:<data>")
+f384 label
+m600 reapply
+m609 encode
+m686 decode
+
+# C_HF: type 1 -- application of one rule form: permutation of cited lines + instantiation + bound-variable map
+class HF RuleApplication
+f390 TYPE
+f391 form
+f392 premiseOrder
+f393 instantiation
+f394 boundVariables
+f395 failureKind
+f396 failureDetail
+m688 getForm
+m689 getPremiseOrder
+m690 getInstantiation
+m691 getBoundVariables
+m692 getPremiseCount
+m693 getPremise
+m694 getPremise
+m695 getConclusion
+m696 getConclusion
+m697 isFullyInstantiated
+m698 decode
+m699 decodeBody
+m700 createDisplay
+
+# C_l_: type 2 -- "PRn": the line is premise n
+class l PremiseJustification
+f1223 TYPE
+f1224 premiseIndex
+m1915 decode
+
+# C_p_E: type 3 -- "ASS ID": assume the negation (or the unnegated form) of the show line
+class pE IndirectAssumptionJustification
+f1336 TYPE
+f1337 negateShow
+m2027 decode
+
+# C_GA: type 4 -- IE / CIE: interchange of equivalents inside a subformula (optionally under a condition)
+class GA InterchangeJustification
+f342 TYPE
+f343 path
+f344 reversed
+f345 pathChosen
+f346 ruleApplication
+f347 equivalenceLine
+f348 equivalencePremise
+f349 instantiation
+f350 boundVariables
+f351 conditionLine
+f352 conditionPremise
+f353 conditionInstance
+f354 conditionReversed
+m599 setCondition
+m601 isConditionSubstitutionClean
+m602 validateInnerRule
+m603 validateEquivalenceLine
+m604 validateEquivalencePremise
+m605 identityInstantiation
+m606 toHighlightedText
+m607 toHighlightedText
+m608 createDisplay
+m610 decodeInterchange
+m611 decodeBody
+m612 parseLineReference
+m613 parsePremiseReference
+m614 parseInstantiation
+m615 parseBoundVariables
+m616 parseConditionInstance
+m617 replaceAt
+m618 getSource
+m619 getSource
+m620 getResult
+m621 getResult
+m622 getConditionRule
+m623 alignConditionQuantifiers
+m624 getEquivalenceRule
+m625 toRuleApplication
+m626 findApplications
+m627 matchEquivalence
+m628 matchConditionalEquivalence
+m629 mentionsAnyLetter
+m630 countLeadingUniversals
+m631 isRuleUsable
+
+# C_c_E: type 5 -- "ASS BD": assume one side of the biconditional show line
+class cE BiconditionalAssumptionJustification
+f1030 TYPE
+f1031 rightSide
+m1672 decode
+
+## ---------------------------------------------------------------- derivation line checker
+
+# DerivationLineChecker (C_a_): parses a line's justification and checks it step by step (operand stack of cited formulas)
+f935 line
+f936 citedNodes
+f937 stack
+f938 argumentCount
+f939 ruleName
+f940 remaining
+f941 lineFormula
+f942 result
+f943 stepIndex
+f944 matchLine
+f945 finalStep
+f946 interactive
+f947 reusedCache
+f948 cachedError
+f949 CONST_TRUE
+f950 CONST_FALSE
+f951 hasPremiseMatch
+f952 hasFullMatch
+f953 premiseMatches
+f954 fullMatches
+f955 consumedFormulas
+f956 presetAnswers
+f957 allForms
+f958 enabledForms
+f959 automaticForms
+f960 minPremises
+f961 maxPremises
+f962 clashes
+m1589 reset
+m1590 computePremiseRange
+m1591 readNextStep
+m1592 skipToNextStep
+m1593 readSourceFormula
+m1594 readLineNumber
+m1595 readPremiseNumber
+m1596 isNameChar
+m1597 normalizeRuleName
+m1598 cacheJustification
+m1599 fail
+m1600 containsWildcard
+m1601 matchesPattern
+m1602 isPrenex
+m1603 hasOnlyOuterQuantifiers
+m1604 isQuantifierFree
+m1605 isNormalForm
+m1606 checkStep
+m1607 checkStep
+m1608 checkResultMatchesLine
+m1609 checkResultMatchesLine
+m1610 checkShowVariant
+m1611 finishShowVariant
+m1612 checkInstantiationRestrictions
+m1613 checkInstantiationRestrictions
+m1614 isVariableUsedInOuterBoxes
+m1615 getCitedNodeOutsideBox
+m1616 matchNamedRule
+m1617 matchRule
+m1618 verifyApplication
+m1619 pruneDegenerateMatches
+m1620 removeMatch
+m1621 reportError
+m1622 reportError
+m1623 putMessageObject
+m1624 clearMessage
+m1625 clearMessage
+m1626 getStackSize
+m1627 getCitedNode
+m1628 getStackFormula
+m1629 getBoundVariableNames
+m1630 getLineBoundVariableNames
+m1631 popStack
+m1632 getRuleName
+m1633 parsePremiseNumber
+
+# C_y_: button actions of derivation messages/queries (replace, undo, variable/term queries, IE/CIE rule queries)
+class y DerivationQueryHandler
+f1446 line
+f1447 SYMBOLS
+m2179 parseRuleReference
+
+## ---------------------------------------------------------------- Recognition module
+
+# LPRecognition$_A: startup runnable of the Recognition module
+class LPRecognition$_A RecognitionStartup
+
+# C_j_A: problem set of the Recognition module
+class jA RecognitionProblemSet
+
+# C_ED: problem entry of the Recognition module
+class ED RecognitionProblemEntry
+f296 savedWork
+
+# C_BF: Recognition message catalogue (recMessages)
+class BF RecognitionMessage
+f247 messages
+f248 FILE_KEY
+
+# C_EC: Recognition dialogs (choose/next/submit/upload/delete/print problems, user problem, save prompt)
+class EC RecognitionDialogs
+f295 SYMBOLS
+m496 showMessage
+m497 showMessage
+m498 showMessage
+m499 showMessage
+m500 askProblemName
+m501 confirmSaveChanges
+m502 confirmRemoveWork
+m503 confirmDelete
+m504 selectNextProblem
+m505 selectProblem
+m506 chooseProblemsToSubmit
+m507 enterSubmittedProblem
+m508 chooseProblemsToUpload
+m509 deleteProblems
+m510 enterUserProblem
+m511 printProblems
+m512 createProblemList
+
+# C_i_E: dialog handler for Recognition messages
+class iE RecognitionDialogHandler
+
+# C_h_: Recognition button bar (Select, User, Check, Save, Delete, Submit, Print, Quit, ...)
+class h RecognitionButtonPanel
+f1136 module
+f1137 defaultButton
+m1834 create
+m1835 buildButtons
+m1836 installDefaultButton
+
+# C_YC: Recognition entry pane: Enter checks the answer
+class YC RecognitionEntryPane
+f904 module
+
+# C_UF: prints the list of Recognition problem statements
+class UF RecognitionListPrintJob
+m1358 print
+
+# C_c_: prints Recognition results
+class c RecognitionResultsPrintJob
+m1665 print
+
+# C_GC: thread that requests focus for a component after an optional delay
+class GC DelayedFocusRequest
+f355 component
+f356 delayMillis
+
+# synthetic outer-instance fields of the anonymous actions in RecognitionButtonPanel (C_h_$1..$17)
+f1138 this$0
+f1139 this$0
+f1140 this$0
+f1141 this$0
+f1142 this$0
+f1143 this$0
+f1144 this$0
+f1145 this$0
+f1146 this$0
+f1147 this$0
+f1148 this$0
+f1149 this$0
+f1150 this$0
+f1151 this$0
+f1152 this$0
+f1153 this$0
+f1154 this$0

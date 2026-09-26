@@ -1,0 +1,695 @@
+# server.mapping -- names for the "server" group: network protocol, user/course identity,
+# backups, updates and the small codec/HTTP helpers they use.
+# Class lines use the ORIGINAL obfuscated name (see "# classes" in mappings/ids.txt).
+
+## ---------------------------------------------------------------- response handler interface
+# ResponseHandler (v): sink for server errors; every request object implements it
+m4 setError
+m5 getError
+
+## ---------------------------------------------------------------- ServerConnection
+# ServerConnection (KC): static facade for every HTTP call to the Logic database server
+f466 editDir
+f467 localDir
+f468 adminDir
+f469 nonetDir
+f470 textDir
+f476 adminInstitution
+f477 adminTerm
+f478 adminCourse
+f479 adminVersion
+f480 adminInstall
+f481 installAdminNow
+f482 linkedFromNonetDir
+f484 coreUpdateOffered
+f485 adminUpdateChecked
+f486 backedUpForUpdate
+f488 waveToken
+f489 cachedLogin
+f490 WORK_DIR_PREFIX
+f493 WORK_ZIP_NAME
+f494 LOADER_JAR_NAME
+m805 httpGet
+m806 postSessionForm
+m809 postMultipartBody
+m810 post
+m811 doPost
+m812 decodeBase64ToFile
+m813 writeRequestBody
+m814 stubReturnsNull
+m815 sqlQuote
+m816 sqlQuoteInteger
+m818 findRow
+m819 findRow
+m820 findRow
+m821 getResponseValue
+m822 getResponseValue
+m823 getResponseInteger
+m824 getResponseInteger
+m825 repostWithNewNonce
+m826 urlDecode
+m827 replaceString
+m828 createWatchdogTask
+m831 refreshNonce
+m832 closeSession
+m833 checkAuthStatus
+m834 verifyResponseSignature
+m838 finishSubmission
+m839 saveWorkZip
+m840 prepareUpload
+m841 uploadProblem
+m842 uploadProblemOnce
+m843 finishUpload
+m844 zipWorkToBase64
+m845 zipWork
+m846 restoreFromWorkZip
+m847 unzipBase64Work
+m848 unzipWork
+m849 hasModuleWorkFiles
+m850 getCourseMessageParams
+m851 normalizeZipEntryName
+m852 prepareBackup
+m853 uploadBackup
+m854 uploadBackupOnce
+m855 saveProblemRecord
+m856 saveProblemRecordOnce
+m857 deleteProblemRecord
+m858 deleteProblemRecordOnce
+m859 isExamVersionCurrent
+m860 isExamVersionCurrentOnce
+m861 getConfiguredCourse
+m862 checkForUpdates
+m863 checkForUpdates
+m864 checkForUpdatesOnce
+m865 matchesConfiguredCourse
+m866 matchesAdminCourse
+m867 isUpToDate
+m868 askInstallAdminVersion
+m869 promptForUpdate
+m870 getUpdateMethod
+m871 writeLoadInfo
+m872 performUpdate
+m873 showUpdateInstructions
+m874 downloadDirectUpdate
+m875 parseUrl
+m876 fetchLoaderJar
+m878 launchLoader
+m879 moveTextFilesToTrash
+m880 emptyTrash
+m881 readJarStaticField
+m882 getUserRelations
+m883 getUserRelations
+m884 getUserRelationsOnce
+m885 addUserRelation
+m886 addUserRelation
+m887 addUserRelationOnce
+m888 ensureInitialBackup
+m889 fetchBackupInfo
+m890 fetchBackupInfoOnce
+m891 restoreBackup
+m892 restoreBackupOnce
+m893 deleteBackup
+m894 deleteBackupOnce
+m895 finishBackupRequest
+m896 backupWork
+m897 hasBackup
+m898 hasBackup
+m899 restoreWork
+m900 copyWork
+m901 copyWorkFiles
+m902 deleteWork
+m903 deleteWork
+m904 deleteFilesIn
+m905 verifyUser
+m906 verifyUser
+m907 verifyUserOnce
+m908 loginUser
+m909 loginUserOnce
+m910 retryLogin
+m911 checkRegistration
+m912 fetchUserInfo
+m913 fetchUserInfo
+m914 fetchUserInfoOnce
+m915 changePassword
+m916 changePasswordOnce
+m917 fetchCourseList
+m918 fetchCourseList
+m919 fetchCourseListOnce
+m920 getErrorStatus
+m921 reportError
+m922 askRetry
+
+## ---------------------------------------------------------------- ServerSession
+# ServerSession (C_0C): nonce + credentials; signs form/multipart request bodies
+f23 error
+f24 cnonceCounter
+m49 setNonce
+m50 nextRequest
+m51 generateCnonce
+m52 setParams
+m54 splitFieldList
+m55 joinDigestFields
+m59 addMultipartField
+
+## ---------------------------------------------------------------- Submission
+# Submission (C_0A): one problem submission posted to logic_submission
+f1 ipAddress
+f2 courseUid
+f3 userUid
+f4 passwordHash
+f15 succeededNames
+f16 failedNames
+m1 reset
+m2 isComplete
+m3 getLogRecord
+
+## ---------------------------------------------------------------- request objects
+# C_XA: backup/restore request: user uid, backup key, base64 work zip, list of server backups
+class XA BackupRequest
+f864 ipAddress
+f865 userUid
+f866 passwordHash
+f867 session
+f868 backupKey
+f869 data
+f870 unusedText
+f871 selectedBackupId
+f872 backups
+m1461 reset
+m1462 isReady
+m1463 countBackupsForKey
+m1464 countBackups
+m1465 forgetSelectedBackup
+m1466 selectNewestBackup
+m1467 selectOldestBackup
+m1468 pruneBackups
+
+# C_w_D: one row of the backup_info reply (key, date, backup id)
+class wD BackupEntry
+f1429 key
+f1430 date
+f1431 backupId
+m2159 isValid
+m2160 clear
+
+# C_LD: instructor problem upload request (logic_upload)
+class LD ProblemUpload
+f506 session
+f507 userUid
+f508 courseUid
+f509 syntax
+f510 problemName
+f511 text
+f512 webText
+f513 type
+f514 aux
+f515 answers
+f516 timestamp
+f517 problemUid
+f518 succeededNames
+f519 failedNames
+f520 resultText
+m944 reset
+
+# C_FC: problem-database record for insert/update/delete_problem (no callers outside ServerConnection)
+class FC ProblemDbRecord
+f305 session
+f306 problemName
+f307 problemText
+f308 commonName
+f309 comment
+f310 version
+m538 getProblemMd5
+m539 getWebFormProblem
+m540 getTruncatedComment
+
+# C_j_B: result of the update check: what to download and how
+class jB UpdateInfo
+f1177 METHOD_LOADER
+f1178 METHOD_DIRECT
+f1179 METHOD_MANUAL
+f1180 downloadUrl
+f1181 downloadText
+f1182 loaderUrl
+f1183 loaderVersion
+f1184 user
+f1185 localUpdate
+f1186 backupRequired
+f1187 method
+f1188 error
+
+# C_a_F: successful login: password hash and logic_user_uid
+class aF LoginResult
+f979 passwordHash
+f980 userUid
+m1642 login
+m1643 login
+
+# C__F: password(s) typed in a dialog, stored as MD5/base64 hashes
+class _F PasswordEntry
+f932 password
+f933 newPassword
+f934 retried
+m1588 hashPassword
+
+## ---------------------------------------------------------------- dialog handlers
+# C_b_E: DialogHandler that just records which button was pressed
+class bE ButtonChoiceHandler
+f1027 choice
+
+# C_SE: DialogHandler for the "update required" prompt (Backup / Update / Quit)
+class SE UpdatePromptHandler
+f772 result
+f773 updateInfo
+
+# C_p_F: DialogHandler for the "different version required" prompt (opens instructions page)
+class pF UpdateInstructionsHandler
+f1338 result
+f1339 instructionsUrl
+
+## ---------------------------------------------------------------- network plumbing
+# C_o_: abstract worker thread run under a NetworkTask
+class o NetworkWorker
+f1317 task
+f1318 result
+m1989 runWork
+m1990 getResult
+m687 perform
+
+# C_HE: NetworkWorker that performs one HTTP POST
+class HE PostWorker
+f385 url
+f386 body
+f387 contentType
+f388 saveFile
+f389 digestAuth
+
+# C_s_E: NetworkWorker that performs one HttpDownloader download
+class sE DownloadWorker
+f1368 url
+f1369 destination
+f1370 downloader
+
+# NetworkTask (C_r_A): abortable network operation with progress dialog
+f1344 inputStream
+f1345 outputStream
+f1346 worker
+f1347 title
+f1348 message
+f1349 progressDialog
+f1350 initialWait
+f1351 abortWait
+f1352 closed
+m2051 execute
+m2052 getResult
+m2053 getPressedButton
+m2054 dismissDialog
+m2055 setMessage
+m2056 getInputStream
+m2057 setInputStream
+m2058 getOutputStream
+m2059 setOutputStream
+m2060 closeStreams
+
+# BusyIndicator (C_x_A): wait cursor and optional message box
+f1432 savedCursor
+f1433 component
+f1434 dialog
+m2162 setBusy
+m2163 showBusyMessage
+
+# QueryResult (C_s_C): response table + error status after a nonce retry
+f1362 table
+f1363 status
+
+# ServerUrl (C_p_)
+f1328 url
+m2010 splitUrl
+m2011 create
+m2012 getFile
+m2013 getHost
+m2014 getPort
+m2015 getProtocol
+m2016 openConnection
+m2017 openStream
+m2018 getUrl
+
+# HttpDownloader (C_i_B): downloads a file, unzipping it when the target is a directory
+m1855 downloadInto
+m1856 download
+m1857 downloadDirect
+m1858 downloadHttp
+m1859 saveOrUnzip
+m1860 baseName
+m1861 unzip
+
+# HttpDigestAuth (C_N): RFC 2617 Basic/Digest client (unused by the desktop protocol)
+f629 scheme
+f630 realm
+f631 nonce
+f632 nonceCount
+f633 opaque
+f634 stale
+f635 algorithm
+f636 qopOptions
+f637 cnonce
+f638 credentials
+f639 credentialCache
+m1121 parseChallenge
+m1122 lookupCachedCredentials
+m1123 setCredentials
+m1124 getAuthorizationHeader
+m1125 checkAuthenticationInfo
+m1126 getBasicToken
+m1127 computeDigestResponse
+m1128 splitList
+
+# C_OD: parsed WWW-Authenticate / Authentication-Info header (scheme + key=value params)
+class OD AuthHeaderParams
+f657 header
+f658 scheme
+m1142 getScheme
+m1143 getParam
+m1144 parse
+
+# C_RA: class loader reading classes out of a jar (used to read loader.jar's version)
+class RA JarClassLoader
+f714 zipFile
+f715 loadedClasses
+m1200 openZip
+
+## ---------------------------------------------------------------- HTML response parsing
+# C_FA: one HTML tag (attributes in a Hashtable) plus static tag-scanning helpers
+class FA HtmlTag
+f302 tagName
+m515 parseTagAt
+m516 getTagNameAt
+m517 getCommentTextAt
+m518 getAttribute
+m519 getAttribute
+m520 getIntAttribute
+m521 parseAttributes
+m522 decodeEntities
+m523 skipWhitespace
+m524 skipWhitespace
+m525 skipToWhitespace
+m526 skipToWhitespace
+m527 getTagName
+m528 findTag
+m529 findTag
+m530 findComment
+m531 findComment
+m532 isCommentAt
+m533 isCommentAt
+m534 findTagEnd
+m535 findTagEnd
+
+# C_r_: parses the first <table> of a response into cells, then into an Object[][] grid
+class r HtmlTableParser
+f1343 bounds
+m2046 addCell
+m2047 parseTable
+m2048 getCellAt
+m2049 getBounds
+m2050 toGrid
+
+## ---------------------------------------------------------------- encoders / streams
+# Md5OutputStream (C_KD)
+f495 md5
+f496 digestBytes
+f497 byteCount
+m924 getByteCount
+m925 writeFile
+m926 writeFile
+
+# HexEncoder (C_m_C)
+f1280 length
+f1281 bytes
+f1282 nibbleState
+f1283 pendingNibble
+f1284 HEX_DIGITS
+m1939 reset
+m1940 ensureCapacity
+m1941 addBytes
+m1942 addBytes
+m1943 getBytes
+m1944 getBytes
+m1945 addHexChar
+m1946 addHexString
+m1947 toHexString
+m1948 toHexStringAndReset
+m1949 toHexString
+
+# Base64Codec (C_o_B)
+f1319 length
+f1320 bytes
+f1321 decodeState
+f1322 pendingBits
+f1323 ALPHABET
+f1324 PADDING
+m1996 reset
+m1997 ensureCapacity
+m1998 addBytes
+m1999 addBytes
+m2000 getBytes
+m2001 getBytes
+m2002 addBase64Char
+m2003 addBase64String
+m2004 encodeAll
+m2005 encodeChunk
+m2006 encode
+
+# C_LE: InputStream that base64-decodes another stream
+class LE Base64InputStream
+f521 in
+f522 codec
+f523 decoded
+f524 decodedPos
+f525 eof
+m945 bufferedCount
+m946 copyDecoded
+m947 readAvailableInput
+
+# C_WC: OutputStream that base64-encodes onto another stream
+class WC Base64OutputStream
+f855 out
+f856 codec
+f857 unusedBuffer
+f858 unusedCount
+f859 closed
+
+# C_UB: (modified) UTF-8 encoder/decoder
+class UB Utf8Codec
+f797 text
+f798 partialChar
+f799 pendingBytes
+m1333 reset
+m1334 append
+m1335 decode
+m1336 decode
+m1337 encode
+m1338 encode
+
+# C_k_F: BufferedWriter that scrambles each line with a key before writing it
+class kF ScramblingWriter
+f1221 key
+f1222 pendingLine
+m1914 scramblePendingLine
+
+## ---------------------------------------------------------------- raw socket clients (unused)
+# C_GE: line-oriented socket client; also static local-IP helpers used for the "ip" field
+class GE SocketLineClient
+f363 reader
+f364 writer
+f365 transcript
+f366 localAddress
+m643 getLocalHost
+m644 getLocalIpString
+m645 getLocalIpWithPort
+m646 toUnsignedInts
+m647 toBytes
+m648 joinInts
+m649 parseDottedAddress
+m650 addOctet
+m651 attachSocket
+m652 closeStreams
+m653 sendLine
+m654 readDotTerminatedLines
+m655 readStatusLine
+
+# C_UD: SocketLineClient for SMTP (25) and POP3 (110)
+class UD MailSocketClient
+f809 popSocket
+f810 smtpSocket
+m1351 connectSmtp
+m1352 connectPop
+m1353 closeSmtp
+m1354 closePop
+m1355 closeAll
+
+# C_w_: byte-level line reader for sockets (CR, LF or CRLF)
+class w SocketLineReader
+f1421 in
+f1422 sawCr
+f1423 buffer
+m2131 readLine
+m2132 close
+
+# C_YB: "NNN text" status reply of a line protocol
+class YB ProtocolReply
+f902 code
+f903 words
+m1536 firstIndex
+m1537 lastIndex
+m1538 isStatusLine
+
+## ---------------------------------------------------------------- user / course / institution
+# DiagnosticsLog (C_k_C)
+m1905 log
+m1906 logThrowable
+
+# UserInfo (C_OE): work/user.txt
+f659 FILE_FORMAT_VERSION
+f661 keyOrder
+f664 userUid
+f665 courseUid
+f666 relations
+m1146 computeDigest
+m1147 computeDigest
+m1148 computeDigest
+m1154 getStudentId
+m1160 usesWorkBackupKey
+m1161 getBackupKey
+m1162 setBackupKey
+m1163 getCourse
+m1164 getCourseUid
+m1165 getMessageParams
+m1170 editInfo
+m682 editInfo
+m683 isComplete
+m1171 hasRelation
+
+# NewUserInfo (C_HB)
+f381 passwordHash
+
+# CourseInfo (C_MF): one course row from Course_Remote
+f620 institution
+f621 term
+f622 course
+f623 courseUid
+f624 comment
+f625 instructors
+f626 assistants
+f627 extraNumber
+f628 allCourses
+m1109 formatTermName
+m1110 formatTermNames
+m1111 listInstitutions
+m1112 listTerms
+m1113 listCourses
+m1114 parseStaffList
+m1115 containsIgnoreCase
+m1116 findCoursesFor
+m1117 getAllCourses
+m1118 findCourses
+m1119 findCourses
+m1120 findCourses
+
+# C_n_E: institution/term/course chooser panel with instructor/assistant details
+class nE CourseChooserPanel
+f1305 institutionChoice
+f1306 termChoice
+f1307 courseChoice
+f1308 courses
+f1309 termCodes
+f1310 commentArea
+f1311 staffPanel
+f1312 dialog
+m1966 getSelectedCourse
+m1967 fillStaffPanel
+m1968 updateCourseDetails
+m1969 joinWithAnd
+
+# Institution (C_SF)
+f774 KNOWN_INSTITUTIONS
+f775 byName
+m1293 forName
+m1294 getCode
+m1295 normalizeStudentId
+m1296 parseTerm
+m1297 formatTermCode
+m1298 formatTermName
+m1299 displayTerm
+
+# C_e_C: default institution: terms like "2026F" (year + W/S/SP/SS/SSA/SSB/SSC/F)
+class eC StandardInstitution
+f1071 code
+f1072 seasonCodes
+f1073 seasonFormats
+
+# C_P: parsed term (year, season index)
+class P TermCode
+f668 year
+f669 season
+m1172 compareTerm
+
+# Institution subclasses
+class mE UclaInstitution
+class pC UcsbInstitution
+class oC UcsdInstitution
+class lC YaleInstitution
+class vE SunysbInstitution
+class fB BounInstitution
+class mD TmuInstitution
+
+# C_q_: JPasswordField in the program font
+class q PasswordInputField
+
+# C_UE: enables a dialog's OK button only when the password fields are filled/match
+class UE PasswordFieldValidator
+f811 dialog
+f812 buttonIndex
+f813 passwordField
+f814 confirmField
+f815 oldPasswordField
+m1356 attach
+m1357 updateButton
+
+# AccountManager (C_j_C)
+m1863 chooseCourse
+m1864 promptForPassword
+m1865 reenterPassword
+m1866 createPassword
+m1867 changePassword
+m1868 reenterChangedPassword
+m1869 createNewUser
+m1870 createNewUser
+m1871 identifyPrivilegedUser
+m1872 verifyAccount
+m1873 showSubmissionResults
+m1874 showSubmissionResults
+m1875 showUploadResults
+m1876 showUploadResults
+
+# UserSetup (C_u_C)
+f1396 verifiedPasswordUsers
+f1397 verifiedRelations
+m2101 hasAccess
+m2102 checkAccess
+m2103 checkAccess
+m2104 showErrorChoice
+m2105 confirmSubmitAll
+m2106 confirmIdentity
+m2107 confirmIdentityAndPreferences
+m2108 chooseInstalledVersion
+m2109 deleteRecursively
+m2110 askContinueOrDelete
+m2111 offerDeleteWork
+m2112 askRestoreOrQuit
+m2113 askRegister
+m2114 offerRegisterOrRestore
+m2115 offerBackupBeforeQuit
+m2116 chooseBackup
+m2117 confirmDeleteWork
+m2118 stripFirstWord
+m2119 stripPrefix
