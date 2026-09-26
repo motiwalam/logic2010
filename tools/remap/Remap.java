@@ -277,6 +277,14 @@ public class Remap {
             }
             Set<String> ancestors = new LinkedHashSet<>();
             collectAncestors(cn.name, ancestors);
+            // a renamed method must not accidentally override a JDK method
+            for (MethodNode mn : cn.methods) {
+                String nn = memberMap.get(cn.name + "." + mn.name + mn.desc);
+                if (nn == null || nn.equals(mn.name) || (mn.access & (Opcodes.ACC_STATIC | Opcodes.ACC_PRIVATE)) != 0) continue;
+                MethodNode probe = new MethodNode(mn.access, nn, mn.desc, null, null);
+                if (overridesExternal(ancestors, probe))
+                    die("mapping makes " + cn.name + "." + nn + mn.desc + " override a JDK method; pick another name");
+            }
             Map<String, String> finalSigs = new HashMap<>(); // newName+argdesc -> origin key
             for (String a : ancestors) {
                 ClassNode an = classes.get(a);
