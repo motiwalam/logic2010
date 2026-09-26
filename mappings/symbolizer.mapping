@@ -1,0 +1,416 @@
+# symbolizer.mapping -- LPSymbolizer (English -> formula symbolization module)
+# plus the shared formula-text editing widgets (StyledTextPane .. FormulaEntryField, keypads).
+# Class lines use the ORIGINAL obfuscated name (see "# classes" in mappings/ids.txt).
+
+## ================================================================ shared formula text widgets
+
+# StyledTextPane (C_e_E): JTextPane base with font setup, whole-text colour/underline attributes and optional no-wrap
+f1092 styleContext
+f1093 wrapLines
+f1094 inWidthCheck
+m1787 setWrapLines
+m1788 isWrapLines
+m1789 setWrapWords
+m1790 isWrapWords
+m1791 setTextForeground
+m1792 setTextBackground
+m1793 setTextColorAttribute
+m1794 setUnderlined
+m1795 replaceRange
+m1796 insertText
+m1797 getPositionLocation
+m1798 scrollToPosition
+m1799 getDocumentLength
+
+# EditableTextPane (C_p_A): StyledTextPane with min/max width, Tab/Enter focus traversal, clipboard helpers and undo
+f1329 minWidth
+f1330 maxWidth
+f1331 multiLine
+f1332 minimumIsPreferred
+f1333 undoManager
+m2019 isMinimumPreferred
+m2020 setMinimumPreferred
+m2021 getPreferredSizeAtLeast
+m2022 setMinWidth
+m2023 setFixedWidth
+m2024 copyToClipboard
+m2025 getClipboardText
+m1844 undo
+m2026 redo
+
+# FormulaTextPane (C_s_D): formula editor: Ctrl+Shift+letter / Option-key symbol shortcuts, bracket and subformula selection
+f1364 CTRL_SHIFT_MASK
+f1365 displaySymbols
+f1366 OPEN_BRACKETS
+f1367 CLOSE_BRACKETS
+m1842 insertAtCaret
+m2077 insertAtCaret
+m2078 selectEnclosingBrackets
+m2079 findOpenBracket
+m2080 findCloseBracket
+m2081 shortcutSymbol
+m714 showKeypad
+
+# FormulaEntryField (C_IF): borderless FormulaTextPane that pops up the symbol keypad on right click
+f424 ownerFrame
+f425 ownerDialog
+m712 setOwnerFrame
+m713 setOwnerDialog
+m715 showCaretOnDialogFocus
+f426 field
+
+# KeypadDialog (C_T): popup dialog that types into a bound EditableTextPane (implements KeypadTarget)
+f776 target
+f777 disposed
+f778 anchor
+m1300 init
+m1301 showLater
+m1302 setAnchor
+m1303 refocusTarget
+f779 dialog
+
+# C_r_B: interface a keypad button panel (C_JF) uses to edit its target text
+class rB KeypadTarget
+m375 translateKey
+m1304 getTargetText
+m376 getTargetSelectionStart
+m377 getTargetSelectionEnd
+m378 getTargetCaret
+m379 selectInTarget
+m380 setTargetCaret
+m381 insertIntoTarget
+m1305 deleteFromTarget
+m1306 isTargetReadOnly
+
+# C_a_E: general formula symbol keypad popup (maps "space"/"backspace" key names)
+class aE SymbolKeypadDialog
+f978 ownerDialog
+
+## ================================================================ symbolization module
+
+# C_v_D: symbolization constants: node kinds NONE..SYMBOLIC, connSymbol/connMenu/connWords tables
+class vD SymbolizationConstants
+
+# LPSymbolizer$C__A: startup runnable; first callback loads the work file, second finishes startup
+class LPSymbolizer$_A SymbolizerStartup
+f528 exercisesReady
+
+# C_d_C: one node of the symbolization tree: English text, connective, and child nodes
+class dC SymbolizationNode
+f1041 TYPE_FORMULA
+f1042 TYPE_TERM
+f1043 TYPE_ANY
+f1044 symbolizer
+f1045 textPanel
+f1046 slots
+f1047 slotAnchors
+f1048 connective
+f1049 outType
+f1050 argTypes
+f1051 problemName
+f1052 originalName
+f1053 scheme
+f1054 answerKeys
+f1055 statement
+f1056 answers
+f1057 answerGroup
+f1058 userAnswerKey
+f1059 displaySymbols
+m1680 setEnglishText
+m1681 isModified
+m1682 getEnglishText
+m1683 getNodeCode
+m1684 getLabel
+m1685 getConnectivePanel
+m1686 getChildNode
+m1687 indexOfChildNode
+m1688 getParentNode
+m1689 clearNode
+m1690 setConnective
+m1691 setConnective
+m1692 putSlot
+m1693 isNonPredicateSymbol
+m1694 suggestBoundVariable
+m1695 showHint
+m1696 containsBinder
+m1697 getConnective
+m1698 toExpression
+m1699 toRecord
+m1700 copyAnswersToUserKey
+m1701 addUserAnswer
+m1702 removeUserAnswers
+m1703 loadRecord
+m1704 loadRecord
+m1705 loadRecord
+m1706 readNodes
+m1707 lookupAnswers
+m1708 lookupAnswers
+m1709 buildFromText
+m1710 buildFromExpression
+m1711 getAnswerSets
+m1712 findMatchingAnswer
+m1713 findEquivalentAnswer
+m1714 countAnswers
+m1715 findClosestAnswer
+m1716 areEquivalent
+m1717 isIncomplete
+m1718 getAnswerSetName
+m1719 indexOfAnswerSet
+m1720 findDuplicateSolution
+m1721 countMatchingNodes
+m1722 matchTree
+m1723 matchTree
+m1724 atomicMatches
+m1725 isLowercaseTerm
+m1726 isBinder
+m1727 isBinder
+m1728 describeType
+m1729 describeType
+m1730 translateVariable
+m1731 translateVariable
+m1732 translateExpression
+m1733 translateExpression
+m1734 translateExpression
+m1735 hasBindingConflicts
+m1736 bindsSameVariable
+m1737 atomsEquivalent
+m1738 isTranslatable
+m1739 clearErrors
+m1740 evaluateWork
+m1741 evaluateWork
+m1742 copyTextFrom
+m1743 copyTextFrom
+
+# C_x_C: header row of a SymbolizationNode: the English text pane (optionally wrapped in "(" / ")") and its connective popup menu
+class xC SymbolizationTextPanel
+f1437 node
+f1438 textPane
+f1439 connectiveMenu
+f1440 popupMenu
+f1441 popupWasOpen
+f1442 parenSide
+f1443 UNUSED_FLAG
+m2164 normalizeText
+m2165 normalizeText
+m2166 collapseWhitespace
+m2167 collapseWhitespace
+m2168 isCollapsibleSpace
+m2169 adjustIndexes
+m2170 onTextFocusGained
+m2171 onTextFocusLost
+m2172 setActive
+m2173 showConnectiveMenu
+m2174 showConnectiveMenu
+m2175 isMenuVisible
+
+# C_x_E: English text pane of a node; Ctrl+Shift keys apply connectives, Alt+arrows navigate the tree
+class xE SymbolizationTextPane
+f1444 textPanel
+f1445 resetCaretOnFocus
+m2178 applyConnective
+
+# C_VE: the connective symbol (plus bound variable / atomic expression) shown between a node's children; hosts error buttons
+class VE SymbolizationConnectivePanel
+f835 connective
+f836 label
+f837 labelComponent
+f838 errorButton
+f839 enableTarget
+f840 displaySymbols
+m1392 setLabel
+m1393 showError
+m1394 clearError
+
+# C_f_A: "Error" button placed on a node that differs from the closest answer; click explains the mismatch
+class fA SymbolizationErrorButton
+f1104 messageId
+f1105 messageText
+f1106 target
+f1107 answer
+f1108 targetBinders
+f1109 answerBinders
+f1110 handler
+m1804 buildMessage
+m1805 errorParams
+m1806 chooseErrorMessage
+m1807 substituteVariables
+
+# C_CD: hint (symnot001) telling the student the right connective for a node
+class CD SymbolizationHint
+f258 messageId
+f259 messageText
+f260 target
+f261 answer
+f262 targetBinders
+f263 answerBinders
+f264 handler
+m424 buildMessage
+m425 hintParams
+m426 show
+
+# C_i_D: callback interface for SymbolizationNode.matchTree
+class iD NodeMatchListener
+m68 nodeMatched
+m69 nodeMismatched
+
+# C_0F: NodeMatchListener that counts matching nodes
+class $F MatchCounter
+f29 count
+m66 reset
+m67 getCount
+
+# C_JA: NodeMatchListener that collects error buttons and the hint for one target node
+class JA HintCollector
+f429 errors
+f430 target
+f431 hint
+m719 reset
+m720 getErrors
+m721 getHint
+
+# C_r_C: NodeMatchListener that shows error buttons and detects an unrestricted quantifier
+class rC ErrorMarker
+f1353 quantifierUnrestricted
+
+# C_TF: snapshot of a node's children (types + records) restored after the connective changes
+class TF ChildRecordSnapshot
+f780 childTypes
+f781 childRecords
+m1308 capture
+m1309 restore
+
+# C_WD: named set of acceptable answers (one problem of an equivalence group)
+class WD AnswerSet
+f860 problemName
+f861 answers
+
+# C_h_C: symbolization ProblemSet; also indexes answer groups ('g' tag)
+class hC SymbolizationProblemSet
+f1158 answerGroups
+f1159 useUserKey
+
+# C__C: symbolization ProblemEntry, with the index of the matched answer set
+class _C SymbolizationEntry
+f927 answerIndex
+f928 knownNames
+m1582 resetState
+
+# C_h_E: symbolization message catalogue (symMessages)
+class hE SymbolizationMessages
+f1162 messages
+f1163 linkName
+
+# C_WB: static dialogs of the symbolizer: choose/delete/submit/print problems, user problems, schemes, Answer Manager
+class WB SymbolizationDialogs
+f854 displaySymbols
+m1427 showMessage
+m1428 showMessage
+m1429 showMessage
+m1430 showMessage
+m1431 deleteProblem
+m1432 deleteExerciseWork
+m1433 selectNextProblem
+m1434 chooseProblem
+m1435 chooseScheme
+m1436 chooseProblemsToSubmit
+m1437 chooseProblemsToUpload
+m1438 deleteProblems
+m1439 chooseProblemsToPrint
+m1440 enterSubmittedProblem
+m1441 createProblemList
+m1442 createUserProblem
+m1443 editUserProblem
+m1444 showSchemeDialog
+m1445 editStatement
+m1446 editScheme
+m1447 showAnswerManager
+m1448 chooseAnswersToPrint
+m1449 createExerciseList
+m1450 confirmSaveChanges
+m1451 askProblemName
+m1452 askForSymbol
+m1453 enterDirectSymbolization
+m1454 showNodeMessage
+
+# C_b_B: symbolizer button bar (Select, User, Direct, Check, Save, Delete, Submit, Print, Menu, Close, Edit, Help ...)
+class bB SymbolizationToolbar
+f995 symbolizer
+m1663 create
+m1664 build
+f996 toolbar
+f997 toolbar
+f998 toolbar
+f999 toolbar
+f1000 toolbar
+f1001 toolbar
+f1002 toolbar
+f1003 toolbar
+f1004 toolbar
+f1005 toolbar
+f1006 toolbar
+f1007 toolbar
+f1008 toolbar
+f1009 toolbar
+f1010 toolbar
+f1011 toolbar
+f1012 toolbar
+f1013 toolbar
+f1014 toolbar
+f1015 toolbar
+
+# C_RE: DialogHandler for error/hint dialogs (Up, Text, Symb, OK)
+class RE NodeMessageHandler
+f737 displaySymbols
+
+# C_r_E: DialogHandler for the Create/Edit Scheme dialog (OK, Clear, Browse, Help)
+class rE SchemeDialogHandler
+
+# C_I: DialogHandler for the User Problem dialog (OK, Clear, Cancel)
+class I UserProblemDialogHandler
+
+# C_QD: DialogHandler for the Answer Manager (Add, Use, Delete, Replace, Help)
+class QD AnswerManagerHandler
+f699 displaySymbols
+m1188 addAnswer
+m1189 deleteSelectedAnswers
+m1190 saveChanges
+
+# C_QC: list label whose toString() is its text (Answer Manager rows)
+class QC AnswerListLabel
+m1187 setHoverText
+
+# C_y_B: editable "symbol : English" table of a symbolization scheme
+class yB SchemeEditor
+f1448 symbolFields
+f1449 englishFields
+f1450 editable
+f1451 constraints
+f1452 displaySymbols
+m2180 clearRows
+m2181 loadScheme
+m2182 setScheme
+m2183 getRowCount
+m2184 getScheme
+m2185 addRow
+m2186 indexOfSymbolField
+m2187 indexOfEnglishField
+
+# C_JC: one cell of the SchemeEditor; Tab/arrows/Enter move between cells and add rows
+class JC SchemeCellPane
+f434 editor
+
+# C_PD: printed answers to the selected exercises (instructor)
+class PD AnswerPrinter
+m1179 printSelected
+
+# C_TC: printed symbolization problems with work
+class TC SymbolizationProblemPrinter
+m1307 printSelected
+
+# C_WF: printed list of problem statements
+class WF StatementListPrinter
+m1460 printSelected
+
+# C_c_A: printed results (check status) of the selected problems
+class cA SymbolizationResultsPrinter
+m1666 printSelected

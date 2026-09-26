@@ -1,0 +1,743 @@
+# parsing.mapping -- LPParsing module, parse/truth-value tree widgets, printing
+# framework, custom layout managers and the generic Swing widget toolkit.
+# Class lines use the ORIGINAL obfuscated name; the current placeholder is in the comment.
+
+## ================================================================ LPParsing module
+
+# LPParsing$C__A: startup runnable that allocates the parsing module window
+class LPParsing$_A ParsingStartupTask
+
+# C_ZC: problem list of the parsing module (ProblemSet subclass)
+class ZC ParsingProblemSet
+
+# C_l_D: one entry of the parsing problem list
+class lD ParsingProblemEntry
+f1254 newProblemNames
+
+# C_ND: parsing message catalogue (parMessages / shade.txt)
+class ND ParsingMessage
+f648 messages
+f649 linkName
+
+# C_KA: static dialogs of the parsing module (choose, delete, submit, upload, print, user problem)
+class KA ParsingDialogs
+f443 SYMBOLS
+m742 showMessage
+m743 showMessage
+m744 showMessage
+m745 showMessage
+m746 deleteProblemOrWork
+m747 deleteWork
+m748 selectNextProblem
+m749 selectProblem
+m750 chooseProblemsToSubmit
+m751 chooseProblemsToUpload
+m752 deleteProblems
+m753 printProblems
+m754 enterSubmittedProblem
+m755 createProblemListView
+m756 confirmSaveChanges
+m757 askProblemName
+m758 createUserProblem
+
+# C_RB: button bar of the parsing module (Select/User/Check/Save/Delete/Submit/Print/Menu/Close/Feedback/Help/Upload)
+class RB ParsingToolbar
+f716 module
+m1201 create
+m1202 buildButtons
+f717 this$0
+f718 this$0
+f719 this$0
+f720 this$0
+f721 this$0
+f722 this$0
+f723 this$0
+f724 this$0
+f725 this$0
+f726 this$0
+f727 this$0
+f728 this$0
+f729 this$0
+f730 this$0
+f731 this$0
+f732 this$0
+
+# C_y_D: the problem panel of a parsing window: notation chooser + parse tree; reads/writes the work record
+class yD ParsingProblemPanel
+f1455 module
+f1456 notationChooser
+f1457 treePanel
+f1458 problemName
+f1459 statement
+f1460 SYMBOLS
+m2188 clearProblem
+m2189 resetWork
+m2190 resetWork
+m2191 isCorrect
+m2192 checkProblem
+m2193 loadRecord
+m2194 getWorkRecord
+
+# C_f_D: "Official Notation / Informal Notation / Not Well Formed" radio group with result label
+class fD NotationChooser
+f1112 problemPanel
+f1113 resultLabel
+f1114 buttons
+f1115 buttonGroup
+f1116 NOTATION_CODES
+f1117 NOTATION_LABELS
+m1808 setResultText
+m1809 getSelectedIndex
+m1810 codeForIndex
+m1811 getSelectedCode
+m1812 indexForCode
+
+# C_j_: one radio button of the NotationChooser; checks immediately when checkNow is set
+class j NotationRadioButton
+f1176 chooser
+
+# C_EB: status label + root of the interactive parse tree
+class EB ParseTreePanel
+f291 statusLabel
+f292 rootNode
+f293 module
+f294 unexpandedCount
+m494 updateStatus
+m495 isComplete
+
+# C_AD: one node of the interactive parse tree (formula text + child node panels)
+class AD ParseTreeNodePanel
+f140 treeLayout
+f141 parseNode
+f142 formulaText
+f143 expanded
+f144 treePanel
+m224 detach
+m225 addChildNode
+m226 setTreePanel
+m227 setFormula
+m228 setParseNode
+m229 setExpanded
+m230 restoreExpansion
+m231 getChildNodeCount
+m232 getChildNode
+m233 getExpansionString
+
+# C_k_: clickable formula text of a parse tree node; the user clicks the main connective
+class k ParseTreeFormulaText
+f1193 SYMBOLS
+f1194 parseNode
+f1195 selectedRange
+f1196 highlightOrigin
+f1197 highlightChars
+f1198 selectionCorrect
+m1898 getOperatorRanges
+m1899 getOperatorPixelRanges
+m1900 getSymbolRangeAt
+m1901 setHighlight
+m1902 clearHighlight
+m1903 flashSymbolAt
+m1904 emptyHook
+
+# C_YF: layout of a parse tree node: formula on top, visible children in a row below
+class YF ParseTreeLayout
+f905 alignX
+f906 alignY
+f907 anchor
+m1541 isFixedParseTreeLayout
+m1542 getLayoutSize
+m1543 setAnchor
+
+# C_j_F: component that knows the x offset of its main connective (tree lines are drawn from it)
+class jF AnchorProvider
+m386 getAnchorX
+
+# C_DD: formula parse node; maps each subexpression to its character range in the displayed text
+class DD FormulaParseNode
+f277 parent
+f278 expression
+f279 informal
+f280 identityStyle
+f281 children
+f282 offset
+f283 length
+f284 text
+f285 letterRanges
+f286 strippedIndex
+f287 parenDepth
+f288 STRIPPED_STRINGS
+f289 EMPTY_STRINGS
+m454 parseFormula
+m455 getParent
+m456 getExpression
+m457 getChildCount
+m458 getChild
+m459 getTextRange
+m460 addLetterRanges
+m461 addTermRanges
+m462 rangesOf
+m463 toStyledText
+m464 getNotationCode
+m465 getStructureString
+m466 getAbsoluteOffset
+m467 getLength
+m468 getRange
+m469 getOperatorRanges
+m470 getRoot
+m471 getRoot
+m472 findNode
+m473 getPath
+m474 findLetterNodes
+m475 collectLetterNodes
+m476 findTermNodes
+m477 collectTermNodes
+m478 findNodeForDisplayRange
+m479 findNodeForRange
+m480 findNodeContaining
+m481 findNodeContaining
+m482 prepareText
+m483 computeStrippedIndex
+m484 computeParenDepth
+m485 findDisplayRange
+m486 findDisplayRange
+m487 convertRanges
+m488 widenToParens
+m489 adjustRangeEnds
+m490 isParenthesizationValid
+m491 checkParenthesization
+
+# C_ME: shows an expression as rows of buttons, one row per tree level (unused)
+class ME ExpressionLevelsPanel
+f619 levelRows
+m1108 addExpression
+
+# C_PA: button that shows one subexpression
+class PA ExpressionButton
+f670 expression
+f671 SYMBOLS
+
+## ================================================================ truth-value trees (used by the truth-analysis module)
+
+# C_VF: truth-value calculation tree for a formula, with a T/F chooser per node
+class VF TruthValueTree
+f841 linkedTree
+f842 alignmentTree
+f843 treeLayout
+f844 parseNode
+f845 label
+f846 cell
+f847 errorShown
+f848 correct
+f849 compact
+m1395 setFormula
+m1396 setFormula
+m1397 setParseNode
+m1398 setAnchor
+m1399 setParseNode
+m1400 setValues
+m1401 setValues
+m1402 setLinkedTree
+m1403 setAlignmentTree
+m1404 isAlignedWith
+m1405 refreshLinks
+m1406 hasEnteredValues
+m1407 getValues
+m1408 appendValues
+m1409 showError
+m1410 showError
+m1411 checkValues
+m1412 checkValues
+m1413 propagateValue
+m1414 setValueIndex
+m1415 getExpression
+m1416 getConnective
+m1417 getValueChar
+m1418 addChildTree
+m1419 detach
+m1420 getChildTreeCount
+m1421 getChildTree
+m1422 getRootTree
+
+# C_BC: node label of a TruthValueTree: formula text above a T/F ChoiceButton
+class BC TruthValueTreeLabel
+f237 SYMBOLS
+f238 tree
+f239 parseNode
+f240 formulaText
+f241 valueButton
+m382 getOperatorRanges
+m383 getCharLocation
+m384 getOperatorPixelRanges
+m385 getConnectiveCenterX
+m387 getRawOperatorRanges
+m388 widenRangesToParens
+m389 getDisplayText
+
+# C_h_A: layout of a TruthValueTree node: label on top, children in a row, optionally aligned to another tree
+class hA TreeNodeLayout
+f1155 alignX
+f1156 alignY
+f1157 anchor
+m1837 isFixedTreeNodeLayout
+m1838 setAnchor
+
+# C_IA: compact (inline) TreeNodeLayout: left child, connective, right child in one row
+class IA InlineTreeNodeLayout
+
+# C_t_C: two components stacked vertically and centred on the first one's anchor
+class tC StackedPairLayout
+f1375 alignX
+f1376 alignY
+m2086 isFixedPairLayout
+
+## ================================================================ printing framework
+
+# C_l_B: base print job: runs PrinterJob, registers itself in a PrintQueue
+class lB PrintTask
+f1230 printProperties
+f1231 BASE_FONT_SIZE
+f1232 scale
+f1233 minMargin
+f1234 queue
+f1235 cancelled
+m413 getPrintable
+m1922 cancel
+m1923 schedule
+m1924 waitForQueue
+m1925 abortQueue
+m1926 getPageSize
+
+# C_l_B$C__A: lays out the printed components and splits them into pages
+class lB$_A PrintPaginator
+f1236 pageSize
+f1237 headerHeight
+f1238 header
+f1239 separatorHeight
+f1240 separator
+f1241 itemEnds
+f1242 itemSizes
+f1243 pages
+f1244 frame
+f1245 contentPanel
+f1246 this$0
+m1927 printPage
+
+# C_l_B$C__A$C2__A: component range printed on one page
+class lB$_A$_A PrintPageSpan
+f1247 firstIndex
+f1248 lastIndex
+f1249 firstOffset
+f1250 this$0
+
+# C_l_B$C__A$C2__B: height and scale of one printed component
+class lB$_A$_B PrintItemSize
+f1251 height
+f1252 scale
+f1253 this$0
+
+# C_CA: abstract printable page list for a set of problems; subclasses supply the components
+class CA PrintPage
+f249 problemIndices
+f250 paginator
+f251 separator
+m70 getPrintComponents
+m414 setSeparator
+
+# C_AE: parsing "Print List" page (problem statements)
+class AE ParsingStatementsPage
+m234 printStatements
+
+# C_o_E: parsing "Print Results" page
+class oE ParsingResultsPage
+m2009 printResults
+
+# C_BD: recognition problems page
+class BD RecognitionProblemsPage
+m390 printProblems
+
+# C_t_B: page header with class, name, date and "Page n of m"
+class tB PrintPageHeader
+f1374 pageLabel
+m2084 createForCurrentUser
+m2085 create
+
+# C_c_C: named queue of running print tasks with listeners
+class cC PrintQueue
+f1028 listeners
+f1029 title
+m1667 getTitle
+m1668 addQueueListener
+m1669 removeQueueListener
+m1670 fireQueueChanged
+
+# C_TD: listener for PrintQueue changes
+class TD PrintQueueListener
+m223 queueChanged
+
+# C_AC: "Please wait for printing to finish" dialog that closes when the queue empties
+class AC PrintWaitDialog
+
+# C_ZB: dialog handler of the print wait dialog ("abort" empties the queue)
+class ZB PrintAbortHandler
+
+## ================================================================ collapsible outline (tips)
+
+# C_v_A: component with an optional header and a collapsible body, toggled by an arrow button
+class vA CollapsibleNode
+f1417 toggle
+f1418 expanded
+f1419 hasHeader
+m1548 setToggle
+m1553 toComponentIndex
+m1554 toContentIndex
+m1555 getContentCount
+m2122 getToggle
+m2123 setExpanded
+m2124 isExpanded
+m2125 setHeader
+m2126 getHeader
+m2127 getBodyCount
+m2128 getBodyComponent
+m2129 detachChild
+
+# C_JE: node of a printable outline read from TaggedRecords (the tips file)
+class JE OutlineNode
+f436 entry
+f437 columnLayout
+f438 indent
+m726 readOutline
+m727 parseOutline
+m728 setWidth
+m729 getAllNodes
+m730 collectNodes
+m731 expandAll
+
+# C_t_: title label and text of an OutlineNode
+class t OutlineEntry
+f1371 titleLabel
+f1372 textArea
+f1373 node
+
+# C_DC: indented vertical layout for CollapsibleNode children (toggle button in the indent)
+class DC IndentedTreeLayout
+f275 indent
+f276 gap
+
+# C_g_: IndentedTreeLayout that centres toggle buttons on the entry titles
+class g OutlineLayout
+f1129 indent
+m1818 layoutWithCenteredToggles
+
+## ================================================================ layout managers
+
+# C_m_A: vertical stack layout with horizontal/vertical alignment flags
+class mA VerticalStackLayout
+f1268 H_CENTER
+f1269 H_FILL
+f1270 V_TOP
+f1271 V_CENTER
+f1272 V_BOTTOM
+f1273 V_MASK
+f1274 FLAG_16
+f1275 alignment
+m1938 computeSize
+
+# C_QF: grid layout with per-row/column sizes, alignment and Point constraints
+class QF FlexGridLayout
+f701 nextRow
+f702 nextColumn
+f703 hAlign
+f704 vAlign
+f705 variableColumnWidths
+f706 variableRowHeights
+f707 fillCells
+f708 cells
+f709 cellSizes
+f710 columnWidths
+f711 rowHeights
+f712 maxCellSize
+m1194 measure
+m1195 computeSize
+m1196 fitContainer
+m1197 getCellComponent
+m1198 getCellPosition
+
+# C_b_C: flow layout with vertical alignment (top/centre/bottom)
+class bC AlignedFlowLayout
+f1016 TOP
+f1017 BOTTOM
+f1018 verticalAlignment
+
+# C_b_C$C__A: sizes of the visible components of an AlignedFlowLayout row
+class bC$_A FlowRowMetrics
+f1019 maxWidth
+f1020 maxHeight
+f1021 totalWidth
+f1022 totalHeight
+f1023 componentCount
+f1024 visibleCount
+f1025 sizes
+f1026 this$0
+
+# C_u_: single row with fixed column widths (first column may be indented to a reference component)
+class u FixedColumnLayout
+f1381 columnCount
+f1382 columnWidths
+f1383 indentSource
+m2092 getColumnWidth
+m2093 setColumnWidth
+m2094 setColumnWidths
+m2095 getTotalWidth
+
+# C_u_$C__A: row height and preferred sizes for FixedColumnLayout
+class u$_A ColumnRowMetrics
+f1384 rowHeight
+f1385 count
+f1386 sizes
+f1387 this$0
+
+# C_u_A: FixedColumnLayout variant for derivation lines (sizes children first)
+class uA FixedColumnLineLayout
+f1388 columnCount
+f1389 columnWidths
+f1390 indentSource
+m2096 getColumnWidth
+m2097 setColumnWidth
+m2098 setColumnWidths
+m2099 getTotalWidth
+
+# C_u_A$C__A: row height and preferred sizes for FixedColumnLineLayout
+class uA$_A LineRowMetrics
+f1391 rowHeight
+f1392 count
+f1393 sizes
+f1394 this$0
+
+# C_ZF: positions derivation overlay components next to the derivation lines they belong to
+class ZF DerivationOverlayLayout
+f914 module
+
+## ================================================================ small widgets
+
+# C_ZE: the standard label (font size, cell-render colours, focus preference)
+class ZE LogicLabel
+f910 focusRequested
+f911 savedForeground
+f912 savedBackground
+f913 prerendered
+
+# C_TE: component that records whether it asked to be focusable
+class TE FocusPreference
+m943 wantsFocus
+
+# C_NC: the standard text area (viewport width tracking, char locations)
+class NC LogicTextArea
+f644 styleContext
+f645 noWidthTracking
+f646 computingTracking
+f647 added
+m1130 getCharLocation
+m1131 getTextLength
+
+# C_s_B: read-only word-wrapping message text
+class sB MessageTextArea
+f1361 focusRequested
+
+# C_b_A: button that pops up a list of choices and shows the selected one
+class bA ChoiceButton
+f981 listeners
+f982 choiceList
+f983 choices
+f984 placeholder
+f985 selectedIndex
+f986 userData
+f987 colors
+f988 savedForeground
+f989 savedBackground
+f990 popup
+f991 showPlaceholder
+f992 sizeToWidest
+f993 locked
+f994 useListPopup
+m1644 setColors
+m1645 setUserData
+m1646 getUserData
+m1647 setLocked
+m1648 isLocked
+m1649 setSelectedIndex
+m1650 setSelectedIndex
+m1651 getSelectedIndex
+m1652 setChoices
+m1653 setChoices
+m1654 getChoice
+m1655 setSizeToWidest
+m1656 setShowPlaceholder
+m1657 getDisplayText
+m1658 copyChoices
+m1659 addChoiceListener
+m1660 removeChoiceListener
+m1661 showPopup
+m1662 isPopupVisible
+
+# C_S: JList popup alternative for ChoiceButton
+class S ChoiceList
+f743 choiceButton
+
+# C__D: button with a primary action and a right-click action, HTML tooltip
+class _D ActionButton
+f929 primaryAction
+f930 rightClickAction
+m1583 setHelpText
+m1584 setPrimaryAction
+m1585 setActions
+
+# C_OB: small-font menu item with tooltip
+class OB SmallMenuItem
+f653 marked
+m1141 setHoverText
+
+# C_MA: connective / edit popup menu of a symbolization node
+class MA SymbolizationNodeMenu
+f609 textPanel
+f610 HINT_LABELS
+f611 HINT_HOVER
+f612 HINT_CHAPTERS
+f613 INEQUALITY_LABELS
+f614 INEQUALITY_CHAPTERS
+f615 RESTRICTED_LABELS
+f616 RESTRICTED_HOVER
+f617 RESTRICTED_CHAPTERS
+m1088 rebuildItems
+m1089 isChapterAvailable
+m1090 getMenuItems
+
+# C__E: SymbolizationNodeMenu shown at the text panel
+class _E SymbolizationPopupMenu
+f931 textPanel
+m1586 showAtPanel
+m1587 showAt
+
+# C_NB: ChoiceButton of a symbolization text panel
+class NB SymbolizationMenuButton
+f640 textPanel
+f641 label
+f642 menu
+f643 ignoreDismiss
+m1129 handlePopupClosed
+
+# C_c_F: scroll pane of the symbolizer module
+class cF SymbolizationScrollPane
+f1032 module
+
+# C_a_B: text field with min/max width and undo
+class aB SizedTextField
+f965 minWidth
+f966 maxWidth
+f967 flag
+f968 undoManager
+m1636 getClampedSize
+m1637 setFixedWidth
+m1638 undo
+m1639 redo
+
+# C_CC: separator with explicit length and line thickness
+class CC SizedSeparator
+f256 thickness
+f257 horizontal
+m421 setLength
+m422 setThickness
+m423 adjustSize
+
+# C_g_C: wide bevelled button of the main menu
+class gC WideMenuButton
+m1820 adjustSize
+
+# C_E: label showing a check mark or blank
+class E CheckMarkLabel
+m492 setChecked
+
+# C_NE: check box with a font-scaled icon
+class NE ScaledCheckBox
+
+# C_g_F: font-scaled Metal check box icon
+class gF ScaledCheckBoxIcon
+m1833 getScaledSize
+
+# C_n_B: font-scaled radio button icon in bruin colours
+class nB ScaledRadioIcon
+f1301 size
+
+# C_NF: radio button that can be deselected even inside a ButtonGroup
+class NF LogicRadioButton
+
+# C_x_B: check box that deselects the other boxes of its truth table grid
+class xB ExclusiveCheckBox
+f1435 grid
+f1436 index
+
+# C_d_D: plain label in the program font
+class dD FontLabel
+
+# C_C: SizedPanel with centred flow layout
+class C CenteredFlowPanel
+
+# C_BB: bevel border whose insets include the button margin
+class BB MarginBevelBorder
+
+# C_z_A: runnable that scrolls a viewport to a point
+class zA ViewportScroller
+f1466 position
+f1467 viewport
+
+# C_YD: pushes a temporary event queue and dispatches all pending events
+class YD EventQueueFlusher
+m1539 flushEvents
+
+# C_FF: unused interface
+class FF FontMetricsProvider
+m544 getMetrics
+
+# C_ID: unused interface
+class ID CharMetricsProvider
+m703 getMetrics
+m704 getCharWidth
+
+## ================================================================ utilities
+
+# C_VA: iterator over k-combinations of n indices
+class VA CombinationIterator
+f817 n
+f818 k
+f819 indices
+m1359 getCombination
+m1360 getIndices
+m1361 setCombination
+m1362 next
+m1363 previous
+m1364 reset
+m1365 normalize
+
+# C_WA: stable merge sort driven by an OrderPredicate
+class WA MergeSorter
+f853 order
+m1424 sortIndices
+m1425 sort
+m1426 mergeRuns
+
+# C_EA: "a may precede b" predicate used by MergeSorter
+class EA OrderPredicate
+m493 inOrder
+
+# C_i_C: string order (optionally case-insensitive)
+class iC LexicalOrder
+f1173 ignoreCase
+
+# C_d_B: CourseInfo order by institution, term, course
+class dB CourseOrder
+m1679 compareIgnoreCase
+
+# C_i_F: cell of a parsed HTML table (x=column, y=row, width/height=spans)
+class iF HtmlTableCell
+f1174 next
+f1175 content
+m1862 insertInto

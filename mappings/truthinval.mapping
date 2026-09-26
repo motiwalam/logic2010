@@ -1,0 +1,414 @@
+# truthinval.mapping -- Truth Tables (LPTruthAnalysis) and Invalidity (LPInvalidation) modules.
+# Class lines use the ORIGINAL obfuscated name; the placeholder is in the comment.
+
+## ================================================================ shared
+
+# C_F: listener interface for C_b_A choice buttons (called when the selected choice changes)
+class F ChoiceListener
+m514 choiceChanged
+
+# C_f_E: word-wrapping text cell used by the modules' "print results" pages
+class fE WrappedTextPanel
+f1118 textArea
+
+# C_AB: problem panel of the Recognition module (enter the rule that turns premises into conclusion)
+class AB RecognitionProblemPanel
+f120 displaySymbols
+f121 module
+f122 argument
+f123 problemName
+f124 statement
+f125 correctRules
+f126 nearMissRules
+f127 successComment
+f128 answer
+f129 argumentPanel
+f130 premisesPanel
+f131 conclusionPanel
+f132 answerPanel
+f133 verdictPanel
+f134 commentPanel
+f135 resultPanel
+f136 conclusionLabel
+f137 verdictLabel
+f138 commentText
+f139 ruleField
+m213 getPromptText
+m214 clear
+m215 loadProblem
+m216 parseRuleList
+m217 readAnswer
+m218 getWorkRecord
+m219 clearAnswer
+m220 showVerdict
+m221 checkAnswer
+m222 isLenientSinglePremiseRule
+
+## ================================================================ Truth Tables (LPTruthAnalysis)
+
+# LPTruthAnalysis$C__A: startup runnable of the truth-table module
+class LPTruthAnalysis$_A TruthStartupTask
+
+# C_FE: truth-table message catalogue (truMessages, truerrNNN ids)
+class FE TruthMessage
+f315 messages
+f316 linkName
+
+# C_O: truth-table ProblemSet
+class O TruthProblemSet
+
+# C_f_C: truth-table ProblemEntry
+class fC TruthProblemEntry
+f1111 workProblemNames
+
+# C_w_A: static dialogs of the truth-table module (choose, delete, submit, print, user problem ...)
+class wA TruthDialogs
+f1424 displaySymbols
+m2133 showMessage
+m2134 showMessage
+m2135 showMessage
+m2136 showMessage
+m2137 askProblemName
+m2138 deleteProblemOrWork
+m2139 deleteWork
+m2140 selectNextProblem
+m2141 chooseProblem
+m2142 chooseSubmitProblems
+m2143 chooseUploadProblems
+m2144 deleteMultipleProblems
+m2145 choosePrintProblems
+m2146 enterSubmittedProblem
+m2147 createProblemListView
+m2148 confirmSaveChanges
+m2149 createUserProblem
+
+# C_u_E: button bar of the truth-table module (Select, User, Check, Save, Delete, Submit, Print ...)
+class uE TruthToolbar
+f1399 module
+m2120 create
+m2121 buildButtons
+# anonymous action classes: synthetic outer-instance fields
+f1400 outer
+f1401 outer
+f1402 outer
+f1403 outer
+f1404 outer
+f1405 outer
+f1406 outer
+f1407 outer
+f1408 outer
+f1409 outer
+f1410 outer
+f1411 outer
+f1412 outer
+f1413 outer
+f1414 outer
+f1415 outer
+f1416 outer
+
+# C_HA: propositional truth-table evaluator for a formula or an argument (all 2^n rows)
+class HA TruthTableEvaluator
+f377 formula
+f378 argument
+f379 sentenceLetters
+f380 rowResults
+m672 collectSentenceLetters
+m673 parseLetterOrder
+m674 setLetterOrder
+m675 computeRows
+m676 evaluateAllRows
+m677 evaluate
+m678 indexOfLetter
+m679 rowAssignment
+m680 isAllTrue
+m681 areEquivalent
+
+# C_k_E: the truth-table problem panel (LPTruthAnalysis.problem): question, table, setup, cell editor
+class kE TruthProblemPanel
+f1200 module
+f1201 table
+f1202 cellEditor
+f1203 setupPanel
+f1204 setupPrompt
+f1205 setupContainer
+f1206 cellEditorContainer
+f1207 mainPanel
+f1208 cellEditorButtons
+f1209 questionPanel
+f1210 setupButtons
+f1211 problemName
+f1212 statement
+f1213 displaySymbols
+f1214 evaluator
+f1215 answer
+f1216 premiseCount
+f1217 letterCount
+f1218 argument
+f1219 setupDone
+f1220 loading
+m1908 clearProblem
+m1909 clearWork
+m1910 loadProblem
+m1911 showTable
+m1912 getWorkRecord
+m1913 setProblemName
+
+# C_XF: the truth-table grid: header, one row per assignment, cells and counterexample boxes
+class XF TruthTableGrid
+f882 displaySymbols
+f883 workPanel
+f884 scrollPane
+f885 headerRow
+f886 rowsPanel
+f887 rowPanels
+f888 columnLayout
+f889 counterexampleBoxes
+f890 cells
+f891 selectedCell
+f892 counterexampleRow
+f893 columnCount
+f894 rowCount
+m1520 buildHeader
+m1521 buildTable
+m1522 layoutColumns
+m1523 rowAssignmentString
+m1524 getCellCodes
+m1525 rowHasWork
+
+# C_GD: one truth-value cell of the grid (toggle button opening its evaluation tree)
+class GD TruthTableCell
+f357 cellCode
+f358 workPanel
+f359 position
+f360 valueTree
+f361 mirrorTree
+f362 isWrong
+m632 loadCode
+m633 getTreeCode
+m634 applyCode
+m635 setWrong
+m636 getCode
+m637 getRowAssignment
+m638 extractValue
+m639 extractTreeValues
+m640 findSignIndex
+m641 hasErrorSign
+m642 commitTreeValue
+
+# C_B: cell editor panel showing the two evaluation-tree views of the selected cell
+class B TruthCellEditor
+f145 valueTree
+f146 mirrorTree
+f147 separator
+f148 workPanel
+m235 setTrees
+
+# C_K: OK button bar under the cell editor
+class K TruthCellEditorButtons
+f441 editor
+f442 okButton
+
+# C_d_: "Is this formula a tautology?" question with a yes/no chooser
+class d TautologyQuestionPanel
+f1033 answerChooser
+f1034 questionLabel
+f1035 workPanel
+m1673 setQuestion
+
+# C_m_F: "complete setup" panel: enter sentence letters and row count, then the T/F assignment columns
+class mF TruthTableSetupPanel
+f1285 displaySymbols
+f1286 workPanel
+f1287 evaluator
+f1288 letterCount
+f1289 rowCount
+f1290 lettersEntered
+f1291 headerRow
+f1292 lastHeaderLabel
+f1293 rowPanels
+f1294 rowsPanel
+f1295 letterEntryPanel
+f1296 lettersField
+f1297 rowCountField
+f1298 columnLayout
+m1950 buildHeader
+m1951 showAssignmentGrid
+m1952 loadSetup
+m1953 getSetupCode
+m1954 hasSetupWork
+m1955 isAssignmentCorrect
+m1956 checkAssignments
+m1957 checkLettersAndRows
+m1958 highlightCell
+m1959 layoutColumns
+
+# C_RC: prompt + OK button driving the two setup stages
+class RC TruthSetupButtons
+f733 stage
+f734 promptLabel
+f735 okButton
+f736 workPanel
+m1203 setStage
+
+# C_A / C_c_D / C_x_: truth-table print pages (results, statement list, problems)
+class A TruthResultsPage
+m71 printResults
+class cD TruthStatementsPage
+m1671 printStatements
+class x TruthProblemsPage
+m2161 printProblems
+
+## ================================================================ Invalidity (LPInvalidation)
+
+# LPInvalidation$C__A: startup runnable of the invalidity module
+class LPInvalidation$_A InvalidityStartupTask
+
+# C_LA: invalidity message catalogue (invMessages, inverrNNN/invnotNNN ids)
+class LA InvalidityMessage
+f501 messages
+f502 linkName
+
+# C_PC: invalidity ProblemSet
+class PC InvalidityProblemSet
+
+# C_u_D: invalidity ProblemEntry
+class uD InvalidityProblemEntry
+f1398 workProblemNames
+
+# C_h_B: empty marker interface (extends LogicConstants) for invalidity classes
+class hB InvalidityConstants
+
+# C_GB: DialogHandler for invalidity message buttons
+class GB InvalidityDialogHandler
+
+# C_CE: static dialogs of the invalidity module, plus the interpretation editor dialog
+class CE InvalidityDialogs
+f265 displaySymbols
+m427 showMessage
+m428 showMessage
+m429 showMessage
+m430 showMessage
+m431 confirmSaveChanges
+m432 askProblemName
+m433 deleteProblemOrWork
+m434 deleteWork
+m435 selectNextProblem
+m436 chooseProblem
+m437 chooseSubmitProblems
+m438 chooseUploadProblems
+m439 deleteMultipleProblems
+m440 choosePrintProblems
+m441 enterSubmittedProblem
+m442 createProblemListView
+m443 createUserProblem
+m444 editInterpretation
+
+# C_IB: button bar of the invalidity module (Select, Check, ..., Derivation, Truth Table, Copy, Expand)
+class IB InvalidityToolbar
+f397 module
+m701 create
+m702 buildButtons
+# anonymous action classes: synthetic outer-instance fields and captured name letter
+f398 outer
+f399 outer
+f400 outer
+f401 outer
+f402 outer
+f403 outer
+f404 outer
+f405 outer
+f406 outer
+f407 outer
+f408 nameLetter
+f409 outer
+f410 outer
+f411 nameLetter
+f412 outer
+f413 outer
+f414 outer
+f415 outer
+f416 outer
+f417 outer
+f418 outer
+f419 outer
+f420 outer
+f421 outer
+
+# C_SA: invalidity problem panel (LPInvalidation.problemPanel): universe size, workspace, symbol rows
+class SA InvalidityProblemPanel
+f744 displaySymbols
+f745 module
+f746 headerPanel
+f747 sizeRow
+f748 universeRow
+f749 workArea
+f750 symbolsPanel
+f751 sizePanel
+f752 workspaceField
+f753 sizeChooser
+f754 sizeLabel
+f755 universeLabel
+m1278 refresh
+m1279 updateWidth
+m1280 relayoutSymbolRows
+
+# C_IE: interpretation of a non-logical symbol (name + arity); base of predicate/operation interpretations
+class IE SymbolInterpretation
+f422 name
+f423 arity
+m705 clearValues
+m706 parse
+m707 restrictToUniverse
+m708 getValue
+m709 encode
+m710 getSignature
+m711 describeValues
+
+# C_a_C: predicate (or sentence letter) interpretation: its extension as a set of tuples
+class aC PredicateInterpretation
+f969 extension
+m1640 parseExtension
+m1641 encodeExtension
+
+# C_g_E: operation (or name) interpretation: value table from tuples plus a default value
+class gE OperationInterpretation
+f1134 valueTable
+f1135 defaultValue
+m1830 parseValueTable
+m1831 encodeValueTable
+m1832 groupByValue
+
+# C_h_D: collects the predicate/operation symbols of an argument and reuses existing interpretations
+class hD SymbolCollector
+f1160 predicates
+f1161 operations
+m1839 collect
+m1840 mergeInterpretations
+m1841 getAllSymbols
+
+# C_s_A: one row of the invalidity panel: symbol button + description of its interpretation
+class sA SymbolInterpretationRow
+f1354 symbol
+f1355 problemPanel
+f1356 buttonPanel
+f1357 symbolButton
+f1358 valueLabel
+f1359 rowLayout
+f1360 flowLayout
+
+# C_e_A: grid of checkboxes / number choosers for editing one interpretation
+class eA InterpretationEditor
+f1064 symbol
+f1065 universeSize
+f1066 columns
+f1067 rows
+f1068 gridLayout
+m1756 applyToSymbol
+
+# C_e_F / C_k_D / C_q_C: invalidity print pages (results, statement list, problems)
+class eF InvalidityResultsPage
+m1800 printResults
+class kD InvalidityStatementsPage
+m1907 printStatements
+class qC InvalidityProblemsPage
+m2038 printProblems
