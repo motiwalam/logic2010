@@ -1,0 +1,662 @@
+# app.mapping -- program core, config, messages/dialogs, module and problem-set framework.
+# Class lines use the ORIGINAL obfuscated name; the current placeholder is in the comment above each section.
+
+## ================================================================ program core
+
+# LogicProgram: static program core -- startup, directories, links/options, symbol translation, misc utilities
+f529 errorLog
+f534 ruleTable
+f540 bundledFonts
+f541 screenSize
+f551 copyDir
+f554 rootDir
+f556 overrideFile
+f557 prefsFile
+f558 workPrefsFile
+f560 loadInfoFile
+f562 textDir
+f563 trashDir
+f564 windowsDir
+f565 failDir
+f566 maxBackups
+f567 backupName
+f568 restoreName
+f571 deleteLoadInfo
+f577 hiddenMode
+f578 unusedFlagA
+f579 unusedFlagB
+f580 fromIde
+f581 backupNeeded
+f582 copyNeeded
+f583 workPresent
+f584 noCoreProblems
+f585 altSymbols
+f588 soloPort
+f589 repeatAuth
+f590 hideSensitive
+f591 reinitializing
+f592 reinitUser
+f593 optionO
+f594 iconImages
+f597 encodedSymbols
+f598 htmlSymbols
+f599 sentenceLetters
+f600 predicateLetters
+f601 operationLetters
+f602 variableLetters
+f603 monochrome
+f604 bruinColors
+f605 printColors
+f606 monochromeColors
+f607 moduleColors
+m964 submitExamStart
+m965 isWritableDirectory
+m966 readLoadInfo
+m967 readCourseFromLoadInfo
+m968 checkUserCourse
+m969 migrateOldWorkDir
+m970 isDemoName
+m971 showFileError
+m972 showProblemError
+m973 currentStackTrace
+m974 logStackTrace
+m975 checkWorkDir
+m976 checkSameUser
+m978 openDebugLogs
+m979 closeDebugLogs
+m980 excludeLogFiles
+m981 createFormulaPane
+m982 createFormulaPane
+m983 createFormulaPane
+m984 createFormulaPane
+m985 createFormulaRow
+m986 createFormulaRow
+m987 createFormulaRow
+m988 createFormulaRow
+m989 createFormulaRow
+m990 createFormulaRow
+m991 createFormulaRow
+m992 createFormulaLabel
+m993 translateSymbols
+m994 translateToDocument
+m995 translateSymbols
+m996 translateSymbols
+m997 translateSymbols
+m998 translateToDocument
+m999 translateStyledText
+m1000 stripNamePrefix
+m1001 symbolBoundsAt
+m1002 shiftPositions
+m1003 splitLines
+m1004 expandEscapes
+m1005 escapeBackslashes
+m1006 parseFormula
+m1007 parseFormula
+m1008 parseFormula
+m1009 parseFormula
+m1011 parseInteger
+m1012 parseLong
+m1013 parseLong
+m1014 toHex8
+m1015 findNumberedPlaceholder
+m1016 sentenceLetter
+m1017 predicateLetter
+m1018 operationLetter
+m1019 variableLetter
+m1020 defaultVariable
+m1021 reverse
+m1022 splitChars
+m1023 findQuestionVariable
+m1024 parseErrorColumn
+m1025 getTheorem
+m1026 getRule
+m1027 listRules
+m1028 parseFontSize
+m1031 chooseOpenFile
+m1032 chooseSaveFile
+m1033 isDescendant
+m1034 commonAncestor
+m1035 boundsRelativeTo
+m1036 boundsIn
+m1037 getParentOf
+m1038 getInteriorBounds
+m1041 findDialog
+m1042 getDialog
+m1043 getWindow
+m1044 findFrame
+m1045 findJFrame
+m1046 setAlwaysOnTop
+m1047 flatten
+m1048 flattenInto
+m1049 appendAll
+m1050 mergeTables
+m1051 indexOf
+m1052 indexOf
+m1053 showHeadlines
+m1054 askFeedback
+m1057 applyOverrideFontSize
+m1058 applyPrefsFontSize
+m1059 applyColorPrefs
+m1060 selectorMatches
+m1063 openDataFile
+m1064 openLocalFile
+m1065 openLocalFile
+m1066 openLocalFile
+m1067 openProblemFile
+m1068 openWriter
+m1069 openRandomAccessFile
+m1070 extractToConfigDir
+m1073 rebaseLinks
+m1075 canonicalFile
+m1080 compactTimestamp
+m1081 lastChars
+m1082 appendSubmitLog
+m1083 appendSubmitLog
+m1084 checkSubmitLog
+m1085 findParentKeyListener
+m1086 forwardKeyEvent
+
+# LogicProgram$C__A: EDT runnable started by main(): look and feel, initialize, user, rules, main menu
+class LogicProgram$_A ProgramStartup
+
+# LPInfo: program name constant (no placeholder members)
+# LogicConstants (C_n_A), ModuleConstants (C_XC), CellRenderable (C_AF), CellPanel (C_TA): no placeholder members
+
+# C_V: PrintStream that replaces System.err, echoing to the old stream and to work/errors.txt
+class V ErrorLogStream
+f816 originalErr
+
+# C_Q: opens URLs and files with java.awt.Desktop
+class Q DesktopLauncher
+m1184 browse
+m1185 open
+m1186 open
+
+# C_LC: empty marker interface implemented by LogicModule, SizedPanel and many module panels (never tested)
+class LC ModuleComponentMarker
+
+## ================================================================ launcher / single instance / settings
+
+# ProgramLauncher (C_UC): reads paths.txt/maps.txt and re-executes java ... LogicProgram with -D flags
+f800 progDir
+f801 pathSpec
+f802 progDirGiven
+m1339 launch
+m1340 resolvePaths
+m1341 readLinkFile
+m1342 readPathFile
+m1343 toDirectory
+m1344 rebase
+m1345 exec
+m1346 exec
+m1347 exec
+m1348 exec
+m1349 waitFor
+m1350 changeDirectory
+
+# ProgramLauncher$C__A: which path file to read and whether it is scrambled
+class UC$_A PathFileSpec
+f803 pathFile
+f804 scrambled
+
+# ProgramLauncher$C__B: the directories resolved from a path/link file
+class UC$_B LaunchPaths
+f805 linkDir
+f806 workDir
+f807 javaDir
+f808 copyDir
+
+# C_YE: command-line tool: set a "key:value" line in each of the given files
+class YE LinkFileEditor
+m1540 setLineInFiles
+
+# C_q_E: entry point with an empty body
+class qE EmptyEntryPoint
+m2039 run
+
+# SingleInstanceGuard (C_m_): "TCPSolo" server socket that answers with a signature string
+f1264 port
+f1265 serverSocket
+f1266 localHost
+f1267 signature
+m1933 startServer
+m1934 waitWhileOtherRunning
+m1935 getPort
+m1936 probePort
+m1937 stopServer
+
+# PreferencesFile (C_w_B): case-insensitive key:value file (prefs.txt)
+f1425 originalKeys
+m2152 removeKey
+m2154 load
+m2155 save
+m2156 save
+
+# OverrideSettings (C_t_A): override.txt key:value table
+m2082 lookup
+m2083 load
+
+## ================================================================ data files
+
+# Scrambler (C_z_D): running-key text cipher + MD5 helpers
+f1491 ALPHABET_SIZE
+f1492 ALPHABET_INDEX
+m2221 buildIndexTable
+m2222 readScramblerMap
+
+# TaggedRecord (C_XD): one "value`tag value`tag ..." line; also a reader of such lines
+f877 clearOnRead
+f878 rawLine
+m1471 clear
+m1472 open
+m1476 indexOfTag
+m1477 indexesOfTag
+m1478 indexOfAnyTag
+m1479 indexOfAnyTag
+m1480 minNonNegative
+m1481 indexesOfAnyTag
+m1482 getFieldCount
+m1484 formatFields
+m1485 intValueAt
+m1486 longValueAt
+m1487 getRawLine
+m1488 removeField
+m1489 removeFields
+m1490 setValueAt
+m1491 insertField
+m1492 addField
+m1493 nameOf
+m1495 withName
+m1496 setName
+m1497 getOriginalName
+m1498 getErrorCount
+m1499 getTimestamp
+m1500 stripTimestamp
+m1501 removeTags
+m1502 isExample
+m1503 clearExampleFlag
+m1504 appendField
+m1505 isHidden
+m1506 getKeyValues
+m1507 escapeBackquotes
+m1508 formatField
+m1509 toLine
+m1510 removeChar
+
+# DelimitedTokenizer (C_OA): splits a string at delimiter chars; the first delimiter char is the escape char
+f650 delimiter
+f651 remaining
+f652 delimiters
+m1132 setInput
+m1133 getRemaining
+m1134 getDelimiter
+m1135 nextToken
+m1136 nextToken
+m1137 escape
+m1138 escape
+m1139 escape
+m1140 escape
+
+## ================================================================ messages / dialogs
+
+# Message (C_H): message catalogue entry
+f375 globalMessages
+f376 globalLinkName
+m657 loadModuleMessages
+m659 getText
+m660 indent
+m662 substitute
+m663 lookupParam
+m665 mergeParams
+m671 addPluralSuffix
+
+# MessageRef (C_J): message id + parameter table
+f427 id
+f428 params
+m716 getId
+m717 getParams
+m718 putParam
+
+# BaseDialog (C_u_B): JDialog that remembers its owner frame
+f1395 ownerFrame
+m2100 getOwnerFrame
+
+# DialogHandler (C_D): parses a "label:action;default" button spec and handles the chosen button
+f270 properties
+f271 defaultIndex
+f272 labels
+f273 actions
+m445 getLabels
+m446 getDefaultIndex
+m447 setProperty
+m448 setProperties
+m449 getProperty
+m450 getSelectedAction
+m451 handleChoice
+
+# C_QA: DialogHandler used by the parsing problem dialogs (no extra behaviour)
+class QA ParsingDialogHandler
+
+# C_b_F: DialogHandler used by the truth-table problem dialogs (no extra behaviour)
+class bF TruthDialogHandler
+
+# MessageDialog (C_UA): modal message/choice dialog with a button row and remembered bounds
+f785 hiddenOwner
+f786 disposeOwner
+f787 restoreLocation
+f788 sizeSet
+f789 packOnShow
+f790 selectedButton
+f791 buttons
+f792 content
+f793 handlers
+f794 savedBounds
+f795 boundsKey
+m1311 resolveOwner
+m1312 disposeHiddenOwner
+m1313 setButtons
+m1314 setDefaultButtonIndex
+m1315 addHandler
+m1316 setButtonTip
+m1317 setBoundsKey
+m1318 getBoundsKey
+m1319 forgetSavedBounds
+m1320 getSavedBounds
+m1321 centeredLocation
+m1322 showAt
+m1323 showAt
+m1324 showModeless
+m1325 close
+m1326 runHandlers
+m1327 fillFieldsAndChoose
+m1330 showNotice
+m1331 closeNotice
+m1332 showScrollingMessage
+
+# MessageDialog$1: anonymous Escape-key action
+f796 outerDialog
+
+# ProgressDialog (C_SD): splash / progress box with optional buttons
+f763 ownerFrame
+f764 textArea
+f765 buttons
+f766 selectedButton
+f767 defaultButton
+f768 marginX
+f769 marginY
+f770 disposed
+m1284 showWithMargins
+m1285 setFontSize
+m1286 createFont
+m1287 createFont
+m1288 getDefaultFontSize
+m1289 setMessage
+m1290 adjustSize
+m1291 centeredLocation
+m1292 unescape
+
+# ProgressDialog$1: anonymous runnable that disposes on the EDT
+f771 outerDialog
+
+## ================================================================ UI framework
+
+# SizedPanel (C_LB): JPanel whose size is clamped to a fixed (or maximum) width/height
+f503 sizeLimit
+f504 maximumOnly
+f505 focusableFlag
+m934 setLimitWidth
+m935 setLimitHeight
+m936 setSizeLimit
+m937 setMaximumOnly
+m938 isMaximumOnly
+m939 getSizeLimit
+m940 constrain
+m941 constrain
+m942 getConstrainedPreferredSize
+
+# ModuleFrame (C_0E): the JFrame that hosts a LogicModule
+m61 applyColors
+m62 closeModule
+m63 handleQuitKey
+m64 installHideToggle
+m65 showLater
+
+# ModuleFrame$1: anonymous "toggleHide" action
+f28 outerFrame
+
+# LogicModule$C__A: startup runnable for a module; subclasses exist per LP* module
+class U$_A ModuleStartupTask
+f782 busyIndicator
+f783 bounds
+f784 problemName
+m1310 stopBusyIndicator
+m959 continueStartup
+
+# MainMenu (C_z_C): "Logic 2010: A Workbook" launcher window
+f1473 baseFontSize
+f1474 HELP_BUTTONS
+f1475 HELP_USING
+f1476 HELP_ABOUT
+f1477 HELP_MENU
+f1478 HELP_TEXT
+f1479 HELP_NOTICES
+f1480 WEB_BUTTONS
+f1481 WEB_ASSIGNMENTS
+f1482 WEB_COURSE_SITE
+f1483 USER_BUTTONS
+f1484 USER_INFO
+f1485 USER_BACKUP
+f1486 USER_COPY
+f1487 USER_DELETE_WORK_QUIT
+f1488 USER_QUIT
+f1489 lastModuleLocation
+m2207 open
+m2208 createMenuFrame
+m2209 closeAllModules
+m2210 shutdownInstances
+m2211 saveAll
+m2212 saveInstances
+m2213 showSubmitSummary
+m2214 appendAll
+m2215 mergeSubmitStatus
+m2216 nextModuleBounds
+
+## ================================================================ problem-set framework
+
+# ProblemSelector (C_BE): set of problem names (sorted boundary list, like an interval set) plus a char-flag set
+f242 complemented
+f243 boundaryCount
+f244 cursor
+f245 boundaries
+f246 flagChars
+m391 single
+m392 startingAt
+m393 after
+m394 copy
+m395 union
+m396 subtract
+m397 intersect
+m398 advanceCursor
+m399 clear
+m400 reset
+m401 complement
+m402 isEmpty
+m403 addPrefix
+m404 contains
+m405 hasFlag
+m406 toggleBoundary
+m407 toggleBoundary
+m408 ensureCapacity
+m409 combineChars
+
+# C_0D: one boundary of a ProblemSelector: a name and whether it sits just before (true) or after it
+class $D SelectorBoundary
+f25 name
+f26 before
+m60 compareBoundary
+
+# ProblemSet (C_e_D): Vector of ProblemEntry, one subclass per module
+f1074 entriesByName
+f1075 headingsByName
+f1076 storedDigest
+f1077 symbolTable
+f1078 changed
+f1079 readFromPlainFile
+f1080 skipArgumentCheck
+f1081 plainColors
+f1082 hideExtraProblems
+m1098 addProblem
+m1099 restateProblems
+m1101 removeProblem
+m1102 createEntry
+m1103 hasWork
+m1104 getWork
+m1105 removeWork
+m1106 getProblemStatement
+m1107 getModuleIndex
+m1766 findInsertIndex
+m1767 indexOfName
+m1768 getStatement
+m1769 hasWork
+m1770 isExample
+m1771 registerEntry
+m1772 getEntry
+m1773 mergeExercises
+m1774 mergeExercise
+m1775 addProblem
+m1776 replaceProblem
+m1777 computeDigest
+m1778 getRecordAt
+m1779 getEntryAt
+m1780 getRecord
+m1781 createListView
+m1782 markTitle
+m1783 lookupName
+m1784 getExercises
+m1785 getInstances
+m1786 getDigestVersKey
+
+# ProblemSet$C__A: EDT task that recomputes the state of every in-progress problem, then continues startup
+class eD$_A ProblemRestateTask
+f1083 changed
+f1084 count
+f1085 index
+f1086 record
+f1087 module
+f1088 startupTask
+f1089 symbolizerProblems
+f1090 symbolizerChecker
+f1091 outerSet
+
+# ProblemEntry (C_f_F): one problem record plus its state (N/I/C/I/U)
+f1121 hidden
+f1122 extraProblem
+f1123 STATE_NO_WORK
+f1124 STATE_INCORRECT
+f1125 STATE_CORRECT
+f1126 STATE_INCOMPLETE
+f1127 STATE_UNCHECKED
+f1128 STATE_CODES
+m513 computeState
+m1813 readProblemNames
+m1814 findExtraProblems
+m1815 markExtraProblems
+m1816 findExtraProblems
+m1817 isListed
+
+# C_EF: unused ProblemEntry that classifies an imported problem as new, duplicate or invalid
+class EF ImportedProblemEntry
+f298 importStatus
+f299 STATUS_NEW
+f300 STATUS_DUPLICATE
+f301 STATUS_INVALID
+
+# C_a_A: snapshot Enumeration over the record strings of a ProblemSet
+class aA ProblemRecordEnumeration
+f963 position
+f964 records
+m1634 retainExisting
+m1635 reset
+
+# ProblemListView (C_YA): JList of problems (with heading rows) used in the problem dialogs
+f895 editorFrame
+f896 dialog
+f897 acceptButton
+f898 cancelButton
+f899 rowToProblem
+f900 scrolledToSelection
+f901 listModel
+m1526 addItem
+m1527 getItemCount
+m1528 setDialog
+m1529 setEditorFrame
+m1530 selectAllProblems
+m1531 selectProblem
+m1532 getSelectedProblem
+m1533 getSelectedProblems
+m1534 accept
+m1535 scrollToSelection
+
+# C_DA: list cell renderer for ProblemListView (uses CellRenderable)
+class DA ProblemListCellRenderer
+
+# ProblemEditorFrame (C_d_A): unfinished two-list editor for user problems
+f1036 moduleIndex
+f1037 workProblems
+f1038 exerciseProblems
+f1039 workList
+f1040 exerciseList
+m1674 openEditor
+m1675 createEditorFrame
+m1676 finishLayout
+m1677 setModuleColors
+m1678 transferProblems
+
+# C__A: static checks for ProblemEditorFrame
+class _A ProblemEditorChecks
+m1568 confirmClose
+
+# ProblemTitlePanel (C_g_D): "Problem: <statement>  <status>" header plus a note area
+f1130 titleLabel
+f1131 statementPane
+f1132 statusPane
+f1133 noteArea
+m1821 setTitleLabel
+m1822 getTitleLabel
+m1823 setStatement
+m1824 getStatement
+m1825 setStatus
+m1826 getStatus
+m1827 setNote
+m1828 getNote
+m1829 clearFields
+
+# C_d_E: label plus numeric choice (0..n-1)
+class dE LabeledNumberChoice
+f1060 choiceCount
+f1061 choice
+m1744 getSelectedNumber
+m1745 setSelectedNumber
+
+## ================================================================ misc small / unused
+
+# C_SC: Enumeration over the integers covered by an integer range set (C_n_F)
+class SC IntRangeEnumeration
+f760 current
+f761 rangeIndex
+f762 rangeSet
+
+# C_y_C: unused (name, index) pair
+class yC NamedIndex
+f1453 name
+f1454 index
+
+# C_QB: unused holder of one static int
+class QB UnusedIntHolder
+f698 value
+
+# C_p_B: empty, unused class
+class pB UnusedEmptyClassPB
+
+# C_v_C: empty, unused class
+class vC UnusedEmptyClassVC
