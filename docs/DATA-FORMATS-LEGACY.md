@@ -33,7 +33,7 @@ The main branch's `data/README.md` describes the new formats. `tools/check-data-
 | `docs/*.pdf` | same | Help documents, linked from `ghost.txt`. | `DesktopLauncher` |
 | `maps.txt`, `mapsa/d/o.txt` | dropped | Path maps for the old `ProgramLauncher` entry point (Windows/floppy installs); unused by the macOS bundle. | `ProgramLauncher` |
 | `Logic2010.icns`, `en.lproj/` | dropped | macOS application icon and localization stub. | — |
-| `work/` | unchanged | The student's own files (§5). Not data shipped with the program. | |
+| `work/*work.txt` | `work/*.rec` | The student's own files (§5), converted by the program itself. Not data shipped with the program. | `DataFiles.writeWork` |
 
 `syntaxN` is `syntax1` or `syntax2`, one per formula notation. The `syntax:` entry of the links table chooses between them, and `LogicProgram.setSyntax` sets `ruleDir`.
 
@@ -272,11 +272,36 @@ In `links.conf` the readable names of the file keys are used instead (`derivatio
 
 ## 5. The student's work directory (`work/`)
 
-The student's files are unscrambled and were not changed:
+The student's files are not scrambled:
 - `user.txt`: `key:value` user information
-- `prefs.txt`
-- one work file per module, `derwork.txt` … `truwork.txt` plus `keywork.txt`. Each is tagged records as in §3: the problems with the student's work added, and a final `# <md5>` digest line that the program checks.
+- `prefs.txt`: `key:value` display preferences
+- one work file per module (below)
 - logs: `errors.txt`, `diagnostics.txt` and `*data.txt`
+
+**Work files.** Each work file is tagged records as in §3: every problem of the module, with the student's work added to the records they worked on. The file ends with a `# <digest>` line; the program reads the digest from the last `#` line (`LogicModule.readProblems`).
+
+The digest is MD5, then Base64 (`UserInfo.computeDigest`), over:
+1. `Full Name (studentID@institution)\n`, from `user.txt`
+2. each record line followed by `\n`
+3. the password of the `digest` credentials, if the course configures one
+
+On loading, the program recomputes the digest. If it differs, it prints "Could not digest file: …" and refuses the file, unless the user has instructor access.
+
+| Old name | Readable name (main branch) | Module |
+|---|---|---|
+| `derwork.txt` | `derivation.rec` | Derivations |
+| `invwork.txt` | `invalidity.rec` | Invalidity |
+| `parwork.txt` | `parsing.rec` | Parsing |
+| `recwork.txt` | `recognition.rec` | Rule recognition |
+| `symwork.txt` | `symbolization.rec` | Symbolization |
+| `truwork.txt` | `truth-tables.rec` | Truth tables |
+| `keywork.txt` | `symbolization-answers.rec` | Answer keys for the student's own symbolization problems (no digest) |
+
+**Conversion.** `tools/convert-data.py` does not convert work files: the digest depends on the user's information and the course's credentials. The program on `main` converts them itself.
+- A module opened with an old-format work file present saves the work again in the readable format and deletes the old file.
+- The readable file ends with `# digest: <digest>`, computed over the records exactly as the reader rebuilds them.
+- Server backups (`ServerConnection.zipWork`) still carry the old names and format.
+- A restored backup writes old-format files. They are newer than the readable ones, so they are read, and they are converted again on the next save.
 
 ## 6. The converter
 
