@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import java.util.Vector;
 
 class ProblemListView extends JList implements Runnable, MouseListener, KeyListener {
    ProblemEditorFrame editorFrame = null;
@@ -16,6 +17,9 @@ class ProblemListView extends JList implements Runnable, MouseListener, KeyListe
    int[] rowToProblem;
    boolean scrolledToSelection = false;
    DefaultListModel listModel;
+   Object[] allItems = null;
+   int[] allRowToProblem = null;
+   String[] searchTexts = null;
 
    ProblemListView(boolean flag) {
       super(new DefaultListModel());
@@ -40,6 +44,123 @@ class ProblemListView extends JList implements Runnable, MouseListener, KeyListe
 
    int getItemCount() {
       return this.listModel.getSize();
+   }
+
+   void rememberRows(String[] astring) {
+      this.allItems = this.listModel.toArray();
+      this.allRowToProblem = this.rowToProblem;
+      this.searchTexts = astring;
+   }
+
+   void setFilter(String s) {
+      if (this.allItems != null) {
+         String s1 = s.trim().toLowerCase();
+         String[] astring = s1.equals("") ? new String[0] : s1.split("\\s+");
+         int i = this.getSelectedProblem(this.rowToProblem);
+         Vector vector = new Vector();
+         Vector vector1 = new Vector();
+
+         for (int j = 0; j < this.allItems.length; j++) {
+            int k = this.allRowToProblem[j];
+            if (astring.length == 0) {
+               vector.addElement(this.allItems[j]);
+               vector1.addElement(k);
+            } else if (k >= 0 && this.searchTexts != null && k < this.searchTexts.length && matches(this.searchTexts[k], astring)) {
+               int l = j;
+
+               while (l > 0 && this.allRowToProblem[l - 1] < 0) {
+                  l--;
+               }
+
+               for (; l < j; l++) {
+                  if (!(this.allItems[l] instanceof LogicLabel) || !((LogicLabel)this.allItems[l]).getText().trim().equals("")) {
+                     vector.addElement(this.allItems[l]);
+                     vector1.addElement(-1);
+                  }
+               }
+
+               vector.addElement(this.allItems[j]);
+               vector1.addElement(k);
+            }
+         }
+
+         this.listModel.removeAllElements();
+         this.rowToProblem = new int[vector.size()];
+         int m = -1;
+         int q = -1;
+
+         for (int n = 0; n < vector.size(); n++) {
+            this.listModel.addElement(vector.elementAt(n));
+            int p = (Integer)vector1.elementAt(n);
+            this.rowToProblem[n] = p;
+            if (p >= 0 && q == -1) {
+               q = n;
+            }
+
+            if (p >= 0 && p == i) {
+               m = n;
+            }
+         }
+
+         if (m == -1) {
+            m = q;
+         }
+
+         if (m == -1) {
+            this.clearSelection();
+         } else {
+            this.setSelectedIndex(m);
+            this.ensureIndexIsVisible(m);
+         }
+      }
+   }
+
+   // Every term must occur in the text. A term like T2 or MC1 (letters, then a number)
+   // must match a whole name: T2 does not match T25 or ST2.
+   static boolean matches(String s, String[] astring) {
+      if (s == null) {
+         return false;
+      } else {
+         for (int i = 0; i < astring.length; i++) {
+            if (!matchesTerm(s, astring[i])) {
+               return false;
+            }
+         }
+
+         return true;
+      }
+   }
+
+   static boolean matchesTerm(String s, String s1) {
+      boolean flag = s1.matches(".*[a-z][0-9]+");
+      int i = 0;
+
+      while ((i = s.indexOf(s1, i)) != -1) {
+         int j = i + s1.length();
+         if (!flag || (i == 0 || !Character.isLetter(s.charAt(i - 1)) || !Character.isLetter(s1.charAt(0)))
+               && (j >= s.length() || !Character.isDigit(s.charAt(j)))) {
+            return true;
+         }
+
+         i++;
+      }
+
+      return false;
+   }
+
+   void moveSelection(int i) {
+      int j = this.getSelectedIndex();
+      int k = this.getItemCount();
+      int l = j;
+
+      do {
+         l += i;
+      } while (l >= 0 && l < k && this.rowToProblem != null && this.rowToProblem[l] < 0);
+
+      if (l >= 0 && l < k) {
+         this.setSelectedIndex(l);
+         this.ensureIndexIsVisible(l);
+      }
    }
 
    void setDialog(MessageDialog messagedialog, int i) {

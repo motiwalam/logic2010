@@ -259,10 +259,11 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
       ProblemListView problemlistview = new ProblemListView(flag);
       Hashtable hashtable = problemset1 == null ? null : problemset1.headingsByName;
       int i = logicmodule == null ? -1 : logicmodule.problemIndex;
-      Color[] acolor = new Color[]{dialogBlack, dialogRed, dialogGreen, dialogRed};
-      Color[] acolor1 = new Color[]{dialogBlack, dialogOrange, dialogOrange, dialogOrange};
+      Color[] acolor = new Color[]{dialogBlack, dialogRed, dialogGreen, dialogRed, dialogBlack};
+      Color[] acolor1 = new Color[]{dialogBlack, dialogOrange, dialogOrange, dialogOrange, dialogBlack};
       int j = this.size();
       int[] aint = new int[j];
+      String[] astring = new String[j];
 
       for (int k = 0; k < j; k++) {
          ProblemEntry problementry = this.getEntryAt(k);
@@ -296,8 +297,10 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
                }
 
                s = (s == null ? "" : s + ":  ") + (s4 == null ? "" : s4.trim());
+               String s5 = this.getSearchNote(taggedrecord);
                AnswerListLabel answerlistlabel = new AnswerListLabel(LogicProgram.translateSymbols(s, maggie, symbolTable), 2);
-               answerlistlabel.setHoverText(LogicProgram.translateSymbols(s, maggie, symbolTable));
+               answerlistlabel.setHoverText(LogicProgram.translateSymbols(s, maggie, symbolTable) + (s5 == null ? "" : "   (" + s5 + ")"));
+               astring[k] = (taggedrecord.getName() + " " + (s5 == null ? "" : s5)).toLowerCase();
                answerlistlabel.setOpaque(true);
                if (!this.plainColors) {
                   boolean flag2 = LogicProgram.selectorMatches(problemselector, s3);
@@ -331,8 +334,14 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
          }
       }
 
+      problemlistview.rememberRows(astring);
       busyindicator.setBusy(false);
       return problemlistview;
+   }
+
+   // Extra text the problem list searches and shows on hover, e.g. what the problem proves.
+   String getSearchNote(TaggedRecord taggedrecord) {
+      return null;
    }
 
    static String markTitle(String s) {

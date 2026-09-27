@@ -90,6 +90,19 @@ Quantifiers are shown as `∀` and `∃` in both notations. The original program
 
 In typed formulas, commands and the data files, `forall x` may be written for `@x` and `exists x` for `!x`: `forall x (Fx -> exists y Gy)`. A blank between the word and its variable is optional. Internally the program still uses `@` and `!` (`QuantifierWords`, `LogicProgram.parseFormula`, `DataFiles`).
 
+## Derivation problem list
+
+The derivation **Problems** list (the **Select** button) has a search field and a count of your progress.
+- **Search:** type to narrow the list. The search looks at problem names and at what each problem proves (its `proves:` field). So `MC1` or `T2` finds the problem that unlocks `MC1` and `T2`, and `DIST` finds every problem that unlocks a `DIST` rule. A compound rule's forms count too.
+  - Every word you type must match.
+  - A name ending in a number matches only that name, so `T2` does not find `T25`.
+  - A matching problem is shown with the headings just above it, such as "To enable MC1 & SSimp5, prove T2."
+  - Hovering over a problem shows what it proves.
+  - Up and Down move the selection; Enter opens the selected problem.
+- **Count:** below the list: problems completed (checked correct) and not completed. Worked examples (`options: eg`, some deliberately wrong) and your own problems are not counted. While searching, the count for the matches is shown too.
+
+Implementation: `ProblemSearchPanel`, `ProblemListView.setFilter`, `DerivationProblemSet.getSearchNote`.
+
 ## Justification syntax extensions
 
 A derivation line's justification is a small stack program: cited line numbers push their formulas, and each rule pops its premises and pushes its result for the next step, as in `2 pr1 MP 2 pr2 MP ID`. This version adds two things to that language. Neither changes how existing justifications are read.

@@ -200,15 +200,14 @@ class DerivationDialogs implements DerivationConstants {
       if (confirmSaveChanges(lpderivation, null)) {
          synchronized (LPDerivation.problems) {
             ProblemListView problemlistview = createProblemList(lpderivation, false, false, null);
-            JScrollPane jscrollpane = new JScrollPane();
-            jscrollpane.setViewportView(problemlistview);
+            ProblemSearchPanel problemsearchpanel = new ProblemSearchPanel(problemlistview, LPDerivation.problems, LPDerivation.exercises);
             String[] astring = new String[]{"OK", "Cancel"};
-            MessageDialog messagedialog = new MessageDialog(lpderivation.frame, ProblemSet.markTitle("Problems"), jscrollpane, astring);
+            MessageDialog messagedialog = new MessageDialog(lpderivation.frame, ProblemSet.markTitle("Problems"), problemsearchpanel, astring);
             problemlistview.setDialog(messagedialog, 0);
             Dimension dimension = new Dimension(32 * LogicProgram.fontSize, 32 * LogicProgram.fontSize);
             messagedialog.setSize(dimension);
             messagedialog.setBoundsKey("derChosen");
-            problemlistview.requestFocus();
+            problemsearchpanel.searchField.requestFocus();
             messagedialog.showAt(MessageDialog.centeredLocation(dimension), true);
             if (messagedialog.selectedButton == 0) {
                int i = problemlistview.getSelectedProblem(problemlistview.rowToProblem);

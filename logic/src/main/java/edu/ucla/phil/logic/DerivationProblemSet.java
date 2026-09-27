@@ -113,6 +113,40 @@ class DerivationProblemSet extends ProblemSet {
    }
 
    @Override
+   String getSearchNote(TaggedRecord taggedrecord) {
+      String s = LPDerivation.getProblemRuleProven(taggedrecord);
+      if (s != null && !s.trim().equals("")) {
+         StringBuffer stringbuffer = new StringBuffer("proves ");
+         String[] astring = s.trim().split("\\s*\\.\\s*");
+
+         for (int i = 0; i < astring.length; i++) {
+            if (i > 0) {
+               stringbuffer.append(", ");
+            }
+
+            stringbuffer.append(astring[i]);
+            Rule rule = SchematicRule.parseTheoremNumber(astring[i]) == null ? LPDerivation.getRule(astring[i]) : null;
+            if (rule != null) {
+               SchematicRule[] aschematicrule = rule.getAllForms();
+               if (aschematicrule.length > 1 || aschematicrule.length == 1 && !aschematicrule[0].name.equals(astring[i])) {
+                  stringbuffer.append(" (");
+
+                  for (int j = 0; j < aschematicrule.length; j++) {
+                     stringbuffer.append(j == 0 ? "" : ", ").append(aschematicrule[j].name);
+                  }
+
+                  stringbuffer.append(")");
+               }
+            }
+         }
+
+         return stringbuffer.toString();
+      } else {
+         return null;
+      }
+   }
+
+   @Override
    ProblemEntry createEntry(String s, boolean flag) {
       return new DerivationProblemEntry(s, flag);
    }
