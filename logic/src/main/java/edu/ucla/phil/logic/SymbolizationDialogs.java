@@ -63,6 +63,7 @@ class SymbolizationDialogs implements SymbolizationConstants {
          if (ajradiobutton[0].isSelected()) {
             lpsymbolizer.problem.setConnective(0, false);
             lpsymbolizer.problem.textPanel.textPane.requestFocus();
+            saveDeletedWork(lpsymbolizer);
             return true;
          }
 
@@ -100,6 +101,7 @@ class SymbolizationDialogs implements SymbolizationConstants {
             return false;
          } else {
             lpsymbolizer.removeWork();
+            saveDeletedWork(lpsymbolizer);
             return true;
          }
       }
@@ -773,6 +775,28 @@ class SymbolizationDialogs implements SymbolizationConstants {
          messagedialog.setSize(dimension);
          messagedialog.showAt(point, true);
          moduleframe.dispose();
+      }
+   }
+
+   /**
+    * Makes "Delete the work on this problem" stick. The original only cleared the work
+    * on screen; the saved copy of the problem kept the work, so it came back the next
+    * time the problem was loaded. Same steps as the "Delete Work" choice of the
+    * multi-problem delete dialog (examples are left alone there too).
+    */
+   static void saveDeletedWork(LPSymbolizer lpsymbolizer) {
+      if (lpsymbolizer.problemIndex == -1) {
+         return;
+      }
+
+      synchronized (LPSymbolizer.problems) {
+         ProblemEntry entry = LPSymbolizer.problems.getEntryAt(lpsymbolizer.problemIndex);
+         if (entry != null && !LPSymbolizer.isExample(new TaggedRecord(entry.name).getName())) {
+            entry.name = LPSymbolizer.removeWork(new TaggedRecord(entry.name));
+            entry.state = 0;
+            lpsymbolizer.loadProblem(entry.name);
+            LPSymbolizer.saveProblems();
+         }
       }
    }
 }

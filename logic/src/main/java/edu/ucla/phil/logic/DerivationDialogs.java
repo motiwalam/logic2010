@@ -101,7 +101,7 @@ class DerivationDialogs implements DerivationConstants {
          }
 
          if (ajradiobutton[0].isSelected()) {
-            lpderivation.removeWork();
+            deleteWorkAndSave(lpderivation);
             return true;
          }
 
@@ -138,9 +138,34 @@ class DerivationDialogs implements DerivationConstants {
          if (messagedialog.selectedButton != 0) {
             return false;
          } else {
-            lpderivation.removeWork();
+            deleteWorkAndSave(lpderivation);
             return true;
          }
+      }
+   }
+
+   /**
+    * Deletes the work on the module's current problem and saves the result.
+    * (The original only removed the lines from the on-screen derivation, without
+    * repainting or updating the saved work, so the work reappeared on the next load.)
+    * Same steps as the "Delete Work" choice of deleteProblemsDialog (examples are left alone there too).
+    */
+   static void deleteWorkAndSave(LPDerivation lpderivation) {
+      synchronized (LPDerivation.problems) {
+         DerivationProblemEntry entry = lpderivation.problemIndex == -1
+            ? null
+            : (DerivationProblemEntry)LPDerivation.problems.getEntryAt(lpderivation.problemIndex);
+         if (entry == null || LPDerivation.isExample(new TaggedRecord(entry.name).getName())) {
+            lpderivation.removeWork();
+            lpderivation.problem.revalidate();
+            lpderivation.problem.repaint();
+            return;
+         }
+
+         entry.name = LPDerivation.removeWork(new TaggedRecord(entry.name));
+         entry.state = 0;
+         lpderivation.loadProblem(entry.name);
+         LPDerivation.saveProblems();
       }
    }
 

@@ -57,6 +57,7 @@ class ParsingDialogs implements LogicConstants {
 
          if (ajradiobutton[0].isSelected()) {
             lpparsing.problem.resetWork();
+            saveDeletedWork(lpparsing);
             return true;
          }
 
@@ -91,6 +92,7 @@ class ParsingDialogs implements LogicConstants {
          return false;
       } else {
          lpparsing.removeWork();
+         saveDeletedWork(lpparsing);
          return true;
       }
    }
@@ -453,5 +455,27 @@ class ParsingDialogs implements LogicConstants {
       }
 
       lpparsing.requestFocus();
+   }
+
+   /**
+    * Makes "Delete the work on this problem" stick. The original only cleared the work
+    * on screen; the saved copy of the problem kept the work, so it came back the next
+    * time the problem was loaded. Same steps as the "Delete Work" choice of the
+    * multi-problem delete dialog (examples are left alone there too).
+    */
+   static void saveDeletedWork(LPParsing lpparsing) {
+      if (lpparsing.problemIndex == -1) {
+         return;
+      }
+
+      synchronized (LPParsing.problems) {
+         ProblemEntry entry = LPParsing.problems.getEntryAt(lpparsing.problemIndex);
+         if (entry != null && !LPParsing.isExample(new TaggedRecord(entry.name).getName())) {
+            entry.name = LPParsing.removeWork(new TaggedRecord(entry.name));
+            entry.state = 0;
+            lpparsing.loadProblem(entry.name);
+            LPParsing.saveProblems();
+         }
+      }
    }
 }

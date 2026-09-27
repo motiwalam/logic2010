@@ -100,6 +100,7 @@ class RecognitionDialogs implements LogicConstants {
             return false;
          } else {
             lprecognition.removeWork();
+            saveDeletedWork(lprecognition);
             return true;
          }
       }
@@ -126,6 +127,7 @@ class RecognitionDialogs implements LogicConstants {
 
          if (ajradiobutton[0].isSelected()) {
             lprecognition.problem.clearAnswer();
+            saveDeletedWork(lprecognition);
             return true;
          }
 
@@ -460,5 +462,27 @@ class RecognitionDialogs implements LogicConstants {
 
    static ProblemListView createProblemList(LPRecognition lprecognition, boolean flag, boolean flag1, ProblemSelector problemselector) {
       return LPRecognition.problems.createListView(lprecognition, LPRecognition.exercises, flag, flag1, LPRecognition.monoProbs, problemselector);
+   }
+
+   /**
+    * Makes "Delete the work on this problem" stick. The original only cleared the work
+    * on screen; the saved copy of the problem kept the work, so it came back the next
+    * time the problem was loaded. Same steps as the "Delete Work" choice of the
+    * multi-problem delete dialog (examples are left alone there too).
+    */
+   static void saveDeletedWork(LPRecognition lprecognition) {
+      if (lprecognition.problemIndex == -1) {
+         return;
+      }
+
+      synchronized (LPRecognition.problems) {
+         ProblemEntry entry = LPRecognition.problems.getEntryAt(lprecognition.problemIndex);
+         if (entry != null && !LPRecognition.isExample(new TaggedRecord(entry.name).getName())) {
+            entry.name = LPRecognition.removeWork(new TaggedRecord(entry.name));
+            entry.state = 0;
+            lprecognition.loadProblem(entry.name);
+            LPRecognition.saveProblems();
+         }
+      }
    }
 }

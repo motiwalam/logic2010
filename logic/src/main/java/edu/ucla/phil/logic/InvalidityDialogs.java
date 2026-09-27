@@ -109,6 +109,7 @@ class InvalidityDialogs implements InvalidityConstants {
 
          if (ajradiobutton[0].isSelected()) {
             lpinvalidation.removeWork();
+            saveDeletedWork(lpinvalidation);
             return true;
          }
 
@@ -146,6 +147,7 @@ class InvalidityDialogs implements InvalidityConstants {
             return false;
          } else {
             lpinvalidation.removeWork();
+            saveDeletedWork(lpinvalidation);
             return true;
          }
       }
@@ -484,6 +486,28 @@ class InvalidityDialogs implements InvalidityConstants {
          return true;
       } else {
          return false;
+      }
+   }
+
+   /**
+    * Makes "Delete the work on this problem" stick. The original only cleared the work
+    * on screen; the saved copy of the problem kept the work, so it came back the next
+    * time the problem was loaded. Same steps as the "Delete Work" choice of the
+    * multi-problem delete dialog (examples are left alone there too).
+    */
+   static void saveDeletedWork(LPInvalidation lpinvalidation) {
+      if (lpinvalidation.problemIndex == -1) {
+         return;
+      }
+
+      synchronized (LPInvalidation.problems) {
+         ProblemEntry entry = LPInvalidation.problems.getEntryAt(lpinvalidation.problemIndex);
+         if (entry != null && !LPInvalidation.isExample(new TaggedRecord(entry.name).getName())) {
+            entry.name = LPInvalidation.removeWork(new TaggedRecord(entry.name));
+            entry.state = 0;
+            lpinvalidation.loadProblem(entry.name);
+            LPInvalidation.saveProblems();
+         }
       }
    }
 }

@@ -94,6 +94,7 @@ class TruthDialogs implements LogicConstants {
 
          if (ajradiobutton[0].isSelected()) {
             lptruthanalysis.problem.clearWork();
+            saveDeletedWork(lptruthanalysis);
             return true;
          }
 
@@ -131,6 +132,7 @@ class TruthDialogs implements LogicConstants {
             return false;
          } else {
             lptruthanalysis.problem.clearWork();
+            saveDeletedWork(lptruthanalysis);
             return true;
          }
       }
@@ -463,5 +465,27 @@ class TruthDialogs implements LogicConstants {
       }
 
       lptruthanalysis.requestFocus();
+   }
+
+   /**
+    * Makes "Delete the work on this problem" stick. The original only cleared the work
+    * on screen; the saved copy of the problem kept the work, so it came back the next
+    * time the problem was loaded. Same steps as the "Delete Work" choice of the
+    * multi-problem delete dialog (examples are left alone there too).
+    */
+   static void saveDeletedWork(LPTruthAnalysis lptruthanalysis) {
+      if (lptruthanalysis.problemIndex == -1) {
+         return;
+      }
+
+      synchronized (LPTruthAnalysis.problems) {
+         ProblemEntry entry = LPTruthAnalysis.problems.getEntryAt(lptruthanalysis.problemIndex);
+         if (entry != null && !LPTruthAnalysis.isExample(new TaggedRecord(entry.name).getName())) {
+            entry.name = LPTruthAnalysis.removeWork(new TaggedRecord(entry.name));
+            entry.state = 0;
+            lptruthanalysis.loadProblem(entry.name);
+            LPTruthAnalysis.saveProblems();
+         }
+      }
    }
 }
