@@ -331,6 +331,10 @@ class LPTruthAnalysis extends LogicModule {
             problems = truthproblemset;
             TruthProblemEntry.workProblemNames = ProblemEntry.findExtraProblems("truwork.txt", problems);
             ProblemEntry.markExtraProblems(exercises, TruthProblemEntry.workProblemNames);
+            if (DataFiles.hasLegacyWork(LogicProgram.workDir, "truwork.txt")) {
+               saveProblems(); // work saved in the older format: save it in the readable one
+            }
+
             return true;
          }
       }
@@ -748,7 +752,7 @@ class LPTruthAnalysis extends LogicModule {
          return false;
       } else {
          try {
-            writeProblems(problems, new FileWriter(new File(LogicProgram.workDir, "truwork.txt")));
+            writeProblems(problems, "truwork.txt");
             return true;
          } catch (IOException ioexception) {
             LogicProgram.showFileError("not004", "truwork.txt");

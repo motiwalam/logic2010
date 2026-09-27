@@ -400,6 +400,10 @@ class LPRecognition extends LogicModule {
             problems = recognitionproblemset;
             RecognitionProblemEntry.savedWork = ProblemEntry.findExtraProblems("recwork.txt", problems);
             ProblemEntry.markExtraProblems(exercises, RecognitionProblemEntry.savedWork);
+            if (DataFiles.hasLegacyWork(LogicProgram.workDir, "recwork.txt")) {
+               saveProblems(); // work saved in the older format: save it in the readable one
+            }
+
             return true;
          }
       }
@@ -502,7 +506,7 @@ class LPRecognition extends LogicModule {
          return false;
       } else {
          try {
-            writeProblems(problems, new FileWriter(new File(LogicProgram.workDir, "recwork.txt")));
+            writeProblems(problems, "recwork.txt");
             return true;
          } catch (IOException ioexception) {
             LogicProgram.showFileError("not004", "recwork.txt");

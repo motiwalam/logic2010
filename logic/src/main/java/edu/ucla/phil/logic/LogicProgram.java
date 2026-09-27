@@ -2140,7 +2140,10 @@ public class LogicProgram implements LogicConstants {
       Object object = null;
       if (flag) {
          try {
-            return new PlainRecordReader(new FileReader(new File(workDir, s)));
+            PlainRecordReader plainrecordreader = DataFiles.openWork(workDir, s);
+            if (plainrecordreader != null) {
+               return plainrecordreader;
+            }
          } catch (IOException ioexception1) {
          }
       }

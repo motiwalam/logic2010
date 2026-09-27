@@ -3,11 +3,16 @@ package edu.ucla.phil.logic;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -30,6 +35,10 @@ import java.util.Vector;
  * The older scrambled files (spirit.txt, ghost.txt, ghoul.txt, ...) are still understood:
  * in normal (server) mode the course server can send course files in that format. When
  * both a readable file and its legacy counterpart exist, the newer one is used.
+ *
+ * The student's work (work/derivation.rec, ...) is saved as record files too (writeWork).
+ * Work in the older format (work/derwork.txt, ...) is still read, and replaced by the
+ * readable file when it is next saved; server backups carry the older format.
  */
 final class DataFiles {
    static final String VERSION_FILE = "version.conf";
@@ -59,6 +68,23 @@ final class DataFiles {
       {"fiend.txt", "theorems.list"}
    };
 
+   /**
+    * The student's work files in the work directory: the program's internal name (the
+    * name the files had in the older format) and the readable file that replaces it.
+    */
+   static final String[][] WORK_FILES = {
+      {"derwork.txt", "derivation.rec", "Derivation work"},
+      {"invwork.txt", "invalidity.rec", "Invalidity work"},
+      {"parwork.txt", "parsing.rec", "Parsing work"},
+      {"recwork.txt", "recognition.rec", "Rule-recognition work"},
+      {"symwork.txt", "symbolization.rec", "Symbolization work"},
+      {"truwork.txt", "truth-tables.rec", "Truth-table work"},
+      {"keywork.txt", "symbolization-answers.rec", "Answer keys for your own symbolization problems"}
+   };
+
+   /** Last line of a work file: the digest the program checks the records against. */
+   static final String DIGEST_COMMENT = "# digest:";
+
    /** Readable link names used in links.conf, and the program's internal link keys. */
    static final String[][] LINK_ALIASES = {
       {"derivation-problems", "derwork.txt"},
@@ -85,6 +111,7 @@ final class DataFiles {
       {"symwork.txt", "symbolization-problems"},
       {"truwork.txt", "truth-table-problems"},
       {"recwork.txt", "recognition-problems"},
+      {"keywork.txt", "symbolization-answers"},
       {"symAnswers", "symbolization-answers"},
       {"messages", "messages"},
       {"derMessages", "messages"},
@@ -281,6 +308,9 @@ final class DataFiles {
             if (line.startsWith("#")) {
                out.append(commentLine(line)).append('\n');
             }
+         } else if (line.startsWith(DIGEST_COMMENT)) {
+            // the program reads the digest from the last "#" line of a work file
+            out.append("# ").append(line.substring(DIGEST_COMMENT.length()).trim()).append('\n');
          } else if (line.startsWith("#")) {
             out.append(commentLine(line)).append('\n');
          } else {
@@ -331,6 +361,8 @@ final class DataFiles {
          String t = name.substring(4);
          if (t.equals("space")) {
             return ' ';
+         } else if (t.equals("colon")) {
+            return ':';
          }
 
          return t.length() == 1 ? t.charAt(0) : 0;
@@ -438,6 +470,242 @@ final class DataFiles {
       }
 
       return out.toString();
+   }
+
+   /** The readable name of a work file, given its internal name; null if it is not a work file. */
+   static String workFileName(String internalName) {
+      for (int i = 0; i < WORK_FILES.length; i++) {
+         if (WORK_FILES[i][0].equalsIgnoreCase(internalName)) {
+            return WORK_FILES[i][1];
+         }
+      }
+
+      return null;
+   }
+
+   /** Whether dir holds a work file in the older format, which is converted when next saved. */
+   static boolean hasLegacyWork(File dir, String internalName) {
+      return workFileName(internalName) != null && new File(dir, internalName).isFile();
+   }
+
+   /** Whether dir holds the work file, in either format. */
+   static boolean hasWork(File dir, String internalName) {
+      String name = workFileName(internalName);
+      return new File(dir, internalName).isFile() || name != null && new File(dir, name).isFile();
+   }
+
+   /**
+    * The work file to read: the readable one, or the older-format file if only it exists or
+    * it is newer (a backup restored from the server is written in the older format).
+    */
+   static File chooseWork(File dir, String internalName) {
+      File legacy = new File(dir, internalName);
+      String name = workFileName(internalName);
+      File readable = name == null ? null : new File(dir, name);
+      if (readable != null && readable.isFile() && (!legacy.isFile() || readable.lastModified() >= legacy.lastModified())) {
+         return readable;
+      } else {
+         return legacy.isFile() ? legacy : null;
+      }
+   }
+
+   /** Opens a work file for reading as tagged-record lines; null if there is none. */
+   static PlainRecordReader openWork(File dir, String internalName) throws IOException {
+      File file = chooseWork(dir, internalName);
+      if (file == null) {
+         return null;
+      } else if (!isReadableFormat(file)) {
+         return new PlainRecordReader(new FileReader(file));
+      } else {
+         return new PlainRecordReader(new StringReader(recordsToTaggedLines(readLines(file), schemaForKey(internalName), file.getPath())));
+      }
+   }
+
+   /** A work file's contents in the older format (the format of server backups), or null if there is none. */
+   static byte[] legacyWorkBytes(File dir, String internalName) throws IOException {
+      File file = chooseWork(dir, internalName);
+      if (file == null) {
+         return null;
+      } else if (!isReadableFormat(file)) {
+         return Files.readAllBytes(file.toPath());
+      } else {
+         Vector lines = readLines(file);
+         String digest = null;
+         StringBuffer out = new StringBuffer();
+         String[] records = recordsToTaggedLines(lines, schemaForKey(internalName), file.getPath()).split("\n");
+
+         for (int i = 0; i < lines.size(); i++) {
+            String line = (String)lines.elementAt(i);
+            if (line.startsWith(DIGEST_COMMENT)) {
+               digest = line.substring(DIGEST_COMMENT.length()).trim();
+            }
+         }
+
+         for (int i = 0; i < records.length; i++) {
+            if (!records[i].equals("") && !records[i].startsWith("#")) {
+               out.append(records[i]).append(LINE_SEPARATOR);
+            }
+         }
+
+         if (digest != null) {
+            out.append("# ").append(digest).append(LINE_SEPARATOR);
+         }
+
+         return out.toString().getBytes();
+      }
+   }
+
+   static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+   /**
+    * The records to save, each exactly as it will read back from its readable form. The
+    * digest is computed over these, so it matches the records the program reads next time.
+    * Records without fields are left out (there is nothing to write for them).
+    */
+   static Vector canonicalRecords(Vector records) {
+      Vector out = new Vector();
+
+      for (int i = 0; i < records.size(); i++) {
+         TaggedRecord t = new TaggedRecord((String)records.elementAt(i));
+         if (t.getFieldCount() != 0) {
+            StringBuffer fields = new StringBuffer();
+
+            for (int j = 0; j < t.getFieldCount(); j++) {
+               fields.append(escapeValue(t.valueAt(j))).append('`').append(t.tagAt(j));
+            }
+
+            StringBuffer line = new StringBuffer();
+            endRecord(line, fields);
+            out.addElement(line.substring(0, line.length() - 1));
+         }
+      }
+
+      return out;
+   }
+
+   /**
+    * Writes a work file in the readable format: records (from canonicalRecords) as
+    * "field: value" blocks, then the digest, if any. Replaces the older-format file.
+    */
+   static void writeWork(File dir, String internalName, Vector records, String digest) throws IOException {
+      String name = workFileName(internalName);
+      String schema = schemaForKey(internalName);
+      String title = name;
+      for (int i = 0; i < WORK_FILES.length; i++) {
+         if (WORK_FILES[i][1].equals(name)) {
+            title = WORK_FILES[i][2];
+         }
+      }
+
+      StringBuffer out = new StringBuffer();
+      out.append("# ").append(title).append(", saved by the program.\n");
+      out.append("# Format: see data/README.md; the fields are those of the course's ").append(schema).append(".rec.\n");
+      if (digest != null) {
+         out.append("# The digest on the last line must match the records, or the program refuses the file.\n");
+      }
+
+      for (int i = 0; i < records.size(); i++) {
+         out.append('\n');
+         writeRecord(out, new TaggedRecord((String)records.elementAt(i)), schema);
+      }
+
+      if (digest != null) {
+         out.append('\n').append(DIGEST_COMMENT).append(' ').append(digest).append('\n');
+      }
+
+      File file = new File(dir, name);
+      File temp = new File(dir, name + ".tmp");
+      Writer writer = new OutputStreamWriter(new FileOutputStream(temp), StandardCharsets.UTF_8);
+      try {
+         writer.write(out.toString());
+      } finally {
+         writer.close();
+      }
+
+      Files.move(temp.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      new File(dir, internalName).delete();
+   }
+
+   /**
+    * One record as "field: value" lines. In a derivation, the lines of each Show line's box
+    * are indented under it (indentation is ignored when the file is read).
+    */
+   static void writeRecord(StringBuffer out, TaggedRecord t, String schema) {
+      boolean derivation = "derivation-problems".equals(schema);
+      boolean firstShow = true;
+      int depth = 0;
+      int lineDepth = 0;
+
+      for (int i = 0; i < t.getFieldCount(); i++) {
+         char tag = t.tagAt(i);
+         String name = (String)schemaTagToName.get(schema + "\u0000" + tag);
+         if (name == null) {
+            name = tag == ' ' ? "tag-space" : tag == ':' ? "tag-colon" : "tag-" + tag;
+         }
+
+         int indent = 0;
+         if (derivation) {
+            if (tag == '-' || tag == '+' || tag == '<') {
+               lineDepth = depth;
+               if (tag != '<') {
+                  depth++;
+               }
+            } else if (tag == '#' || tag == '=') {
+               depth = Math.max(depth - 1, 0);
+               lineDepth = depth;
+            }
+
+            if (tag == '-') {
+               name = firstShow ? "statement" : "show";
+               firstShow = false;
+            }
+
+            // the problem's own fields stay at the left; a line's fields go with the line
+            indent = "-+<#=>:sm?".indexOf(tag) != -1 ? lineDepth : 0;
+         }
+
+         for (int j = 0; j < indent; j++) {
+            out.append("  ");
+         }
+
+         out.append(name).append(':').append(formatValue(t.valueAt(i))).append('\n');
+      }
+   }
+
+   /** " value", or " \"quoted\"" when the value's blanks or characters would not survive as raw text. */
+   static String formatValue(String v) {
+      if (v.equals("")) {
+         return "";
+      }
+
+      boolean quote = !v.equals(v.trim()) || v.startsWith("\"");
+      for (int i = 0; i < v.length() && !quote; i++) {
+         quote = v.charAt(i) < ' ';
+      }
+
+      if (!quote) {
+         return " " + v;
+      }
+
+      StringBuffer out = new StringBuffer(" \"");
+      for (int i = 0; i < v.length(); i++) {
+         char c = v.charAt(i);
+         if (c == '"' || c == '\\') {
+            out.append('\\').append(c);
+         } else if (c == '\n') {
+            out.append("\\n");
+         } else if (c == '\r') {
+            out.append("\\r");
+         } else if (c == '\t') {
+            out.append("\\t");
+         } else if (c < ' ') {
+            out.append(String.format("\\u%04x", (int)c));
+         } else {
+            out.append(c);
+         }
+      }
+
+      return out.append('"').toString();
    }
 
    static void warn(String fileName, int lineNo, String message) {

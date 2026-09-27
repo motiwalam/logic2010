@@ -99,6 +99,24 @@ In `links.conf`, file locations may start with these directory names:
 - `linkDir/`: this directory
 - `progDir/`: the program's directory
 
+## Your work
+
+The program saves each module's work in the runtime directory's `Contents/Resources/work/`, as record files like the ones above:
+
+| File | Contents |
+|---|---|
+| `derivation.rec` | Derivation problems and your work on them |
+| `invalidity.rec`, `parsing.rec`, `recognition.rec`, `symbolization.rec`, `truth-tables.rec` | The same for the other modules |
+| `symbolization-answers.rec` | Answer keys for symbolization problems you created |
+| `user.txt`, `prefs.txt` | Your user information and display preferences (`key:value` lines) |
+
+- A work file holds every problem of its module, not only the ones you worked on. The program starts it from the course's problem file on first save.
+- The fields are those of the course file (`derivation.rec` uses the fields of `syntaxN/derivation-problems.rec`, and so on).
+- In `derivation.rec`, each Show line's box is indented under it, so a derivation reads as it looks in the program. The indentation is for reading only.
+- The last line, `# digest: ...`, is a checksum of the records and your user information. If the records do not match it, the program refuses the file ("Could not digest file"), so a file edited by hand stops loading.
+
+Work saved by older versions (`derwork.txt`, `truwork.txt`, …, `keywork.txt`, in the one-line-per-record format) is still read. It is converted to the readable file when the module is first opened. Server backups still carry the work in that older format, under the older names, so they remain compatible with the course server and other installations.
+
 ## Older formats
 
 The official Logic 2010 releases ship these same files with meaningless names (`ghost.txt`, `ghoul.txt`, …), scrambled with a running-key cipher, in a one-line-per-record format with one-character field tags. The program still reads those files. In normal (server) mode the course server may send course files in that format, and when both a readable file and its old-format counterpart exist, the newer one is used. The `reverse-engineering` branch has the converter (`tools/convert-data.py`) and documents the old formats.

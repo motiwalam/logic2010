@@ -158,6 +158,10 @@ class LPInvalidation extends LogicModule implements LogicConstants {
             problems = invalidityproblemset;
             InvalidityProblemEntry.workProblemNames = ProblemEntry.findExtraProblems("invwork.txt", problems);
             ProblemEntry.markExtraProblems(exercises, InvalidityProblemEntry.workProblemNames);
+            if (DataFiles.hasLegacyWork(LogicProgram.workDir, "invwork.txt")) {
+               saveProblems(); // work saved in the older format: save it in the readable one
+            }
+
             return true;
          }
       }
@@ -1372,7 +1376,7 @@ class LPInvalidation extends LogicModule implements LogicConstants {
          return false;
       } else {
          try {
-            writeProblems(problems, new FileWriter(new File(LogicProgram.workDir, "invwork.txt")));
+            writeProblems(problems, "invwork.txt");
             return true;
          } catch (IOException ioexception) {
             LogicProgram.showFileError("not004", "invwork.txt");

@@ -75,7 +75,7 @@ If the server installs a core update, it replaces the program in `runtime/server
 | Path | Contents |
 |---|---|
 | `data/` | All the course data the program reads, as readable plain text: problems and answer keys, rules and theorems (`syntax1/`, `syntax2/`), message catalogues (`messages/`), options (`options.rec`), the links file (`links.conf`: the demo course, notation, file locations, server URLs), help PDFs (`docs/`) and textbook chapters (`syntax2/text/`). See [`data/README.md`](data/README.md) for the file formats. |
-| `runtime/local/`, `runtime/server/` | Created by `run.sh` (git-ignored), laid out like the macOS app bundle that the program expects:<br>• `Contents/Resources/` is a copy of `data/`, refreshed from `data/` whenever a file there is newer<br>• `Contents/Resources/work/` holds the student's work: `user.txt`, `prefs.txt`, `*work.txt` and logs<br>• `Contents/Java/` holds the jars from `build/` |
+| `runtime/local/`, `runtime/server/` | Created by `run.sh` (git-ignored), laid out like the macOS app bundle that the program expects:<br>• `Contents/Resources/` is a copy of `data/`, refreshed from `data/` whenever a file there is newer<br>• `Contents/Resources/work/` holds the student's work: `user.txt`, `prefs.txt`, one readable record file per module (`derivation.rec`, `truth-tables.rec`, …; see [data/README.md](data/README.md#your-work)) and logs<br>• `Contents/Java/` holds the jars from `build/` |
 
 Local and normal mode keep separate runtime directories, so local work never gets mixed into a server account. To start over, delete the runtime directory.
 
@@ -120,7 +120,7 @@ Where to start reading:
 
 | Branch | Purpose |
 |---|---|
-| `main` | Working branch: `base-logic2010` plus your changes (so far: bundled course data, local mode, and a menu-layout fix for modern Java). |
+| `main` | Working branch: `base-logic2010` plus your changes (so far: bundled course data, readable data and work files, local mode, a fix for deleting a problem's work, and a menu-layout fix for modern Java). |
 | `base-logic2010` | The unmodified source, exactly equivalent to the official Logic 2010 program (core version 20200601), still needing an existing installation to run. Keep it untouched as the reference point. |
 | `reverse-engineering` | How this source was recovered. It holds the original jars, the naming mappings, the build pipeline that regenerates `base-logic2010`'s source, the equivalence checker, the converter from the original scrambled data files to the readable ones (and documentation of the old formats), and detailed architecture notes (`docs/`). |
 

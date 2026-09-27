@@ -180,7 +180,8 @@ abstract class LogicModule extends CellPanel implements ModuleConstants, ModuleC
       }
    }
 
-   static void writeProblems(ProblemSet problemset, Writer writer) throws IOException {
+   /** Saves a module's work: workFileName is the internal work file name, e.g. "derwork.txt". */
+   static void writeProblems(ProblemSet problemset, String workFileName) throws IOException {
       String s = problemset.getDigestVersKey();
       if (!LogicProgram.user.getField(s, "").equals("1")) {
          LogicProgram.user.put(s, "1");
@@ -188,29 +189,17 @@ abstract class LogicModule extends CellPanel implements ModuleConstants, ModuleC
       }
 
       synchronized (problemset) {
-         if (problemset == null) {
-            return;
-         }
-
-         BufferedWriter bufferedwriter;
-         if (writer instanceof BufferedWriter) {
-            bufferedwriter = (BufferedWriter)writer;
-         } else {
-            bufferedwriter = new BufferedWriter(writer);
-         }
-
+         Vector vector = new Vector();
          int i = problemset.size();
 
          for (int j = 0; j < i; j++) {
-            String s1 = problemset.getRecordAt(j);
-            bufferedwriter.write(s1, 0, s1.length());
-            bufferedwriter.newLine();
+            vector.addElement(problemset.getRecordAt(j));
          }
 
-         String s2 = "# " + problemset.computeDigest(LogicProgram.user);
-         bufferedwriter.write(s2, 0, s2.length());
-         bufferedwriter.newLine();
-         bufferedwriter.close();
+         // the digest covers the records as they will be read back from the saved file
+         vector = DataFiles.canonicalRecords(vector);
+         String s1 = LogicProgram.user.computeDigest(vector.elements(), (String)LogicProgram.user.get(s));
+         DataFiles.writeWork(LogicProgram.workDir, workFileName, vector, s1);
       }
 
       LogicProgram.backupNeeded = true;

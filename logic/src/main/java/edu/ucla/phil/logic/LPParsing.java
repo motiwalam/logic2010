@@ -451,6 +451,10 @@ class LPParsing extends LogicModule implements LogicConstants {
             problems = parsingproblemset;
             ParsingProblemEntry.newProblemNames = ProblemEntry.findExtraProblems("parwork.txt", problems);
             ProblemEntry.markExtraProblems(exercises, ParsingProblemEntry.newProblemNames);
+            if (DataFiles.hasLegacyWork(LogicProgram.workDir, "parwork.txt")) {
+               saveProblems(); // work saved in the older format: save it in the readable one
+            }
+
             return true;
          }
       }
@@ -863,7 +867,7 @@ class LPParsing extends LogicModule implements LogicConstants {
          return false;
       } else {
          try {
-            writeProblems(problems, new FileWriter(new File(LogicProgram.workDir, "parwork.txt")));
+            writeProblems(problems, "parwork.txt");
             return true;
          } catch (IOException ioexception) {
             LogicProgram.showFileError("not004", "parwork.txt");

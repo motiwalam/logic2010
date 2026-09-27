@@ -574,6 +574,10 @@ class LPSymbolizer extends LogicModule implements SymbolizationConstants {
             problems = symbolizationproblemset;
             SymbolizationEntry.knownNames = ProblemEntry.findExtraProblems("symwork.txt", problems);
             ProblemEntry.markExtraProblems(exercises, SymbolizationEntry.knownNames);
+            if (DataFiles.hasLegacyWork(LogicProgram.workDir, "symwork.txt")) {
+               saveProblems(); // work saved in the older format: save it in the readable one
+            }
+
             return true;
          }
       }
@@ -620,6 +624,10 @@ class LPSymbolizer extends LogicModule implements SymbolizationConstants {
          LogicProgram.showFileError("not002", "keywork.txt");
          return false;
       } else {
+         if (DataFiles.hasLegacyWork(LogicProgram.workDir, "keywork.txt")) {
+            writeUserKey(); // saved in the older format: save in the readable one
+         }
+
          return true;
       }
    }
@@ -629,17 +637,8 @@ class LPSymbolizer extends LogicModule implements SymbolizationConstants {
          if (userKey == null) {
             return true;
          } else {
-            Enumeration enumeration = userKey.elements();
-            BufferedWriter bufferedwriter = new BufferedWriter(LogicProgram.openWriter("keywork.txt", false, true));
-
             try {
-               while (enumeration.hasMoreElements()) {
-                  String s = (String)enumeration.nextElement();
-                  bufferedwriter.write(s, 0, s.length());
-                  bufferedwriter.newLine();
-               }
-
-               bufferedwriter.close();
+               DataFiles.writeWork(LogicProgram.workDir, "keywork.txt", DataFiles.canonicalRecords(new Vector(userKey.values())), null);
             } catch (IOException ioexception) {
                return false;
             }
@@ -1322,7 +1321,7 @@ class LPSymbolizer extends LogicModule implements SymbolizationConstants {
          return false;
       } else {
          try {
-            writeProblems(problems, new FileWriter(new File(LogicProgram.workDir, "symwork.txt")));
+            writeProblems(problems, "symwork.txt");
             writeUserKey();
             return true;
          } catch (IOException ioexception) {

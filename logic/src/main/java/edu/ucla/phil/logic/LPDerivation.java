@@ -716,7 +716,7 @@ class LPDerivation extends LogicModule implements RulePropertySource, Derivation
          return false;
       } else {
          try {
-            writeProblems(problems, new FileWriter(new File(LogicProgram.workDir, "derwork.txt")));
+            writeProblems(problems, "derwork.txt");
             return true;
          } catch (IOException ioexception) {
             LogicProgram.showFileError("not004", "derwork.txt");
@@ -1689,6 +1689,10 @@ class LPDerivation extends LogicModule implements RulePropertySource, Derivation
             derivationproblemset.rebuildUserRules();
             DerivationProblemEntry.workProblemNames = ProblemEntry.findExtraProblems("derwork.txt", problems);
             ProblemEntry.markExtraProblems(exercises, DerivationProblemEntry.workProblemNames);
+            if (DataFiles.hasLegacyWork(LogicProgram.workDir, "derwork.txt")) {
+               saveProblems(); // work saved in the older format: save it in the readable one
+            }
+
             return true;
          }
       }

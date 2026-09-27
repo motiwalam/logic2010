@@ -1125,18 +1125,11 @@ class ServerConnection implements LogicConstants {
             int j = WORK_FILES.length;
 
             for (int k = 0; k < j; k++) {
-               File file2 = new File(file1, WORK_FILES[k]);
-               if (file2.exists() && file2.isFile()) {
+               // backups carry the work files in the older format, under their older names
+               byte[] abyte1 = DataFiles.legacyWorkBytes(file1, WORK_FILES[k]);
+               if (abyte1 != null) {
                   zipoutputstream.putNextEntry(new ZipEntry("work/" + WORK_FILES[k]));
-                  fileinputstream = new FileInputStream(file2);
-
-                  int i;
-                  while ((i = fileinputstream.read(abyte)) != -1) {
-                     zipoutputstream.write(abyte, 0, i);
-                  }
-
-                  fileinputstream.close();
-                  fileinputstream = null;
+                  zipoutputstream.write(abyte1);
                }
             }
 
@@ -1258,7 +1251,7 @@ class ServerConnection implements LogicConstants {
 
    static boolean hasModuleWorkFiles() {
       for (int i = 2; i < WORK_FILES.length; i++) {
-         if (new File(LogicProgram.workDir, WORK_FILES[i]).exists()) {
+         if (DataFiles.hasWork(LogicProgram.workDir, WORK_FILES[i])) {
             return true;
          }
       }
