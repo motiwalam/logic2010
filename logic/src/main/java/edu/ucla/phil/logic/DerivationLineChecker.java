@@ -36,6 +36,9 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
    int minPremises;
    int maxPremises;
    Vector clashes;
+   /** Choices occurrenceChoices offers at most, and occurrences of a term it chooses among. */
+   static final int MAX_CHOICES = 12;
+   static final int MAX_OCCURRENCES = 3;
 
    DerivationLineChecker(DerivationLine derivationline, boolean flag) {
       this.line = derivationline;
@@ -198,7 +201,7 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                   return false;
                }
 
-               if (!this.line.canUse(derivationnode)) {
+               if (!this.canUse(derivationnode)) {
                   return false;
                }
 
@@ -266,7 +269,7 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
          DerivationNode derivationnode = this.line.box.module.problem.findLine(integer);
          if (derivationnode == null) {
             return new ErrorRef("dererr003", Message.params("remote line number", integer.toString()));
-         } else if (!this.line.canUse(derivationnode)) {
+         } else if (!this.canUse(derivationnode)) {
             return new ErrorRef(null);
          } else {
             Expression expression = derivationnode.getFormula();
@@ -303,6 +306,20 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
          } else {
             return null;
          }
+      }
+   }
+
+   /** Whether the line may cite derivationnode; in preview the error is recorded instead of shown on the line. */
+   boolean canUse(DerivationNode derivationnode) {
+      if (!this.preview) {
+         return this.line.canUse(derivationnode);
+      } else {
+         ErrorRef errorref = this.line.usageError(derivationnode);
+         if (errorref != null) {
+            this.reportError(errorref.id, errorref.params);
+         }
+
+         return errorref == null;
       }
    }
 
@@ -1940,7 +1957,8 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
    /**
     * With an asserted result, the applications left all give that result (they differ only
     * in which cited formula fills which premise): take the first one that is fully
-    * determined. Returns -1 if none is, so that the program asks as usual.
+    * determined, or else one that the result completes (the occurrences LL1 and LL2
+    * replace). Returns -1 if there is none, so that the program asks as usual.
     */
    int chooseAssertedInstance(Vector vector) {
       for (int i = 0; i < vector.size(); i++) {
@@ -1949,7 +1967,155 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
          }
       }
 
+      // the result may settle which occurrences of a term a letter stands for (LL1, LL2)
+      for (int j = 0; j < vector.size(); j++) {
+         RuleApplication ruleapplication = (RuleApplication)vector.elementAt(j);
+         Vector vector1 = this.occurrenceChoices(ruleapplication);
+
+         for (int k = 0; k < vector1.size(); k++) {
+            SchemeInstantiation schemeinstantiation = (SchemeInstantiation)vector1.elementAt(k);
+            BoundVariableMap boundvariablemap = new BoundVariableMap();
+            if (schemeinstantiation.hasNoDeferredMatches() && this.premisesMatch(ruleapplication.form, ruleapplication.premiseOrder, schemeinstantiation, boundvariablemap)) {
+               RuleApplication ruleapplication1 = new RuleApplication(ruleapplication.form, ruleapplication.premiseOrder, schemeinstantiation, boundvariablemap);
+               Expression expression = ruleapplication1.getConclusion();
+               if (expression.findMislinkedVariables() == null && expression.isIdentical(this.assertion)) {
+                  vector.setElementAt(ruleapplication1, j);
+                  return j;
+               }
+            }
+         }
+      }
+
       return -1;
+   }
+
+   /** Whether the premises of schematicrule, in the order aint, are the top of the stack under schemeinstantiation. */
+   boolean premisesMatch(SchematicRule schematicrule, int[] aint, SchemeInstantiation schemeinstantiation, BoundVariableMap boundvariablemap) {
+      int i = aint.length;
+
+      for (int j = 0; j < i; j++) {
+         if (!boundvariablemap.matches(schematicrule.premises[aint[j]], this.getStackFormula(j - i), schemeinstantiation)) {
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   /**
+    * The ways to complete ruleapplication when the program would ask which occurrences of a
+    * term a letter of the conclusion stands for (EG, LL1, LL2): one instantiation for each
+    * choice, if there are few; otherwise, or if there is no such choice, just its own. An
+    * asserted result selects among them (chooseAssertedInstance); the rules view shows them.
+    */
+   Vector occurrenceChoices(RuleApplication ruleapplication) {
+      Vector vector = new Vector();
+      SchemeInstantiation schemeinstantiation = ruleapplication.instantiation;
+      Vector vector1 = ruleapplication.form.conclusion.getSchematicLetters();
+      SchematicLetter schematicletter = null;
+      DeferredMatch deferredmatch = null;
+
+      for (int i = 0; i < schemeinstantiation.pendingLetters.size() && schematicletter == null; i++) {
+         SchematicLetter schematicletter1 = (SchematicLetter)schemeinstantiation.pendingLetters.elementAt(i);
+         Vector vector2 = schematicletter1.getDeferredMatches(false);
+         if (schematicletter1 instanceof PredicateLetter && schematicletter1.getArity() == 1 && vector2 != null && vector1.contains(schematicletter1)) {
+            // the choices come from the first match with a formula; adding each choice checks the others
+            for (int i2 = 0; i2 < vector2.size() && deferredmatch == null; i2++) {
+               DeferredMatch deferredmatch1 = (DeferredMatch)vector2.elementAt(i2);
+               if (deferredmatch1.instance != null) {
+                  schematicletter = schematicletter1;
+                  deferredmatch = deferredmatch1;
+               }
+            }
+         }
+      }
+
+      if (schematicletter != null && deferredmatch != null) {
+         Expression expression = deferredmatch.pattern.getChild(0);
+         SchematicLetter schematicletter2 = expression.getSchematicLetter();
+         Vector vector3 = new Vector();
+         boolean flag = schematicletter2 != null && schemeinstantiation.getReplacement(schematicletter2) == null;
+         if (flag) {
+            collectTerms(deferredmatch.instance, vector3);
+         } else {
+            vector3.addElement(expression.instantiate(schemeinstantiation));
+         }
+
+         for (int j = 0; j < vector3.size() && vector != null; j++) {
+            Expression expression1 = (Expression)vector3.elementAt(j);
+            Vector vector4 = deferredmatch.instance.findOccurrences(expression1);
+            int k = vector4.size();
+            if (k == 0 || k > MAX_OCCURRENCES) {
+               vector = null;
+            } else {
+               for (int l = 1; l < 1 << k && vector != null; l++) {
+                  SimpleTerm simpleterm = new SimpleTerm(SchematicLetter.placeholder(0));
+                  Expression expression2 = deferredmatch.instance;
+
+                  for (int i1 = 0; i1 < k; i1++) {
+                     if ((l & 1 << i1) != 0) {
+                        expression2 = InterchangeJustification.replaceAt(expression2, simpleterm, (ExpressionPath)vector4.elementAt(i1));
+                     }
+                  }
+
+                  Expression expression3 = deferredmatch.pattern.copy();
+                  expression3.children.setElementAt(simpleterm, 0);
+                  SchemeInstantiation schemeinstantiation1 = (SchemeInstantiation)schemeinstantiation.clone();
+                  if (expression2.findMislinkedVariables() == null
+                     && (!flag || schemeinstantiation1.addReplacement(expression, expression1))
+                     && schemeinstantiation1.addReplacement(expression3, expression2)
+                     && this.premisesMatch(ruleapplication.form, ruleapplication.premiseOrder, schemeinstantiation1, new BoundVariableMap())) {
+                     vector.addElement(schemeinstantiation1);
+                     if (vector.size() > MAX_CHOICES) {
+                        vector = null;
+                     }
+                  }
+               }
+            }
+         }
+      } else {
+         vector = null;
+      }
+
+      if (vector == null || vector.isEmpty()) {
+         vector = new Vector();
+         vector.addElement(schemeinstantiation);
+      }
+
+      return vector;
+   }
+
+   /** The terms in expression (each once) that could be generalized: no bound variables in them. */
+   static void collectTerms(Expression expression, Vector vector) {
+      if (expression instanceof Term && !hasBoundVariable(expression)) {
+         boolean flag = false;
+
+         for (int i = 0; i < vector.size() && !flag; i++) {
+            flag = ((Expression)vector.elementAt(i)).isIdentical(expression);
+         }
+
+         if (!flag) {
+            vector.addElement(expression);
+         }
+      }
+
+      for (int j = 0; j < expression.childCount; j++) {
+         collectTerms(expression.getChild(j), vector);
+      }
+   }
+
+   static boolean hasBoundVariable(Expression expression) {
+      if (expression instanceof SimpleTerm && ((SimpleTerm)expression).hasBinder()) {
+         return true;
+      } else {
+         for (int i = 0; i < expression.childCount; i++) {
+            if (hasBoundVariable(expression.getChild(i))) {
+               return true;
+            }
+         }
+
+         return false;
+      }
    }
 
    /**

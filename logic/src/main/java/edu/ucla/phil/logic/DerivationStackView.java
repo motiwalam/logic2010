@@ -220,6 +220,14 @@ class DerivationStackView extends JPanel implements ActionListener {
     * with no dialogs (serial mode) and no messages, and restores what checking changes.
     */
    static DerivationStackView.Snapshot compute(DerivationLine derivationline, String s) {
+      return compute(derivationline, s, null);
+   }
+
+   /**
+    * As compute(derivationline, s), and if the steps of s apply without error and leave the
+    * box open, lets visitor look at the checker there before the state is restored.
+    */
+   static DerivationStackView.Snapshot compute(DerivationLine derivationline, String s, DerivationStackView.Visitor visitor) {
       LPDerivation lpderivation = derivationline.box.module;
       DerivationBox derivationbox = derivationline.box;
       boolean flag = lpderivation.serialMode;
@@ -276,6 +284,10 @@ class DerivationStackView extends JPanel implements ActionListener {
             snapshot.formulas.addElement(expression);
             String s2 = derivationnode != null ? "line " + derivationnode.getLineNumber() : (String)identityhashmap.get(expression);
             snapshot.origins.addElement(s2 == null ? "" : s2);
+         }
+
+         if (visitor != null && snapshot.error == null && snapshot.closed == null) {
+            visitor.visit(derivationlinechecker, snapshot);
          }
       } catch (RuntimeException runtimeexception) {
          snapshot.error = "The stack could not be computed here (" + runtimeexception + ").";
@@ -336,6 +348,11 @@ class DerivationStackView extends JPanel implements ActionListener {
       public boolean getScrollableTracksViewportHeight() {
          return false;
       }
+   }
+
+   /** Work done with the checker at the cursor (DerivationRulesView). */
+   interface Visitor {
+      void visit(DerivationLineChecker derivationlinechecker, DerivationStackView.Snapshot snapshot);
    }
 
    static class Snapshot {

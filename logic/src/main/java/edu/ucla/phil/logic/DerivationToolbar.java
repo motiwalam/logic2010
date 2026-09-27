@@ -117,6 +117,17 @@ class DerivationToolbar extends CellPanel {
       };
       jpanel.add(stackbutton);
       stackbutton.setHelpText("Show the formulas on the stack of the justification at the cursor");
+      final ActionButton rulesbutton = new ActionButton("Applicable");
+      rulesbutton.primaryAction = new AbstractAction() {
+         @Override
+         public void actionPerformed(ActionEvent actionevent) {
+            DerivationToolbar.this.module.toggleRulesView();
+            rulesbutton.setText(DerivationToolbar.this.module.rulesView.isVisible() ? "Hide Applicable" : "Applicable");
+            DerivationToolbar.this.module.requestFocus();
+         }
+      };
+      jpanel.add(rulesbutton);
+      rulesbutton.setHelpText("Show the rules that apply to the stack of the justification at the cursor, and what they give");
       abstractaction = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {

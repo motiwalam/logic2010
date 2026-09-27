@@ -126,7 +126,7 @@ class InterchangeJustification extends Justification {
                      return false;
                   }
 
-                  if (!derivationlinechecker.line.canUse(this.equivalenceLine)) {
+                  if (!derivationlinechecker.canUse(this.equivalenceLine)) {
                      return false;
                   }
 
@@ -968,7 +968,7 @@ class InterchangeJustification extends Justification {
       if (schematicrule instanceof PremiseRule) {
          return true;
       } else if (schematicrule instanceof LineRule) {
-         return derivationlinechecker.line.canUse(((LineRule)schematicrule).line);
+         return derivationlinechecker.canUse(((LineRule)schematicrule).line);
       } else {
          LPDerivation lpderivation = derivationlinechecker.line.box.module;
          String s = derivationlinechecker.interactive ? "manualOrDisabled" : "disabled";

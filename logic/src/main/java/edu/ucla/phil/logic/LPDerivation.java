@@ -33,6 +33,8 @@ class LPDerivation extends LogicModule implements RulePropertySource, Derivation
    DerivationLineEditor focus;
    DerivationLineEditor lastFocus;
    DerivationStackView stackView;
+   DerivationRulesView rulesView;
+   JPanel sidePanels;
    JScrollPane scroller;
    LinePanel problemPanel;
    LinePanel scrollPanel;
@@ -621,12 +623,35 @@ class LPDerivation extends LogicModule implements RulePropertySource, Derivation
       if (this.stackView == null) {
          this.stackView = new DerivationStackView(this);
          this.stackView.setVisible(false);
-         this.add(this.stackView, "East");
+         this.getSidePanels().add(this.stackView, "West");
       }
 
       this.stackView.setOn(!this.stackView.isVisible());
       this.revalidate();
       this.repaint();
+   }
+
+   /** Shows or hides the rules view (the Applicable button). */
+   void toggleRulesView() {
+      if (this.rulesView == null) {
+         this.rulesView = new DerivationRulesView(this);
+         this.rulesView.setVisible(false);
+         this.getSidePanels().add(this.rulesView, "East");
+      }
+
+      this.rulesView.setOn(!this.rulesView.isVisible());
+      this.revalidate();
+      this.repaint();
+   }
+
+   /** The area right of the derivation that holds the stack and rules views. */
+   JPanel getSidePanels() {
+      if (this.sidePanels == null) {
+         this.sidePanels = new JPanel(new BorderLayout());
+         this.add(this.sidePanels, "East");
+      }
+
+      return this.sidePanels;
    }
 
    @Override

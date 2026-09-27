@@ -643,6 +643,16 @@ class DerivationLine extends JPanel implements DerivationNode, MessageParamSourc
    }
 
    boolean canUse(DerivationNode derivationnode) {
+      ErrorRef errorref = this.usageError(derivationnode);
+      if (errorref != null) {
+         this.showMessage(errorref.id, errorref.params);
+      }
+
+      return errorref == null;
+   }
+
+   /** Why this line may not cite derivationnode, or null if it may. */
+   ErrorRef usageError(DerivationNode derivationnode) {
       DerivationBox derivationbox = this.getEnclosingBox();
       Object object = this.getHeadNode();
       DerivationBox derivationbox1 = derivationnode.getEnclosingBox();
@@ -654,23 +664,19 @@ class DerivationLine extends JPanel implements DerivationNode, MessageParamSourc
          }
 
          if (derivationbox == derivationbox1 && derivationnode1.getIndexInBox() < ((DerivationNode)object).getIndexInBox()) {
-            return true;
+            return null;
          } else {
             int i = derivationnode1.getLineNumber();
             if (i >= this.getLineNumber()) {
-               this.showMessage("dererr044", Message.params("remote line number", i + ""));
-               return false;
+               return new ErrorRef("dererr044", Message.params("remote line number", i + ""));
             } else if (derivationbox == derivationbox1) {
-               this.showMessage("dererr045", Message.params("remote line number", i + ""));
-               return false;
+               return new ErrorRef("dererr045", Message.params("remote line number", i + ""));
             } else {
-               this.showMessage("dererr046", Message.params("remote line number", i + ""));
-               return false;
+               return new ErrorRef("dererr046", Message.params("remote line number", i + ""));
             }
          }
       } else {
-         this.showMessage("dererrtxt", Message.params("text", "unexpected error; contact instructor: LPDerLine.canUse(ILPDerLine)"));
-         return false;
+         return new ErrorRef("dererrtxt", Message.params("text", "unexpected error; contact instructor: LPDerLine.canUse(ILPDerLine)"));
       }
    }
 

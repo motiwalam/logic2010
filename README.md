@@ -125,7 +125,40 @@ For example, `pr1 DUP pr2 MP MP` derives Q from P and P->(P->Q). Each formula ke
 - The steps run as the Check button runs them, but nothing in the derivation changes. Choices you already made in dialogs are used.
 - With the cursor in a line's formula, the panel shows the stack after that line's whole justification.
 
-Implementation: `DerivationLineChecker` (`readAssertion`, `checkStep`, `applyStackOperation`, and the preview mode used by `DerivationStackView`); messages `DerErr110`–`DerErr114` in `data/messages/derivation.rec`.
+**Applicable rules.** The **Applicable** button opens a panel next to the stack view. It lists every rule that could be the next step at the cursor, with what it would produce.
+- **What is listed:**
+  - each form of the rules list and of your own rules (`UR…`) whose premises match the top of the stack, in any order
+  - `CD`, `ID`, `DD`, `UD` and `BD` when they can close the box here
+  - `IE` and `CIE`
+  - the premises (`PR1`, `PR2`, …)
+  - on the first line of a box, the assumptions (`ASS CD`, `ASS ID`, `ASS BDL`, `ASS BDR`)
+  - `DUP`, `DROP` and `SWAP`, in a separate section at the end
+  - Theorems (`Tn`) are not listed.
+- **Several results:** a rule that can give several results has one row per result. For example, `Adj` gives both `Q∧R` and `R∧Q`, `LL1` lists each choice of occurrences, and `EG` lists each choice of term occurrences (when there are at most three).
+- **Unknowns:** parts the program would ask for are shown as unknowns, in blue:
+  - `?P`, `?Q` for formulas
+  - `?F(…)` for formulas with the arguments shown in them
+  - `?t` for terms, and `?f(…)` for terms built around the arguments shown
+  - `?x` for variables
+
+  For example, `MC1` on `Q` gives `?P→Q`, `UI` on `∀xFx` gives `F?t`, and `EI` gives `F?x`.
+- **Order:** rules with no unknowns come first, then rules with unknowns. Within each group:
+  1. rules that close the box
+  2. rules that use the stack
+  3. rules that push a formula
+- **Not allowed here:** rules the problem does not allow still appear, grayed and in their own section, with the reason. Reasons are:
+  - disabled for this problem (`options.rec`)
+  - a derived rule whose theorem is not proved yet (the problem to prove is named)
+  - `manual` in Command Mode
+  - `ASS` rules whose box no rule may close in this problem
+- **Matching the line:** `= line` marks a result that is the line's formula.
+- **Hover details:** hovering over a row shows:
+  - the rule's form and the stack formulas it uses
+  - what it gives, and the unknowns explained
+  - why it is not allowed, if it is not
+  - what to type. That is the rule name, or `RULE[formula]` when the rule has several results or unknowns, e.g. `EG[exists ?x G(?x b)]` with `?x` filled in. Typed that way, no dialog appears.
+
+Implementation: `DerivationLineChecker` (`readAssertion`, `checkStep`, `applyStackOperation`, `occurrenceChoices`, and the preview mode used by `DerivationStackView`); `DerivationRulesView`; messages `DerErr110`–`DerErr114` in `data/messages/derivation.rec`. An asserted result also settles which occurrences `LL1` and `LL2` replace, e.g. `pr1 pr2 LL1[G(ba)]` from `a=b` and `G(aa)`.
 
 ## Source layout
 
