@@ -130,7 +130,8 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
 
       for (int l = 0; l < WEB_BUTTONS.length; l++) {
          if ((!WEB_BUTTONS[l].equals(WEB_BUTTONS[1]) || ServerConnection.websiteUrl != null)
-            && (!WEB_BUTTONS[l].equals(WEB_BUTTONS[0]) || LogicProgram.getCredentials("exam") == null || ServerConnection.adminInstall)) {
+            && (!WEB_BUTTONS[l].equals(WEB_BUTTONS[0]) || LogicProgram.getCredentials("exam") == null || ServerConnection.adminInstall)
+            && !(LogicProgram.localMode && WEB_BUTTONS[l].equals(WEB_BUTTONS[0]))) { // course assignments page: needs a server account
             WideMenuButton widemenubutton2 = new WideMenuButton(WEB_BUTTONS[l]);
             widemenubutton2.addActionListener(this);
             cellpanel1.add(ajbutton[i++] = widemenubutton2);

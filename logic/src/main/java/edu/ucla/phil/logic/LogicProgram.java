@@ -102,6 +102,12 @@ public class LogicProgram implements LogicConstants {
    static boolean overheadColors = false;
    static boolean remote = false;
    static boolean noNetwork = false;
+   /**
+    * Local mode (-Dlogic.local=true, see run.sh --local): run entirely offline. Forces the
+    * "nonet" option (no server verification, updates, submissions or backups) and demo mode
+    * (no institution/course selection or registration; a built-in local user is created).
+    */
+   static final boolean localMode = Boolean.getBoolean("logic.local");
    static boolean hiddenMode = false;
    static boolean unusedFlagA = false;
    static boolean unusedFlagB = true;
@@ -2059,6 +2065,10 @@ public class LogicProgram implements LogicConstants {
             }
          }
 
+         if (localMode) {
+            noNetwork = true;
+         }
+
          if (noNetwork) {
             remote = false;
          }
@@ -2301,6 +2311,11 @@ public class LogicProgram implements LogicConstants {
                }
 
                if (flag) {
+                  // In local mode there is no course to dictate the notation; -Dlogic.syntax=1|2 picks it.
+                  if (localMode && System.getProperty("logic.syntax") != null) {
+                     hashtable.put("SYNTAX", System.getProperty("logic.syntax").trim());
+                  }
+
                   Integer integer = parseInteger((String)hashtable.get("SYNTAX"));
                   setSyntax(integer != null ? integer : 1);
                }

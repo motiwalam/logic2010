@@ -74,10 +74,12 @@ class ServerUrl {
    }
 
    public URLConnection openConnection() throws IOException {
+      ServerConnection.checkNetworkAllowed(this.url);
       return this.url.openConnection();
    }
 
    public InputStream openStream() throws IOException {
+      ServerConnection.checkNetworkAllowed(this.url);
       return this.url.openStream();
    }
 

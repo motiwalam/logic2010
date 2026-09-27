@@ -183,7 +183,7 @@ class CourseInfo {
    }
 
    static CourseInfo[] getAllCourses() {
-      if (allCourses == null) {
+      if (allCourses == null && !LogicProgram.localMode) {
          ServerConnection.fetchCourseList();
       }
 

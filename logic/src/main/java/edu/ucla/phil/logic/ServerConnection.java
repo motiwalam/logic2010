@@ -135,7 +135,7 @@ class ServerConnection implements LogicConstants {
          adminInstall = false;
       }
 
-      demoMode = LogicProgram.isDemoName(institution);
+      demoMode = LogicProgram.localMode || LogicProgram.isDemoName(institution);
       if (institution.equals("")) {
          return false;
       } else {
@@ -205,11 +205,21 @@ class ServerConnection implements LogicConstants {
       return s;
    }
 
+   /** Safety net for local mode: the course server must never be contacted. */
+   static void checkNetworkAllowed(Object target) throws IOException {
+      if (LogicProgram.localMode) {
+         IOException e = new IOException("network access disabled in local mode: " + target);
+         e.printStackTrace();
+         throw e;
+      }
+   }
+
    static String httpGet(URL url, HttpDigestAuth httpdigestauth) {
       URLConnection urlconnection = null;
 
       String s;
       try {
+         checkNetworkAllowed(url);
          urlconnection = url.openConnection();
          if (!(urlconnection instanceof HttpURLConnection)) {
             return null;
