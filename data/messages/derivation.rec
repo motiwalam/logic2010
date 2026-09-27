@@ -612,6 +612,31 @@ text: You appear to be attempting to justify the line by the rule <rule name>, w
 buttons: OK
 description: Only in Check
 
+id: DerErr110
+error: <rule name> does not give the formula in brackets
+text: You asked for this result of <rule name>:\n<indent 5><asserted>\nbut <rule name>, applied to the formulas you cite, cannot produce that formula.\n\nA formula in brackets after a rule name, as in MP[Q], is the result the step must have.
+buttons: OK
+
+id: DerErr111
+error: formula in brackets is not the line
+text: The last step of this justification asks for the result:\n<indent 5><asserted>\nbut the line is:\n<indent 5><wff>\n\nOn the last step, the formula in brackets must be the line's formula.  (In Command Mode you may leave the line empty: it is filled in with the formula in brackets.)
+buttons: OK
+
+id: DerErr112
+error: misplaced or ill-formed formula in brackets
+text: A formula in brackets must come right after a rule name, as in MP[Q] or ASS ID[P], and must be a well-formed formula.  The justification has:\n<indent 5><assertion>
+buttons: OK
+
+id: DerErr113
+error: <rule name> needs <n> formula<s> on the stack
+text: <rule name> rearranges the formulas cited so far: DUP copies the last one, DROP removes it, and SWAP exchanges the last two.  There are not enough formulas for <rule name> at this point of the justification.
+buttons: OK
+
+id: DerErr114
+error: <rule name> cannot be the last step
+text: DUP, DROP and SWAP only rearrange the formulas cited so far.  The last step of a justification must be a rule that gives the line's formula.
+buttons: OK
+
 # Not001 - Not008 were moved to messages.txt
 # 73  `s     DerNot001  `n     Could not find advice file.  `x
 # 74  `s     DerNot002  `n     There is no work file.  `x

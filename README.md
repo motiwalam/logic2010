@@ -84,6 +84,36 @@ Local and normal mode keep separate runtime directories, so local work never get
 - `config.dir` and `link.dir` point at `Contents/Resources`
 - `prog.dir` points at `Contents/Java`
 
+## Justification syntax extensions
+
+A derivation line's justification is a small stack program: cited line numbers push their formulas, and each rule pops its premises and pushes its result for the next step, as in `2 pr1 MP 2 pr2 MP ID`. This version adds two things to that language. Neither changes how existing justifications are read.
+
+**Asserted results: `RULE[formula]`.** A formula in brackets right after a rule name is the result that step must have.
+- If the rule could produce several results, the bracket chooses one, so no dialog appears.
+- If the rule cannot produce the formula, the step is an error.
+- On the last step, the bracketed formula must be the line's formula.
+- In Command Mode the line may be left empty: it is filled in from the brackets.
+
+```
+pr1 S[Q] pr2 MP      line 1 is P&Q: take the conjunct Q, then Modus Ponens with premise 2
+ass id[P]            Show line ~P: assume P rather than ~~P
+pr1 UI[Fa] pr2 MP    instantiate @xFx to Fa without asking for the term
+pr2 pr1 SWAP[R]      after SWAP the top formula must be R
+```
+
+- The formula uses the current notation. Blanks inside the brackets are allowed.
+- A choice that no formula can settle still asks, e.g. the text questions of IE. The `/` answers (`UI/a`) still fill those questions in.
+- Rules whose applications all give the asserted formula take the first one.
+
+**Stack operations: `DUP`, `DROP`, `SWAP`.** These rearrange the formulas cited so far:
+- `DUP` pushes another copy of the top formula
+- `DROP` removes the top formula
+- `SWAP` exchanges the top two
+
+For example, `pr1 DUP pr2 MP MP` derives Q from P and P->(P->Q). Each formula keeps the line it was cited from, so box-closing rules still check where their lines come from. A stack operation cannot be the last step, which must be a rule that gives the line's formula.
+
+Implementation: `DerivationLineChecker` (`readAssertion`, `checkStep`, `applyStackOperation`); messages `DerErr110`–`DerErr114` in `data/messages/derivation.rec`.
+
 ## Source layout
 
 ```
@@ -120,7 +150,7 @@ Where to start reading:
 
 | Branch | Purpose |
 |---|---|
-| `main` | Working branch: `base-logic2010` plus your changes (so far: bundled course data, readable data and work files, local mode, a fix for deleting a problem's work, and a menu-layout fix for modern Java). |
+| `main` | Working branch: `base-logic2010` plus your changes (so far: bundled course data, readable data and work files, local mode, justification syntax extensions, and fixes for deleting a problem's work, the menu layout on modern Java, and formula parse errors). |
 | `base-logic2010` | The unmodified source, exactly equivalent to the official Logic 2010 program (core version 20200601), still needing an existing installation to run. Keep it untouched as the reference point. |
 | `reverse-engineering` | How this source was recovered. It holds the original jars, the naming mappings, the build pipeline that regenerates `base-logic2010`'s source, the equivalence checker, the converter from the original scrambled data files to the readable ones (and documentation of the old formats), and detailed architecture notes (`docs/`). |
 

@@ -26,6 +26,8 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
    Vector fullMatches;
    Vector consumedFormulas;
    Vector presetAnswers;
+   Expression assertion;
+   Expression target;
    SchematicRule[] allForms;
    SchematicRule[] enabledForms;
    SchematicRule[] automaticForms;
@@ -58,6 +60,8 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
       this.hasFullMatch = false;
       this.consumedFormulas = null;
       this.presetAnswers = null;
+      this.assertion = null;
+      this.target = null;
       this.allForms = null;
       this.enabledForms = null;
       this.automaticForms = null;
@@ -88,6 +92,7 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
 
    boolean readNextStep() {
       this.ruleName = null;
+      this.assertion = null;
       if (this.remaining == null) {
          return true;
       } else {
@@ -117,6 +122,11 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                if (isNameChar(c0)) {
                   flag1 = false;
                   break;
+               }
+
+               if (c0 == '[' || c0 == ']') {
+                  this.reportError("dererr112", Message.params("assertion", this.remaining.substring(k)));
+                  return false;
                }
             }
 
@@ -215,7 +225,7 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                   this.reportError("dererr006");
                }
 
-               return flag2;
+               return flag2 && this.readAssertion();
             }
          }
 
@@ -524,7 +534,97 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
       return this.checkStep(flag, false);
    }
 
+   /**
+    * Checks one step. A formula in brackets after the rule name ("MP[Q]") is the result the
+    * step must have: it selects among the rule's possible results as the line's own formula
+    * does on the last step, and the step fails if the rule cannot produce it.
+    */
    boolean checkStep(boolean flag, boolean flag1) {
+      this.target = this.assertion != null ? this.assertion : (flag ? this.lineFormula : null);
+      if (this.assertion != null && flag && this.lineFormula != null && !this.assertion.isIdentical(this.lineFormula)) {
+         this.reportError("dererr111");
+         return this.fail();
+      } else if (!this.applyStep(flag, flag1)) {
+         return false;
+      } else if (this.assertion != null && !this.assertionHolds()) {
+         this.reportError("dererr110");
+         return this.fail();
+      } else {
+         return true;
+      }
+   }
+
+   /** Whether the step just applied produced the asserted formula. */
+   boolean assertionHolds() {
+      if (isStackOperation(this.ruleName)) {
+         Expression expression = this.getStackFormula(-1);
+         return expression != null && expression.isIdentical(this.assertion);
+      } else if (this.ruleName.equals("CD") || this.ruleName.equals("ID") || this.ruleName.equals("DD") || this.ruleName.equals("UD") || this.ruleName.equals("BD")) {
+         Expression expression = this.line.box.getFormula();
+         return expression != null && expression.isIdentical(this.assertion);
+      } else {
+         return this.result != null && this.result.isIdentical(this.assertion);
+      }
+   }
+
+   static boolean isStackOperation(String s) {
+      return s.equals("DUP") || s.equals("DROP") || s.equals("SWAP");
+   }
+
+   /**
+    * Reads "[formula]" right after a rule name (blanks may come between). Brackets nest, so a
+    * formula may itself contain brackets.
+    */
+   boolean readAssertion() {
+      int i = 0;
+      int j = this.remaining.length();
+
+      while (i < j && Character.isWhitespace(this.remaining.charAt(i))) {
+         i++;
+      }
+
+      if (i < j && this.remaining.charAt(i) == ']') {
+         this.reportError("dererr112", Message.params("assertion", this.remaining.substring(i)));
+         return false;
+      } else if (i >= j || this.remaining.charAt(i) != '[') {
+         return true;
+      } else {
+         int k = i;
+         int l = 0;
+
+         for (; k < j; k++) {
+            char c0 = this.remaining.charAt(k);
+            if (c0 == '[') {
+               l++;
+            } else if (c0 == ']' && --l == 0) {
+               break;
+            }
+         }
+
+         if (k >= j) {
+            this.reportError("dererr112", Message.params("assertion", this.remaining.substring(i)));
+            return false;
+         } else {
+            String s = this.remaining.substring(i + 1, k);
+
+            try {
+               this.assertion = LogicProgram.parseFormula(LogicProgram.translateSymbols(s, DerivationLine.SYMBOLS, maggie));
+            } catch (FormulaParseException formulaparseexception) {
+               this.assertion = null;
+            }
+
+            if (this.assertion == null) {
+               this.reportError("dererr112", Message.params("assertion", this.remaining.substring(i, k + 1)));
+               return false;
+            } else {
+               this.remaining = this.remaining.substring(k + 1);
+               return true;
+            }
+         }
+      }
+   }
+
+   private boolean applyStep(boolean flag, boolean flag1) {
       this.argumentCount = this.getStackSize();
       this.matchLine = flag;
       this.finalStep = flag1;
@@ -551,7 +651,12 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
          this.reportError(errorref.getId());
          return this.fail();
       } else {
-         if (!this.ruleName.equals("CD")
+         if (isStackOperation(this.ruleName)) {
+            if (flag || flag1) {
+               this.reportError("dererr114");
+               return this.fail();
+            }
+         } else if (!this.ruleName.equals("CD")
             && !this.ruleName.equals("ID")
             && !this.ruleName.equals("DD")
             && !this.ruleName.equals("UD")
@@ -577,9 +682,20 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
          this.line.box.strategyConsistent &= (this.ruleName.equals("IE") || this.ruleName.equals("CIE") || this.ruleName.equals("BD") || this.ruleName.startsWith("ASS "));
          Justification justification = (Justification)this.line.justifications.elementAt(this.stepIndex);
          if (justification != null) {
+            Vector vector = (Vector)this.stack.clone();
+            Vector vector1 = (Vector)this.citedNodes.clone();
+            Expression expression = this.result;
             if (justification.reapply(this)) {
-               this.reusedCache = true;
-               return true;
+               if (this.assertion == null || this.assertionHolds()) {
+                  this.reusedCache = true;
+                  return true;
+               }
+
+               this.stack = vector;
+               this.citedNodes = vector1;
+               this.result = expression;
+               this.consumedFormulas = null;
+               this.cachedError = null;
             }
 
             if (this.cachedError != null) {
@@ -590,7 +706,9 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
             this.cacheJustification(null);
          }
 
-         if (this.ruleName.equals("CD")) {
+         if (isStackOperation(this.ruleName)) {
+            return this.applyStackOperation();
+         } else if (this.ruleName.equals("CD")) {
             if (this.argumentCount != 1) {
                this.reportError("dererr010", Message.params("n", "1"));
                return this.fail();
@@ -859,13 +977,13 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                   this.reportError(this.line.box.getFormulaText(true).trim().equals("") ? "dererr011" : "dererr012");
                   return this.fail();
                } else {
-                  if (flag && this.lineFormula != null) {
-                     if (!expression.isNegationOf(this.lineFormula) && !this.lineFormula.isNegationOf(expression)) {
-                        this.reportError("dererr027");
+                  if (this.target != null) {
+                     if (!expression.isNegationOf(this.target) && !this.target.isNegationOf(expression)) {
+                        this.reportError(this.assertion != null ? "dererr110" : "dererr027");
                         return this.fail();
                      }
 
-                     this.result = this.lineFormula;
+                     this.result = this.target;
                   } else if (expression.getSymbol().equals("~")) {
                      Expression[] aexpression2 = new Expression[]{expression.getChild(0), expression.negate()};
                      int i1 = DerivationDialogs.chooseFormula(
@@ -919,16 +1037,22 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                      this.reportError("dererr081");
                      return this.fail();
                   } else {
-                     if (flag && this.lineFormula != null) {
-                        if ((j == 1 || !expression12.getChild(0).isIdentical(this.lineFormula))
-                           && (j == 0 || !expression12.getChild(1).isIdentical(this.lineFormula))) {
+                     if (this.target != null) {
+                        if ((j == 1 || !expression12.getChild(0).isIdentical(this.target))
+                           && (j == 0 || !expression12.getChild(1).isIdentical(this.target))) {
                            String[] astring = new String[]{"the left", "the right", "either"};
-                           this.reportError("dererr092", Message.params("side", astring[j]));
+                           if (this.assertion != null) {
+                              this.reportError("dererr110");
+                           } else {
+                              this.reportError("dererr092", Message.params("side", astring[j]));
+                           }
+
                            return this.fail();
                         }
 
-                        this.result = this.lineFormula;
-                        this.line.box.assumedSide = j;
+                        this.result = this.target;
+                        // an asserted side is recorded as that side; the line's own formula as before
+                        this.line.box.assumedSide = this.assertion == null ? j : (expression12.getChild(0).isIdentical(this.target) && j != 1 ? 0 : 1);
                      } else if (j < 2) {
                         if (containsWildcard(this.result = expression12.getChild(j))) {
                            this.reportError("dererr093");
@@ -1214,17 +1338,23 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                   } else if ((flag || flag1) && this.argumentCount != 0) {
                      this.reportError("dererr024", Message.params("n", this.argumentCount + ""));
                      return this.fail();
-                  } else if (flag && this.lineFormula != null) {
+                  } else if (this.target != null) {
                      if (i == 0) {
-                        if (!this.line.box.module.isPremise(this.lineFormula)) {
-                           this.reportError("dererr031");
+                        if (!this.line.box.module.isPremise(this.target)) {
+                           this.reportError(this.assertion != null ? "dererr110" : "dererr031");
                            return this.fail();
                         }
-                     } else if (!this.lineFormula.isIdentical(aexpression1[i - 1])) {
-                        this.reportError("dererr032", Message.params("premise index", i + "", "indexed premise", "\\l" + aexpression1[i - 1] + "\\l"));
+                     } else if (!this.target.isIdentical(aexpression1[i - 1])) {
+                        if (this.assertion != null) {
+                           this.reportError("dererr110");
+                        } else {
+                           this.reportError("dererr032", Message.params("premise index", i + "", "indexed premise", "\\l" + aexpression1[i - 1] + "\\l"));
+                        }
+
                         return this.fail();
                      }
 
+                     this.result = this.target;
                      this.popStack(0);
                      return true;
                   } else {
@@ -1498,8 +1628,8 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                boolean flag5 = false;
                boolean[] aboolean = new boolean[j];
                schematicrule.conclusion.match(null, schemeinstantiation1);
-               if (this.matchLine && this.lineFormula != null) {
-                  flag4 = schematicrule.conclusion.match(this.lineFormula, schemeinstantiation);
+               if (this.target != null) {
+                  flag4 = schematicrule.conclusion.match(this.target, schemeinstantiation);
                } else {
                   flag4 = schemeinstantiation.mergeFrom(schemeinstantiation1);
                }
@@ -1573,7 +1703,7 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                               BinderMap bindermap2 = new BinderMap();
                               Expression expression = schematicrule.conclusion.instantiate(schemeinstantiation2, bindermap2);
                               int[][] aint1 = bindermap2.getBinderCorrespondence(schematicrule.conclusion, expression);
-                              if (!boundvariablemap2.matchBinders(schematicrule.conclusion, this.matchLine ? this.lineFormula : null, aint1)) {
+                              if (!boundvariablemap2.matchBinders(schematicrule.conclusion, this.target, aint1)) {
                                  ruleapplication2.failureKind = 3;
                                  break label394;
                               }
@@ -1584,7 +1714,7 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                                  break label394;
                               }
 
-                              if (this.matchLine && this.lineFormula != null && !expression.isIdentical(this.lineFormula)) {
+                              if (this.target != null && !expression.isIdentical(this.target)) {
                                  ruleapplication2.failureKind = 5;
                                  break label394;
                               }
@@ -1633,6 +1763,8 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                this.reportError("dererr016");
             } else if (this.reusedCache) {
                this.reportError("dererr064");
+            } else if (this.assertion != null && this.hasFullMatch) {
+               this.reportError("dererr110");
             } else if (this.hasFullMatch && this.fullMatches.size() == 1) {
                if (this.matchLine && this.lineFormula != null) {
                   Expression expression1 = ((RuleApplication)this.fullMatches.elementAt(0)).getConclusion();
@@ -1671,7 +1803,11 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
 
             return null;
          } else {
-            int l1 = DerivationDialogs.chooseRuleInstance(this, vector);
+            int l1 = this.assertion != null ? this.chooseAssertedInstance(vector) : -1;
+            if (l1 == -1) {
+               l1 = DerivationDialogs.chooseRuleInstance(this, vector);
+            }
+
             if (l1 == -1) {
                if (this.line.box.module.serialMode) {
                   this.line.box.module.complete = false;
@@ -1753,9 +1889,9 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
 
                   if (flag7) {
                      flag7 = false;
-                     if ((!this.matchLine || this.lineFormula == null || boundvariablemap1.matchBinders(schematicrule1.conclusion, this.lineFormula, aint2))
+                     if ((this.target == null || boundvariablemap1.matchBinders(schematicrule1.conclusion, this.target, aint2))
                         && boundvariablemap1.renameBinders(schematicrule1.conclusion, expression2, aint2, null)
-                        && (!this.matchLine || this.lineFormula == null || expression2.isIdentical(this.lineFormula))) {
+                        && (this.target == null || expression2.isIdentical(this.target))) {
                         flag7 = true;
                      }
                   }
@@ -1781,6 +1917,53 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                }
             }
          }
+      }
+   }
+
+   /**
+    * With an asserted result, the applications left all give that result (they differ only
+    * in which cited formula fills which premise): take the first one that is fully
+    * determined. Returns -1 if none is, so that the program asks as usual.
+    */
+   int chooseAssertedInstance(Vector vector) {
+      for (int i = 0; i < vector.size(); i++) {
+         if (((RuleApplication)vector.elementAt(i)).getInstantiation().hasNoDeferredMatches()) {
+            return i;
+         }
+      }
+
+      return -1;
+   }
+
+   /**
+    * DUP pushes another copy of the top formula, DROP removes it, SWAP exchanges the top
+    * two. They rearrange the formulas already on the stack (each keeps the line it was
+    * cited from) and produce no result of their own.
+    */
+   boolean applyStackOperation() {
+      int i = this.ruleName.equals("SWAP") ? 2 : 1;
+      if (this.argumentCount < i) {
+         this.reportError("dererr113", Message.params("n", i + "", "s", i == 1 ? "" : "s"));
+         return this.fail();
+      } else {
+         int j = this.stack.size();
+         if (this.ruleName.equals("DUP")) {
+            this.stack.addElement(this.stack.elementAt(j - 1));
+            this.citedNodes.addElement(this.citedNodes.elementAt(j - 1));
+         } else if (this.ruleName.equals("DROP")) {
+            this.stack.setSize(j - 1);
+            this.citedNodes.setSize(j - 1);
+         } else {
+            Object object = this.stack.elementAt(j - 1);
+            this.stack.setElementAt(this.stack.elementAt(j - 2), j - 1);
+            this.stack.setElementAt(object, j - 2);
+            object = this.citedNodes.elementAt(j - 1);
+            this.citedNodes.setElementAt(this.citedNodes.elementAt(j - 2), j - 1);
+            this.citedNodes.setElementAt(object, j - 2);
+         }
+
+         this.result = null;
+         return true;
       }
    }
 
@@ -1816,9 +1999,9 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
 
       if (flag) {
          flag = false;
-         if ((!this.matchLine || this.lineFormula == null || boundvariablemap.matchBinders(schematicrule.conclusion, this.lineFormula, aint1))
+         if ((this.target == null || boundvariablemap.matchBinders(schematicrule.conclusion, this.target, aint1))
             && boundvariablemap.renameBinders(schematicrule.conclusion, expression, aint1, null)
-            && (!this.matchLine || this.lineFormula == null || expression.isIdentical(this.lineFormula))) {
+            && (this.target == null || expression.isIdentical(this.target))) {
             flag = true;
          }
       }
@@ -1972,6 +2155,8 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
    public String getParamValue(String s) {
       if (s.equals("rule name")) {
          return this.ruleName;
+      } else if (s.equals("asserted")) {
+         return this.assertion == null ? "" : "\\l" + this.assertion + "\\l";
       } else if (s.equals("stack")) {
          String object = "\\l";
 
