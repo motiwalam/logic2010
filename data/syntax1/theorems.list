@@ -1,0 +1,284 @@
+# Theorems (notation 1). One per line: NAME, blanks, then the definition.
+# '## text' lines are headings shown in the program's lists.
+
+##  
+##                          THEOREMS
+##  CHAPTER I
+1    P->P
+2    Q->(P->Q)
+3    P->((P->Q)->Q)
+4    (P->Q)->((Q->R)->(P->R))
+5    (Q->R)->((P->Q)->(P->R))
+6    (P->(Q->R))->((P->Q)->(P->R))
+7    ((P->Q)->(P->R))->(P->(Q->R))
+8    (P->(Q->R))->(Q->(P->R))
+9    (P->(P->Q))->(P->Q)
+10   ((P->Q)->Q)->((Q->P)->P)
+11   ~~P->P
+12   P->~~P
+13   (P->Q)->(~Q->~P)
+14   (P->~Q)->(Q->~P)
+15   (~P->Q)->(~Q->P)
+16   (~P->~Q)->(Q->P)
+17   P->(~P->Q)
+18   ~P->(P->Q)
+19   (~P->P)->P
+20   (P->~P)->~P
+21   ~(P->Q)->P
+22   ~(P->Q)->~Q
+23   ((P->Q)->P)->P
+##  CHAPTER II
+24   P&Q<->Q&P
+25   P&(Q&R)<->(P&Q)&R
+26   (P->Q)&(Q->R)->(P->R)
+27   (P&Q->R)<->(P->(Q->R))
+28   (P&Q->R)<->(P&~R->~Q)
+29   (P->Q&R)<->(P->Q)&(P->R)
+30   (P->Q)->(R&P->R&Q)
+31   (P->Q)->(P&R->Q&R)
+32   (P->R)&(Q->S)->(P&Q->R&S)
+33   (P->Q)&(~P->Q)->Q
+34   (P->Q)&(P->~Q)->~P
+35   (~P->R)&(Q->R)<->((P->Q)->R)
+36   ~(P&~P)
+37   (P->Q)<->~(P&~Q)
+38   P&Q<->~(P->~Q)
+39   ~(P&Q)<->(P->~Q)
+40   ~(P->Q)<->P&~Q
+41   P<->P&P
+42   P&~Q->~(P->Q)
+43   ~P->~(P&Q)
+44   ~Q->~(P&Q)
+45   P|Q<->(~P->Q)
+46   (P->Q)<->~P|Q
+47   P<->P|P
+48   (P|Q)&(P->R)&(Q->S)->R|S
+49   (P|Q)&(P->R)&(Q->R)->R
+50   (P->R)&(Q->R)<->(P|Q->R)
+51   (P|Q)&(P->R)&(~P&Q->R)->R
+52   (P->R)&(~P&Q->R)<->(P|Q->R)
+53   P|Q<->Q|P
+54   P|(Q|R)<->(P|Q)|R
+55   (P->Q|R)<->(P->Q)|(P->R)
+56   (P->Q)->(R|P->R|Q)
+57   (P->Q)->(P|R->Q|R)
+58   (P->Q)|(Q->R)
+59   P|~P
+60   (P->R)|(Q->R)<->(P&Q->R)
+61   P&(Q|R)<->(P&Q)|(P&R)
+62   P|(Q&R)<->(P|Q)&(P|R)
+63   P&Q<->~(~P|~Q)
+64   P|Q<->~(~P&~Q)
+65   ~(P&Q)<->~P|~Q
+66   ~(P|Q)<->~P&~Q
+67   ~P&~Q->~(P|Q)
+68   P<->(P&Q)|(P&~Q)
+69   P<->(P|Q)&(P|~Q)
+70   Q->(P&Q<->P)
+71   ~Q->(P|Q<->P)
+72   (P->Q)<->(P&Q<->P)
+73   (P->Q)<->(P|Q<->Q)
+74   (P<->Q)&P->Q
+75   (P<->Q)&Q->P
+76   (P<->Q)&~P->~Q
+77   (P<->Q)&~Q->~P
+78   (P->(Q->R))->((P->Q)<->(P->R))
+79   (P->(Q->R))->(P&Q<->P&R)
+80   (P<->Q)|(P<->~Q)
+81   (P<->Q)<->(P->Q)&(Q->P)
+82   (P<->Q)<->~((P->Q)->~(Q->P))
+83   (P<->Q)<->(P&Q)|(~P&~Q)
+84   P&Q->(P<->Q)
+85   ~P&~Q->(P<->Q)
+86   ((P<->Q)->R)<->(P&Q->R)&(~P&~Q->R)
+87   ~(P<->Q)<->(P&~Q)|(~P&Q)
+88   P&~Q->~(P<->Q)
+89   ~P&Q->~(P<->Q)
+90   ~(P<->Q)<->(P<->~Q)
+91   P<->P
+92   (P<->Q)<->(Q<->P)
+93   (P<->Q)&(Q<->R)->(P<->R)
+94   (P<->(Q<->R))<->((P<->Q)<->R)
+95   (P<->Q)<->((P<->R)<->(Q<->R))
+96   (P<->Q)<->(~P<->~Q)
+97   (P<->R)&(Q<->S)->((P->Q)<->(R->S))
+98   (P<->R)&(Q<->S)->((P&Q)<->(R&S))
+99   (P<->R)&(Q<->S)->((P|Q)<->(R|S))
+100  (P<->R)&(Q<->S)->((P<->Q)<->(R<->S))
+101  (Q<->S)->((P->Q)<->(P->S))&((Q->P)<->(S->P))
+102  (Q<->S)->(P&Q<->P&S)
+103  (Q<->S)->(P|Q<->P|S)
+104  (Q<->S)->((P<->Q)<->(P<->S))
+105  P&(Q<->R)->(P&Q<->R)
+106  (P->(Q->R))<->((P->Q)->(P->R))
+107  (P->(Q->R))<->(Q->(P->R))
+108  (P->(P->Q))<->(P->Q)
+109  ((P->Q)->Q)<->((Q->P)->P)
+110  P<->~~P
+111  (P->Q)<->(~Q->~P)
+112  (P->~Q)<->(Q->~P)
+113  (~P->Q)<->(~Q->P)
+114  (~P->P)<->P
+115  (P->~P)<->~P
+116  (P&Q)|(R&S)<->(P|R)&(P|S)&(Q|R)&(Q|S)
+117  (P|Q)&(R|S)<->(P&R)|(P&S)|(Q&R)|(Q&S)
+118  (P->Q)&(R->S)<->(~P&~R)|(~P&S)|(Q&~R)|(Q&S)
+119  (P|~P)&Q<->Q
+120  (P&~P)|Q<->Q
+121  P|(~P&Q)<->P|Q
+122  P&(~P|Q)<->P&Q
+123  P<->P|(P&Q)
+124  P<->P&(P|Q)
+125  (P->Q&R)->(P&Q<->P&R)
+##  CHAPTER III
+##  LAWS OF DISTRIBUTION:
+201  @x(Fx->Gx)->(@xFx->@xGx)
+202  @x(Fx->Gx)->(!xFx->!xGx)
+##  MORE LAWS OF DISTRIBUTION:
+207  !x(Fx|Gx)<->!xFx|!xGx
+208  @x(Fx&Gx)<->@xFx&@xGx
+209  !x(Fx&Gx)->!xFx&!xGx
+210  @xFx|@xGx->@x(Fx|Gx)
+211  (!xFx->!xGx)->!x(Fx->Gx)
+212  (@xFx->@xGx)->!x(Fx->Gx)
+213  @x(Fx<->Gx)->(@xFx<->@xGx)
+214  @x(Fx<->Gx)->(!xFx<->!xGx)
+##  LAWS OF QUANTIFIER NEGATION:
+203  ~@xFx<->!x~Fx
+204  ~!xFx<->@x~Fx
+205  @xFx<->~!x~Fx
+206  !xFx<->~@x~Fx
+##  LAWS OF CONFINEMENT:
+215  @x(P&Fx)<->P&@xFx
+216  !x(P&Fx)<->P&!xFx
+217  @x(P|Fx)<->P|@xFx
+218  !x(P|Fx)<->P|!xFx
+219  @x(P->Fx)<->(P->@xFx)
+220  !x(P->Fx)<->(P->!xFx)
+221  @x(Fx->P)<->(!xFx->P)
+222  !x(Fx->P)<->(@xFx->P)
+223  @x(Fx<->P)->(@xFx<->P)
+224  @x(Fx<->P)->(!xFx<->P)
+225  (!xFx<->P)->!x(Fx<->P)
+226  (@xFx<->P)->!x(Fx<->P)
+##  LAWS OF VACUOUS QUANTIFICATION:
+227  @xP<->P
+228  !xP<->P
+229  !x(!xFx->Fx)
+230  !x(Fx->@xFx)
+##  LAWS OF ALPHABETIC VARIANCE:
+231  @xFx<->@yFy
+232  !xFx<->!yFy
+##  MISCELLANEOUS THEOREMS
+233  (Fx->Gx)&(Gx->Hx)->(Fx->Hx)
+234  @x((Fx->Gx)&(Gx->Hx)->(Fx->Hx))
+235  @x(Fx->Gx)&@x(Gx->Hx)->@x(Fx->Hx)
+236  @x(Fx<->Gx)&@x(Gx<->Hx)->@x(Fx<->Hx)
+237  @x(Fx->Gx)&@x(Fx->Hx)<->@x(Fx->Gx&Hx)
+238  @xFx->!xFx
+239  @xFx&!xGx->!x(Fx&Gx)
+240  @x(Fx->Gx)&!x(Fx&Hx)->!x(Gx&Hx)
+241  @x(Fx->Gx|Hx)->@x(Fx->Gx)|!x(Fx&Hx)
+242  ~@x(Fx->Gx)<->!x(Fx&~Gx)
+243  ~!x(Fx&Gx)<->@x(Fx->~Gx)
+244  ~!xFx->@x(Fx->Gx)
+245  ~!xFx<->@x(Fx->Gx)&@x(Fx->~Gx)
+246  ~!xFx&~!xGx->@x(Fx<->Gx)
+247  !x(Fx->Gx)<->!x~Fx|!xGx
+248  !xFx&!x~Fx<->@x!y(Fx<->~Fy)
+##  CHAPTER IV
+249  @x@yF(xy)->!x!yF(xy)
+250  @x@y@zF(xyz)<->~!x!y!z~F(xyz)
+251  @x@yF(xy)<->@y@xF(xy)
+252  !x!yF(xy)<->!y!xF(xy)
+253  !x@yF(xy)->@y!xF(xy)
+254  !x!yF(xy)<->!x!y(F(xy)|F(yx))
+255  @x@yF(xy)->@y@xF(yx)
+256  @x!y(F(xy)&Gy)->!x!y(F(xy)&Gx)
+257  @xFA(x)->!x(Fx&FA(x))
+258  F(xA(x))<->!y(@z(F(zy)->F(zA(x)))&F(xy))
+259  @x!z(Fx->!y(Gy->Hz))<->(!xFx&@xGx->!xHx)
+260  @x(Fx->!y(Gy&(Hy|Hx)))<->!x(Gx&Hx)|~!xFx|(!xGx&@x(Fx->Hx))
+261  @x(!yF(xy)->!yG(xy))<->@x@y!z(F(xy)->G(xz))
+262  !y(!xF(xy)<->Gy)<->!y@x!z((F(xy)->Gy)&(Gy->F(zy)))
+263  @x!y(Fx->Gy)<->!y@x(Fx->Gy)
+264  @x!y(Fx&Gy)<->!y@x(Fx&Gy)
+265  @x!y(Fx|Gy)<->!y@x(Fx|Gy)
+266  @x@y!z(Fx&Gy->Hz)<->@y!z@x(Fx&Gy->Hz)
+267  @x(Fx<->~FA(x))->!x(Fx&~FA(x))
+268  @x(F(Ax)|@yF(xy))->!x@yF(xy)
+269  ~!y@x(F(xy)<->~F(xx))
+270  @z!y@x(F(xy)<->F(xz)&~F(xx))->~!z@xF(xz)
+271  ~!y@x(F(xy)<->~!z(F(xz)&F(zx)))
+272  !y@x(F(xy)<->F(xx))->~@x!y@z(F(zy)<->~F(zx))
+##  CHAPTER V
+301  x=x
+302  x=y<->y=x
+303  x=y&y=z->x=z
+304  x=y->(Fx<->Fy)
+305  x=y->A(x)=A(y)
+306  Fx<->@y(y=x->Fy)
+307  Fx<->!y(y=x&Fy)
+308  x=y<->@z(z=x->z=y)
+309  x=y<->!z(z=x&z=y)
+310  F(xy)<->@z@w(z=x&w=y->F(zw))
+311  F(xy)<->!z!w(z=x&w=y&F(zw))
+# 312a	~x=y<->~y=x
+312  x<>y<->y<>x
+313  Fx&x=y<->Fy&x=y
+# 314a	Fx|~x=y<->Fy|~x=y			
+314  Fx|x<>y<->Fy|x<>y
+315  @x(!y(Fy&x=A(y))->Fx)<->@x(Fx->FA(x))
+316  !xFx&@x@y(Fx&Fy->x=y)<->!x(Fx&@y(Fy->x=y))
+317  !xFx&@x@y(Fx&Fy->x=y)<->!y@x(Fx<->x=y)
+# 318a	!x!y(Fx&Fy&~x=y)&@x@y@z(Fx&Fy&Fz->x=y|x=z|y=z)<->!x!y(Fx&Fy&~x=y&@z(Fz->x=z|y=z))
+318  !x!y(Fx&Fy&x<>y)&@x@y@z(Fx&Fy&Fz->x=y|x=z|y=z)<->!x!y(Fx&Fy&x<>y&@z(Fz->x=z|y=z))
+# 319a	!x!y(Fx&Fy&~x=y)&@x@y@z(Fx&Fy&Fz->x=y|x=z|y=z)<->!x!y(~x=y&@z(Fz<->x=z|y=z))	
+319  !x!y(Fx&Fy&x<>y)&@x@y@z(Fx&Fy&Fz->x=y|x=z|y=z)<->!x!y(x<>y&@z(Fz<->x=z|y=z))
+# 320a	~!y@x(Fx<->x=y)<->~!xFx|!x!y(~x=y&Fx&Fy)			
+320  ~!y@x(Fx<->x=y)<->~!xFx|!x!y(x<>y&Fx&Fy)
+# 321a	~!x!y(~x=y&@z(Fz<->z=x|z=y))<->@x@y(Fx&Fy->x=y)|!x!y!z(Fx&Fy&Fz&~x=y&~x=z&~y=z)	
+321  ~!x!y(x<>y&@z(Fz<->z=x|z=y))<->@x@y(Fx&Fy->x=y)|!x!y!z(Fx&Fy&Fz&x<>y&x<>z&y<>z)
+322  !x@yy=x<->@x@yy=x
+# 323a	!x!y~x=y<->@x!y~x=y			
+323  !x!yx<>y<->@x!yx<>y
+# 324a	~!x!y~x=y->(!xFx<->@xFx)			
+324  ~!x!yx<>y->(!xFx<->@xFx)
+# 325a	!x!y@z(z=x|z=y)<->!x@yy=x|!x!y(~x=y&@z(z=x|z=y))			
+325  !x!y@z(z=x|z=y)<->!x@yy=x|!x!y(x<>y&@z(z=x|z=y))
+# 326a	!x!y@z(~x=y&(z=x|z=y))<->!x!y@z(~x=y<->(z=x|z=y))			
+326  !x!y@z(x<>y&(z=x|z=y))<->!x!y@z(x<>y<->(z=x|z=y))
+# 327a	@x!y(Fx<->x=y)<->!x!y~x=y|@xFx			
+327  @x!y(Fx<->x=y)<->!x!yx<>y|@xFx
+328  @x@y(Fx&Fy<->x=y)<->!x(@yy=x&Fx)
+329  !xx=y
+330  !z@x(x=y<->x=z)
+331  !y(@x(Fx<->x=y)&Gy)<->!y@x(Fx<->x=y)&@x(Fx->Gx)
+332  ~!y(@x(Fx<->x=y)&Gy)<->~!y@x(Fx<->x=y)|!y(@x(Fx<->x=y)&~Gy)
+333  !y@x(Fx<->x=y)->(@x(Fx->Gx)<->!x(Fx&Gx))
+# 334a	~!y@x(~x=x<->x=y)
+334  ~!y@x(x<>x<->x=y)
+335  !yy=x&P<->P
+336  ~!yy=x|P<->P
+##  CHAPTER VI
+401  @x(Fx<->x=y)->%xFx=y
+402  !y@x(Fx<->x=y)->F%xFx
+# 403a	~!y@x(Fx<->x=y)->%xFx=%x~x=x
+403  ~!y@x(Fx<->x=y)->%xFx=%xx<>x
+404  @x(Fx<->Gx)->%xFx=%xGx
+405  %xFx=%yFy
+406  !y@x(Fx<->x=y)->@x(Fx<->x=%xFx)
+407  @x(Fx<->x=%xFx)->!y@x(Fx<->x=y)
+408  !y@x(Fx<->x=y)&!y@x(Gx<->x=y)->(%xFx=%xGx->@x(Fx<->Gx))
+# 409a	F%xFx<->!y@x(Fx<->x=y)|F%x~x=x
+409  F%xFx<->!y@x(Fx<->x=y)|F%xx<>x
+410  !y@x(Fx<->x=y)->(%xFx=y->@x(Fx<->x=y))
+411  ~!y@x(Fx<->x=y)&~!y@x(Gx<->x=y)->%xFx=%xGx
+# 412a	G%xFx<->!y(@x(Fx<->x=y)&Gy)|(~!y@x(Fx<->x=y)&G%x~x=x)
+412  G%xFx<->!y(@x(Fx<->x=y)&Gy)|(~!y@x(Fx<->x=y)&G%xx<>x)
+413  %xx=y=y
+# 414a	%xx=x=%x~x=x
+414  %xx=x=%xx<>x
+# 415a	%xP=%x~x=x
+415  %xP=%xx<>x
+416  F%xFx|~F%x~Fx

@@ -42,7 +42,7 @@ Options:
 | Option | Meaning |
 |---|---|
 | `--local` | Local mode. |
-| `--syntax 1\|2` | Formula notation in local mode. The default is 1, taken from `data/ghost.txt`. Notation 2 is the one used by the current textbook; it also enables the *Logic Text* menu button, which opens the textbook chapters. |
+| `--syntax 1\|2` | Formula notation in local mode. The default is 1, taken from `data/links.conf`. Notation 2 is the one used by the current textbook; it also enables the *Logic Text* menu button, which opens the textbook chapters. |
 | `--home DIR` | Runtime directory to use instead of `runtime/local` or `runtime/server`. |
 
 ### Local mode
@@ -74,7 +74,7 @@ If the server installs a core update, it replaces the program in `runtime/server
 
 | Path | Contents |
 |---|---|
-| `data/` | The course data shipped with the program:<br>• problem, answer, rule and theorem files (`syntax1/`, `syntax2/`)<br>• message catalogues<br>• options (`wraith.txt`)<br>• links (`ghost.txt`: the demo course, notation, file names, server URLs)<br>• help PDFs (`docs/`) and textbook chapters (`syntax2/text/`)<br>The `.txt` files are "scrambled" with a fixed running-key cipher (`Scrambler`/`ScrambledReader`). |
+| `data/` | All the course data the program reads, as readable plain text: problems and answer keys, rules and theorems (`syntax1/`, `syntax2/`), message catalogues (`messages/`), options (`options.rec`), the links file (`links.conf`: the demo course, notation, file locations, server URLs), help PDFs (`docs/`) and textbook chapters (`syntax2/text/`). See [`data/README.md`](data/README.md) for the file formats. |
 | `runtime/local/`, `runtime/server/` | Created by `run.sh` (git-ignored), laid out like the macOS app bundle that the program expects:<br>• `Contents/Resources/` is a copy of `data/`, refreshed from `data/` whenever a file there is newer<br>• `Contents/Resources/work/` holds the student's work: `user.txt`, `prefs.txt`, `*work.txt` and logs<br>• `Contents/Java/` holds the jars from `build/` |
 
 Local and normal mode keep separate runtime directories, so local work never gets mixed into a server account. To start over, delete the runtime directory.
@@ -104,7 +104,7 @@ Where to start reading:
   - `Message` and `MessageDialog`: message catalogues and dialogs.
 - **Data files:**
   - `TaggedRecord`: the record format used by every problem, work, option and message file.
-  - `Scrambler` and `ScrambledReader`: the course data files are scrambled with a fixed running-key cipher.
+  - `DataFiles`: reads the data files (`data/README.md`) and hands them to the rest of the program as `TaggedRecord` lines. It also reads the original, scrambled format (`Scrambler`/`ScrambledReader`), which the course server may still send.
 - **Formulas:**
   - `Expression` is the expression tree, with `Formula` and `Term` subclasses.
   - `FormulaParser` picks the `syntax1` or `syntax2` parser.
@@ -122,7 +122,7 @@ Where to start reading:
 |---|---|
 | `main` | Working branch: `base-logic2010` plus your changes (so far: bundled course data, local mode, and a menu-layout fix for modern Java). |
 | `base-logic2010` | The unmodified source, exactly equivalent to the official Logic 2010 program (core version 20200601), still needing an existing installation to run. Keep it untouched as the reference point. |
-| `reverse-engineering` | How this source was recovered. It holds the original jars, the naming mappings, the build pipeline that regenerates `base-logic2010`'s source, the equivalence checker, a decoder for the scrambled data files, and detailed architecture notes (`docs/`). |
+| `reverse-engineering` | How this source was recovered. It holds the original jars, the naming mappings, the build pipeline that regenerates `base-logic2010`'s source, the equivalence checker, the converter from the original scrambled data files to the readable ones (and documentation of the old formats), and detailed architecture notes (`docs/`). |
 
 Common tasks:
 

@@ -2147,12 +2147,12 @@ public class LogicProgram implements LogicConstants {
 
       if ((object = getLink(s)) != null) {
          try {
-            File file1 = new File((String)object);
+            File file1 = DataFiles.choose(new File((String)object));
             if (!file1.exists()) {
                file1 = ServerConnection.resolvePath(configDir, (String)object);
             }
 
-            return new ScrambledReader(new FileReader(file1), flag1 ? scrambleKey : null);
+            return DataFiles.open(file1, s, flag1);
          } catch (IOException ioexception) {
          }
       }
@@ -2175,7 +2175,7 @@ public class LogicProgram implements LogicConstants {
          String s2 = new File(file1, new File(s1).getName()).getPath();
 
          try {
-            return new ScrambledReader(new FileReader(s2), flag1 ? scrambleKey : null);
+            return DataFiles.open(new File(s2), s, flag1);
          } catch (IOException ioexception) {
             return null;
          }
@@ -2193,7 +2193,7 @@ public class LogicProgram implements LogicConstants {
          String s2 = new File(file1, new File(s1).getName()).getPath();
 
          try {
-            return new ScrambledReader(new FileReader(s2), flag1 ? scrambleKey : null);
+            return DataFiles.open(new File(s2), s, flag1);
          } catch (IOException ioexception) {
             return null;
          }
@@ -2250,15 +2250,16 @@ public class LogicProgram implements LogicConstants {
       try {
          File file1 = new File(configDir, "coreinfo.txt");
          if (!file1.exists()) {
-            file1 = new File(configDir, "spirit.txt");
+            file1 = DataFiles.choose(new File(configDir, DataFiles.VERSION_FILE));
             if (!file1.exists()) {
                return null;
             }
 
+            // Scrambled mode: legacy data files (e.g. ones sent by the course server) are scrambled.
             s = "the Logic Program is protected by international copyright law";
          }
 
-         scrambledreader = new ScrambledReader(new FileReader(file1), s);
+         scrambledreader = DataFiles.isReadableFormat(file1) ? DataFiles.open(file1, null, false) : new ScrambledReader(new FileReader(file1), s);
          hashtable = new Hashtable();
 
          String s1;
@@ -2296,11 +2297,11 @@ public class LogicProgram implements LogicConstants {
             if (scrambleKey == null) {
                file2 = new File(file1, "links.txt");
             } else {
-               file2 = new File(file1, "ghost.txt");
+               file2 = DataFiles.choose(new File(file1, DataFiles.LINKS_FILE));
             }
 
             if (file2.exists()) {
-               scrambledreader = new ScrambledReader(new FileReader(file2), scrambleKey);
+               scrambledreader = DataFiles.isReadableFormat(file2) ? DataFiles.open(file2, null, false) : new ScrambledReader(new FileReader(file2), scrambleKey);
                hashtable = new Hashtable();
 
                while ((s = scrambledreader.readLine()) != null) {
