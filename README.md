@@ -122,6 +122,7 @@ pr2 pr1 SWAP[R]      after SWAP the top formula must be R
 
 - The formula uses the current notation. Blanks inside the brackets are allowed.
 - A choice that no formula can settle still asks, e.g. the text questions of IE. The `/` answers (`UI/a`) still fill those questions in.
+- `IE` and `CIE` ask two things: which part to replace, and by which equivalence. The bracket settles the first (the part where the stack formula and the bracket differ) and a `/` answer the second, written before the bracket: `pr1 IE/DN[P&~~Q] SL` turns `~~P&~~Q` into `P&~~Q`. On the last step the line's formula settles the part, so `pr1 IE/DN` is enough. One IE step replaces one part; `~~P&~~Q` to `P&Q` takes two: `pr1 IE/DN[P&~~Q] IE/DN`.
 - Rules whose applications all give the asserted formula take the first one.
 
 **Stack operations: `DUP`, `DROP`, `SWAP`.** These rearrange the formulas cited so far:

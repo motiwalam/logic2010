@@ -1292,8 +1292,9 @@ class DerivationDialogs implements DerivationConstants {
    }
 
    static boolean interchangeFormulaQuery(DerivationLineChecker derivationlinechecker, InterchangeJustification interchangejustification) {
-      if (derivationlinechecker.matchLine && derivationlinechecker.lineFormula != null && !interchangejustification.pathChosen) {
-         interchangejustification.path = derivationlinechecker.lineFormula.getDifferencePath(derivationlinechecker.getStackFormula(-1));
+      // the result wanted (an asserted one, or the line's formula on the last step) shows what to replace
+      if (derivationlinechecker.target != null && !interchangejustification.pathChosen) {
+         interchangejustification.path = derivationlinechecker.target.getDifferencePath(derivationlinechecker.getStackFormula(-1));
          if (interchangejustification.pathChosen = interchangejustification.path != null) {
             return true;
          }
