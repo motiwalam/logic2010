@@ -1465,68 +1465,68 @@ node: *W{}0:Judi authorizes \naction
 node: *V{}0:Carol controls \ncalamity
 
 answer-key: 3.001
-node: @x:Everything is good.
+node: forall x:Everything is good.
 node: *Fx:<x> is good
 
 answer-key: 3.002
 node: ~:Nothing is good.
-node: !x:something is good
+node: exists x:something is good
 node: *Fx:<x> is good
 
 answer-key: 3.003
-node: !x:Something is good.
+node: exists x:Something is good.
 node: *Fx:<x> is good
 
 answer-key: 3.004
-node: !x:Something is not good.
+node: exists x:Something is not good.
 node: ~:<x> is not good
 node: *Fx:<x> is good
 
 answer-key: 3.005
-node: @x:All sweets are good.
+node: forall x:All sweets are good.
 node: ->:if <x> is sweet, then <x> is good
 node: *Hx:<x> is sweet
 node: *Fx:<x> is good
 
 answer-key: 3.006
 node: ~:No sweets are good.
-node: !x:some sweets are good
+node: exists x:some sweets are good
 node: &:<x> is sweet and <x> is good
 node: *Hx:<x> is sweet
 node: *Fx:<x> is good
 
 answer-key: 3.007
-node: !x:Some sweets are good.
+node: exists x:Some sweets are good.
 node: &:<x> is sweet and <x> is good
 node: *Hx:<x> is sweet
 node: *Fx:<x> is good
 
 answer-key: 3.008
-node: !x:Some sweets are not good.
+node: exists x:Some sweets are not good.
 node: &:<x> is sweet and <x> is not good
 node: *Hx:<x> is sweet
 node: ~:<x> is not good
 node: *Fx:<x> is good
 
 answer-key: 3.009
-node: @x:Only chocolates are good.
+node: forall x:Only chocolates are good.
 node: ->:if <x> is good, then <x> is a chocolate
 node: *Fx:<x> is good
 node: *Ix:<x> is chocolate
 
 answer-key: 3.010
-node: @x:All and only sweets are edible.
+node: forall x:All and only sweets are edible.
 node: <->:<x> is sweet if and only if <x> is edible
 node: *Hx:<x> is sweet
 node: *Gx:<x> is edible
 
 answer-key: 3.011
 node: &:All sweet things and edible things are good.
-node: @x:all sweet things are good
+node: forall x:all sweet things are good
 node: ->:if <x> is sweet, then <x> is good
 node: *Hx:<x> is sweet
 node: *Fx:<x> is good
-node: @x:all edible things are good.
+node: forall x:all edible things are good.
 node: ->:if <x> is edible, then <x> is good
 node: *Gx:<x> is edible
 node: *Fx:<x> is good
@@ -1535,7 +1535,7 @@ answer-key: 3011b
 english: All sweet things and edible things are good.
 node: ~:All sweet things and edible things are good.
 node: "~:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "|:    "
 node: "*Hx{}0:    "
@@ -1543,7 +1543,7 @@ node: "*Gx{}0:    "
 node: "*Fx{}0:    "
 
 answer-key: 3.012
-node: @x:Among sweets, only chocolates are healthy.
+node: forall x:Among sweets, only chocolates are healthy.
 node: ->:if <x> is sweet, then only if <x> is chocolate is <x> healthy
 node: *Hx:<x> is sweet
 node: ->:only if <x> is chocolate is <x> healthy
@@ -1551,7 +1551,7 @@ node: *Jx:<x> is healthy
 node: *Ix:<x> is chocolate
 
 answer-key: 3.013
-node: @x:Chocolates that are good should be enjoyed.
+node: forall x:Chocolates that are good should be enjoyed.
 node: ->:if <x> is chocolate that is good, then <x> should be enjoyed
 node: &:<x> is chocolate that is good
 node: *Ix:X is chocolate
@@ -1560,11 +1560,11 @@ node: *Kx:<x> should be enjoyed
 
 answer-key: 3.014
 node: &:Chocolates, which are good, should be enjoyed.
-node: @x:chocolates should be enjoyed
+node: forall x:chocolates should be enjoyed
 node: ->:if <x> is a chocolate, then <x> should be enjoyed
 node: *Ix:<x> is a chocolate
 node: *Kx:<x> should be enjoyed
-node: @x:chocolates are good
+node: forall x:chocolates are good
 node: ->:if <x> is a chocolate, then <x> is good
 node: *Ix:<x> is a chocolate
 node: *Fx:<x> is good
@@ -1573,7 +1573,7 @@ answer-key: 3014b
 english: Chocolates, which are good, should be enjoyed.
 node: ~:Chocolates, which are good, should be enjoyed.
 node: "~:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "*Ix{}0:    "
 node: "&:    "
@@ -1581,25 +1581,25 @@ node: "*Fx{}0:    "
 node: "*Kx{}0:    "
 
 answer-key: 3.015
-node: @x:A chocolate should be enjoyed.
+node: forall x:A chocolate should be enjoyed.
 node: ->:if <x> is a chocolate, then <x> should be enjoyed
 node: *Ix:<x> is a chocolate
 node: *Kx:<x> should be enjoyed
 
 answer-key: 3.016
-node: !x:A chocolate poisoned my friend.
+node: exists x:A chocolate poisoned my friend.
 node: &:<x> is a chocolate and <x> poisoned my friend
 node: *Ix:<x> is a chocolate
 node: *Lx:<x> poisoned my friend
 
 answer-key: 3.017
-node: @x:Nothing other than a chocolate is good.
+node: forall x:Nothing other than a chocolate is good.
 node: ->:only if <x> is a chocolate, is <x> good
 node: *Fx:<x> is good
 node: *Ix:<x> is a chocolate
 
 answer-key: 3.018
-node: @x:Only chocolates are good.
+node: forall x:Only chocolates are good.
 node: "->:    "
 node: *Fx{}0:<x> is good
 node: *Ix{}0:<x> is a chocolate
@@ -1607,37 +1607,37 @@ node: *Ix{}0:<x> is a chocolate
 answer-key: 3.030
 node: &:Something is round and something is square, but it is not the case that something is a round square.
 node: &:Something is round and something is square
-node: !x:Something is round
+node: exists x:Something is round
 node: *Fx:<x> is round
-node: !x:Something is square
+node: exists x:Something is square
 node: *Gx:<x> is square
 node: ~:it is not the case that something is a round square
-node: !x:something is a round square
+node: exists x:something is a round square
 node: &:<x> is a round square
 node: *Fx:<x> is round
 node: *Gx:<x> is square
 
 answer-key: 3.031
 node: ->:If everything is mental, then nothing is physical unless something is both mental and physical.
-node: @x:everything is mental
+node: forall x:everything is mental
 node: *Fx:<x> is mental
 node: |:nothing is physical unless something is both mental and physical
 node: ~:nothing is physical
-node: !x:something is physical
+node: exists x:something is physical
 node: *Gx:<x> is physical
-node: !x:something is both mental and physical
+node: exists x:something is both mental and physical
 node: &:<x> is both mental and physical
 node: *Fx:<x> is mental
 node: *Gx:<x> is physical
 
 answer-key: 3.032
-node: @x:None but the brave deserve the fair.
+node: forall x:None but the brave deserve the fair.
 node: ->:only if <x> is brave, does <x> desrve the fair
 node: *Gx:<x> deserves the fair
 node: *Fx:<x> is brave
 
 answer-key: 3.033
-node: @x:Kettles boil quickly only if not watched.
+node: forall x:Kettles boil quickly only if not watched.
 node: ->:if <x> is a kettle, then <x> boils quickly only if not watched
 node: *Fx:<x> is a kettle
 node: ->:<x> boils quickly only if not watched
@@ -1646,7 +1646,7 @@ node: ~:<x> is not watched
 node: *Hx:<x> is watched
 
 answer-key: 3.034
-node: @x:Kettles boil quickly if not watched.
+node: forall x:Kettles boil quickly if not watched.
 node: ->:if <x> is a kettle, then <x> boils quickly if not watched
 node: *Fx:<x> is a kettle
 node: ->:<x> boils quickly if not watched
@@ -1656,18 +1656,18 @@ node: *Gx:<x> boils quickly
 
 answer-key: 3.035
 node: &:Some soldiers love war, but not all who love war are soldiers.
-node: !x:some soldiers love war
+node: exists x:some soldiers love war
 node: &:<x> is a sodier and <x> loves war
 node: *Fx:<x> is a sodier
 node: *Gx:<x> loves war
 node: ~:not all who love war are soldiers
-node: @x:all who love war are soldiers
+node: forall x:all who love war are soldiers
 node: ->:if <x> loves war, then <x> is a soldier
 node: *Gx:<x> loves war
 node: *Fx:<x> is a soldier
 
 answer-key: 3.040
-node: @x:Among equine mammals, all and only zebras have dark stripes on a white or buffy background.
+node: forall x:Among equine mammals, all and only zebras have dark stripes on a white or buffy background.
 node: ->:if <x> is an equine mammals, then if and only if <x> is a zebra does <x> have dark stripes on a white or buffy background
 node: *Fx:<x> is an equine mammal
 node: <->:if and only if <x> is a zebra does <x> have dark stripes on a white or buffy background
@@ -1676,13 +1676,13 @@ node: *Hx:<x> has dark stripes on a white or buffy background
 
 answer-key: 3.041
 node: &:Democrats and Republicans who put loyality above legality are detrimental to democracy.
-node: @x:Democrats who put loyality above legality are detrimental to democracy
+node: forall x:Democrats who put loyality above legality are detrimental to democracy
 node: ->:if <x> is a democrat and <x> puts loyalty above legality, then <x> is detrimental to democracy
 node: &:<x> is a democrat and <x> puts loyalty above legality
 node: *Fx:<x> is a democrat
 node: *Hx:<x> puts loyalty above legality
 node: *Jx:<x> is detrimental to democracy
-node: @x:Republicans who put loyality above legality are detrimental to democracy
+node: forall x:Republicans who put loyality above legality are detrimental to democracy
 node: ->:if <x> is a republican and <x> puts loyalty above legality, then <x> is detrimental to democracy
 node: &:<x> is a republican and <x> puts loyalty above legality
 node: *Gx:<x> is a republican
@@ -1691,7 +1691,7 @@ node: *Jx:<x> is detrimental to democracy
 
 answer-key: 3041b
 english: Democrats and Republicans who put loyality above legality are detrimental to democracy.
-node: @x:Democrats and Republicans who put loyality above legality are detrimental to democracy.
+node: forall x:Democrats and Republicans who put loyality above legality are detrimental to democracy.
 node: "->:    "
 node: "&:    "
 node: "|:    "
@@ -1702,7 +1702,7 @@ node: "*Jx{}0:    "
 seconds: 41
 
 answer-key: 3.042
-node: @x:Professors are good lecturers if and only if they are both witty and intellectually competent.
+node: forall x:Professors are good lecturers if and only if they are both witty and intellectually competent.
 node: ->:if <x> is a professor, then <x> is a good lecturer if and only if <x> is both witty and intellectually competent
 node: *Fx:<x> is a professor
 node: <->:<x> is a good lecturer if and only if <x> is both witty and intellectually competent
@@ -1712,14 +1712,14 @@ node: *Hx:<x> is witty
 node: *Jx:<x> is intellectually competent
 
 answer-key: 3.043
-node: @x:If a registered voter has not declared a party and only those who have declared a party can vote in a primary election, then he or she cannot vote in a primary election.
+node: forall x:If a registered voter has not declared a party and only those who have declared a party can vote in a primary election, then he or she cannot vote in a primary election.
 node: ->:if <x> is a registered voter who has not declared a party and only those who have declared a party can vote in a primary election, then <x> cannot vote in a primary election
 node: &:<x> is a registered voter who has not declared a party and only those who have declared a party can vote in a primary election
 node: &:<x> is a registered voter who has not declared a party
 node: *Fx:<x> is a registered voter
 node: ~:<x> has not declared a party
 node: *Gx:<x> has declared a party
-node: @y:only those who have declared a party can vote in a primary election
+node: forall y:only those who have declared a party can vote in a primary election
 node: ->:if <y> can vote in a primary election, then <y> has declared a party
 node: *Hy:<y> can vote in a primary election
 node: *Gy:<y> has declared a party
@@ -1729,19 +1729,19 @@ node: *Hx:<x> can vote in a primary election
 answer-key: 3.044
 node: ->:If only Republicans support the incumbent and no Democrat supports the candidate, then if anyone is a Democrat, someone supports neither the incumbent nor the candidate.
 node: &:only Republicans support the incumbent and no Democrat supports the candidate
-node: @x:only Republicans support the incumbent
+node: forall x:only Republicans support the incumbent
 node: ->:if <x> supports the incumbent, then <x> is a Republican
 node: *Gx:<x> supports the incumbent
 node: *Fx:<x> is a Republican
 node: ~:no Democrat supports the candidate
-node: !x:some Democrat supports the candidate
+node: exists x:some Democrat supports the candidate
 node: &:<x> is a Democrat and <x> supports the candidate
 node: *Hx:<x> is a Democrat
 node: *Jx:<x> supports the candidate
 node: ->:if anyone is a Democrat, someone supports neither the incumbent nor the candidate
-node: !x:someone is a Democrat
+node: exists x:someone is a Democrat
 node: *Hx:<x> is a Democrat
-node: !x:someone supports neither the incumbent nor the candidate
+node: exists x:someone supports neither the incumbent nor the candidate
 node: ~:supports neither the incumbent nor the candidate
 node: |:<x> supports the incumbent or <x> supports the candidate
 node: *Gx:<x> supports the incumbent
@@ -1749,19 +1749,19 @@ node: *Jx:<x> supports the candidate
 
 answer-key: 3.045
 node: ->:If those who believe in God have immortal souls, then, given that God exists, they will have eternal bliss.
-node: @x:those who believe in God have immortal souls
+node: forall x:those who believe in God have immortal souls
 node: ->:if <x> believes in God, then <x> has an immortal soul
 node: *Fx:F<x> believes in God
 node: *Gx:<x> has an immortal souls
 node: ->:given that God exists, those who believe in God will have eternal bliss.
 node: *P:God exists
-node: @x:those who believe in God will have eternal bliss
+node: forall x:those who believe in God will have eternal bliss
 node: ->:if <x> believes in God, then <x> will have eternal bliss.
 node: *Fx:<x> believes in God
 node: *Hx:<x> will have eternal bliss
 
 answer-key: 3.050
-node: @x:Only policemen and firemen are both indispensable and underpaid.
+node: forall x:Only policemen and firemen are both indispensable and underpaid.
 node: ->:<x> is both indispensable and underpaid only if <x> is a policeman or fireman
 node: &:<x> is both indispensable and underpaid
 node: *Hx:<x> is indispensable
@@ -1772,13 +1772,13 @@ node: *Gx:X is a fireman
 
 answer-key: 3.051
 node: &:All fruits and vegetables are wholesome and nourishing.
-node: @x:All fruits are wholesome and nourishing.
+node: forall x:All fruits are wholesome and nourishing.
 node: ->:if <x> is a fruit, then <x> is wholesome and nourishing.
 node: *Fx{}0:<x> is a fruit
 node: &:<x> is wholesome and nourishing
 node: *Hx{}0:<x> is wholesome
 node: *Jx{}0:<x> is nourishing
-node: @x:All vegetables are wholesome and nourishing
+node: forall x:All vegetables are wholesome and nourishing
 node: ->:if <x> is a vegetable, then <x> is wholesome and nourishing
 node: *Gx{}0:<x> is a vegetable
 node: &:<x> is wholesome and nourishing
@@ -1787,7 +1787,7 @@ node: *Jx{}0:<x> is nourishing
 
 answer-key: 3051b
 english: All fruits and vegetables are wholesome and nourishing.
-node: @x:All fruits and vegetables are wholesome and nourishing.
+node: forall x:All fruits and vegetables are wholesome and nourishing.
 node: "->:    "
 node: "|:    "
 node: "*Fx{}0:    "
@@ -1799,7 +1799,7 @@ seconds: 44
 
 answer-key: 3.052
 node: &:Doctors and lawyers who are rich are admired only if they're also honest.
-node: @x:doctors who are rich are admired only if they're also honest
+node: forall x:doctors who are rich are admired only if they're also honest
 node: ->:if <x> is a doctors who is rich, then <x> is admired only if <x> is also honest
 node: &:<x> is a doctor who is rich
 node: *Fx:F<x> is a doctor
@@ -1807,7 +1807,7 @@ node: *Hx:<x> is rich
 node: ->:<x> is admired only if <x> is also honest
 node: *Jx:<x> is admired
 node: *Kx:<x> is also honest
-node: @x:lawyers who are rich are admired only if they're also honest
+node: forall x:lawyers who are rich are admired only if they're also honest
 node: ->:<x> is a lawyer who is rich, then <x> is admired only if <x> is also honest
 node: &:<x> is a lawyer who is rich
 node: *Gx:<x> is a lawyer
@@ -1818,7 +1818,7 @@ node: *Kx:<x> is also honest
 
 answer-key: 3052b
 english: Doctors and lawyers who are rich are admired only if they're also honest.
-node: @x:Doctors and lawyers who are rich are admired only if they're also honest.
+node: forall x:Doctors and lawyers who are rich are admired only if they're also honest.
 node: "->:    "
 node: "&:    "
 node: "|:    "
@@ -1833,31 +1833,31 @@ seconds: 104
 answer-key: 3053a
 node: &:Doctors and lawyers, who are rich, are admired only if they're also honest.
 node: &:doctors and lawyers are admired only if they're also honest.
-node: @x:doctors are admired only if they're also honest.
+node: forall x:doctors are admired only if they're also honest.
 node: ->:if <x> is a doctor, then <x> is admired only if <x> is also honest
 node: *Fx:<x> is a doctor
 node: ->:<x> is admired only if <x> is also honest
 node: *Jx:<x> is admired
 node: *Kx:<x> is honest
-node: @x:lawyers are admired only if they're also honest.
+node: forall x:lawyers are admired only if they're also honest.
 node: ->:if <x> is lawyer, then <x> is admired only if <x> is also honest.
 node: *Gx:<x> is a lawyer
 node: ->:<x> is admired only if <x> is also honest.
 node: *Jx:<x> is admired
 node: *Kx:<x> is also honest.
 node: &:doctors and lawyers are rich
-node: @x:doctors are rich
+node: forall x:doctors are rich
 node: ->:if <x> is a doctor, then <x> is rich
 node: *Fx:<x> is a doctor
 node: *Hx:<x> is rich
-node: @x:lawyers are rich
+node: forall x:lawyers are rich
 node: ->:if <x> is a lawyer, then <x> is rich
 node: *Gx:<x> is a lawyer
 node: *Hx:<x> is rich
 
 answer-key: 3053b
 english: Doctors and lawyers, who are rich, are admired only if they're also honest.
-node: @x:Doctors and lawyers, who are rich, are admired only if they're also honest.
+node: forall x:Doctors and lawyers, who are rich, are admired only if they're also honest.
 node: "->:    "
 node: "|:    "
 node: "*Fx{}0:    "
@@ -1870,12 +1870,12 @@ node: "*Kx{}0:    "
 
 answer-key: 3.097
 node: &:Those who read The Daily Bruin in class are inconsiderate, but none of them are illiterate.
-node: @x:those who read The Daily Bruin in class are inconsiderate
+node: forall x:those who read The Daily Bruin in class are inconsiderate
 node: ->:if <x> reads The Daily Bruin in class, then <x> is inconsiderate
 node: *Fx:<x> reads The Daily Bruin in class
 node: *Gx:<x> is inconsiderate
 node: ~:none of those who read The Daily Bruin in class are illiterate
-node: !x:at least one of those who read The Daily Bruin in class are illiterate
+node: exists x:at least one of those who read The Daily Bruin in class are illiterate
 node: &:<x> reads The Daily Bruin in class, and <x> is illiterate
 node: *Fx:<x> reads The Daily Bruin in class
 node: *Hx:<x> is illiterate
@@ -1883,23 +1883,23 @@ node: *Hx:<x> is illiterate
 answer-key: 3.098
 node: ->:If there is no one who does not read The Daily Bruin in class, then only the inconsiderate are literate.
 node: ~:there is no one who does not read The Daily Bruin in class
-node: !x:there is someone who does not read The Daily Bruin in class
+node: exists x:there is someone who does not read The Daily Bruin in class
 node: ~:<x> does not read The Daily Bruin in class
 node: *Fx:<x> reads The Daily Bruin in class
-node: @x:only the inconsiderate are literate
+node: forall x:only the inconsiderate are literate
 node: ->:only if <x> is inconsiderate, is she literate
 node: *Hx:<x> is literate
 node: *Gx:<x> is inconsiderate,
 
 answer-key: 3.099
-node: @x:If any woman studies, then no student passes unless she does.
+node: forall x:If any woman studies, then no student passes unless she does.
 node: ->:if <x> is a woman who studies, then no student passes unless she does.
 node: &:<x> is a woman who studies
 node: *Fx:<x> is a woman
 node: *Gx:<x> studies
 node: |:no student passes unless <x> does.
 node: ~:no student passes
-node: !y:some student passes
+node: exists y:some student passes
 node: &:<y> is a student and <y> passes
 node: *Hy:<y> is a student
 node: *Jy:<y> passes
@@ -1907,13 +1907,13 @@ node: *Jx:<x> passes
 
 answer-key: 3.201
 node: &:Dogs and dolphins jump if petted.
-node: @x:dogs jump if petted
+node: forall x:dogs jump if petted
 node: ->:if <x> is a dog, <x> jumps if petted
 node: *Ix{}0:<x> is a dog
 node: ->:<x> jumps if petted
 node: *Hx{}0:<x> is petted
 node: *Fx{}0:<x> jumps
-node: @x:dolphins jump if petted
+node: forall x:dolphins jump if petted
 node: ->:if <x> is a dolphin, <x> jumps if petted
 node: *Kx{}0:<x> is a dolphin
 node: ->:<x> jumps if petted
@@ -1922,7 +1922,7 @@ node: *Fx{}0:<x> jumps
 
 answer-key: 3201b
 english: Dogs and dolphins jump if petted.
-node: @x:Dogs and dolphins jump if petted.
+node: forall x:Dogs and dolphins jump if petted.
 node: "->:    "
 node: "|:    "
 node: "*Ix{}0:    "
@@ -1934,7 +1934,7 @@ seconds: 38
 
 answer-key: 3.202
 node: ~:Only dogs and dolphins jump if petted.
-node: !x:something distinct from both dogs and dolphins jumps if petted
+node: exists x:something distinct from both dogs and dolphins jumps if petted
 node: "&:    "
 node: &:<x> is distinct from both dogs and dolphins
 node: ~:<x> is not a dog
@@ -1947,13 +1947,13 @@ node: *Fx{}0:<x> jumps
 
 answer-key: 3.203
 node: &:Dogs and dolphins jump only if petted.
-node: @x:dogs jump only if petted
+node: forall x:dogs jump only if petted
 node: "->:    "
 node: *Ix{}0:<x> is a dog
 node: ->:<x> jumps only if petted
 node: *Fx{}0:<x> jumps
 node: *Hx{}0:<x> is petted
-node: @x:dolphins jump only if petted
+node: forall x:dolphins jump only if petted
 node: "->:    "
 node: *Kx{}0:<x> is a dolphin
 node: ->:<x> jumps only if petted
@@ -1962,7 +1962,7 @@ node: *Hx{}0:<x> is petted
 
 answer-key: 3203b
 english: Dogs and dolphins jump only if petted.
-node: @x:Dogs and dolphins jump only if petted.
+node: forall x:Dogs and dolphins jump only if petted.
 node: "->:    "
 node: "|:    "
 node: "*Ix{}0:    "
@@ -1974,7 +1974,7 @@ seconds: 35
 
 answer-key: 3.204
 node: &:Dogs and dolphins jump only if Spot and Kiwi are petted.
-node: @x:dogs jump only if Spot and Kiwi are petted
+node: forall x:dogs jump only if Spot and Kiwi are petted
 node: "->:    "
 node: *Ix{}0:<x> is a dog
 node: ->:<x> jumps only if Spot and Kiwi are petted
@@ -1982,7 +1982,7 @@ node: *Fx{}0:<x> jumps
 node: &:Spot and Kiwi are petted
 node: *Ha{}0:Spot is petted
 node: *Hb{}0:Kiwi is petted
-node: @x:dolphins jump only if Spot and Kiwi are petted
+node: forall x:dolphins jump only if Spot and Kiwi are petted
 node: "->:    "
 node: *Kx{}0:<x> is a dolphin
 node: ->:<x> jumps only if Spot and Kiwi are petted
@@ -1993,7 +1993,7 @@ node: *Hb{}0:Kiwi is petted
 
 answer-key: 3204b
 english: Dogs and dolphins jump only if Spot and Kiwi are petted.
-node: @x:Dogs and dolphins jump only if Spot and Kiwi are petted.
+node: forall x:Dogs and dolphins jump only if Spot and Kiwi are petted.
 node: "->:    "
 node: "|:    "
 node: "*Ix{}0:    "
@@ -2006,7 +2006,7 @@ node: "*Hb{}0:    "
 
 answer-key: 3.205
 node: ~:No pet neither sings nor jumps.
-node: !x:some pet neither sings nor jumps
+node: exists x:some pet neither sings nor jumps
 node: "&:    "
 node: *Nx{}0:<x> is a pet
 node: ~:<x> neither sings nor jumps
@@ -2016,13 +2016,13 @@ node: *Fx{}0:<x> jumps
 
 answer-key: 3.206
 node: &:Some dogs both sing and jump, but only long-haired dogs are petted.
-node: !x:some dogs both sing and jump
+node: exists x:some dogs both sing and jump
 node: "&:    "
 node: *Ix{}0:<x> is a dog
 node: &:<x> sings and jumps
 node: *Gx{}0:<x> sings
 node: *Fx{}0:<x> jumps
-node: @x:only long-haired dogs are petted
+node: forall x:only long-haired dogs are petted
 node: "->:    "
 node: *Ix{}0:<x> is a dog
 node: ->:only if <x> is long-haired is <x> petted
@@ -2030,7 +2030,7 @@ node: *Hx{}0:<x> is petted
 node: *Mx{}0:<x> is long-haired
 
 answer-key: 3.207
-node: @x:If a pet is yellow, then it sings but doesn't jump.
+node: forall x:If a pet is yellow, then it sings but doesn't jump.
 node: "->:    "
 node: *Nx{}0:<x> is a pet
 node: ->:<x> is yellow, only if it sings but doesn't jump
@@ -2042,7 +2042,7 @@ node: *Fx{}0:<x> jumps
 
 answer-key: 3.207b
 english: If a pet is yellow, then it sings but doesn't jump.
-node: @x:If a pet is yellow, then it sings but doesn't jump.
+node: forall x:If a pet is yellow, then it sings but doesn't jump.
 node: ->:if <x> is a pet and <x> is yellow, then <x> sings but <x> doesn't jump
 node: &:<x> is a pet and <x> is yellow
 node: *Nx{}0:<x> is a pet
@@ -2056,7 +2056,7 @@ answer-key: 3.208
 node: ->:If Feathers sings and all who sing jump, then Feathers will not fail to jump.
 node: &:Feathers sings and all who sing jump
 node: *Gc{}0:Feathers sings
-node: @x:all who sing jump
+node: forall x:all who sing jump
 node: "->:    "
 node: *Gx{}0:<x> sings
 node: *Fx{}0:<x> jumps
@@ -2067,19 +2067,19 @@ node: *Fc{}0:Feathers will jump
 answer-key: 3.209
 node: ->:Given that all pets jump or sing and no canary jumps, no canary is a pet unless it sings.
 node: &:Given that all pets jump or sing and no canary jumps
-node: @x:all pets jump or sing
+node: forall x:all pets jump or sing
 node: "->:    "
 node: *Nx{}0:<x> is a pet
 node: |:<x> jumps or sings
 node: *Fx{}0:<x> jumps
 node: *Gx{}0:<x> sings
 node: ~:no canary jumps
-node: !x:some canary jumps
+node: exists x:some canary jumps
 node: "&:    "
 node: *Jx{}0:<x> is a canary
 node: *Fx{}0:<x> jumps
 node: ~:no canary is a pet unless it sings
-node: !x:some canary is a pet and doesn't sing
+node: exists x:some canary is a pet and doesn't sing
 node: "&:    "
 node: *Jx{}0:<x> is a canary
 node: &:<x> is a pet and doesn't sing
@@ -2088,7 +2088,7 @@ node: ~:<x> doesn't sing
 node: *Gx{}0:<x> sings
 
 answer-key: 3.210
-node: @x:No dolphin sings unless it jumps.
+node: forall x:No dolphin sings unless it jumps.
 node: ->:if <x> is a dolphin, <x> doesn't sing unless it jumps
 node: *Kx{}0:<x> is a dolphin
 node: |:<x> doesn't sing unless it jumps
@@ -2099,7 +2099,7 @@ node: *Fx{}0:<x> jumps
 answer-key: 3.211
 node: |:No dolphin sings unless Kiwi jumps.
 node: ~:no dolphin sings
-node: !x:some dolphin sings
+node: exists x:some dolphin sings
 node: "&:    "
 node: *Kx{}0:<x> is a dolphin
 node: *Gx{}0:<x> sings
@@ -2108,7 +2108,7 @@ node: *Fb{}0:Kiwi jumps
 answer-key: 2ANS_3211
 english: No dolphin sings unless Kiwi jumps.
 node: ~:No dolphin sings unless Kiwi jumps.
-node: !x:A dolphin sings and Kiwi doesn't jump.
+node: exists x:A dolphin sings and Kiwi doesn't jump.
 node: &:<x> is a dolphin and <x> sings and Kiwi doesn't jump.
 node: *Kx{}0:<x> is a dolphin.
 node: &:<x> sings and Kiwi doesn't jump.
@@ -2117,7 +2117,7 @@ node: ~:Kiwi doesn't jump.
 node: *Fb{}0:Kiwi jumps
 
 answer-key: 3.212
-node: @x:If a dolphin is petted, it will jump.
+node: forall x:If a dolphin is petted, it will jump.
 node: "->:    "
 node: *Kx{}0:<x> is a dolphin
 node: ->:if <x> is petted, it will jump
@@ -2126,24 +2126,24 @@ node: *Fx{}0:<x> will jump
 
 answer-key: 3.213
 node: ->:If all dolphins are petted, they will all jump.
-node: @x:all dolphins are petted
+node: forall x:all dolphins are petted
 node: "->:    "
 node: *Kx{}0:<x> is a dolphin
 node: *Hx{}0:<x> is petted
-node: @x:all dolphins will jump
+node: forall x:all dolphins will jump
 node: "->:    "
 node: *Kx{}0:<x> is a dolphin
 node: *Fx{}0:<x> will jump
 
 answer-key: 3.214
-node: @x:A dolphin jumps.
+node: forall x:A dolphin jumps.
 node: "->:    "
 node: *Kx{}0:<x> is a dolphin
 node: *Fx{}0:<x> jumps
 
 answer-key: 3.215
 node: ~:Only a dog is long-haired.
-node: !x:something other than a dog is long-haired.
+node: exists x:something other than a dog is long-haired.
 node: "&:    "
 node: ~:<x> is other than a dog
 node: *Ix{}0:<x> is a dog
@@ -2173,11 +2173,11 @@ node: *Nb{}0:Kiwi is a pet
 answer-key: 3806a
 english: If all elves are mean, no elf won't bite.
 node: ->:If all elves are mean, no elf won't bite.
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "*Hx{}0:    "
 node: "*Gx{}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "*Hx{}0:    "
 node: "~:    "
@@ -2187,12 +2187,12 @@ node: "*Ix{}0:    "
 answer-key: 3806b
 english: If all elves are mean, no elf won't bite.
 node: ->:If all elves are mean, no elf won't bite.
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "*Hx{}0:    "
 node: "*Gx{}0:    "
 node: "~:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "*Hx{}0:    "
 node: "~:    "
@@ -2200,7 +2200,7 @@ node: "*Ix{}0:    "
 
 answer-key: 3807a
 english: All elves who are mean will bite.
-node: @x:All elves who are mean will bite.
+node: forall x:All elves who are mean will bite.
 node: "->:    "
 node: "&:    "
 node: "*Hx{}0:    "
@@ -2210,7 +2210,7 @@ node: "*Ix{}0:    "
 answer-key: 3807b
 english: All elves who are mean will bite.
 node: ~:All elves who are mean will bite.
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "&:    "
 node: "*Hx{}0:    "
@@ -2221,7 +2221,7 @@ node: "*Ix{}0:    "
 answer-key: 3808
 english: Although some mean elves will bite even though not provoked, neither Bruce nor Carrie will bite unless provoked.
 node: &:Although some mean elves will bite even though not provoked, neither Bruce nor Carrie will bite unless provoked.
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "&:    "
 node: "&:    "
@@ -2245,20 +2245,20 @@ answer-key: 3809a
 english: Given that some mean elf will bite and some friendly one will too, the mean ones will bite whether or not provoked but the friendly ones will bite only if provoked.
 node: ->:Given that some mean elf will bite and some friendly one will too, the mean ones will bite whether or not provoked but the friendly ones will bite only if provoked.
 node: "&:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "&:    "
 node: "*Hx{}0:    "
 node: "*Gx{}0:    "
 node: "*Ix{}0:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "&:    "
 node: "*Hx{}0:    "
 node: "*Fx{}0:    "
 node: "*Ix{}0:    "
 node: "&:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "&:    "
 node: "*Hx{}0:    "
@@ -2269,7 +2269,7 @@ node: "*Jx{}0:    "
 node: "~:    "
 node: "*Jx{}0:    "
 node: "*Ix{}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "&:    "
 node: "*Hx{}0:    "
@@ -2282,26 +2282,26 @@ answer-key: 3809b
 english: Given that some mean elf will bite and some friendly one will too, the mean ones will bite whether or not provoked but the friendly ones will bite only if provoked.
 node: ->:Given that some mean elf will bite and some friendly one will too, the mean ones will bite whether or not provoked but the friendly ones will bite only if provoked.
 node: "&:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "&:    "
 node: "*Hx{}0:    "
 node: "*Gx{}0:    "
 node: "*Ix{}0:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "&:    "
 node: "*Hx{}0:    "
 node: "*Fx{}0:    "
 node: "*Ix{}0:    "
 node: "&:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "&:    "
 node: "*Hx{}0:    "
 node: "*Gx{}0:    "
 node: "*Ix{}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "&:    "
 node: "*Hx{}0:    "
@@ -2314,31 +2314,31 @@ answer-key: 3810a
 english: No Republican is in the majority unless only Republicans are in the majority.
 node: |:No Republican is in the majority unless only Republicans are in the majority.
 node: "~:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "*Fx{}0:    "
 node: "*Gx{}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "*Gx{}0:    "
 node: "*Fx{}0:    "
 
 answer-key: 3810b
 english: No Republican is in the majority unless only Republicans are in the majority.
-node: @x:No Republican is in the majority unless only Republicans are in the majority.
+node: forall x:No Republican is in the majority unless only Republicans are in the majority.
 node: "|:    "
 node: "~:    "
 node: "&:    "
 node: "*Fx{}0:    "
 node: "*Gx{}0:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*Gy{}0:    "
 node: "*Fy{}0:    "
 
 answer-key: 3803
 english: Only logicians and mathematicians like quantifiers
-node: @x:Only logicians and mathematicians like quantifiers
+node: forall x:Only logicians and mathematicians like quantifiers
 node: "->:    "
 node: "*Fx{}0:    "
 node: "|:    "
@@ -2347,7 +2347,7 @@ node: "*Hx{}0:    "
 
 answer-key: 3801
 english: If a cancer survivor wins the Tour de France, then he's a superb athlete or on drugs.
-node: @x:If a cancer survivor wins the Tour de France, then he's a superb athlete or on drugs.
+node: forall x:If a cancer survivor wins the Tour de France, then he's a superb athlete or on drugs.
 node: "->:    "
 node: "&:    "
 node: "*Fx{}0:    "
@@ -2359,13 +2359,13 @@ node: "*Ix{}0:    "
 answer-key: 3811a
 english: Neither Republicans nor Democrats are honest except when it benefits them
 node: &:Neither Republicans nor Democrats are honest except when it benefits them
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "*Fx{}0:    "
 node: "->:    "
 node: "*Hx{}0:    "
 node: "*Ix{}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "*Gx{}0:    "
 node: "->:    "
@@ -2374,7 +2374,7 @@ node: "*Ix{}0:    "
 
 answer-key: 3811b
 english: Neither Republicans nor Democrats are honest except when it benefits them.
-node: @x:Neither Republicans nor Democrats are honest except when it benefits them.
+node: forall x:Neither Republicans nor Democrats are honest except when it benefits them.
 node: "->:    "
 node: "|:    "
 node: "*Fx{}0:    "
@@ -2386,7 +2386,7 @@ node: "*Ix{}0:    "
 answer-key: 3811c
 english: Neither Republicans nor Democrats are honest except when it benefits them
 node: ~:Neither Republicans nor Democrats are honest except when it benefits them
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "&:    "
 node: "|:    "
@@ -2400,14 +2400,14 @@ answer-key: 3811d
 english: Neither Republicans nor Democrats are honest except when it benefits them
 node: ~:Neither Republicans nor Democrats are honest except when it benefits them
 node: "|:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "&:    "
 node: "*Fx{}0:    "
 node: "*Hx{}0:    "
 node: "~:    "
 node: "*Ix{}0:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "&:    "
 node: "*Gx{}0:    "
@@ -2417,7 +2417,7 @@ node: "*Ix{}0:    "
 
 answer-key: 3804
 english: Among adults, only husbands and wives are excluded from singles clubs
-node: @x:Among adults, only husbands and wives are excluded from singles clubs
+node: forall x:Among adults, only husbands and wives are excluded from singles clubs
 node: "->:    "
 node: "*Fx{}0:    "
 node: "->:    "
@@ -2429,7 +2429,7 @@ node: "*Gx{}0:    "
 answer-key: 3805a
 english: No smoker is in jeopardy unless she inhales
 node: ~:No smoker is in jeopardy unless she inhales
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "*Mx{}0:    "
 node: "&:    "
@@ -2440,7 +2440,7 @@ node: "*Hx{}0:    "
 answer-key: 3805b
 english: No smoker is in jeopardy unless he or she inhales
 node: ~:No smoker is in jeopardy unless he or she inhales
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "&:    "
 node: "*Mx{}0:    "
@@ -2452,13 +2452,13 @@ seconds: 12
 answer-key: 3802a
 english: Men and women who enjoy martinis sleep well
 node: &:Men and women who enjoy martinis sleep well
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "&:    "
 node: "*Mx{}0:    "
 node: "*Jx{}0:    "
 node: "*Kx{}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "&:    "
 node: "*Ox{}0:    "
@@ -2467,7 +2467,7 @@ node: "*Kx{}0:    "
 
 answer-key: 3802b
 english: Men and women who enjoy martinis sleep well
-node: @x:Men and women who enjoy martinis sleep well
+node: forall x:Men and women who enjoy martinis sleep well
 node: "->:    "
 node: "&:    "
 node: "|:    "
@@ -2477,94 +2477,94 @@ node: "*Jx{}0:    "
 node: "*Kx{}0:    "
 
 answer-key: 4.033
-node: @x:Alfred is a friend of those who have no friends.
+node: forall x:Alfred is a friend of those who have no friends.
 node: "->:    "
 node: ~:<x> has no friends
-node: !y:<x> has friends
+node: exists y:<x> has friends
 node: *F(yx){}0:<y> is a friend of <x>
 node: *F(ax){}0:Alfred is a friend of <x>
 
 answer-key: 4.034
 node: &:Every husband and wife has a spouse.
-node: @x:every husband has a spouse
+node: forall x:every husband has a spouse
 node: "->:    "
 node: *Gx{}0:<x> is a husband
-node: !y:<x> has a spouse
+node: exists y:<x> has a spouse
 node: *F(yx){}0:<y> is a spouse of <x>
-node: @x:every wife has a spouse
+node: forall x:every wife has a spouse
 node: "->:    "
 node: *Hx{}0:<x> is a wife
-node: !y:<x> has a spouse
+node: exists y:<x> has a spouse
 node: *F(yx){}0:<y> is a spouse of <x>
 
 answer-key: 4.035
 node: &:No one lacks a father, but not everyone is a father.
 node: ~:no one lacks a father
-node: !x:someone lacks a father.
+node: exists x:someone lacks a father.
 node: "&:    "
 node: *Gx{}0:<x> is a person
 node: ~:<x> lacks a father
-node: !y:<x> has a father
+node: exists y:<x> has a father
 node: *F(yx){}0:<y> is a father of <x>
 node: ~:not everyone is a father
-node: @x:everyone is a father
+node: forall x:everyone is a father
 node: "->:    "
 node: *Gx{}0:<x> is a person
-node: !y:<x> is a father
+node: exists y:<x> is a father
 node: *F(xy){}0:<x> is a father of <y>
 
 answer-key: Symb 4.001 Ex14(1)
-node: @x:Everyone loves someone.
+node: forall x:Everyone loves someone.
 node: "->:    "
 node: *Fx{}0:<x> is a person
-node: !y:<x> loves someone
+node: exists y:<x> loves someone
 node: "&:    "
 node: *Fy{}0:<y> is a person
 node: *G(xy){}0:<x> loves <y>
 
 answer-key: 2ANS_4001
 english: Everyone loves someone.
-node: !x:Everyone loves someone.
+node: exists x:Everyone loves someone.
 node: &:<x> is a person whom everyone loves
 node: *Fx{}0:<x> is a person
-node: @y:everyone loves <x>
+node: forall y:everyone loves <x>
 node: "->:    "
 node: *Fy{}0:<y> is a person
 node: *G(yx){}0:<y> loves <x>
 
 answer-key: Symb 4.002 Ex14(2)
-node: !x:Someone loves someone.
+node: exists x:Someone loves someone.
 node: "&:    "
 node: *Fx{}0:<x> is a person
-node: !y:<x> loves someone
+node: exists y:<x> loves someone
 node: "&:    "
 node: *Fy{}0:<y> is a person
 node: *G(xy){}0:<x> loves <y>
 
 answer-key: 2ANS_4002
 english: Someone loves someone.
-node: !x:Someone loves someone.
+node: exists x:Someone loves someone.
 node: &:<x> is a person whom someone loves
 node: *Fx{}0:<x> is a person
-node: !y:someone loves <x>
+node: exists y:someone loves <x>
 node: "&:    "
 node: *Fy{}0:<y> is a person
 node: *G(yx){}0:<y> loves <x>
 
 answer-key: Symb 4.003 Ex14(3)
 node: ->:If anything is a person, then someone loves himself.
-node: !x:something is a person
+node: exists x:something is a person
 node: *Fx{}0:<x> is a person
-node: !x:someone loves him or her self
+node: exists x:someone loves him or her self
 node: "&:    "
 node: *Fx{}0:<x> is a person
 node: *G(xx){}0:<x> loves <x>
 
 answer-key: Symb 4.004 Ex14(4)
-node: !x:Someone loves everyone.
+node: exists x:Someone loves everyone.
 node: "&:    "
 node: *Fx{}0:<x> is a person
-node: @y:<x> loves everyone
+node: forall y:<x> loves everyone
 node: "->:    "
 node: *Fy{}0:<y> is a person
 node: *G(xy){}0:<x> loves <y>
@@ -2572,69 +2572,69 @@ errors: 1
 
 answer-key: 2ANS_4004
 english: Someone loves everyone.
-node: @x:Someone loves everyone.
+node: forall x:Someone loves everyone.
 node: ->:if <x> is a person, someone loves him or her
 node: *Fx{}0:<x> is a person
-node: !y:someone loves <x>
+node: exists y:someone loves <x>
 node: "&:    "
 node: *Fy{}0:<y> is a person
 node: *G(yx){}0:<y> loves <x>
 
 answer-key: 1ANS_4005
 english: Everyone loves everyone.
-node: @x:Everyone loves everyone.
+node: forall x:Everyone loves everyone.
 node: "->:    "
 node: *Fx{}0:<x> is a person
-node: @y:<x> loves everyone
+node: forall y:<x> loves everyone
 node: "->:    "
 node: *Fy{}0:<y> is a person
 node: *G(xy){}0:<x> loves <y>
 
 answer-key: 2ANS_4005
 english: Everyone loves everyone.
-node: @x:Everyone loves everyone.
+node: forall x:Everyone loves everyone.
 node: ->:if <x> is a person, then everyone loves <x>
 node: *Fx{}0:<x> is a person
-node: @y:everyone loves <x>
+node: forall y:everyone loves <x>
 node: "->:    "
 node: *Fy{}0:<y> is a person
 node: *G(yx){}0:<y> loves <x>
 
 answer-key: ANS_4006
 english: Every student studies every subject with every teacher.
-node: @x:Every student studies every subject with every teacher.
+node: forall x:Every student studies every subject with every teacher.
 node: ->:if <x> is a student, then <x> studies every subject with every teacher
 node: *Fx{}0:<x> is a student
-node: @y:<x> studies every subject with every teacher
+node: forall y:<x> studies every subject with every teacher
 node: "->:    "
 node: *Hy{}0:<y> is a subject
-node: @z:<x> studies <y> with every teacher
+node: forall z:<x> studies <y> with every teacher
 node: "->:    "
 node: *Gz{}0:<z> is a teacher
 node: *S(xyz){}0:x studies y with z
 
 answer-key: ANS_4007
 english: Every student studies some subject with some teacher.
-node: @x:Every student studies some subject with some teacher.
+node: forall x:Every student studies some subject with some teacher.
 node: ->:if <x> is a student then <x> studies some subject with some teacher
 node: *Fx{}0:<x> is a student
-node: !y:<x> studies some subject with some teacher
+node: exists y:<x> studies some subject with some teacher
 node: &:<y> is a subject and <x> studies <y> with some teacher
 node: *Hy{}0:<y> is a subject
-node: !z:<x> studies <y> with some teacher
+node: exists z:<x> studies <y> with some teacher
 node: "&:    "
 node: *Gz{}0:<z> is a teacher
 node: *S(xyz){}0:<x> studies <y> with <z>
 
 answer-key: Symb 4.008 Ex15(3)
 node: ~:No student studies every subject with a teacher.
-node: !x:Some student studies every subject with a teacher.
+node: exists x:Some student studies every subject with a teacher.
 node: &:<x> is a student and <x> studies every subject with a teacher.
 node: *Fx{}0:<x> is a student
-node: @y:<x> studies every subject with a teacher.
+node: forall y:<x> studies every subject with a teacher.
 node: ->:if <y> is a subject, <x> studies <y> with a teacher.
 node: *Hy{}0:<y> is a subject
-node: !z:<x> studies <y> with a teacher
+node: exists z:<x> studies <y> with a teacher
 node: &:<z> is a teacher and <x> studies <y> with <z>
 node: *Gz{}0:<z> is a teacher
 node: *S(xyz){}0:<x> studies <y> with <z>
@@ -2642,25 +2642,25 @@ node: *S(xyz){}0:<x> studies <y> with <z>
 answer-key: ANS_4008x
 english: No student studies every subject with the same teacher.
 node: ~:No student studies every subject with the same teacher.
-node: !x:some student studies every subject with the same teacher
+node: exists x:some student studies every subject with the same teacher
 node: "&:    "
 node: *Fx{}0:<x> is a student
-node: !y:<x> studies every subject with the same teacher
+node: exists y:<x> studies every subject with the same teacher
 node: "&:    "
 node: *Gy{}0:<y> is a teacher
-node: @z:<x> studies every subject with <y>
+node: forall z:<x> studies every subject with <y>
 node: "->:    "
 node: *Hz{}0:<z> is a subject
 node: *S(xzy){}0:<x> studies <z> with <y>
 errors: 1
 
 answer-key: Symb 4.009 Ex15(4)
-node: @x:Only students study every subject with a teacher.
+node: forall x:Only students study every subject with a teacher.
 node: ->:if <x> studies every subject with a teacher, then <x> is a student
-node: @y:<x> studies every subject with a teacher.
+node: forall y:<x> studies every subject with a teacher.
 node: ->:if <y> is a subject, then <x> studies <y> with a teacher
 node: *Hy{}0:<y> is a subject
-node: !z:<x> studies <y> with a teacher.
+node: exists z:<x> studies <y> with a teacher.
 node: &:<z> is a teacher and <x> studies <y> with <z>
 node: *Gz{}0:<z> is a teacher
 node: *S(xyz){}0:<x> studies <y>> with <z>
@@ -2669,14 +2669,14 @@ node: *Fx{}0:<x> is a student
 answer-key: 2ANS_4009
 english: Only students study every subject with a teacher.
 node: ~:Only students study every subject with a teacher.
-node: !x:something other than a student studies every subject with a teacher
+node: exists x:something other than a student studies every subject with a teacher
 node: "&:    "
 node: ~:<x> is other than a student
 node: *Fx{}0:<x> is a student
-node: @y:<x> studies every subject with a teacher.
+node: forall y:<x> studies every subject with a teacher.
 node: ->:if <y> is a subject, then <x> studies <y> with a teacher
 node: *Hy{}0:<y> is a subject
-node: !z:<x> studies <y> with a teacher.
+node: exists z:<x> studies <y> with a teacher.
 node: &:<z> is a teacher and <x> studies <y> with <z>
 node: *Gz{}0:<z> is a teacher
 node: *S(xyz){}0:<x> studies <y>> with <z>
@@ -2684,13 +2684,13 @@ node: *S(xyz){}0:<x> studies <y>> with <z>
 answer-key: ANS_4010
 english: No subject is such that every student studies it with every teacher.
 node: ~:No subject is such that every student studies it with every teacher.
-node: !x:some subject is such that every student studies it with every teacher
+node: exists x:some subject is such that every student studies it with every teacher
 node: "&:    "
 node: *Hx{}0:<x> is a subject
-node: @y:every student studies <x> with every teacher
+node: forall y:every student studies <x> with every teacher
 node: "->:    "
 node: *Fy{}0:<y> is a student
-node: @z:studies <x> with every teacher
+node: forall z:studies <x> with every teacher
 node: "->:    "
 node: *Gz{}0:<z> is a teacher
 node: *S(yxz){}0:<y> studies <x> with <z>
@@ -2698,13 +2698,13 @@ node: *S(yxz){}0:<y> studies <x> with <z>
 answer-key: ANS_4010x
 english: No subject is such that every student studies it with the same teacher.
 node: ~:No subject is such that every student studies it with the same teacher.
-node: !x:some subject is such that every student studies it with the same teacher
+node: exists x:some subject is such that every student studies it with the same teacher
 node: "&:    "
 node: *Hx{}0:<x> is a subject
-node: !z:every student studies <x> with the same teacher
+node: exists z:every student studies <x> with the same teacher
 node: "&:    "
 node: *Gz{}0:<z> is a teacher
-node: @y:every student studies <x> with <z>
+node: forall y:every student studies <x> with <z>
 node: "->:    "
 node: *Fy{}0:<y> is a student
 node: *S(yxz){}0:<y> studies <x> with <z>
@@ -2715,11 +2715,11 @@ english: No subject is such that every student studies it with every teacher.
 node: ~:No subject is such that every student studies it with every teacher.
 node: "~:    "
 node: "~:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "*Hx{}0:    "
-node: "@y:    "
-node: "@z:    "
+node: "forall y:    "
+node: "forall z:    "
 node: "->:    "
 node: "&:    "
 node: "*Fy{}0:    "
@@ -2728,13 +2728,13 @@ node: "*S(yxz){}0:    "
 
 answer-key: ANS_4011
 english: Every teacher has some subject that some student studies with him or her.
-node: @x:Every teacher has some subject that some student studies with him or her.
+node: forall x:Every teacher has some subject that some student studies with him or her.
 node: ->:if <x> is a teacher, then there is some subject that some student studies with <x>
 node: *Gx{}0:<x> is a teacher
-node: !y:there is some subject that some student studies with <x>
+node: exists y:there is some subject that some student studies with <x>
 node: "&:    "
 node: *Hy{}0:<y> is a subject
-node: !z:some student studies <y> with <x>
+node: exists z:some student studies <y> with <x>
 node: "&:    "
 node: *Fz{}0:<z> is a student
 node: *S(zyx){}0:<z> studies <y> with <x>
@@ -2743,11 +2743,11 @@ answer-key: TEMP_4011
 english: Every teacher has some subject that some student studies with him or her.
 node: ~:Every teacher has some subject that some student studies with him or her.
 node: "~:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "*Gx{}0:    "
-node: "!y:    "
-node: "!z:    "
+node: "exists y:    "
+node: "exists z:    "
 node: "&:    "
 node: "&:    "
 node: "*Fy{}0:    "
@@ -2756,13 +2756,13 @@ node: "*S(yzx){}0:    "
 
 answer-key: ANS_4012
 english: Each subject has some student who studies it with some teacher.
-node: @x:Each subject has some student who studies it with some teacher.
+node: forall x:Each subject has some student who studies it with some teacher.
 node: ->:if <x> is a subject, then some student studies <x> with some teacher.
 node: *Hx{}0:<x> is a subject
-node: !y:some student studies <x> with some teacher.
+node: exists y:some student studies <x> with some teacher.
 node: "&:    "
 node: *Fy{}0:<y> is a student
-node: !z:<y> studies <x> with some teacher
+node: exists z:<y> studies <x> with some teacher
 node: "&:    "
 node: *Gz{}0:<z> is a teacher
 node: *S(yxz){}0:<y> studies <x> with <z>
@@ -2771,11 +2771,11 @@ answer-key: TEMP_4012
 english: Each subject has some student who studies it with some teacher.
 node: ~:Each subject has some student who studies it with some teacher.
 node: "~:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "*Hx{}0:    "
-node: "!y:    "
-node: "!z:    "
+node: "exists y:    "
+node: "exists z:    "
 node: "&:    "
 node: "&:    "
 node: "*Fy{}0:    "
@@ -2784,12 +2784,12 @@ node: "*S(yxz){}0:    "
 
 answer-key: 1ANS_4013
 english: None but teachers are such that all students study all subjects with them.
-node: @x:None but teachers are such that all students study all subjects with them.
+node: forall x:None but teachers are such that all students study all subjects with them.
 node: ->:if all students study all subjects with <x>, then <x> is a teacher
-node: @y:all students study all subjects with <x>
+node: forall y:all students study all subjects with <x>
 node: "->:    "
 node: *Fy{}0:<y> is a student
-node: @z:<y> studies all subjects with <x>
+node: forall z:<y> studies all subjects with <x>
 node: "->:    "
 node: *Hz{}0:<z> is a subject
 node: *S(yzx){}0:<y> studies <z> with <x>
@@ -2798,14 +2798,14 @@ node: *Gx{}0:<x> is a teacher
 answer-key: 2ANS_4013
 english: None but teachers are such that all students study all subjects with them.
 node: ~:None but teachers are such that all students study all subjects with them.
-node: !x:something other than a teacher is such that all students study all subjects with them
+node: exists x:something other than a teacher is such that all students study all subjects with them
 node: "&:    "
 node: ~:<x> is other than a teacher
 node: *Gx{}0:<x> is a teacher
-node: @y:all students study all subjects with <x>
+node: forall y:all students study all subjects with <x>
 node: "->:    "
 node: *Fy{}0:<y> is a student
-node: @z:<y> studies all subjects with <x>
+node: forall z:<y> studies all subjects with <x>
 node: "->:    "
 node: *Hz{}0:<z> is a subject
 node: *S(yzx){}0:<y> studies <z> with <x>
@@ -2814,10 +2814,10 @@ answer-key: TEMP_4013
 english: None but teachers are such that all students study all subjects with them.
 node: ~:None but teachers are such that all students study all subjects with them.
 node: "~:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
-node: "@y:    "
-node: "@z:    "
+node: "forall y:    "
+node: "forall z:    "
 node: "->:    "
 node: "&:    "
 node: "*Fy{}0:    "
@@ -2827,12 +2827,12 @@ node: "*Gx{}0:    "
 
 answer-key: ANS_4014
 english: Anyone who studies any subject with any teacher is a student.
-node: @x:Anyone who studies any subject with any teacher is a student.
+node: forall x:Anyone who studies any subject with any teacher is a student.
 node: ->:if <x> studies any subject with any teacher, then <x> is a student
-node: !y:<x> studies a subject with a teacher
+node: exists y:<x> studies a subject with a teacher
 node: "&:    "
 node: *Hy{}0:<y> is a subject
-node: !z:<x> studies <y> with a teacher
+node: exists z:<x> studies <y> with a teacher
 node: "&:    "
 node: *Gz{}0:<z> is a teacher
 node: *S(xyz){}0:<x> studies <y> with <z>
@@ -2842,10 +2842,10 @@ answer-key: TEMP_4014
 english: Anyone who studies any subject with any teacher is a student.
 node: ~:Anyone who studies any subject with any teacher is a student.
 node: "~:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
-node: "!y:    "
-node: "!z:    "
+node: "exists y:    "
+node: "exists z:    "
 node: "&:    "
 node: "&:    "
 node: "*Hy{}0:    "
@@ -2854,26 +2854,26 @@ node: "*S(xyz){}0:    "
 node: "*Fx{}0:    "
 
 answer-key: Symb 4.015 Ex15(10)
-node: !x:There is a teacher such that every student studies some subject with him or her.
+node: exists x:There is a teacher such that every student studies some subject with him or her.
 node: &:<x> is a teacher and every student studies some subject with <x>
 node: *Gx{}0:<x> is a teacher
-node: @y:every student studies some subject with <x>
+node: forall y:every student studies some subject with <x>
 node: ->:if <y> is a student, then <y> studies some subject with <x>
 node: *Fy{}0:<y> is a student
-node: !z:<y> studies some subject with <x>
+node: exists z:<y> studies some subject with <x>
 node: &:<z> is a subject and <y> studies <z> with <x>
 node: *Hz{}0:<z> is a subject
 node: *S(yzx){}0:<y> studies <z> with <x>
 
 answer-key: ANS_4016
 english: There is a teacher such that some student studies every subject with him or her.
-node: !x:There is a teacher such that some student studies every subject with him or her.
+node: exists x:There is a teacher such that some student studies every subject with him or her.
 node: &:<x> is a teacher and some student studies every subject with <x>
 node: *Gx{}0:<x> is a teacher
-node: !y:some student studies every subject with <x>
+node: exists y:some student studies every subject with <x>
 node: "&:    "
 node: *Fy{}0:<y> is a student
-node: @z:<y> studies every subject with <x>
+node: forall z:<y> studies every subject with <x>
 node: "->:    "
 node: *Hz{}0:<z> is a subject
 node: *S(yzx){}0:<y> studies <z> with <x>
@@ -2882,27 +2882,27 @@ answer-key: TEMP_4016
 english: There is a teacher such that some student studies every subject with him or her.
 node: ~:There is a teacher such that some student studies every subject with him or her.
 node: "~:    "
-node: "!x:    "
-node: "!y:    "
+node: "exists x:    "
+node: "exists y:    "
 node: "&:    "
 node: "&:    "
 node: "*Gx{}0:    "
 node: "*Fy{}0:    "
-node: "@z:    "
+node: "forall z:    "
 node: "->:    "
 node: "*Hz{}0:    "
 node: "*S(yzx){}0:    "
 
 answer-key: ANS_4017
 english: Teachers who study some subject with a teacher are students.
-node: @x:Teachers who study some subject with a teacher are students.
+node: forall x:Teachers who study some subject with a teacher are students.
 node: ->:if <x> is a teacher and <x> studies some subject with a teacher, then <x> is a student
 node: &:<x> is a teacher and <x> studies some subject with a teacher
 node: *Gx{}0:<x> is a teacher
-node: !y:<x> studies some subject with a teacher
+node: exists y:<x> studies some subject with a teacher
 node: &:<y> is a subject and <x> studies <y> with a teacher
 node: *Hy{}0:<y> is a subject
-node: !z:<x> studies <y> with a teacher
+node: exists z:<x> studies <y> with a teacher
 node: "&:    "
 node: *Gz{}0:<z> is a teacher
 node: *S(xyz){}0:<x> studies <y> with <z>
@@ -2912,12 +2912,12 @@ answer-key: TEMP_4.017
 english: Teachers who study some subject with a teacher are students.
 node: ~:Teachers who study some subject with a teacher are students.
 node: "~:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "&:    "
 node: "*Gx{}0:    "
-node: "!y:    "
-node: "!z:    "
+node: "exists y:    "
+node: "exists z:    "
 node: "&:    "
 node: "&:    "
 node: "*Hy{}0:    "
@@ -2926,15 +2926,15 @@ node: "*S(xyz){}0:    "
 node: "*Fx{}0:    "
 
 answer-key: Symb 4.018 Ex15(13)
-node: @x:No student who does not study every subject with a teacher is a teacher.
+node: forall x:No student who does not study every subject with a teacher is a teacher.
 node: ->:if <x> is a student who does not study every subject with a teacher, then <x> is not a teacher
 node: &:<x> is a student who does not study every subject with a teacher
 node: *Fx{}0:<x> is a student
 node: ~:<x> does not study every subject with a teacher
-node: @y:<x> studies every subject with a teacher
+node: forall y:<x> studies every subject with a teacher
 node: ->:if <y> is a subject, then <x> studies <y> with a teacher
 node: *Hy{}0:<y> is a subject
-node: !z:<x> studies <y> with a teacher
+node: exists z:<x> studies <y> with a teacher
 node: &:<z> is a teacher and <x> studies <y> with <z>
 node: *Gz{}0:<z> is a teacher
 node: *S(xyz){}0:<x> studies <y> with <z>
@@ -2942,22 +2942,22 @@ node: ~:<x> is not a teacher
 node: *Gx{}0:<x> is a teacher
 
 answer-key: Symb 4.019 Ex15(14)
-node: @x:Any student who studies any subject with himself or herself is a teacher.
+node: forall x:Any student who studies any subject with himself or herself is a teacher.
 node: ->:if <x> is a student and <x> studies any subject with <x>, then <x> is a teacher
 node: &:<x> is a student and <x> studies any subject with <x>
 node: *Fx{}0:<x> is a student
-node: !y:<x> studies any subject with <x>
+node: exists y:<x> studies any subject with <x>
 node: &:<y> is a subject and <x> studies <y> with <x>
 node: *Hy{}0:<y> is a subject
 node: *S(xyx){}0:<x> studies <y> with <x>
 node: *Gx{}0:<x> is a teacher
 
 answer-key: Symb 4.020 Ex15(15)
-node: !x:Some teacher who studies every subject with himself or herself is a student.
+node: exists x:Some teacher who studies every subject with himself or herself is a student.
 node: &:<x> is a teacher and <x> studies every subject with <x> and <x> is a student
 node: &:<x> is a teacher and <x> studies every subject with <x>
 node: *Gx{}0:<x> is a teacher
-node: @y:<x> studies every subject with <x>
+node: forall y:<x> studies every subject with <x>
 node: ->:if <y> is a subject, then <x> studies <y> with <x>
 node: *Hy{}0:<y> is a subject
 node: *S(xyx){}0:<x> studies <y> with <x>
@@ -2965,86 +2965,86 @@ node: *Fx{}0:<x> is a student
 
 answer-key: Symb 4.021 Ex15(16)
 node: ~:There is no teacher with whom any student studies all subjects.
-node: !x:There is a teacher with whom any student studies all subjects.
+node: exists x:There is a teacher with whom any student studies all subjects.
 node: &:<x> is a teacher and any student studies all subjects with <x>
 node: *Gx{}0:<x> is a teacher
-node: !y:any student studies all subjects with <x>
+node: exists y:any student studies all subjects with <x>
 node: &:<y> is a student and <y> studies all subjects with <x>
 node: *Fy{}0:<y> is a student
-node: @z:<y> studies all subjects with <x>
+node: forall z:<y> studies all subjects with <x>
 node: ->:if <z> is a subject, then <y> studies <z> with <x>
 node: *Hz{}0:<z> is a subject
 node: *S(yzx){}0:<y> studies <z> with <x>
 
 answer-key: Symb 4.022 Ex19
 node: &:Every husband and wife has a spouse.
-node: @x:every husband has a spouse
+node: forall x:every husband has a spouse
 node: "->:    "
 node: *Fx{}0:<x> is a husband
-node: !y:<x> has a spouse
+node: exists y:<x> has a spouse
 node: *H(yx){}0:<y> is a spouse of <x>
-node: @x:every wife has a spouse
+node: forall x:every wife has a spouse
 node: "->:    "
 node: *Gx{}0:<x> is a wife
-node: !y:<x> has a spouse
+node: exists y:<x> has a spouse
 node: *H(yx){}0:<y> is a spouse of <x>
 
 answer-key: 2ANS_4022
 english: Every husband and wife has a spouse.
-node: @x:Every husband and wife has a spouse.
+node: forall x:Every husband and wife has a spouse.
 node: ->:if <x> is a husband or a wife, then <x> has a spouse
 node: |:<x> is a husband or a wife
 node: *Fx{}0:<x> is a husband
 node: *Gx{}0:<x> is a wife
-node: !y:<x> has a spouse
+node: exists y:<x> has a spouse
 node: *H(yx){}0:<y> is a spouse of <x>
 
 answer-key: Symb 4.023 Ex20
 node: &:No one lacks a father, but not everyone is a father.
 node: ~:no one lacks a father
-node: !x:someone lacks a father.
+node: exists x:someone lacks a father.
 node: "&:    "
 node: *Fx{}0:<x> is a person
 node: ~:<x> lacks a father
-node: !y:<x> has a father
+node: exists y:<x> has a father
 node: *G(yx){}0:<y> is a father of <x>
 node: ~:not everyone is a father
-node: @x:everyone is a father
+node: forall x:everyone is a father
 node: "->:    "
 node: *Fx{}0:<x> is a person
-node: !y:<x> is a father
+node: exists y:<x> is a father
 node: *G(xy){}0:<x> is a father of <y>
 
 answer-key: Symb 4.024 Ex21
-node: @x:Every number has some number as its successor.
+node: forall x:Every number has some number as its successor.
 node: ->:if <x> is a number, then some number is a successor of <x>
 node: *Fx{}0:<x> is a number
-node: !y:some number is a successor of <x>
+node: exists y:some number is a successor of <x>
 node: &:<y> is a number and <y> is a successor of <x>
 node: *Fy{}0:<y> is a number
 node: *G(yx){}0:<y> is a successor of <x>
 
 answer-key: Symb 4.025 Ex22
-node: !x:Some number is a successor of every number.
+node: exists x:Some number is a successor of every number.
 node: &:<x> is a number and <x> is a successor of every number
 node: *Fx{}0:<x> is a number
-node: @y:<x> is a successor of every number
+node: forall y:<x> is a successor of every number
 node: ->:if <y> is a number, then <x> is a successor of <y>
 node: *Fy{}0:<y> is a number
 node: *G(xy){}0:<x> is a successor of <y>
 
 answer-key: 1ANS_4026
 english: A teacher has no scruples if he or she assigns a problem that has no solution.
-node: @x:A teacher has no scruples if he or she assigns a problem that has no solution.
+node: forall x:A teacher has no scruples if he or she assigns a problem that has no solution.
 node: ->:if <x> is a teacher, then <x> has no scruples if <x> assigns a problem that has no solution
 node: *Fx{}0:<x> is a teacher
 node: ->:<x> has no scruples if <x> assigns a problem that has no solution
-node: !y:<x> assigns a problem that has no solution
+node: exists y:<x> assigns a problem that has no solution
 node: &:<y> is a problem that has no solution and <x> assigns <y>
 node: &:<y> is a problem that has no solution
 node: *Jy{}0:<y> is a problem
 node: ~:<y> has no solution
-node: !z:<y> has a solution
+node: exists z:<y> has a solution
 node: *K(zy){}0:<z> is a solution of <y>
 node: *H(xy){}0:<x> assigns <y>
 node: ~:<x> has no scruples
@@ -3052,35 +3052,35 @@ node: *Gx{}0:<x> has scruples
 
 answer-key: 2ANS_4026
 english: A teacher has no scruples if he or she assigns a problem that has no solution.
-node: !x:A teacher has no scruples if he or she assigns a problem that has no solution.
+node: exists x:A teacher has no scruples if he or she assigns a problem that has no solution.
 node: &:<x> is a teacher, and <x> has no scruples if <x> assigns a problem that has no solution
 node: *Fx{}0:<x> is a teacher
 node: ->:<x> has no scruples if <x> assigns a problem that has no solution
-node: !y:<x> assigns a problem that has no solution
+node: exists y:<x> assigns a problem that has no solution
 node: &:<y> is a problem that has no solution and <x> assigns <y>
 node: &:<y> is a problem that has no solution
 node: *Jy{}0:<y> is a problem
 node: ~:<y> has no solution
-node: !z:<y> has a solution
+node: exists z:<y> has a solution
 node: *K(zy){}0:<z> is a solution of <y>
 node: *H(xy){}0:<x> assigns <y>
 node: ~:<x> has no scruples
 node: *Gx{}0:<x> has scruples
 
 answer-key: Symb 4.027 Ex24
-node: @x:The net force acting on a particle is equal to the product of its mass and its acceleration.
+node: forall x:The net force acting on a particle is equal to the product of its mass and its acceleration.
 node: ->:if <x> is a particle, then the net force acting on <x> is equal to the product of the mass of <x> and the acceleration of <x>
 node: *Fx{}0:<x> is a particle
 node: *G(a(x)b(c(x)d(x))){}0:the net force acting on <x> is equal to the product of the mass of <x> and the acceleration of <x>
 
 answer-key: Symb 4.028 Ex25
-node: @x:No principle is innate unless everyone who hears it assents to it.
+node: forall x:No principle is innate unless everyone who hears it assents to it.
 node: ->:if <x> is a principle, then <x> is not innate unless everyone who hears <x> assents to <x>
 node: *Fx{}0:<x> is a principle
 node: |:<x> is not innate unless everyone who hears <x> assents to <x>
 node: ~:<x> is not innate
 node: *Gx{}0:<x> is innate
-node: @y:everyone who hears <x> assents to <x>
+node: forall y:everyone who hears <x> assents to <x>
 node: ->:if <y> is a person and <y> hears <x>, then <y> assents to <x>
 node: &:<y> is a person and <y> hears <x>
 node: *Hy{}0:<y> is a person
@@ -3090,13 +3090,13 @@ node: *K(yx){}0:<y> assents to <x>
 answer-key: 2ANS_4028
 english: No principle is innate unless everyone who hears it assents to it.
 node: ~:No principle is innate unless everyone who hears it assents to it.
-node: !x:some principle is innate although not everyone who hears it assents to it
+node: exists x:some principle is innate although not everyone who hears it assents to it
 node: "&:    "
 node: *Fx{}0:<x> is a principle
 node: &:<x> is innate although not everyone who hears <x> assents to <x>
 node: *Gx{}0:<x> is innate
 node: ~:not everyone who hears <x> assents to <x>
-node: @y:everyone who hears <x> assents to <x>
+node: forall y:everyone who hears <x> assents to <x>
 node: ->:if <y> is a person and <y> hears <x>, then <y> assents to <x>
 node: &:<y> is a person and <y> hears <x>
 node: *Hy{}0:<y> is a person
@@ -3107,18 +3107,18 @@ answer-key: Symb 4.029 Ex26
 node: *Fa(b(c)){}0:The cube of the square of 2 is even.
 
 answer-key: Symb 4.030 Ex27
-node: @x:No monk likes every course he takes unless the only courses he takes are theological studies.
+node: forall x:No monk likes every course he takes unless the only courses he takes are theological studies.
 node: ->:if <x> is a monk, then <x> does not like every course <x> takes unless the only courses <x> takes are theological studies
 node: *Fx{}0:<x> is a monk
 node: |:<x> does not like every course <x> takes unless the only courses <x> takes are theological studies
 node: ~:<x> does not like every course <x> takes
-node: @y:<x> likes every course <x> takes
+node: forall y:<x> likes every course <x> takes
 node: ->:if <y> is a course and <x> takes <y>, then <x> likes <y>
 node: &:<y> is a course and <x> takes <y>
 node: *Gy{}0:<y> is a course
 node: *J(xy){}0:<x> takes <y>
 node: *K(xy){}0:<x> likes <y>
-node: @y:the only courses <x> takes are theological studies
+node: forall y:the only courses <x> takes are theological studies
 node: ->:if <y> is a course and <x> takes <y>, then <y> is a theological study
 node: &:<y> is a course and <x> takes <y>
 node: *Gy{}0:<y> is a course
@@ -3128,18 +3128,18 @@ node: *Hy{}0:<y> is a theological study
 answer-key: 2ANS_4030
 english: No monk likes every course he takes unless the only courses he takes are theological studies.
 node: ~:No monk likes every course he takes unless the only courses he takes are theological studies.
-node: !x:some monk likes every course he takes although the courses he takes are not only theological studies
+node: exists x:some monk likes every course he takes although the courses he takes are not only theological studies
 node: "&:    "
 node: *Fx{}0:<x> is a monk
 node: &:<x> likes every course <x> takes although the courses <x> takes are not only theological studies
-node: @y:<x> likes every course <x> takes
+node: forall y:<x> likes every course <x> takes
 node: ->:if <y> is a course and <x> takes <y>, then <x> likes <y>
 node: &:<y> is a course and <x> takes <y>
 node: *Gy{}0:<y> is a course
 node: *J(xy){}0:<x> takes <y>
 node: *K(xy){}0:<x> likes <y>
 node: ~:the courses <x> takes are not only theological studies
-node: @y:the courses <x> takes are only theological studies
+node: forall y:the courses <x> takes are only theological studies
 node: ->:if <y> is a course and <x> takes <y>, then <y> is a theological study
 node: &:<y> is a course and <x> takes <y>
 node: *Gy{}0:<y> is a course
@@ -3148,18 +3148,18 @@ node: *Hy{}0:<y> is a theological study
 
 answer-key: ANS_4031
 english: A man who loves himself more than he loves anyone else is not loved by anyone other than himself.
-node: @x:A man who loves himself more than he loves anyone else is not loved by anyone other than himself.
+node: forall x:A man who loves himself more than he loves anyone else is not loved by anyone other than himself.
 node: ->:if <x> is a man who loves <x> more than <x> loves anyone else, then <x> is not loved by anyone other than <x>
 node: &:<x> is a man who loves <x> more than <x> loves anyone else
 node: *Fx{}0:<x> is a man
-node: @y:<x> loves <x> more than <x> loves anyone else
+node: forall y:<x> loves <x> more than <x> loves anyone else
 node: "->:    "
 node: &:<y> is a person and <y> is different from <x>
 node: *Gy{}0:<y> is a person
 node: *J(yx){}0:<y> is different from <x>
 node: *L(xxxy){}0:<x> loves <x> more than <x> loves <y>
 node: ~:<x> is not loved by anyone other than <x>
-node: !y:<x> is loved by someone other than <x>
+node: exists y:<x> is loved by someone other than <x>
 node: &:<y> is a person other than <x> and <y> loves <x> and
 node: &:<y> is a person and <y> is different from <x>
 node: *Gy{}0:<y> is a person
@@ -3167,15 +3167,15 @@ node: *J(yx){}0:<y> is different from <x>
 node: *H(yx){}0:<y> loves <x>
 
 answer-key: Symb 4.032 Ex29
-node: @x:If a father has only male children, then he does not have to provide a dowry for any one of them.
+node: forall x:If a father has only male children, then he does not have to provide a dowry for any one of them.
 node: ->:If <x> is a father and <x> has only male children, then <x> does not have to provide a dowry for any of his children
 node: &:<x> is a father and <x> has only male children
 node: *Fx{}0:<x> is a father
-node: @y:<x> has only male children
+node: forall y:<x> has only male children
 node: ->:if <y> is a child of <x>, then <y> is male
 node: *H(yx){}0:<y> is a child of <x>
 node: *Gy{}0:<y> is male
-node: @y:<x> does not have to provide a dowry for any of his children
+node: forall y:<x> does not have to provide a dowry for any of his children
 node: ->:if <y> is a child of <x>, then <x> does not have to provide a dowry for <y>
 node: *H(yx){}0:<y> is a child of <x>
 node: ~:<x> does not have to provide a dowry for <y>
@@ -3183,7 +3183,7 @@ node: *J(xy){}0:<x> has to provide a dowry for <y>
 
 answer-key: ANS_4033x
 english: The spouse of anyone who marries the child of the brother of his or her father marries the child of the brother of the spouse of his or her mother.
-node: @x:The spouse of anyone who marries the child of the brother of his or her father marries the child of the brother of the spouse of his or her mother.
+node: forall x:The spouse of anyone who marries the child of the brother of his or her father marries the child of the brother of the spouse of his or her mother.
 node: "->:    "
 node: *F(xb(c(d(x)))){}0:<x> marries the child of the brother of the father of <x>
 node: *F(a(x)b(c(a(e(a(x)))))){}2:the spouse of <x> marries the child of the brother of the spouse of the mother of the spouse of <x>
@@ -3196,7 +3196,7 @@ node: *Fx{}0:x is an integer
 node: |:x is greater than or equal to zero
 node: *G(xa){}0:x is greater than zero
 node: *H(xa){}0:x is equal to zero
-node: @y:every integer is divisible by x
+node: forall y:every integer is divisible by x
 node: ->:if <y> is an integer, then <y> is divisible by x
 node: *Fy{}0:<y> is an integer
 node: *I(yx){}0:<y> is divisible by x
@@ -3204,13 +3204,13 @@ node: *H(xb){}0:x is equal to 1
 
 answer-key: ANS_4035x
 english: The square of the length of the hypotenuse of a right triangle is equal to the sum of the squares of the lengths of the other two sides.
-node: @x:The square of the length of the hypotenuse of a right triangle is equal \nto the sum of the squares of the lengths of the other two sides.
+node: forall x:The square of the length of the hypotenuse of a right triangle is equal \nto the sum of the squares of the lengths of the other two sides.
 node: "->:    "
 node: *Fx{}0:<x> is a right\n triangle
-node: @y:the square of the length of the hypotenuse of <x> is equal to the \nsum of the squares of the lengths of the other two sides of <x>
+node: forall y:the square of the length of the hypotenuse of <x> is equal to the \nsum of the squares of the lengths of the other two sides of <x>
 node: "->:    "
 node: *G(yx){}0:<y> is a \nside of <x>
-node: @z:the square of the length of the hypotenuse of <x> is equal to the \nsum of the squares of the lengths of <y> and the other side of <x>
+node: forall z:the square of the length of the hypotenuse of <x> is equal to the \nsum of the squares of the lengths of <y> and the other side of <x>
 node: "->:    "
 node: &:<z> is a side of <x>\n different from <y>
 node: "*G(zx){}0:    "
@@ -3218,67 +3218,67 @@ node: "*J(yz){}0:    "
 node: *H(a(d(b(x)))c(a(d(y))a(d(z)))){}0:the square of the length of the hypotenuse of <x> is equal\n to the sum of the squares of the lengths of <y> and <z>
 
 answer-key: Symb 4.036a Ex33a
-node: @x:Someone is hit by a car every day.
+node: forall x:Someone is hit by a car every day.
 node: ->:if <x> is a day, then someone is hit by a car on <x>
 node: *Hx{}0:<x> is a day
-node: !y:someone is hit by a car on <x>
+node: exists y:someone is hit by a car on <x>
 node: &:<y> is a person and <y> is hit by a car on <x>
 node: *Fy{}0:<y> is a person
-node: !z:<y> is hit by a car on <x>
+node: exists z:<y> is hit by a car on <x>
 node: &:<z> is a car and <y> is hit by <z> on <x>
 node: *Gz{}0:<z> is a car
 node: *J(yzx){}0:<y> is hit by <z> on <x>
 
 answer-key: Symb 4.036b Ex33b
-node: !x:Someone is hit by a car every day.
+node: exists x:Someone is hit by a car every day.
 node: &:<x> is a person and <x> is hit by car every day
 node: *Fx{}0:<x> is a person
-node: !y:<x> is hit by car every day
+node: exists y:<x> is hit by car every day
 node: &:<y> is a car and <x> is hit by <y> every day
 node: *Gy{}0:<y> is a car
-node: @z:<x> is hit by <y> every day
+node: forall z:<x> is hit by <y> every day
 node: ->:if <z> is a day, then <x> is hit by <y> on <z>
 node: *Hz{}0:<z> is a day
 node: *J(xyz){}0:<x> is hit by <y> on <z>
 
 answer-key: Symb 4.036c Ex33c
-node: !x:Someone is hit by a car every day.
+node: exists x:Someone is hit by a car every day.
 node: &:<x> is a car and someone is hit by <x> every day
 node: *Gx{}0:<x> is a car
-node: @y:someone is hit by <x> every day
+node: forall y:someone is hit by <x> every day
 node: ->:if <y> is a day, someone is hit by <x> on <y>
 node: *Hy{}0:<y> is a day
-node: !z:someone is hit by <x> on <y>
+node: exists z:someone is hit by <x> on <y>
 node: &:<z> is a person and <z> is hit by <x> on <y>
 node: *Fz{}0:<z> is a person
 node: *J(zxy){}0:<z> is hit by <x> on <y>
 
 answer-key: Symb 4.036d Ex33d
-node: !x:Someone is hit by a car every day.
+node: exists x:Someone is hit by a car every day.
 node: &:<x> is a person and <x> is hit by a car every day
 node: *Fx{}0:<x> is a person
-node: @y:<x> is hit by a car every day
+node: forall y:<x> is hit by a car every day
 node: ->:if <y > is a day, then <x> is hit by a car on <y>
 node: *Hy{}0:<y > is a day
-node: !z:<x> is hit by a car on <y>
+node: exists z:<x> is hit by a car on <y>
 node: &:<z> is a car and <x> is hit by <z> on <y>
 node: *Gz{}0:<z> is a car
 node: *J(xzy){}0:<x> is hit by <z> on <y>
 
 answer-key: Symb 4.037a Ex34(I)
-node: @x:You can fool some of the people all of the time.
+node: forall x:You can fool some of the people all of the time.
 node: ->:if <x> is a time, then you can fool some of the people at <x>
 node: *Hx{}0:<x> is a time
-node: !y:you can fool some of the people at <x>
+node: exists y:you can fool some of the people at <x>
 node: &:<y> is a person and you can fool <y> at <x>
 node: *Gy{}0:<y> is a person
 node: *F(yx){}0:you can fool <y> at <x>
 
 answer-key: Symb 4.037b Ex34(I)
-node: !x:You can fool some of the people all of the time.
+node: exists x:You can fool some of the people all of the time.
 node: &:if <x> is a person and you can fool <x> all of the time
 node: *Gx{}0:<x> is a person
-node: @y:you can fool <x> all of the time
+node: forall y:you can fool <x> all of the time
 node: ->:if <y> is a time, then you can fool <x> at <y>>
 node: *Hy{}0:<y> is a time
 node: *F(xy){}0:you can fool <x> at <y>>
@@ -3286,10 +3286,10 @@ node: *F(xy){}0:you can fool <x> at <y>>
 answer-key: ANS_4038
 english: You cannot fool all of the people all of the time.
 node: ~:You cannot fool all of the people all of the time.
-node: @x:You can fool all of the people all of the time.
+node: forall x:You can fool all of the people all of the time.
 node: "->:    "
 node: *Gx{}0:<x> is a person
-node: @y:you can fool <x> all of the time
+node: forall y:you can fool <x> all of the time
 node: "->:    "
 node: *Hy{}0:<y> is a time
 node: *F(xy){}0:you can fool <x> at <y>
@@ -3307,8 +3307,8 @@ english: The product of 3 and the square of 6 plus 3 is even.
 node: *Fc(d(ae(b))a){}0:The product of 3 and the square of 6 plus 3 is even.
 
 answer-key: Symb 5.001 Ex1(1)
-node: !x:Something differs from everything except itself.
-node: @y:<x> differs from everything except itself
+node: exists x:Something differs from everything except itself.
+node: forall y:<x> differs from everything except itself
 node: ->:if <y> is not <x>, then <x> differs from <y>
 node: ~:<y> is not <x>
 node: =:<y> is <x>
@@ -3321,28 +3321,28 @@ node: *y{}1:<y>
 errors: 4
 
 answer-key: Symb 5.002 Ex1(2)
-node: @x:Everything is identical with something.
-node: !y:<x> is identical with something
+node: forall x:Everything is identical with something.
+node: exists y:<x> is identical with something
 node: =:<x> is identical with <y>
 node: *x{}1:<x>
 node: *y{}1:<y>
 
 answer-key: Symb 5.003 Ex1(3)
-node: @x:Everything is distinct from something.
-node: !y:<x> is distinct from something
+node: forall x:Everything is distinct from something.
+node: exists y:<x> is distinct from something
 node: ~:<x> is distinct from <y>
 node: =:<x> is <y>
 node: *x{}1:<x>
 node: *y{}1:<y>
 
 answer-key: Symb 5.004 Ex1(4)
-node: @x:Everything equal to a thing differs from everything not equal to that thing.
-node: @y:if <x> is equal to a thing, then <x> differs from everything not equal to that thing
+node: forall x:Everything equal to a thing differs from everything not equal to that thing.
+node: forall y:if <x> is equal to a thing, then <x> differs from everything not equal to that thing
 node: ->:if <x> is equal to <y>, then <x> differs from everything not equal to <y>
 node: =:<x> is equal to <y>
 node: *x{}1:<x>
 node: *y{}1:<y>
-node: @z:<x> differs from everything not equal to <y>
+node: forall z:<x> differs from everything not equal to <y>
 node: ->:if <z> is not equal to <y>, then <x> differs from <z>
 node: ~:<z> is not equal to <y>
 node: =:<z> is equal to <y>
@@ -3355,18 +3355,18 @@ node: *z{}1:<z>
 
 answer-key: Symb 5.005 Ex1(5)
 node: ~:Nothing differs from everything.
-node: !x:something differs from everything
-node: @y:<x> differs from everything
+node: exists x:something differs from everything
+node: forall y:<x> differs from everything
 node: ~:<x> differs from <y>
 node: =:<x> is <y>
 node: *x{}1:<x>
 node: *y{}1:<y>
 
 answer-key: Symb 5.006 Ex1(6)
-node: @x:Things equal to the same thing are equal to each other.
-node: @y:if <x> and something are equal to the same thing, then they are equal to each other
+node: forall x:Things equal to the same thing are equal to each other.
+node: forall y:if <x> and something are equal to the same thing, then they are equal to each other
 node: ->:if <x> and <y> are equal to the same thing, then <x> and <y> are equal to each other
-node: !z:<x> and <y> are equal to the same thing
+node: exists z:<x> and <y> are equal to the same thing
 node: &:<x> and <y> are equal to <z>
 node: =:<x> is equal to <z>
 node: *x{}1:<x>
@@ -3380,9 +3380,9 @@ node: *y{}1:<y>
 
 answer-key: ANS_5006a
 english: Things equal to the same thing are equal to each other.
-node: @x:Things equal to the same thing are equal to each other.
-node: "@y:    "
-node: @z:x and y are equal to the same thing
+node: forall x:Things equal to the same thing are equal to each other.
+node: "forall y:    "
+node: forall z:x and y are equal to the same thing
 node: ->:if x and y are equal to z, then x equals y
 node: &:x and y are equal to z
 node: =:x equals z
@@ -3397,7 +3397,7 @@ node: *y{}1:y
 
 answer-key: Symb 5.007 Ex1(7)
 node: ~:Nothing differs from itself.
-node: !x:something differs from itself
+node: exists x:something differs from itself
 node: ~:<x> differs from itself
 node: =:<x> is identical with itself
 node: *x{}1:<x>
@@ -3405,7 +3405,7 @@ node: *x{}1:<x>
 
 answer-key: Symb 5.008 Ex2
 node: ~:None but Alfred and his teacher are able to solve the problem.
-node: !x:someone other than Alfred and his teacher are able to solve the problem
+node: exists x:someone other than Alfred and his teacher are able to solve the problem
 node: &:<x> differs from Alfred and his teacher, and <x> is able to solve the problem
 node: &:<x> differs from Alfred and his teacher
 node: ~:<x> differs from Alfred
@@ -3419,7 +3419,7 @@ node: *c(a){}1:Alfred's teacher
 node: *F(xb){}0:<x> is able to solve the problem
 
 answer-key: Symb 5.008 Ex2b
-node: @x:None but Alfred and his teacher are able to solve the problem.
+node: forall x:None but Alfred and his teacher are able to solve the problem.
 node: ->:if <x> is able to solve the problem, then <x> is Alfred or his teacher
 node: *F(xb){}0:<x> is able to solve the problem
 node: |:<x> is Alfred or his teacher
@@ -3431,7 +3431,7 @@ node: *x{}1:<x>
 node: *c(a){}1:Alfred's teacher
 
 answer-key: Symb 5.008 Ex2c
-node: @x:None but Alfred and his teacher are able to solve the problem.
+node: forall x:None but Alfred and his teacher are able to solve the problem.
 node: <->:<x> is able to solve the problem if and only if <x> is Alfred or his teacher
 node: *F(xb){}0:<x> is able to solve the problem
 node: |:<x> is Alfred or his teacher
@@ -3447,7 +3447,7 @@ node: &:Alfred attended the conference and arrived at it before everyone else wh
 node: "&:    "
 node: "*F(ab){}0:    "
 node: "*F(cb){}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "&:    "
 node: "&:    "
@@ -3467,7 +3467,7 @@ node: &:Alfred attended the conference and arrived at it before everyone else wh
 node: "&:    "
 node: "*F(ab){}0:    "
 node: "*F(cb){}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "*F(xb){}0:    "
 node: "<->:    "
@@ -3487,7 +3487,7 @@ node: &:Alfred is the only member of the class who can read Greek.
 node: "&:    "
 node: "*F(ab){}0:    "
 node: "*G(ac){}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "&:    "
 node: "*F(xb){}0:    "
@@ -3497,7 +3497,7 @@ node: "*x{}1:    "
 node: "*a{}1:    "
 
 answer-key: Symb 5.010 Ex4b
-node: @x:Alfred is the only member of the class who can read Greek.
+node: forall x:Alfred is the only member of the class who can read Greek.
 node: "<->:    "
 node: "&:    "
 node: "*F(xb){}0:    "
@@ -3510,7 +3510,7 @@ answer-key: Symb 5.010 Ex4c
 node: &:Alfred is the only member of the class who can read Greek.
 node: "&:    "
 node: "~:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "&:    "
 node: "~:    "
@@ -3527,7 +3527,7 @@ node: &:Greensleeves can jump farther than any other frog in Calaveras County.
 node: "&:    "
 node: "*Ga{}0:    "
 node: "*H(ab){}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "&:    "
 node: "&:    "
@@ -3542,7 +3542,7 @@ node: "*F(ax){}0:    "
 answer-key: Symb 5.012 Ex6
 node: &:Pergolesi was the most promising composer of his time.
 node: "*Ga{}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
 node: "&:    "
 node: "&:    "
@@ -3555,11 +3555,11 @@ node: "*a{}1:    "
 node: "*F(ax){}0:    "
 
 answer-key: Symb 5.013 Ex7
-node: @x:Anyone whose mother is the wife of a citizen, whose father is married to his or her mother, and whose father has no other children is the child of a citizen.
+node: forall x:Anyone whose mother is the wife of a citizen, whose father is married to his or her mother, and whose father has no other children is the child of a citizen.
 node: "->:    "
 node: "&:    "
 node: "&:    "
-node: "!y:    "
+node: "exists y:    "
 node: "&:    "
 node: "*Fy{}0:    "
 node: "=:    "
@@ -3567,14 +3567,14 @@ node: "*a(x){}1:    "
 node: "*b(y){}1:    "
 node: "*G(c(x)a(x)){}0:    "
 node: "~:    "
-node: "!y:    "
+node: "exists y:    "
 node: "&:    "
 node: "~:    "
 node: "=:    "
 node: "*y{}1:    "
 node: "*x{}1:    "
 node: "*H(yc(x)){}0:    "
-node: "!y:    "
+node: "exists y:    "
 node: "&:    "
 node: "*Fy{}0:    "
 node: "=:    "
@@ -3592,16 +3592,16 @@ node: "*e(c(a)){}1:    "
 
 answer-key: Symb 5.015 Ex9
 node: ->:If a sister of Alfred is the wife of a brother-in-law of Alfred, then the father-in-law of Alfred is the father-in-law of a sister of Alfred.
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "*F(xa){}0:    "
-node: "!y:    "
+node: "exists y:    "
 node: "&:    "
 node: "*G(ya){}0:    "
 node: "=:    "
 node: "*x{}1:    "
 node: "*b(y){}1:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "*F(xa){}0:    "
 node: "=:    "
@@ -3609,11 +3609,11 @@ node: "*c(a){}1:    "
 node: "*c(x){}1:    "
 
 answer-key: Symb 5.016 Ex10
-node: @x:If a sister of Alfred is the wife of a brother-in-law of Alfred, then the father-in-law of Alfred is the father-in-law of that sister of Alfred.
+node: forall x:If a sister of Alfred is the wife of a brother-in-law of Alfred, then the father-in-law of Alfred is the father-in-law of that sister of Alfred.
 node: "->:    "
 node: "&:    "
 node: "*F(xa){}0:    "
-node: "!y:    "
+node: "exists y:    "
 node: "&:    "
 node: "*G(ya){}0:    "
 node: "=:    "
@@ -3627,18 +3627,18 @@ answer-key: Symb 5.017 Ex11
 node: &:Brothers and sisters I have none, but that man's father is my father's son.
 node: "&:    "
 node: "~:    "
-node: "!x:    "
+node: "exists x:    "
 node: "*F(xa){}0:    "
 node: "~:    "
-node: "!x:    "
+node: "exists x:    "
 node: "*G(xa){}0:    "
 node: "=:    "
 node: "*c(b){}1:    "
 node: "*d(c(a)){}1:    "
 
 answer-key: Symb 5.018 Ex12
-node: @x:The product of distinct positive integers is less than their sum if and only if one of them is equal to its square.
-node: "@y:    "
+node: forall x:The product of distinct positive integers is less than their sum if and only if one of them is equal to its square.
+node: "forall y:    "
 node: "->:    "
 node: "&:    "
 node: "&:    "
@@ -3659,8 +3659,8 @@ node: "*y{}1:    "
 node: "*c(y){}1:    "
 
 answer-key: Symb 5.020 Ex20
-node: !y:There is exactly one even prime number.
-node: "@x:    "
+node: exists y:There is exactly one even prime number.
+node: "forall x:    "
 node: "<->:    "
 node: "&:    "
 node: "&:    "
@@ -3672,9 +3672,9 @@ node: "*x{}1:    "
 node: "*y{}1:    "
 
 answer-key: Symb 5.021 Ex21
-node: !x:There is exactly one even number, and it is prime.
+node: exists x:There is exactly one even number, and it is prime.
 node: "&:    "
-node: "@y:    "
+node: "forall y:    "
 node: "<->:    "
 node: "&:    "
 node: "*Fy{}0:    "
@@ -3687,11 +3687,11 @@ node: "*Gx{}0:    "
 answer-key: Symb 5.022 Ex22
 english: No monogamous person has more than one spouse.
 node: ~:No monogamous person has more than one spouse.
-node: !x:some monogamous person has more than one spouse
+node: exists x:some monogamous person has more than one spouse
 node: "&:    "
 node: *Fx{}0:<x> is a monogamous person
-node: !y:<x> has more than one spouse
-node: "!z:    "
+node: exists y:<x> has more than one spouse
+node: "exists z:    "
 node: "&:    "
 node: &:<y> is a spouse of <x>, and <z> is a spouse of <x>
 node: *G(yx){}0:<y> is a spouse of <x>
@@ -3702,19 +3702,19 @@ node: *y{}1:<y>
 node: *z{}1:<z>
 
 answer-key: Symb 5.023 Ex23
-node: @x:An opera is enjoyable if and only if it has exactly two acts.
+node: forall x:An opera is enjoyable if and only if it has exactly two acts.
 node: "->:    "
 node: "*Fx{}0:    "
 node: "<->:    "
 node: "*Gx{}0:    "
-node: "!y:    "
-node: "!z:    "
+node: "exists y:    "
+node: "exists z:    "
 node: "&:    "
 node: "~:    "
 node: "=:    "
 node: "*y{}1:    "
 node: "*z{}1:    "
-node: "@w:    "
+node: "forall w:    "
 node: "<->:    "
 node: "*H(wx){}0:    "
 node: "|:    "
@@ -3727,14 +3727,14 @@ node: "*z{}1:    "
 
 answer-key: Symb 5.024 Ex24
 english: At most one student missed at most one problem.
-node: @x:At most one student missed at most one problem.
-node: "@y:    "
+node: forall x:At most one student missed at most one problem.
+node: "forall y:    "
 node: "->:    "
 node: &:<x> is a student who missed at most one problem, \nand <y> is a student who missed at most one problem
 node: &:<x> is a student who \nmissed at most one problem
 node: *Fx{}0:<x> is a student
-node: @z:<x> missed at most\n one problem
-node: "@u:    "
+node: forall z:<x> missed at most\n one problem
+node: "forall u:    "
 node: "->:    "
 node: &:<z> is a problem that <x> missed, \nand <u> is a problem that <x> missed
 node: &:<z> is a problem \nthat <x> missed
@@ -3748,8 +3748,8 @@ node: *z{}1:<z>
 node: *u{}1:<u>
 node: &:<y> is a student who \nmissed at most one problem
 node: *Fy{}0:<y> is a student
-node: @z:<y> missed at most\n one problem
-node: "@u:    "
+node: forall z:<y> missed at most\n one problem
+node: "forall u:    "
 node: "->:    "
 node: &:<z> is a problem that <y> missed, \nand <u> is a problem that <y> missed
 node: &:<z> is a problem \nthat <y> missed
@@ -3767,11 +3767,11 @@ node: *y{}1:<y>
 
 answer-key: Symb 5.024a
 english: At least one student missed at most one problem.
-node: !x:At least one student missed at most one problem.
+node: exists x:At least one student missed at most one problem.
 node: "&:    "
 node: *Fx{}0:<x> is a student
-node: @y:<x> missed at most one problem
-node: "@z:    "
+node: forall y:<x> missed at most one problem
+node: "forall z:    "
 node: "->:    "
 node: &:<y> is a problem that <x> missed and <z> is a problem that <x> missed
 node: &:<y> is a problem that <x> missed
@@ -3786,19 +3786,19 @@ node: *z{}1:<z>
 
 answer-key: Symb 5.024b
 english: At most one student missed at least one problem.
-node: @x:At most one student missed at least one problem.
-node: "@y:    "
+node: forall x:At most one student missed at least one problem.
+node: "forall y:    "
 node: "->:    "
 node: &:<x> is a student who missed at least one problem, \nand <y> is a student who missed at least one problem
 node: &:<x> is a student who missed\n at least one problem
 node: *Fx{}0:<x> is a \nstudent
-node: !z:<x> missed at \nleast one problem
+node: exists z:<x> missed at \nleast one problem
 node: "&:    "
 node: *Hz{}0:<z> is a \nproblem
 node: *G(xz){}0:<x> missed <z>
 node: &:<y> is a student who missed\n at least one problem
 node: *Fy{}0:<y> is a \nstudent
-node: !z:<y> missed at \nleast one problem
+node: exists z:<y> missed at \nleast one problem
 node: "&:    "
 node: *Hz{}0:<z> is a \nproblem
 node: *G(yz){}0:<y> missed <z>
@@ -3808,23 +3808,23 @@ node: *y{}1:<y>
 
 answer-key: Symb 5.024c
 english: At least one student missed at least one problem.
-node: !x:At least one student missed at least one problem.
+node: exists x:At least one student missed at least one problem.
 node: "&:    "
 node: *Fx{}0:<x> is a student
-node: !y:<x> missed at least one problem
+node: exists y:<x> missed at least one problem
 node: "&:    "
 node: *Hy{}0:<y> is a problem
 node: *G(xy){}0:<x> missed <y>
 
 answer-key: Symb 5.024d
 english: Exactly one student missed at most one problem.
-node: !x:Exactly one student missed at most one problem.
-node: "@y:    "
+node: exists x:Exactly one student missed at most one problem.
+node: "forall y:    "
 node: "<->:    "
 node: &:<y> is a student who \nmissed at most one problem
 node: *Fy{}0:<y> is a student
-node: @z:<y> missed at most\n one problem
-node: "@u:    "
+node: forall z:<y> missed at most\n one problem
+node: "forall u:    "
 node: "->:    "
 node: &:<z> is a problem that <y> missed, and\n <u> is a problem that <y> missed
 node: &:<z> is a problem\n that <y> missed
@@ -3842,12 +3842,12 @@ node: *x{}1:<x>
 
 answer-key: Symb 5.024e
 english: Exactly one student missed at least one problem.
-node: !x:Exactly one student missed at least one problem.
-node: "@y:    "
+node: exists x:Exactly one student missed at least one problem.
+node: "forall y:    "
 node: "<->:    "
 node: &:<y> is a student who \nmissed at least one problem
 node: *Fy{}0:<y> is a student
-node: !z:<y> missed at least\n one problem
+node: exists z:<y> missed at least\n one problem
 node: "&:    "
 node: *Hz{}0:<z> is a problem
 node: *G(yz){}0:<y> missed <z>
@@ -3857,13 +3857,13 @@ node: *x{}1:<x>
 
 answer-key: Symb 5.024f
 english: Exactly one student missed exactly one problem.
-node: !x:Exactly one student missed exactly one problem.
-node: "@y:    "
+node: exists x:Exactly one student missed exactly one problem.
+node: "forall y:    "
 node: "<->:    "
 node: &:<y> is a student who \nmissed exactly one problem
 node: *Fy{}0:<y> is a student
-node: !z:<y> missed exactly one problem
-node: "@u:    "
+node: exists z:<y> missed exactly one problem
+node: "forall u:    "
 node: "<->:    "
 node: &:<u> is a problem\n that <y> missed
 node: *Hu{}0:<u> is a \nproblem
@@ -3877,14 +3877,14 @@ node: *x{}1:<x>
 
 answer-key: Symb 5.024g
 english: At most one student missed exactly one problem.
-node: @x:At most one student missed exactly one problem.
-node: "@y:    "
+node: forall x:At most one student missed exactly one problem.
+node: "forall y:    "
 node: "->:    "
 node: &:<x> is a student who missed\n exactly one problem, and\n<y> is a student who missed\n exactly one problem
 node: &:<x> is a student who \nmissed exactly one problem
 node: *Fx{}0:<x> is a student
-node: !z:<x> missed exactly\n one problem
-node: "@u:    "
+node: exists z:<x> missed exactly\n one problem
+node: "forall u:    "
 node: "<->:    "
 node: &:<u> is a problem\n that <x> missed
 node: *Hu{}0:<u> is a \nproblem
@@ -3894,8 +3894,8 @@ node: *u{}1:<u>
 node: *z{}1:<z>
 node: &:<y> is a student who \nmissed exactly one problem
 node: *Fy{}0:<y> is a student
-node: !z:<y> missed exactly\n one problem
-node: "@u:    "
+node: exists z:<y> missed exactly\n one problem
+node: "forall u:    "
 node: "<->:    "
 node: &:<u> is a problem\n that <y> missed
 node: *Hu{}0:<u> is a \nproblem
@@ -3909,11 +3909,11 @@ node: *y{}1:<y>
 
 answer-key: Symb 5.024h
 english: At least one student missed exactly one problem.
-node: !x:At least one student missed exactly one problem.
+node: exists x:At least one student missed exactly one problem.
 node: "&:    "
 node: *Fx{}0:<x> is a student
-node: !y:<x> missed exactly one problem
-node: "@z:    "
+node: exists y:<x> missed exactly one problem
+node: "forall z:    "
 node: "<->:    "
 node: &:<z> is a problem\n that <x> missed
 node: *Hz{}0:<z> is a \nproblem
@@ -3923,8 +3923,8 @@ node: *z{}1:<z>
 node: *y{}1:<y>
 
 answer-key: Symb 5.025 Ex25
-node: !x:At least two soldiers shot at least one demonstrator.
-node: "!y:    "
+node: exists x:At least two soldiers shot at least one demonstrator.
+node: "exists y:    "
 node: "&:    "
 node: "&:    "
 node: "&:    "
@@ -3935,18 +3935,18 @@ node: "*x{}1:    "
 node: "*y{}1:    "
 node: "*Fx{}0:    "
 node: "*Fy{}0:    "
-node: "!z:    "
+node: "exists z:    "
 node: "&:    "
 node: "*Hz{}0:    "
 node: "*G(xz){}0:    "
-node: "!z:    "
+node: "exists z:    "
 node: "&:    "
 node: "*Hz{}0:    "
 node: "*G(yz){}0:    "
 
 answer-key: Symb 5.026 Ex26(i)
-node: @x:Classes are identical if and only if they have the same members.
-node: "@y:    "
+node: forall x:Classes are identical if and only if they have the same members.
+node: "forall y:    "
 node: "->:    "
 node: "&:    "
 node: "*Fx{}0:    "
@@ -3955,24 +3955,24 @@ node: "<->:    "
 node: "=:    "
 node: "*x{}1:    "
 node: "*y{}1:    "
-node: "@z:    "
+node: "forall z:    "
 node: "<->:    "
 node: "*G(zx){}0:    "
 node: "*G(zy){}0:    "
 
 answer-key: Symb 5.026 Ex26(ii)
-node: @x:For every class x, if every member of x has a member and no two members of x have any member in common, then there is a class y such that every member of x has exactly one member in common with y.
+node: forall x:For every class x, if every member of x has a member and no two members of x have any member in common, then there is a class y such that every member of x has exactly one member in common with y.
 node: "->:    "
 node: "&:    "
 node: "&:    "
 node: "*Fx{}0:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*G(yx){}0:    "
-node: "!z:    "
+node: "exists z:    "
 node: "*G(zy){}0:    "
-node: "@y:    "
-node: "@z:    "
+node: "forall y:    "
+node: "forall z:    "
 node: "->:    "
 node: "&:    "
 node: "&:    "
@@ -3983,18 +3983,18 @@ node: "=:    "
 node: "*y{}1:    "
 node: "*z{}1:    "
 node: "~:    "
-node: "!w:    "
+node: "exists w:    "
 node: "&:    "
 node: "*G(wy){}0:    "
 node: "*G(wz){}0:    "
-node: "!y:    "
+node: "exists y:    "
 node: "&:    "
 node: "*Fy{}0:    "
-node: "@z:    "
+node: "forall z:    "
 node: "->:    "
 node: "*G(zx){}0:    "
-node: "!w:    "
-node: "@u:    "
+node: "exists w:    "
+node: "forall u:    "
 node: "<->:    "
 node: "&:    "
 node: "*G(uz){}0:    "
@@ -4005,11 +4005,11 @@ node: "*w{}1:    "
 
 answer-key: Symb 5.027 Ex27
 node: &:Some course is taught by exactly one instructor, and some instructor teaches exactly one course.
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "*Gx{}0:    "
-node: "!z:    "
-node: "@y:    "
+node: "exists z:    "
+node: "forall y:    "
 node: "<->:    "
 node: "&:    "
 node: "*Fy{}0:    "
@@ -4017,11 +4017,11 @@ node: "*H(yx){}0:    "
 node: "=:    "
 node: "*y{}1:    "
 node: "*z{}1:    "
-node: "!y:    "
+node: "exists y:    "
 node: "&:    "
 node: "*Fy{}0:    "
-node: "!z:    "
-node: "@x:    "
+node: "exists z:    "
+node: "forall x:    "
 node: "<->:    "
 node: "&:    "
 node: "*Gx{}0:    "
@@ -4032,24 +4032,24 @@ node: "*z{}1:    "
 
 answer-key: Symb 5.028 Ex28
 node: &:Exactly one instructor teaches a course, and exactly one course is taught by an instructor.
-node: "!z:    "
-node: "@y:    "
+node: "exists z:    "
+node: "forall y:    "
 node: "<->:    "
 node: "&:    "
 node: "*Fy{}0:    "
-node: "!x:    "
+node: "exists x:    "
 node: "&:    "
 node: "*Gx{}0:    "
 node: "*H(yx){}0:    "
 node: "=:    "
 node: "*y{}1:    "
 node: "*z{}1:    "
-node: "!z:    "
-node: "@x:    "
+node: "exists z:    "
+node: "forall x:    "
 node: "<->:    "
 node: "&:    "
 node: "*Gx{}0:    "
-node: "!y:    "
+node: "exists y:    "
 node: "&:    "
 node: "*Fy{}0:    "
 node: "*H(yx){}0:    "
@@ -4058,17 +4058,17 @@ node: "*x{}1:    "
 node: "*z{}1:    "
 
 answer-key: Symb 5.029 Ex29
-node: !z:There is exactly one instructor and exactly one course, and that instructor teaches that course.
-node: "!w:    "
+node: exists z:There is exactly one instructor and exactly one course, and that instructor teaches that course.
+node: "exists w:    "
 node: "&:    "
 node: "&:    "
-node: "@y:    "
+node: "forall y:    "
 node: "<->:    "
 node: "*Fy{}0:    "
 node: "=:    "
 node: "*y{}1:    "
 node: "*z{}1:    "
-node: "@x:    "
+node: "forall x:    "
 node: "<->:    "
 node: "*Gx{}0:    "
 node: "=:    "
@@ -4077,13 +4077,13 @@ node: "*w{}1:    "
 node: "*H(zw){}0:    "
 
 answer-key: Symb 5.030 Ex30
-node: !z:There is exactly one instructor who teaches exactly one course.
-node: "@y:    "
+node: exists z:There is exactly one instructor who teaches exactly one course.
+node: "forall y:    "
 node: "<->:    "
 node: "&:    "
 node: "*Fy{}0:    "
-node: "!w:    "
-node: "@x:    "
+node: "exists w:    "
+node: "forall x:    "
 node: "<->:    "
 node: "&:    "
 node: "*Gx{}0:    "
@@ -4097,8 +4097,8 @@ node: "*z{}1:    "
 
 answer-key: Symb 5.031 Ex31
 english: Alfred has exactly one half-brother.
-node: !x:Alfred has exactly one half-brother.
-node: "!y:    "
+node: exists x:Alfred has exactly one half-brother.
+node: "exists y:    "
 node: "&:    "
 node: &:<x> and <y> are distinct and Alfred is a son of each of them
 node: ~:<x> and <y> are distinct
@@ -4108,8 +4108,8 @@ node: *y{}1:<y>
 node: &:Alfred is a son of both <x> and <y>
 node: *F(ax){}0:Alfred is a son <x>
 node: *F(ay){}0:Alfred is a son <y>
-node: !w:exactly one thing is a son of one of <x> and <y> but not a son of both of them
-node: "@z:    "
+node: exists w:exactly one thing is a son of one of <x> and <y> but not a son of both of them
+node: "forall z:    "
 node: "<->:    "
 node: &:<z> is a son of one of <x> and <y> but not a son of both of them
 node: |:<z> is a son of one of <x> and <y>
@@ -4125,11 +4125,11 @@ node: *w{}1:<w>
 
 answer-key: Symb 5.031 Ex31b
 english: Alfred has exactly one half-brother.
-node: !x:Alfred has exactly one half-brother.
-node: @y:<x> and only <x> is a half-brother of Alfred
+node: exists x:Alfred has exactly one half-brother.
+node: forall y:<x> and only <x> is a half-brother of Alfred
 node: "<->:    "
-node: !w:<y> is a half-brother of Alfred
-node: @z:<w> and only <w> is such that both <y> and Alfred are sons of <w>
+node: exists w:<y> is a half-brother of Alfred
+node: forall z:<w> and only <w> is such that both <y> and Alfred are sons of <w>
 node: "<->:    "
 node: &:both <y> and Alfred are sons of <z>
 node: *F(yz){}0:<y> is a son of <w>
@@ -4143,16 +4143,16 @@ node: *x{}1:<x>
 
 answer-key: ANS_5040
 english: Emily envies those that Emily envies
-node: @x:Emily envies those that Emily envies
+node: forall x:Emily envies those that Emily envies
 node: "->:    "
 node: *V(ex){}0:Emily envies <x>
 node: *V(ex){}0:Emily envies <x>
 
 answer-key: ANS_5041a
 english: Emily envies those that only Emily envies
-node: @x:Emily envies those that only Emily envies
+node: forall x:Emily envies those that only Emily envies
 node: "->:    "
-node: @y:only Emily envies <x>
+node: forall y:only Emily envies <x>
 node: "<->:    "
 node: *V(yx){}0:<y> envies <x>
 node: =:<y> is Emily
@@ -4162,11 +4162,11 @@ node: *V(ex){}0:Emily envies <x>
 
 answer-key: ANS_5041b
 english: Emily envies those that only Emily envies
-node: @x:Emily envies those that only Emily envies
+node: forall x:Emily envies those that only Emily envies
 node: "->:    "
 node: &:only Emily envies <x>
 node: *V(ex){}0:Emily envies <x>
-node: @y:nothing other than Emily envies <x>
+node: forall y:nothing other than Emily envies <x>
 node: "->:    "
 node: *V(yx){}0:<y> envies <x>
 node: =:<y> is Emily
@@ -4176,17 +4176,17 @@ node: *V(ex){}0:Emily envies <x>
 
 answer-key: ANS_5042
 english: Emily envies only those that Emily envies
-node: @x:Emily envies only those that Emily envies
+node: forall x:Emily envies only those that Emily envies
 node: "->:    "
 node: *V(ex){}0:Emily envies <x>
 node: *V(ex){}0:Emily envies <x>
 
 answer-key: ANS_5043a
 english: Only Emily envies those that Emily envies
-node: @x:Only Emily envies those that Emily envies
+node: forall x:Only Emily envies those that Emily envies
 node: "->:    "
 node: *V(ex){}0:Emily envies <x>
-node: @y:only Emily envies <x>
+node: forall y:only Emily envies <x>
 node: "<->:    "
 node: *V(yx){}0:<y> envies <x>
 node: =:<y> is Emily
@@ -4195,12 +4195,12 @@ node: *e{}1:Emily
 
 answer-key: ANS_5043b
 english: Only Emily envies those that Emily envies
-node: @x:Only Emily envies those that Emily envies
+node: forall x:Only Emily envies those that Emily envies
 node: "->:    "
 node: "*V(ex){}0:    "
 node: "&:    "
 node: "*V(ex){}0:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*V(yx){}0:    "
 node: "=:    "
@@ -4209,10 +4209,10 @@ node: "*e{}1:    "
 
 answer-key: ANS_5043c
 english: Only Emily envies those that Emily envies
-node: @x:Only Emily envies those that Emily envies
+node: forall x:Only Emily envies those that Emily envies
 node: "->:    "
 node: "*V(ex){}0:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*V(yx){}0:    "
 node: "=:    "
@@ -4221,10 +4221,10 @@ node: "*e{}1:    "
 
 answer-key: ANS_5044a
 english: Emily envies only those that only Emily envies
-node: @x:Emily envies only those that only Emily envies
+node: forall x:Emily envies only those that only Emily envies
 node: "->:    "
 node: *V(ex){}0:Emily envies <x>
-node: @y:only Emily envies <x>
+node: forall y:only Emily envies <x>
 node: "<->:    "
 node: *V(yx){}0:<y> envies <x>
 node: =:<y> is Emily
@@ -4233,12 +4233,12 @@ node: *e{}1:Emily
 
 answer-key: ANS_5044b
 english: Emily envies only those that only Emily envies
-node: @x:Emily envies only those that only Emily envies
+node: forall x:Emily envies only those that only Emily envies
 node: "->:    "
 node: "*V(ex){}0:    "
 node: "&:    "
 node: "*V(ex){}0:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*V(yx){}0:    "
 node: "=:    "
@@ -4247,10 +4247,10 @@ node: "*e{}1:    "
 
 answer-key: ANS_5044c
 english: Emily envies only those that only Emily envies
-node: @x:Emily envies only those that only Emily envies
+node: forall x:Emily envies only those that only Emily envies
 node: "->:    "
 node: "*V(ex){}0:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*V(yx){}0:    "
 node: "=:    "
@@ -4259,9 +4259,9 @@ node: "*e{}1:    "
 
 answer-key: ANS_5045a
 english: Only Emily envies only those that Emily envies
-node: @x:Only Emily envies only those that Emily envies
+node: forall x:Only Emily envies only those that Emily envies
 node: "<->:    "
-node: @y:<x> envies only those that Emily envies
+node: forall y:<x> envies only those that Emily envies
 node: "->:    "
 node: *V(xy){}0:<x> envies <y>
 node: *V(ey){}0:Emily envies <y>
@@ -4272,13 +4272,13 @@ node: *e{}1:Emily
 answer-key: ANS_5045b
 english: Only Emily envies only those that Emily envies
 node: &:Only Emily envies only those that Emily envies
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*V(ey){}0:    "
 node: "*V(ey){}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*V(xy){}0:    "
 node: "*V(ey){}0:    "
@@ -4288,9 +4288,9 @@ node: "*e{}1:    "
 
 answer-key: ANS_5045c
 english: Only Emily envies only those that Emily envies
-node: @x:Only Emily envies only those that Emily envies
+node: forall x:Only Emily envies only those that Emily envies
 node: "->:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*V(xy){}0:    "
 node: "*V(ey){}0:    "
@@ -4300,11 +4300,11 @@ node: "*e{}1:    "
 
 answer-key: ANS_5046a
 english: Only Emily envies those that only Emily envies
-node: @x:Only Emily envies those that only Emily envies
+node: forall x:Only Emily envies those that only Emily envies
 node: "<->:    "
-node: @y:<x> envies those that only Emily envies
+node: forall y:<x> envies those that only Emily envies
 node: "->:    "
-node: @z:only emily envies <y>
+node: forall z:only emily envies <y>
 node: "<->:    "
 node: *V(zy){}0:<z> envies <y>
 node: =:<z> is Emily
@@ -4318,20 +4318,20 @@ node: *e{}1:Emily
 answer-key: ANS_5046b
 english: Only Emily envies those that only Emily envies
 node: &:Only Emily envies those that only Emily envies
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
-node: "@z:    "
+node: "forall z:    "
 node: "<->:    "
 node: "*V(zy){}0:    "
 node: "=:    "
 node: "*z{}1:    "
 node: "*e{}1:    "
 node: "*V(ey){}0:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
-node: "@z:    "
+node: "forall z:    "
 node: "<->:    "
 node: "*V(zy){}0:    "
 node: "=:    "
@@ -4344,11 +4344,11 @@ node: "*e{}1:    "
 
 answer-key: ANS_5046c
 english: Only Emily envies those that only Emily envies
-node: @x:Only Emily envies those that only Emily envies
+node: forall x:Only Emily envies those that only Emily envies
 node: "->:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
-node: "@z:    "
+node: "forall z:    "
 node: "<->:    "
 node: "*V(zy){}0:    "
 node: "=:    "
@@ -4361,13 +4361,13 @@ node: "*e{}1:    "
 
 answer-key: ANS_5046d
 english: Only Emily envies those that only Emily envies
-node: @x:Only Emily envies those that only Emily envies
+node: forall x:Only Emily envies those that only Emily envies
 node: "->:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "&:    "
 node: "*V(ey){}0:    "
-node: "@z:    "
+node: "forall z:    "
 node: "->:    "
 node: "*V(zy){}0:    "
 node: "=:    "
@@ -4380,12 +4380,12 @@ node: "*e{}1:    "
 
 answer-key: ANS_5047a
 english: Only Emily envies only those that only Emily envies
-node: @x:Only Emily envies only those that only Emily envies
+node: forall x:Only Emily envies only those that only Emily envies
 node: "<->:    "
-node: @y:<x> envies only those that only Emily envies
+node: forall y:<x> envies only those that only Emily envies
 node: "->:    "
 node: *V(xy){}0:<x> envies <y>
-node: @z:only Emily envies <y>
+node: forall z:only Emily envies <y>
 node: "<->:    "
 node: *V(zy){}0:<z> envies <y>
 node: =:<z> is Emily
@@ -4398,21 +4398,21 @@ node: *e{}1:Emily
 answer-key: ANS_5047b
 english: Only Emily envies only those that only Emily envies
 node: &:Only Emily envies only those that only Emily envies
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*V(ey){}0:    "
-node: "@z:    "
+node: "forall z:    "
 node: "<->:    "
 node: "*V(zy){}0:    "
 node: "=:    "
 node: "*z{}1:    "
 node: "*e{}1:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*V(xy){}0:    "
-node: "@z:    "
+node: "forall z:    "
 node: "<->:    "
 node: "*V(zy){}0:    "
 node: "=:    "
@@ -4425,21 +4425,21 @@ node: "*e{}1:    "
 answer-key: ANS_5047c
 english: Only Emily envies only those that only Emily envies
 node: &:Only Emily envies only those that only Emily envies
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*V(ey){}0:    "
-node: "@z:    "
+node: "forall z:    "
 node: "->:    "
 node: "*V(zy){}0:    "
 node: "=:    "
 node: "*z{}1:    "
 node: "*e{}1:    "
-node: "@x:    "
+node: "forall x:    "
 node: "->:    "
-node: "@y:    "
+node: "forall y:    "
 node: "->:    "
 node: "*V(xy){}0:    "
-node: "@z:    "
+node: "forall z:    "
 node: "<->:    "
 node: "*V(zy){}0:    "
 node: "=:    "
@@ -4469,7 +4469,7 @@ node: "*O%x(Fx&M(xa)){}0:    "
 
 answer-key: ANS_6011
 english: The hardest problem on the exam was solved by the youngest student in the class.
-node: *S(%x(Fx&@y(Fy&y<>x->H(xy)))%x(Nx&@y(Ny&y<>x->Y(xy)))){}0:The hardest problem on the exam was solved by the youngest student in the class.
+node: *S(%x(Fx&forall y (Fy&y<>x->H(xy)))%x(Nx&forall y (Ny&y<>x->Y(xy)))){}0:The hardest problem on the exam was solved by the youngest student in the class.
 
 answer-key: ANS_6012
 english: If the author of Waverly is the author of Ivanhoe, then the author of Ivanhoe is an author of Waverly.
@@ -4487,7 +4487,7 @@ node: =:God is that than which nothing greater can be conceived.
 node: *a{}1:God
 node: %x:that than which nothing greater can be conceived
 node: ~:nothing greater than x can be conceived
-node: !y:something greater than x can be conceived
+node: exists y:something greater than x can be conceived
 node: &:y is greater than x, and can be conceived
 node: *G(yx){}0:y is greater than x
 node: *V(y){}2:y can be conceived
@@ -4498,7 +4498,7 @@ node: =:God is that than which nothing greater can be conceived.
 node: *a{}1:God
 node: %x:that than which nothing greater can be conceived
 node: ~:nothing greater than x can be conceived
-node: !y:something greater than x can be conceived
+node: exists y:something greater than x can be conceived
 node: &:y is greater than x, and can be conceived
 node: *V(y){}2:y can be conceived
 node: *G(yx){}0:y is greater than x
@@ -4515,7 +4515,7 @@ node: &:<x> is a positive integer and <x> is less than all other positive intege
 node: &:<x> is positive and <x> is an integer
 node: *Ox{}0:<x> is positive
 node: *Nx{}0:<x> is an integer
-node: @y:<x> is less than all other positive integers
+node: forall y:<x> is less than all other positive integers
 node: ->:if <y> is a positive integer and <y> is not <x>, then <x> is less than <y>
 node: &:<y> is a positive integer and <y> is not <x>
 node: &:<y> is a positive integer
@@ -4538,12 +4538,12 @@ node: *x{}1:<x>
 answer-key: ANS_6016
 english: There is no greatest positive integer.
 node: ~:There is no greatest positive integer.
-node: !x:There is a greatest positive integer
+node: exists x:There is a greatest positive integer
 node: &:<x> is a positive integer and <x> is greater than all other positive integers
 node: &:<x> is a positive integer
 node: *Ox{}0:<x> is positive
 node: *Nx{}0:<x> is an integer
-node: @y:<x> is greater than all other positive integers
+node: forall y:<x> is greater than all other positive integers
 node: ->:if <y> is a positive integer and <y> is not <x>, then <x> is greater than <y>
 node: &:<y> is a positive integer and <y> is not <x>
 node: &:<y> is a positive integer

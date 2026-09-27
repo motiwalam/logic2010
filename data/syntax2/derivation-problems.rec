@@ -3529,36 +3529,36 @@ common-name: Deriv 2.817
 problem: Deriv 3.001
 flag: c
 flag: q
-statement: " @x(Fx&Gx) .: @xGx"
+statement: " forall x (Fx&Gx) .: forall x Gx"
 end-box:
 common-name: Deriv 3.001
 
 problem: Deriv 3.002
 flag: c
 flag: q
-statement: " !xFx .: !x(Gx->Fx)"
+statement: " exists x Fx .: exists x (Gx->Fx)"
 end-box:
 common-name: Deriv 3.002
 
 problem: Deriv 3.003
 flag: c
 flag: q
-statement: " @x(Fx->(~Gx->Hx))  .: @x(Fx->Gx|Hx)"
+statement: " forall x (Fx->(~Gx->Hx))  .: forall x (Fx->Gx|Hx)"
 end-box:
 common-name: Deriv 3.003
 
 problem: Deriv 3.003EG1
-statement: " @x(Fx->(~Gx->Hx))  .: @x(Fx->Gx|Hx)"
-show: @x(Fx->Gx|Hx)
+statement: " forall x (Fx->(~Gx->Hx))  .: forall x (Fx->Gx|Hx)"
+show: forall x (Fx->Gx|Hx)
 command: "\"show conc\""
-line: ~@x(Fx->Gx|Hx)
+line: ~forall x (Fx->Gx|Hx)
 reason: ass id
-line: !x~(Fx->Gx|Hx)
+line: exists x ~(Fx->Gx|Hx)
 reason: 2 qn
 line: ~(Fi->Gi|Hi)
 reason: 3 ei/i
 cached-justification: 1:EI{0}i:i.F{1}:~(F{1}->G{1}|H{1}),x:x
-line: @x(Fx->(~Gx->Hx))
+line: forall x (Fx->(~Gx->Hx))
 reason: pr
 line: Fi->(~Gi->Hi)
 reason: 5 ui/i
@@ -3585,17 +3585,17 @@ options: eg
 common-name: Deriv 3.003EG1
 
 problem: Deriv 3.003EG2
-statement: " @x(Fx->(~Gx->Hx))  .: @x(Fx->Gx|Hx)"
-show: @x(Fx->Gx|Hx)
+statement: " forall x (Fx->(~Gx->Hx))  .: forall x (Fx->Gx|Hx)"
+show: forall x (Fx->Gx|Hx)
 command: "\"show conc\""
-line: ~@x(Fx->Gx|Hx)
+line: ~forall x (Fx->Gx|Hx)
 reason: ass id
-line: !x~(Fx->Gx|Hx)
+line: exists x ~(Fx->Gx|Hx)
 reason: 2 qn
 line: ~(Fi->Gi|Hi)
 reason: 3 ei/i
 cached-justification: 1:EI{0}i:i.F{1}:~(F{1}->G{1}|H{1}),x:x
-line: @x(Fx->(~Gx->Hx))
+line: forall x (Fx->(~Gx->Hx))
 reason: pr
 line: Fi->(~Gi->Hi)
 reason: 5 ui/i
@@ -3618,31 +3618,31 @@ common-name: Deriv 3.003EG2
 problem: Deriv 3.004
 flag: c
 flag: q
-statement: " @x(Fx->Gx). @x(Gx->Hx) .: Fa->!x(Gx&Hx)"
+statement: " forall x (Fx->Gx). forall x (Gx->Hx) .: Fa->exists x (Gx&Hx)"
 end-box:
 common-name: Deriv 3.004
 
 problem: Deriv 3.004EG1
-statement: " @x(Fx->Gx). @x(Gx->Hx) .: Fa->!x(Gx&Hx)"
-show: Fa->!x(Gx&Hx)
+statement: " forall x (Fx->Gx). forall x (Gx->Hx) .: Fa->exists x (Gx&Hx)"
+show: Fa->exists x (Gx&Hx)
 command: "\"show conc\""
 line: Fa
 reason: ass cd
-show: !x(Gx&Hx)
+show: exists x (Gx&Hx)
 command: "\"show cons\""
-line: ~!x(Gx&Hx)
+line: ~exists x (Gx&Hx)
 reason: ass id
-line: @x~(Gx&Hx)
+line: forall x ~(Gx&Hx)
 reason: 4 qn
 line: ~(Ga&Ha)
 reason: 5 ui/a
 cached-justification: 1:UI{0}a:a.F{1}:~(G{1}&H{1}),x:x
-line: @x(Fx->Gx)
+line: forall x (Fx->Gx)
 reason: pr1
 line: Fa->Ga
 reason: 7 ui/a
 cached-justification: 1:UI{0}a:a.F{1}:F{1}->G{1},x:x
-line: @x(Gx->Hx)
+line: forall x (Gx->Hx)
 reason: pr2
 line: Ga->Ha
 reason: 9 ui/a
@@ -3661,16 +3661,16 @@ options: eg
 common-name: Deriv 3.004EG1
 
 problem: Deriv 3.004EG2
-statement: " @x(Fx->Gx). @x(Gx->Hx) .: Fa->!x(Gx&Hx)"
-show: Fa->!x(Gx&Hx)
+statement: " forall x (Fx->Gx). forall x (Gx->Hx) .: Fa->exists x (Gx&Hx)"
+show: Fa->exists x (Gx&Hx)
 command: "\"show conc\""
 line: Fa
 reason: ass cd
-show: !x(Gx&Hx)
+show: exists x (Gx&Hx)
 command: "\"show cons\""
-line: ~!x(Gx&Hx)
+line: ~exists x (Gx&Hx)
 reason: ass id
-line: @x~(Gx&Hx)
+line: forall x ~(Gx&Hx)
 reason: 4 qn
 line: ~(Ga&Ha)
 reason: 5 ui/a
@@ -3699,28 +3699,28 @@ common-name: Deriv 3.004EG2
 problem: Deriv 3.005
 flag: c
 flag: q
-statement: " @x~Fx->@xFx .: !xFx"
+statement: " forall x ~Fx->forall x Fx .: exists x Fx"
 end-box:
 common-name: Deriv 3.005
 
 problem: Deriv 3.006
 flag: c
 flag: q
-statement: " @xFx|@xGx. @x(Fx->~Gx) .: !xFx->@xFx"
+statement: " forall x Fx|forall x Gx. forall x (Fx->~Gx) .: exists x Fx->forall x Fx"
 end-box:
 common-name: Deriv 3.006
 
 problem: Deriv 3.006EG1
-statement: " @xFx|@xGx. @x(Fx->~Gx) .: !xFx->@xFx"
-show: !xFx->@xFx
+statement: " forall x Fx|forall x Gx. forall x (Fx->~Gx) .: exists x Fx->forall x Fx"
+show: exists x Fx->forall x Fx
 command: "\"show conc\""
-line: !xFx
+line: exists x Fx
 reason: ass cd
-show: @xFx
+show: forall x Fx
 command: "\"show cons\""
-line: ~@xFx
+line: ~forall x Fx
 reason: ass id
-line: !x~Fx
+line: exists x ~Fx
 reason: 4 qn
 line: Fi
 reason: 2 ei/i
@@ -3728,7 +3728,7 @@ cached-justification: 1:EI{0}i:i.F{1}:F{1},x:x
 line: ~Fj
 reason: 5 ei/j
 cached-justification: 1:EI{0}i:j.F{1}:~F{1},x:x
-line: @xGx
+line: forall x Gx
 reason: 4 pr1 mtp
 line: Gi
 reason: 8 ui/i
@@ -3736,7 +3736,7 @@ cached-justification: 1:UI{0}a:i.F{1}:G{1},x:x
 line: Gj
 reason: 8 ui/j
 cached-justification: 1:UI{0}a:j.F{1}:G{1},x:x
-line: @x(Fx->~Gx)
+line: forall x (Fx->~Gx)
 reason: pr2
 line: Fi->~Gi
 reason: 11 ui/i
@@ -3753,20 +3753,20 @@ options: eg
 common-name: Deriv 3.006EG1
 
 problem: Deriv 3.006EG2
-statement: " @xFx|@xGx. @x(Fx->~Gx) .: !xFx->@xFx"
-show: !xFx->@xFx
+statement: " forall x Fx|forall x Gx. forall x (Fx->~Gx) .: exists x Fx->forall x Fx"
+show: exists x Fx->forall x Fx
 command: "\"show conc\""
-line: !xFx
+line: exists x Fx
 reason: ass cd
-show: @xFx
+show: forall x Fx
 command: "\"show cons\""
-line: ~@xFx
+line: ~forall x Fx
 reason: ass id
-line: !x~Fx
+line: exists x ~Fx
 reason: 4 qn
-line: @xGx
+line: forall x Gx
 reason: 4 pr1 mtp
-line: @x(Fx->~Gx)
+line: forall x (Fx->~Gx)
 reason: pr2
 line: Fi
 reason: 2 ei/i
@@ -3788,28 +3788,28 @@ common-name: Deriv 3.006EG2
 problem: Deriv 3.007
 flag: c
 flag: q
-statement: " P->@x(Fx->Fa). @x(Fx->Gx)&@x(Gx->Hx) .: ~Ha->~P|@x~Fx"
+statement: " P->forall x (Fx->Fa). forall x (Fx->Gx)&forall x (Gx->Hx) .: ~Ha->~P|forall x ~Fx"
 end-box:
 common-name: Deriv 3.007
 
 problem: Deriv 3.008
 flag: c
 flag: q
-statement: " !x(Fx|Ga). @x(Fx->Gx) .: !xGx"
+statement: " exists x (Fx|Ga). forall x (Fx->Gx) .: exists x Gx"
 end-box:
 common-name: Deriv 3.008
 
 problem: Deriv 3.008EG1
-statement: " !x(Fx|Ga). @x(Fx->Gx) .: !xGx"
-show: !xGx
+statement: " exists x (Fx|Ga). forall x (Fx->Gx) .: exists x Gx"
+show: exists x Gx
 command: "\"show conc\""
-line: ~!xGx
+line: ~exists x Gx
 reason: ass id
-line: @x~Gx
+line: forall x ~Gx
 reason: 2 qn
-line: !x(Fx|Ga)
+line: exists x (Fx|Ga)
 reason: pr1
-line: @x(Fx->Gx)
+line: forall x (Fx->Gx)
 reason: pr2
 line: Fi|Ga
 reason: 4 ei/i
@@ -3836,12 +3836,12 @@ options: eg
 common-name: Deriv 3.008EG1
 
 problem: Deriv 3.008EG2
-statement: " !x(Fx|Ga). @x(Fx->Gx) .: !xGx"
-show: !xGx
+statement: " exists x (Fx|Ga). forall x (Fx->Gx) .: exists x Gx"
+show: exists x Gx
 command: "\"show conc\""
-line: ~!xGx
+line: ~exists x Gx
 reason: ass id
-line: @x~Gx
+line: forall x ~Gx
 reason: 2 qn
 line: Fi|Ga
 reason: pr1 ei/i
@@ -3869,24 +3869,24 @@ common-name: Deriv 3.008EG2
 problem: Deriv 3.009
 flag: c
 flag: q
-statement: " @x(Fx->Gx) .: @x(Fx&~!y(Gy&Hy)->!x~Hx)"
+statement: " forall x (Fx->Gx) .: forall x (Fx&~exists y (Gy&Hy)->exists x ~Hx)"
 end-box:
 common-name: Deriv 3.009
 
 problem: Deriv 3.010
 flag: c
 flag: q
-statement: " @x(Fx<->P). !xFx .: @xFx"
+statement: " forall x (Fx<->P). exists x Fx .: forall x Fx"
 end-box:
 common-name: Deriv 3.010
 
 problem: Deriv 3.010EG1
-statement: " @x(Fx<->P). !xFx .: @xFx"
-show: @xFx
+statement: " forall x (Fx<->P). exists x Fx .: forall x Fx"
+show: forall x Fx
 command: "\"show conc\""
-line: ~@xFx
+line: ~forall x Fx
 reason: ass id
-line: !x~Fx
+line: exists x ~Fx
 reason: 2 qn
 line: ~Fi
 reason: 3 ei/i
@@ -3915,31 +3915,31 @@ common-name: Deriv 3.010EG1
 problem: Deriv 3.011
 flag: c
 flag: q
-statement: " !y@x(Fx<->Fy). !xFx .: @xFx"
+statement: " exists y forall x (Fx<->Fy). exists x Fx .: forall x Fx"
 end-box:
 common-name: Deriv 3.011
 
 problem: Deriv 3.012
 flag: c
 flag: q
-statement: " @x(Fx&(Gx|Hx)->Jx). @x(Jx&Hx->Kx). @x(Lx->Hx) .: @x(Fx&Lx->Kx)"
+statement: " forall x (Fx&(Gx|Hx)->Jx). forall x (Jx&Hx->Kx). forall x (Lx->Hx) .: forall x (Fx&Lx->Kx)"
 end-box:
 common-name: Deriv 3.012
 
 problem: Deriv 3.013
 flag: c
 flag: q
-statement: " @x(Fx<->Gx|Hx). !xGx. @x(Fx->@xHx) .: @xFx"
+statement: " forall x (Fx<->Gx|Hx). exists x Gx. forall x (Fx->forall x Hx) .: forall x Fx"
 end-box:
 common-name: Deriv 3.013
 
 problem: Deriv 3.013EG1
-statement: " @x(Fx<->Gx|Hx). !xGx. @x(Fx->@xHx) .: @xFx"
-show: @xFx
+statement: " forall x (Fx<->Gx|Hx). exists x Gx. forall x (Fx->forall x Hx) .: forall x Fx"
+show: forall x Fx
 command: "\"show conc\""
-line: ~@xFx
+line: ~forall x Fx
 reason: ass id
-line: !x~Fx
+line: exists x ~Fx
 reason: 2 qn
 line: ~Fi
 reason: 3 ei/i
@@ -3956,11 +3956,11 @@ line: Fj<->Gj|Hj
 reason: pr1 ui/j
 cached-justification:
 cached-justification: 1:UI{0}a:j.F{1}:F{1}<->G{1}|H{1},x:x
-line: Fi->@xHx
+line: Fi->forall x Hx
 reason: pr3 ui/i
 cached-justification:
 cached-justification: 1:UI{0}a:i.F{1}:F{1}->@xHx,x:x
-line: Fj->@xHx
+line: Fj->forall x Hx
 reason: pr3 ui/j
 cached-justification:
 cached-justification: 1:UI{0}a:j.F{1}:F{1}->@xHx,x:x
@@ -3969,7 +3969,7 @@ reason: 5 addr/Hj
 cached-justification: 1:AddR{0}Q:Hj.P:Gj,
 line: Fj
 reason: 10 7 bp
-line: @xHx
+line: forall x Hx
 reason: 11 9 mp
 line: Hi
 reason: 12 ui/i
@@ -3989,12 +3989,12 @@ options: eg
 common-name: Deriv 3.013EG1
 
 problem: Deriv 3.013EG2
-statement: " @x(Fx<->Gx|Hx). !xGx. @x(Fx->@xHx) .: @xFx"
-show: @xFx
+statement: " forall x (Fx<->Gx|Hx). exists x Gx. forall x (Fx->forall x Hx) .: forall x Fx"
+show: forall x Fx
 command: "\"show conc\""
-line: ~@xFx
+line: ~forall x Fx
 reason: ass id
-line: !x~Fx
+line: exists x ~Fx
 reason: 2 qn
 line: ~Fi
 reason: 3 ei/i
@@ -4011,7 +4011,7 @@ line: Fj<->Gj|Hj
 reason: pr1 ui/j
 cached-justification:
 cached-justification: 1:UI{0}a:j.F{1}:F{1}<->G{1}|H{1},x:x
-line: Fj->@xHx
+line: Fj->forall x Hx
 reason: pr3 ui/j
 cached-justification:
 cached-justification: 1:UI{0}a:j.F{1}:F{1}->@xHx,x:x
@@ -4020,7 +4020,7 @@ reason: 5 addr/Hj
 cached-justification: 1:AddR{0}Q:Hj.P:Gj,
 line: Fj
 reason: 9 7 bp
-line: @xHx
+line: forall x Hx
 reason: 10 8 mp
 line: Hi
 reason: 11 ui/i
@@ -4039,21 +4039,21 @@ common-name: Deriv 3.013EG2
 problem: Deriv 3.014
 flag: c
 flag: q
-statement: " @x(Fx->Gx). !x((Fx&Hx)|(Fx&Jx))->~@x(Fx->Gx) .: @x(Fx->~Jx)"
+statement: " forall x (Fx->Gx). exists x ((Fx&Hx)|(Fx&Jx))->~forall x (Fx->Gx) .: forall x (Fx->~Jx)"
 end-box:
 common-name: Deriv 3.014
 
 problem: Deriv 3.014EG1
-statement: " @x(Fx->Gx). !x((Fx&Hx)|(Fx&Jx))->~@x(Fx->Gx) .: @x(Fx->~Jx)"
-show: @x(Fx->~Jx)
+statement: " forall x (Fx->Gx). exists x ((Fx&Hx)|(Fx&Jx))->~forall x (Fx->Gx) .: forall x (Fx->~Jx)"
+show: forall x (Fx->~Jx)
 command: "\"show conc\""
-line: ~@x(Fx->~Jx)
+line: ~forall x (Fx->~Jx)
 reason: ass id
-line: !x~(Fx->~Jx)
+line: exists x ~(Fx->~Jx)
 reason: 2 qn
-line: ~!x((Fx&Hx)|(Fx&Jx))
+line: ~exists x ((Fx&Hx)|(Fx&Jx))
 reason: pr1 dn pr2 mt
-line: @x~((Fx&Hx)|(Fx&Jx))
+line: forall x ~((Fx&Hx)|(Fx&Jx))
 reason: 4 qn
 line: ~(Fi->~Ji)
 reason: 3 ei/i
@@ -4083,66 +4083,66 @@ common-name: Deriv 3.014EG1
 problem: Deriv 3.015
 flag: c
 flag: q
-statement: " !x(Fx&~Gx)->@x(Fx->Hx). !x(Fx&Jx) .: @x(Fx->~Hx)->!x(Jx&Gx)"
+statement: " exists x (Fx&~Gx)->forall x (Fx->Hx). exists x (Fx&Jx) .: forall x (Fx->~Hx)->exists x (Jx&Gx)"
 end-box:
 common-name: Deriv 3.015
 
 problem: Deriv 3.016
 flag: c
 flag: q
-statement: " ~!x(Fx&(Gx|Hx)). !x(Ix&Fx). @x(~Hx->Jx) .: !x(Ix&Jx)"
+statement: " ~exists x (Fx&(Gx|Hx)). exists x (Ix&Fx). forall x (~Hx->Jx) .: exists x (Ix&Jx)"
 end-box:
 common-name: Deriv 3.016
 
 problem: Deriv 3.017
 flag: c
 flag: q
-statement: " @x(Fx->@xGx) .: @x(Fx->@x(Gx|Hx))"
+statement: " forall x (Fx->forall x Gx) .: forall x (Fx->forall x (Gx|Hx))"
 end-box:
 common-name: Deriv 3.017
 
 problem: Deriv 3.018
 flag: c
 flag: q
-statement: " !xFx->@xGx. @x(Gx|Hx)->@xJx .: @x(Fx->Jx)"
+statement: " exists x Fx->forall x Gx. forall x (Gx|Hx)->forall x Jx .: forall x (Fx->Jx)"
 end-box:
 common-name: Deriv 3.018
 
 problem: Deriv 3.019
 flag: c
 flag: q
-statement: " .: @y(Fy&(~!xFx|@xGx)->@x(Fx|Gx))"
+statement: " .: forall y (Fy&(~exists x Fx|forall x Gx)->forall x (Fx|Gx))"
 end-box:
 common-name: Deriv 3.019
 
 problem: Deriv 3.020
 flag: c
 flag: q
-statement: " @x(Fx->~Gx). @x(Hx->Jx). !x(Jx&~Gx)->@x(Hx|Fx->~Kx) .: !x(Hx&Fx)->@x(Hx->~Kx)"
+statement: " forall x (Fx->~Gx). forall x (Hx->Jx). exists x (Jx&~Gx)->forall x (Hx|Fx->~Kx) .: exists x (Hx&Fx)->forall x (Hx->~Kx)"
 end-box:
 common-name: Deriv 3.020
 
 problem: Deriv 3.021
 flag: c
 flag: q
-statement: " @x(Fx|Gx->~Hx). @x((Gx->~Jx)->Fx&Hx) .: @xJx"
+statement: " forall x (Fx|Gx->~Hx). forall x ((Gx->~Jx)->Fx&Hx) .: forall x Jx"
 end-box:
 common-name: Deriv 3.021
 
 problem: Deriv 3.022
 flag: c
 flag: q
-statement: " !x(Fx->P). !x(P->Fx) .: !x(Fx<->P)"
+statement: " exists x (Fx->P). exists x (P->Fx) .: exists x (Fx<->P)"
 end-box:
 common-name: Deriv 3.022
 
 problem: Deriv 3.022EG1
-statement: " !x(Fx->P). !x(P->Fx) .: !x(Fx<->P)"
-show: !x(Fx<->P)
+statement: " exists x (Fx->P). exists x (P->Fx) .: exists x (Fx<->P)"
+show: exists x (Fx<->P)
 command: "\"show conc\""
-line: ~!x(Fx<->P)
+line: ~exists x (Fx<->P)
 reason: ass id
-line: @x~(Fx<->P)
+line: forall x ~(Fx<->P)
 reason: 2 qn
 line: Fi->P
 reason: pr1 ei/i
@@ -4169,115 +4169,115 @@ common-name: Deriv 3.022EG1
 problem: Deriv 3.023
 flag: c
 flag: q
-statement: " !xFx<->!xGx .: !x!y(Fx<->Gy)"
+statement: " exists x Fx<->exists x Gx .: exists x exists y (Fx<->Gy)"
 end-box:
 common-name: Deriv 3.023
 
 problem: Deriv 3.024
 flag: c
 flag: q
-statement: " !x(Fx<->P). !x(Gx<->P). @x(Fx<->~Gx) .: !x!y(Fx&~Gx<->Gy&~Fy)"
+statement: " exists x (Fx<->P). exists x (Gx<->P). forall x (Fx<->~Gx) .: exists x exists y (Fx&~Gx<->Gy&~Fy)"
 end-box:
 common-name: Deriv 3.024
 
 problem: Deriv 3.024a
-statement: " !x(Fx<->P). !x(Gx<->P) .: !x!y(Fx&~Gx<->Gy&~Fy)"
+statement: " exists x (Fx<->P). exists x (Gx<->P) .: exists x exists y (Fx&~Gx<->Gy&~Fy)"
 end-box:
 common-name: Deriv 3.024a
 
 problem: Deriv 3.024b
-statement: " @x(Fx<->Gx) .: !x!y(Fx&~Gx<->Gy&~Fy)"
+statement: " forall x (Fx<->Gx) .: exists x exists y (Fx&~Gx<->Gy&~Fy)"
 end-box:
 common-name: Deriv 3.024b
 
 problem: Deriv 3.025
 flag: c
 flag: q
-statement: " !x(Fx&Hx)|@x(Jx->Gx). @x(Fx->~Hx) .: !xJx->!x(Gx&Jx)"
+statement: " exists x (Fx&Hx)|forall x (Jx->Gx). forall x (Fx->~Hx) .: exists x Jx->exists x (Gx&Jx)"
 end-box:
 common-name: Deriv 3.025
 
 problem: Deriv 3.026
 flag: c
 flag: q
-statement: " @x(Fx->Gx)|!x(Fx&Hx). @x(Kx->~Jx|~Hx). @x(Fx->Kx&Jx). !xFx .: !x(Gx&Fx)"
+statement: " forall x (Fx->Gx)|exists x (Fx&Hx). forall x (Kx->~Jx|~Hx). forall x (Fx->Kx&Jx). exists x Fx .: exists x (Gx&Fx)"
 end-box:
 common-name: Deriv 3.026
 
 problem: Deriv 3.027
 flag: c
 flag: q
-statement: " Fa .: @x(Fx->Gx)<->@x((Fx&Gx)|(~Fx&Ga))"
+statement: " Fa .: forall x (Fx->Gx)<->forall x ((Fx&Gx)|(~Fx&Ga))"
 end-box:
 common-name: Deriv 3.027
 
 problem: Deriv 3.028
 flag: c
 flag: q
-statement: " !x(Fx&~Gx). @x(Fx->Hx). @x(Jx&Kx->Fx). !x(Hx&~Gx)->@x(Kx->~Hx) .: @x(Jx->~Kx)"
+statement: " exists x (Fx&~Gx). forall x (Fx->Hx). forall x (Jx&Kx->Fx). exists x (Hx&~Gx)->forall x (Kx->~Hx) .: forall x (Jx->~Kx)"
 end-box:
 common-name: Deriv 3.028
 
 problem: Deriv 3.029
 flag: c
 flag: q
-statement: " @x(Fx->Gx|Hx). @x(Gx|Hx->Kx). ~!x(Kx&Gx). ~!xFx->!xGx .: !x(Fx&Hx)"
+statement: " forall x (Fx->Gx|Hx). forall x (Gx|Hx->Kx). ~exists x (Kx&Gx). ~exists x Fx->exists x Gx .: exists x (Fx&Hx)"
 end-box:
 common-name: Deriv 3.029
 
 problem: Deriv 3.030
 flag: c
 flag: q
-statement: " @y(Fx&Gy) .: Fx&Gx"
+statement: " forall y (Fx&Gy) .: Fx&Gx"
 end-box:
 common-name: Deriv 3.030
 
 problem: Deriv 3.031
 flag: c
 flag: q
-statement: " Fx&Gx .: @y(Fx&Gy)"
+statement: " Fx&Gx .: forall y (Fx&Gy)"
 end-box:
 common-name: Deriv 3.031
 
 problem: Deriv 3.032
 flag: c
 flag: q
-statement: " Fx&Gy .: @z(Fz&Gz)"
+statement: " Fx&Gy .: forall z (Fz&Gz)"
 end-box:
 common-name: Deriv 3.032
 
 problem: Deriv 3.033
 flag: c
 flag: q
-statement: " !xGx .: !y@x(Fx->Gy)"
+statement: " exists x Gx .: exists y forall x (Fx->Gy)"
 end-box:
 common-name: Deriv 3.033
 
 problem: Deriv 3.034
 flag: c
 flag: q
-statement: " .: ~@x!y(Fy&~Fx)"
+statement: " .: ~forall x exists y (Fy&~Fx)"
 end-box:
 common-name: Deriv 3.034
 
 problem: Deriv 3.035
 flag: c
 flag: q
-statement: " @x!y(Fy&Gx) .: !x(Fx&Gx)"
+statement: " forall x exists y (Fy&Gx) .: exists x (Fx&Gx)"
 end-box:
 common-name: Deriv 3.035
 
 problem: Deriv 3.035EG1
-statement: " @x!y(Fy&Gx) .: !x(Fx&Gx)"
-show: !x(Fx&Gx)
+statement: " forall x exists y (Fy&Gx) .: exists x (Fx&Gx)"
+show: exists x (Fx&Gx)
 command: "\"show conc\""
-line: ~!x(Fx&Gx)
+line: ~exists x (Fx&Gx)
 reason: ass id
-line: @x~(Fx&Gx)
+line: forall x ~(Fx&Gx)
 reason: 2 qn
-line: @x!y(Fy&Gx)
+line: forall x exists y (Fy&Gx)
 reason: pr1
-line: !y(Fy&Gi)
+line: exists y (Fy&Gi)
 reason: 4 ui/i
 cached-justification: 1:UI{0}a:i.F{1}:!y(Fy&G{1}),x:x
 line: Fj&Gi
@@ -4289,7 +4289,7 @@ cached-justification: 1:UI{0}a:i.F{1}:~(F{1}&G{1}),x:x
 line: ~(Fj&Gj)
 reason: 3 ui/j
 cached-justification: 1:UI{0}a:j.F{1}:~(F{1}&G{1}),x:x
-line: !y(Fy&Gj)
+line: exists y (Fy&Gj)
 reason: 4 ui/j
 cached-justification: 1:UI{0}a:j.F{1}:!y(Fy&G{1}),x:x
 line: Fk&Gj
@@ -4312,45 +4312,45 @@ common-name: Deriv 3.035EG1
 problem: Deriv 3.036
 flag: c
 flag: q
-statement: " @x!y~(Fy->~Gx) .: !x~(Fx->~Gx)"
+statement: " forall x exists y ~(Fy->~Gx) .: exists x ~(Fx->~Gx)"
 end-box:
 common-name: Deriv 3.036
 
 problem: Deriv 3.037
-statement: " !y@x(Fx<->Fy) . !xFx .: @xFx"
+statement: " exists y forall x (Fx<->Fy) . exists x Fx .: forall x Fx"
 end-box:
 common-name: Deriv 3.037
 
 problem: Deriv 3.038
-statement: " !xFx<->!xGx .: !x!y(Fx<->Gy)"
+statement: " exists x Fx<->exists x Gx .: exists x exists y (Fx<->Gy)"
 end-box:
 common-name: Deriv 3.038
 
 problem: Deriv 3.039
-statement: " @x!y(Fx&Gy) .: !y@x(Fx&Gy)"
+statement: " forall x exists y (Fx&Gy) .: exists y forall x (Fx&Gy)"
 end-box:
 common-name: Deriv 3.039
 
 problem: Deriv 3.040
-statement: " !y@x(Fx&Gy) .: @x!y(Fx&Gy)"
+statement: " exists y forall x (Fx&Gy) .: forall x exists y (Fx&Gy)"
 end-box:
 note: Note that this problem, which is formed from 3.039 by exchanging premise and conclusion, is much easier than 3.039 because unlike 3.039 the quantifier elimination terminates.
 common-name: Deriv 3.040
 
 problem: Deriv 3.040EG1
-statement: " !y@x(Fx&Gy) .: @x!y(Fx&Gy)"
-show: @x!y(Fx&Gy)
+statement: " exists y forall x (Fx&Gy) .: forall x exists y (Fx&Gy)"
+show: forall x exists y (Fx&Gy)
 command: "\"show conc\""
-line: ~@x!y(Fx&Gy)
+line: ~forall x exists y (Fx&Gy)
 reason: ass id
-line: !x~!y(Fx&Gy)
+line: exists x ~exists y (Fx&Gy)
 reason: 2 qn
-line: ~!y(Fi&Gy)
+line: ~exists y (Fi&Gy)
 reason: 3 ei/i
 cached-justification: 1:EI{0}i:i.F{1}:~!y(F{1}&Gy),x:x
-line: @y~(Fi&Gy)
+line: forall y ~(Fi&Gy)
 reason: 4 qn
-line: @x(Fx&Gj)
+line: forall x (Fx&Gj)
 reason: pr1 ei/j
 cached-justification:
 cached-justification: 1:EI{0}i:j.F{1}:@x(Fx&G{1}),x:y
@@ -4373,19 +4373,19 @@ options: eg
 common-name: Deriv 3.040EG1
 
 problem: Deriv 3.040EG2
-statement: " !y@x(Fx&Gy) .: @x!y(Fx&Gy)"
-show: @x!y(Fx&Gy)
+statement: " exists y forall x (Fx&Gy) .: forall x exists y (Fx&Gy)"
+show: forall x exists y (Fx&Gy)
 command: "\"show conc\""
-line: ~@x!y(Fx&Gy)
+line: ~forall x exists y (Fx&Gy)
 reason: ass id
-line: !x~!y(Fx&Gy)
+line: exists x ~exists y (Fx&Gy)
 reason: 2 qn
-line: ~!y(Fi&Gy)
+line: ~exists y (Fi&Gy)
 reason: 3 ei/i
 cached-justification: 1:EI{0}i:i.F{1}:~!y(F{1}&Gy),x:x
-line: @y~(Fi&Gy)
+line: forall y ~(Fi&Gy)
 reason: 4 qn
-line: @x(Fx&Gj)
+line: forall x (Fx&Gj)
 reason: pr1 ei/j
 cached-justification:
 cached-justification: 1:EI{0}i:j.F{1}:@x(Fx&G{1}),x:y
@@ -4406,7 +4406,7 @@ common-name: Deriv 3.040EG2
 problem: Deriv 3.201 T201
 flag: c
 flag: q
-statement: " .:@x(Fx->Gx)->(@xFx->@xGx)"
+statement: " .:forall x (Fx->Gx)->(forall x Fx->forall x Gx)"
 end-box:
 proves: QDISTUC.T201
 common-name: Deriv 3.201 T201
@@ -4416,7 +4416,7 @@ common-name: Deriv 3.201 T201
 problem: Deriv 3.202 T202
 flag: c
 flag: q
-statement: " .:@x(Fx->Gx)->(!xFx->!xGx)"
+statement: " .:forall x (Fx->Gx)->(exists x Fx->exists x Gx)"
 end-box:
 proves: QDISTUEC.T202
 common-name: Deriv 3.202 T202
@@ -4426,7 +4426,7 @@ common-name: Deriv 3.202 T202
 problem: Deriv 3.203 T203
 flag: c
 flag: q
-statement: " .:~@xFx<->!x~Fx"
+statement: " .:~forall x Fx<->exists x ~Fx"
 end-box:
 proves: QN1.QN2.T203
 common-name: Deriv 3.203 T203
@@ -4436,7 +4436,7 @@ common-name: Deriv 3.203 T203
 problem: Deriv 3.204 T204
 flag: c
 flag: q
-statement: " .:~!xFx<->@x~Fx"
+statement: " .:~exists x Fx<->forall x ~Fx"
 end-box:
 proves: QN3.QN4.T204
 common-name: Deriv 3.204 T204
@@ -4446,22 +4446,22 @@ common-name: Deriv 3.204 T204
 problem: Deriv 3.205 T205
 flag: c
 flag: q
-statement: " .:@xFx<->~!x~Fx"
+statement: " .:forall x Fx<->~exists x ~Fx"
 end-box:
 proves: QN5.QN6.T205
 common-name: Deriv 3.205 T205
 
 problem: Deriv 3.205 T205EG1
-statement: " .:@xFx<->~!x~Fx"
-show: @xFx<->~!x~Fx
+statement: " .:forall x Fx<->~exists x ~Fx"
+show: forall x Fx<->~exists x ~Fx
 command: "\"show conc\""
-show: @xFx->~!x~Fx
+show: forall x Fx->~exists x ~Fx
 command: "\"show cond\""
-line: @xFx
+line: forall x Fx
 reason: ass cd
-show: ~!x~Fx
+show: ~exists x ~Fx
 command: "\"show cons\""
-line: !x~Fx
+line: exists x ~Fx
 reason: ass id
 cached-justification: 3:-
 line: ~Fi
@@ -4472,25 +4472,25 @@ reason: 3 ui/i
 cached-justification: 1:UI{0}a:i.F{1}:F{1},x:x
 cancel: 7 6 id
 cancel: 4 cd
-show: ~!x~Fx->@xFx
+show: ~exists x ~Fx->forall x Fx
 command: "\"show cond\""
-line: ~!x~Fx
+line: ~exists x ~Fx
 reason: ass cd
-show: @xFx
+show: forall x Fx
 command: "\"show cons\""
 show: Fx
 command: "\"show inst\""
 line: ~Fx
 reason: ass id
-line: !x~Fx
+line: exists x ~Fx
 reason: 14 eg/x
 cached-justification: 1:EG{0}a:x.F{1}:~F{1},x:x
-line: ~!x~Fx
+line: ~exists x ~Fx
 reason: 11 r
 cancel: 16 15 id
 cancel: 13 ud
 cancel: 12 cd
-line: @xFx<->~!x~Fx
+line: forall x Fx<->~exists x ~Fx
 reason: 10 2 cb
 cached-justification: 1:CB{1,0}Q:~!x~Fx.P:@xFx,
 cancel: 20 dd
@@ -4503,22 +4503,22 @@ common-name: Deriv 3.205 T205EG1
 problem: Deriv 3.206 T206
 flag: c
 flag: q
-statement: " .:!xFx<->~@x~Fx"
+statement: " .:exists x Fx<->~forall x ~Fx"
 end-box:
 proves: QN7.QN8.T206
 common-name: Deriv 3.206 T206
 
 problem: Deriv 3.206 T206EG1
-statement: " .:!xFx<->~@x~Fx"
-show: !xFx<->~@x~Fx
+statement: " .:exists x Fx<->~forall x ~Fx"
+show: exists x Fx<->~forall x ~Fx
 command: "\"show conc\""
-show: !xFx->~@x~Fx
+show: exists x Fx->~forall x ~Fx
 command: "\"show cond\""
-line: !xFx
+line: exists x Fx
 reason: ass cd
-show: ~@x~Fx
+show: ~forall x ~Fx
 command: "\"show cons\""
-line: @x~Fx
+line: forall x ~Fx
 reason: ass id
 cached-justification: 3:-
 line: Fi
@@ -4529,33 +4529,33 @@ reason: 5 ui/i
 cached-justification: 1:UI{0}a:i.F{1}:~F{1},x:x
 cancel: 7 6 id
 cancel: 4 cd
-show: ~@x~Fx->!xFx
+show: ~forall x ~Fx->exists x Fx
 command: "\"show cond\""
-line: ~@x~Fx
+line: ~forall x ~Fx
 reason: ass cd
-show: !xFx
+show: exists x Fx
 command: "\"show cons\""
-line: ~!xFx
+line: ~exists x Fx
 reason: ass id
-show: @x~Fx
+show: forall x ~Fx
 command: "\"show unneg 11\""
 show: ~Fx
 command: "\"show inst\""
 line: Fx
 reason: ass id
 cached-justification: 3:-
-line: !xFx
+line: exists x Fx
 reason: 16 eg/x
 cached-justification: 1:EG{0}i:x.F{1}:F{1},x:x
-line: ~!xFx
+line: ~exists x Fx
 reason: 13 r
 cancel: 18 17 id
 cancel: 15 ud
-line: ~@x~Fx
+line: ~forall x ~Fx
 reason: 11 r
 cancel: 21 14 id
 cancel: 12 cd
-line: !xFx<->~@x~Fx
+line: exists x Fx<->~forall x ~Fx
 reason: 2 10 cb
 cached-justification: 1:CB{0,1}Q:~@x~Fx.P:!xFx,
 cancel: 24 dd
@@ -4568,7 +4568,7 @@ common-name: Deriv 3.206 T206EG1
 problem: Deriv 3.207 T207
 flag: c
 flag: q
-statement: " .:!x(Fx|Gx)<->!xFx|!xGx"
+statement: " .:exists x (Fx|Gx)<->exists x Fx|exists x Gx"
 end-box:
 proves: QDISTEO1.QDISTEO2.QDISTEO1a.QDISTEO2a.QDISTEO1b.QDISTEO2b.T207
 common-name: Deriv 3.207 T207
@@ -4578,7 +4578,7 @@ common-name: Deriv 3.207 T207
 problem: Deriv 3.208 T208
 flag: c
 flag: q
-statement: " .:@x(Fx&Gx)<->@xFx&@xGx"
+statement: " .:forall x (Fx&Gx)<->forall x Fx&forall x Gx"
 end-box:
 proves: QDISTUA1.QDISTUA2.QDISTUA1a.QDISTUA2a.QDISTUA1b.QDISTUA2b.T208
 common-name: Deriv 3.208 T208
@@ -4588,7 +4588,7 @@ common-name: Deriv 3.208 T208
 problem: Deriv 3.209 T209
 flag: c
 flag: q
-statement: " .:!x(Fx&Gx)->!xFx&!xGx"
+statement: " .:exists x (Fx&Gx)->exists x Fx&exists x Gx"
 end-box:
 proves: QDISTEA.T209
 common-name: Deriv 3.209 T209
@@ -4596,7 +4596,7 @@ common-name: Deriv 3.209 T209
 problem: Deriv 3.210 T210
 flag: c
 flag: q
-statement: " .:@xFx|@xGx->@x(Fx|Gx)"
+statement: " .:forall x Fx|forall x Gx->forall x (Fx|Gx)"
 end-box:
 proves: T210
 common-name: Deriv 3.210 T210
@@ -4604,7 +4604,7 @@ common-name: Deriv 3.210 T210
 problem: Deriv 3.211 T211
 flag: c
 flag: q
-statement: " .:(!xFx->!xGx)->!x(Fx->Gx)"
+statement: " .:(exists x Fx->exists x Gx)->exists x (Fx->Gx)"
 end-box:
 proves: T211
 common-name: Deriv 3.211 T211
@@ -4612,7 +4612,7 @@ common-name: Deriv 3.211 T211
 problem: Deriv 3.212 T212
 flag: c
 flag: q
-statement: " .:(@xFx->@xGx)->!x(Fx->Gx)"
+statement: " .:(forall x Fx->forall x Gx)->exists x (Fx->Gx)"
 end-box:
 proves: T212
 common-name: Deriv 3.212 T212
@@ -4622,7 +4622,7 @@ common-name: Deriv 3.212 T212
 problem: Deriv 3.213 T213
 flag: c
 flag: q
-statement: " .:@x(Fx<->Gx)->(@xFx<->@xGx)"
+statement: " .:forall x (Fx<->Gx)->(forall x Fx<->forall x Gx)"
 end-box:
 proves: QDISTUB.T213
 note: IE and CIE are disabled for this problem.
@@ -4633,7 +4633,7 @@ common-name: Deriv 3.213 T213
 problem: Deriv 3.214 T214
 flag: c
 flag: q
-statement: " .:@x(Fx<->Gx)->(!xFx<->!xGx)"
+statement: " .:forall x (Fx<->Gx)->(exists x Fx<->exists x Gx)"
 end-box:
 proves: QDISTUEB.T214
 note: IE and CIE are disabled for this problem.
@@ -4644,7 +4644,7 @@ common-name: Deriv 3.214 T214
 problem: Deriv 3.215 T215
 flag: c
 flag: q
-statement: " .:@x(P&Fx)<->P&@xFx"
+statement: " .:forall x (P&Fx)<->P&forall x Fx"
 end-box:
 proves: CONFUA1.CONFUA2.CONFUA3.CONFUA4.T215
 common-name: Deriv 3.215 T215
@@ -4654,7 +4654,7 @@ common-name: Deriv 3.215 T215
 problem: Deriv 3.215a
 flag: c
 flag: q
-statement: " .:@x(Fx&P)<->@xFx&P"
+statement: " .:forall x (Fx&P)<->forall x Fx&P"
 end-box:
 proves: CONFUA3.CONFUA4
 common-name: Deriv 3.215a
@@ -4664,7 +4664,7 @@ common-name: Deriv 3.215a
 problem: Deriv 3.216 T216
 flag: c
 flag: q
-statement: " .:!x(P&Fx)<->P&!xFx"
+statement: " .:exists x (P&Fx)<->P&exists x Fx"
 end-box:
 proves: CONFEA1.CONFEA2.CONFEA3.CONFEA4.T216
 common-name: Deriv 3.216 T216
@@ -4674,7 +4674,7 @@ common-name: Deriv 3.216 T216
 problem: Deriv 3.216a
 flag: c
 flag: q
-statement: " .:!x(Fx&P)<->!xFx&P"
+statement: " .:exists x (Fx&P)<->exists x Fx&P"
 end-box:
 proves: CONFEA3.CONFEA4
 common-name: Deriv 3.216a
@@ -4684,7 +4684,7 @@ common-name: Deriv 3.216a
 problem: Deriv 3.217 T217
 flag: c
 flag: q
-statement: " .:@x(P|Fx)<->P|@xFx"
+statement: " .:forall x (P|Fx)<->P|forall x Fx"
 end-box:
 proves: CONFUO1.CONFUO2.CONFUO3.CONFUO4.T217
 common-name: Deriv 3.217 T217
@@ -4694,7 +4694,7 @@ common-name: Deriv 3.217 T217
 problem: Deriv 3.217a
 flag: c
 flag: q
-statement: " .:@x(Fx|P)<->@xFx|P"
+statement: " .:forall x (Fx|P)<->forall x Fx|P"
 end-box:
 proves: CONFUO3.CONFUO4
 common-name: Deriv 3.217a
@@ -4704,7 +4704,7 @@ common-name: Deriv 3.217a
 problem: Deriv 3.218 T218
 flag: c
 flag: q
-statement: " .:!x(P|Fx)<->P|!xFx"
+statement: " .:exists x (P|Fx)<->P|exists x Fx"
 end-box:
 proves: CONFEO1.CONFEO2.CONFEO3.CONFEO4.T218
 common-name: Deriv 3.218 T218
@@ -4714,7 +4714,7 @@ common-name: Deriv 3.218 T218
 problem: Deriv 3.218a
 flag: c
 flag: q
-statement: " .:!x(Fx|P)<->!xFx|P"
+statement: " .:exists x (Fx|P)<->exists x Fx|P"
 end-box:
 proves: CONFEO3.CONFEO4
 common-name: Deriv 3.218a
@@ -4724,7 +4724,7 @@ common-name: Deriv 3.218a
 problem: Deriv 3.219 T219
 flag: c
 flag: q
-statement: " .:@x(P->Fx)<->(P->@xFx)"
+statement: " .:forall x (P->Fx)<->(P->forall x Fx)"
 end-box:
 proves: CONFUCC1.CONFUCC2.T219
 common-name: Deriv 3.219 T219
@@ -4734,7 +4734,7 @@ common-name: Deriv 3.219 T219
 problem: Deriv 3.220 T220
 flag: c
 flag: q
-statement: " .:!x(P->Fx)<->(P->!xFx)"
+statement: " .:exists x (P->Fx)<->(P->exists x Fx)"
 end-box:
 proves: CONFECC1.CONFECC2.T220
 common-name: Deriv 3.220 T220
@@ -4744,7 +4744,7 @@ common-name: Deriv 3.220 T220
 problem: Deriv 3.221 T221
 flag: c
 flag: q
-statement: " .:@x(Fx->P)<->(!xFx->P)"
+statement: " .:forall x (Fx->P)<->(exists x Fx->P)"
 end-box:
 proves: CONFUCA1. CONFUCA2.T221
 common-name: Deriv 3.221 T221
@@ -4754,7 +4754,7 @@ common-name: Deriv 3.221 T221
 problem: Deriv 3.222 T222
 flag: c
 flag: q
-statement: " .:!x(Fx->P)<->(@xFx->P)"
+statement: " .:exists x (Fx->P)<->(forall x Fx->P)"
 end-box:
 proves: CONFECA1. CONFECA2.T222
 common-name: Deriv 3.222 T222
@@ -4762,7 +4762,7 @@ common-name: Deriv 3.222 T222
 problem: Deriv 3.223 T223
 flag: c
 flag: q
-statement: " .:@x(Fx<->P)->(@xFx<->P)"
+statement: " .:forall x (Fx<->P)->(forall x Fx<->P)"
 end-box:
 proves: T223
 common-name: Deriv 3.223 T223
@@ -4770,7 +4770,7 @@ common-name: Deriv 3.223 T223
 problem: Deriv 3.224 T224
 flag: c
 flag: q
-statement: " .:@x(Fx<->P)->(!xFx<->P)"
+statement: " .:forall x (Fx<->P)->(exists x Fx<->P)"
 end-box:
 proves: T224
 common-name: Deriv 3.224 T224
@@ -4780,7 +4780,7 @@ common-name: Deriv 3.224 T224
 problem: Deriv 3.224a
 flag: c
 flag: q
-statement: " .:@x(Fx<->P)<->(@xFx&P)|(~!xFx&~P)"
+statement: " .:forall x (Fx<->P)<->(forall x Fx&P)|(~exists x Fx&~P)"
 end-box:
 proves: CONFUB1.CONFUB2.CONFUB3.CONFUB4
 common-name: Deriv 3.224a
@@ -4790,7 +4790,7 @@ common-name: Deriv 3.224a
 problem: Deriv 3.224b
 flag: c
 flag: q
-statement: " .:!x(Fx<->P)<->(!xFx&P)|(~@xFx&~P)"
+statement: " .:exists x (Fx<->P)<->(exists x Fx&P)|(~forall x Fx&~P)"
 end-box:
 proves: CONFEB1.CONFEB2.CONFEB3.CONFEB4
 common-name: Deriv 3.224b
@@ -4798,7 +4798,7 @@ common-name: Deriv 3.224b
 problem: Deriv 3.225 T225
 flag: c
 flag: q
-statement: " .:(!xFx<->P)->!x(Fx<->P)"
+statement: " .:(exists x Fx<->P)->exists x (Fx<->P)"
 end-box:
 proves: T225
 common-name: Deriv 3.225 T225
@@ -4806,7 +4806,7 @@ common-name: Deriv 3.225 T225
 problem: Deriv 3.226 T226
 flag: c
 flag: q
-statement: " .:(@xFx<->P)->!x(Fx<->P)"
+statement: " .:(forall x Fx<->P)->exists x (Fx<->P)"
 end-box:
 proves: T226
 common-name: Deriv 3.226 T226
@@ -4816,7 +4816,7 @@ common-name: Deriv 3.226 T226
 problem: Deriv 3.227 T227
 flag: c
 flag: q
-statement: " .:@xP<->P"
+statement: " .:forall x P<->P"
 end-box:
 proves: T227.VAC1.VAC2
 common-name: Deriv 3.227 T227
@@ -4824,7 +4824,7 @@ common-name: Deriv 3.227 T227
 problem: Deriv 3.228 T228
 flag: c
 flag: q
-statement: " .:!xP<->P"
+statement: " .:exists x P<->P"
 end-box:
 proves: T228.VAC3.VAC4
 common-name: Deriv 3.228 T228
@@ -4832,7 +4832,7 @@ common-name: Deriv 3.228 T228
 problem: Deriv 3.229 T229
 flag: c
 flag: q
-statement: " .:!x(!xFx->Fx)"
+statement: " .:exists x (exists x Fx->Fx)"
 end-box:
 proves: T229
 common-name: Deriv 3.229 T229
@@ -4840,7 +4840,7 @@ common-name: Deriv 3.229 T229
 problem: Deriv 3.230 T230
 flag: c
 flag: q
-statement: " .:!x(Fx->@xFx)"
+statement: " .:exists x (Fx->forall x Fx)"
 end-box:
 proves: T230
 common-name: Deriv 3.230 T230
@@ -4850,7 +4850,7 @@ common-name: Deriv 3.230 T230
 problem: Deriv 3.231 T231
 flag: c
 flag: q
-statement: " .:@xFx<->@yFy"
+statement: " .:forall x Fx<->forall y Fy"
 end-box:
 proves: AV1.T231
 common-name: Deriv 3.231 T231
@@ -4860,7 +4860,7 @@ common-name: Deriv 3.231 T231
 problem: Deriv 3.232 T232
 flag: c
 flag: q
-statement: " .:!xFx<->!yFy"
+statement: " .:exists x Fx<->exists y Fy"
 end-box:
 proves: AV2.T232
 common-name: Deriv 3.232 T232
@@ -4876,7 +4876,7 @@ common-name: Deriv 3.233 T233
 problem: Deriv 3.234 T234
 flag: c
 flag: q
-statement: " .:@x((Fx->Gx)&(Gx->Hx)->(Fx->Hx))"
+statement: " .:forall x ((Fx->Gx)&(Gx->Hx)->(Fx->Hx))"
 end-box:
 proves: T234
 common-name: Deriv 3.234 T234
@@ -4884,7 +4884,7 @@ common-name: Deriv 3.234 T234
 problem: Deriv 3.235 T235
 flag: c
 flag: q
-statement: " .:@x(Fx->Gx)&@x(Gx->Hx)->@x(Fx->Hx)"
+statement: " .:forall x (Fx->Gx)&forall x (Gx->Hx)->forall x (Fx->Hx)"
 end-box:
 proves: T235
 common-name: Deriv 3.235 T235
@@ -4892,7 +4892,7 @@ common-name: Deriv 3.235 T235
 problem: Deriv 3.236 T236
 flag: c
 flag: q
-statement: " .:@x(Fx<->Gx)&@x(Gx<->Hx)->@x(Fx<->Hx)"
+statement: " .:forall x (Fx<->Gx)&forall x (Gx<->Hx)->forall x (Fx<->Hx)"
 end-box:
 proves: T236
 common-name: Deriv 3.236 T236
@@ -4900,7 +4900,7 @@ common-name: Deriv 3.236 T236
 problem: Deriv 3.237 T237
 flag: c
 flag: q
-statement: " .:@x(Fx->Gx)&@x(Fx->Hx)<->@x(Fx->Gx&Hx)"
+statement: " .:forall x (Fx->Gx)&forall x (Fx->Hx)<->forall x (Fx->Gx&Hx)"
 end-box:
 proves: T237
 common-name: Deriv 3.237 T237
@@ -4908,7 +4908,7 @@ common-name: Deriv 3.237 T237
 problem: Deriv 3.238 T238
 flag: c
 flag: q
-statement: " .:@xFx->!xFx"
+statement: " .:forall x Fx->exists x Fx"
 end-box:
 proves: T238
 common-name: Deriv 3.238 T238
@@ -4916,7 +4916,7 @@ common-name: Deriv 3.238 T238
 problem: Deriv 3.239 T239
 flag: c
 flag: q
-statement: " .:@xFx&!xGx->!x(Fx&Gx)"
+statement: " .:forall x Fx&exists x Gx->exists x (Fx&Gx)"
 end-box:
 proves: T239
 common-name: Deriv 3.239 T239
@@ -4924,7 +4924,7 @@ common-name: Deriv 3.239 T239
 problem: Deriv 3.240 T240
 flag: c
 flag: q
-statement: " .:@x(Fx->Gx)&!x(Fx&Hx)->!x(Gx&Hx)"
+statement: " .:forall x (Fx->Gx)&exists x (Fx&Hx)->exists x (Gx&Hx)"
 end-box:
 proves: T240
 common-name: Deriv 3.240 T240
@@ -4932,7 +4932,7 @@ common-name: Deriv 3.240 T240
 problem: Deriv 3.241 T241
 flag: c
 flag: q
-statement: " .:@x(Fx->Gx|Hx)->@x(Fx->Gx)|!x(Fx&Hx)"
+statement: " .:forall x (Fx->Gx|Hx)->forall x (Fx->Gx)|exists x (Fx&Hx)"
 end-box:
 proves: T241
 common-name: Deriv 3.241 T241
@@ -4940,7 +4940,7 @@ common-name: Deriv 3.241 T241
 problem: Deriv 3.242 T242
 flag: c
 flag: q
-statement: " .:~@x(Fx->Gx)<->!x(Fx&~Gx)"
+statement: " .:~forall x (Fx->Gx)<->exists x (Fx&~Gx)"
 end-box:
 proves: T242
 common-name: Deriv 3.242 T242
@@ -4948,7 +4948,7 @@ common-name: Deriv 3.242 T242
 problem: Deriv 3.243 T243
 flag: c
 flag: q
-statement: " .:~!x(Fx&Gx)<->@x(Fx->~Gx)"
+statement: " .:~exists x (Fx&Gx)<->forall x (Fx->~Gx)"
 end-box:
 proves: T243
 common-name: Deriv 3.243 T243
@@ -4956,7 +4956,7 @@ common-name: Deriv 3.243 T243
 problem: Deriv 3.244 T244
 flag: c
 flag: q
-statement: " .:~!xFx->@x(Fx->Gx)"
+statement: " .:~exists x Fx->forall x (Fx->Gx)"
 end-box:
 proves: T244
 common-name: Deriv 3.244 T244
@@ -4964,7 +4964,7 @@ common-name: Deriv 3.244 T244
 problem: Deriv 3.245 T245
 flag: c
 flag: q
-statement: " .:~!xFx<->@x(Fx->Gx)&@x(Fx->~Gx)"
+statement: " .:~exists x Fx<->forall x (Fx->Gx)&forall x (Fx->~Gx)"
 end-box:
 proves: T245
 common-name: Deriv 3.245 T245
@@ -4972,7 +4972,7 @@ common-name: Deriv 3.245 T245
 problem: Deriv 3.246 T246
 flag: c
 flag: q
-statement: " .:~!xFx&~!xGx->@x(Fx<->Gx)"
+statement: " .:~exists x Fx&~exists x Gx->forall x (Fx<->Gx)"
 end-box:
 proves: T246
 common-name: Deriv 3.246 T246
@@ -4980,7 +4980,7 @@ common-name: Deriv 3.246 T246
 problem: Deriv 3.247 T247
 flag: c
 flag: q
-statement: " .:!x(Fx->Gx)<->!x~Fx|!xGx"
+statement: " .:exists x (Fx->Gx)<->exists x ~Fx|exists x Gx"
 end-box:
 proves: T247
 common-name: Deriv 3.247 T247
@@ -4988,7 +4988,7 @@ common-name: Deriv 3.247 T247
 problem: Deriv 3.248 T248
 flag: c
 flag: q
-statement: " .:!xFx&!x~Fx<->@x!y(Fx<->~Fy)"
+statement: " .:exists x Fx&exists x ~Fx<->forall x exists y (Fx<->~Fy)"
 end-box:
 proves: T248
 common-name: Deriv 3.248 T248
@@ -4998,25 +4998,25 @@ common-name: Deriv 3.248 T248
 ## 
 
 problem: Deriv 3.411
-statement: " !y@x(Fx<->Fy). !xFx .: @xFx"
+statement: " exists y forall x (Fx<->Fy). exists x Fx .: forall x Fx"
 end-box:
 note: QN has been disabled for this problem, which corresponds to Deriv 3.011.
 common-name: Deriv 3.411
 
 problem: Deriv 3.419
-statement: " .: @x(Fx&(~!xFx|@xGx)->@x(Fx|Gx))"
+statement: " .: forall x (Fx&(~exists x Fx|forall x Gx)->forall x (Fx|Gx))"
 end-box:
 note: QN has been disabled for this problem, which corresponds to Deriv 3.019.  This is a very tricky problem, but it can be done using just the primitive rules.
 common-name: Deriv 3.419
 
 problem: Deriv 3.420
-statement: " Fx->@xFx .: !xFx->Fx"
+statement: " Fx->forall x Fx .: exists x Fx->Fx"
 end-box:
 note: All derived rules of Chapter III have been disabled for this problem.  This is a very difficult problem unless an appropriate technique is used to deal with the free variable in the premise.
 common-name: Deriv 3.420
 
 problem: Deriv 3.421
-statement: " .: @x(Fy&@yGx)->!x(Fx&Gx)"
+statement: " .: forall x (Fy&forall y Gx)->exists x (Fx&Gx)"
 end-box:
 note: All derived rules of Chapter III except for QN have been disabled for this problem.  This is a very difficult problem unless an appropriate technique is used to deal with the free variable in the conclusion.
 common-name: Deriv 3.421
@@ -5057,85 +5057,85 @@ note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All
 common-name: Deriv 3.704
 
 problem: Deriv 3.705
-statement: " @x(Fx&Hx->Gx).  @xHx  .:  !xFx->!xGx"
+statement: " forall x (Fx&Hx->Gx).  forall x Hx  .:  exists x Fx->exists x Gx"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.705
 
 problem: Deriv 3.706
-statement: " @x~Fx->@xFx  .:  !xFx"
+statement: " forall x ~Fx->forall x Fx  .:  exists x Fx"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.706
 
 problem: Deriv 3.707
-statement: " !xGx->@x(Gx->Hx).  @x(Hx|Jx->Fx)  .:  Ga->!xFx"
+statement: " exists x Gx->forall x (Gx->Hx).  forall x (Hx|Jx->Fx)  .:  Ga->exists x Fx"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.707
 
 problem: Deriv 3.708
-statement: " !yFy->!x(~Fx&~Gx)  .:  ~Gb->~@x(Fx|Gx)"
+statement: " exists y Fy->exists x (~Fx&~Gx)  .:  ~Gb->~forall x (Fx|Gx)"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.708
 
 problem: Deriv 3.709
-statement: " !yGy->!y(Fy&~Gy)  .:  @x(~Gx->~Fx)->~Fa"
+statement: " exists y Gy->exists y (Fy&~Gy)  .:  forall x (~Gx->~Fx)->~Fa"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.709
 
 problem: Deriv 3.710
-statement: " @x(Fx<->~Gx|~Hx).  ~@x(Gx&Hx)->!x(Ix&~Gx)  .:  !xFx->!x(Ix&Fx)"
+statement: " forall x (Fx<->~Gx|~Hx).  ~forall x (Gx&Hx)->exists x (Ix&~Gx)  .:  exists x Fx->exists x (Ix&Fx)"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.710
 
 problem: Deriv 3.711
-statement: " !x(Fx&Hx)|@x(Gx->Jx).  @x(Fx->~Hx).  @x(Ix->Fx|Gx)  .:  @x(Ix->Fx|Jx)"
+statement: " exists x (Fx&Hx)|forall x (Gx->Jx).  forall x (Fx->~Hx).  forall x (Ix->Fx|Gx)  .:  forall x (Ix->Fx|Jx)"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.711
 
 problem: Deriv 3.712
-statement: " @x@y(Fx->~(Gx&~Hy)).  @x(~Fx->~!x~Hx)  .:  !xGx->@xHx"
+statement: " forall x forall y (Fx->~(Gx&~Hy)).  forall x (~Fx->~exists x ~Hx)  .:  exists x Gx->forall x Hx"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.712
 
 problem: Deriv 3.713
-statement: " !x(Fx->@xGx)  .:  !x!y(~Fx|Gy)"
+statement: " exists x (Fx->forall x Gx)  .:  exists x exists y (~Fx|Gy)"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.713
 
 problem: Deriv 3.714
-statement: "  .:  (~@y!x(Fy&Gx)|!x(Gx&Fx))"
+statement: "  .:  (~forall y exists x (Fy&Gx)|exists x (Gx&Fx))"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.714
 
 problem: Deriv 3.715
-statement: " @x!y(Fx|~Gy).  !x@y(Gy|Hx)  .:  ~!xHx->@xFx"
+statement: " forall x exists y (Fx|~Gy).  exists x forall y (Gy|Hx)  .:  ~exists x Hx->forall x Fx"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.715
 
 problem: Deriv 3.716
-statement: "  .:  @xGx->~@x!y(Gx->Fy&~Fx)"
+statement: "  .:  forall x Gx->~forall x exists y (Gx->Fy&~Fx)"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.716
 
 problem: Deriv 3.717
-statement: "  .:  @y!x(Fy&Gx)->!x(Gx&Fx)"
+statement: "  .:  forall y exists x (Fy&Gx)->exists x (Gx&Fx)"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.717
 
 problem: Deriv 3.718
-statement: " Fx&!xGx.@x(Fx&Gx->Hx)  .:  !xHx"
+statement: " Fx&exists x Gx.forall x (Fx&Gx->Hx)  .:  exists x Hx"
 end-box:
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  All derived rules and theorems are enabled.  Command Mode is disabled.  Show Commands are disabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.718
@@ -5170,85 +5170,85 @@ note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It 
 common-name: Deriv 3.804
 
 problem: Deriv 3.805
-statement: " @x(Fx&Hx->Gx).  @xHx  .:  !xFx->!xGx"
+statement: " forall x (Fx&Hx->Gx).  forall x Hx  .:  exists x Fx->exists x Gx"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.805
 
 problem: Deriv 3.806
-statement: " @x~Fx->@xFx  .:  !xFx"
+statement: " forall x ~Fx->forall x Fx  .:  exists x Fx"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.806
 
 problem: Deriv 3.807
-statement: " !xGx->@x(Gx->Hx).  @x(Hx|Jx->Fx)  .:  Ga->!xFx"
+statement: " exists x Gx->forall x (Gx->Hx).  forall x (Hx|Jx->Fx)  .:  Ga->exists x Fx"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.807
 
 problem: Deriv 3.808
-statement: " !yFy->!x(~Fx&~Gx)  .:  ~Gb->~@x(Fx|Gx)"
+statement: " exists y Fy->exists x (~Fx&~Gx)  .:  ~Gb->~forall x (Fx|Gx)"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.808
 
 problem: Deriv 3.809
-statement: " !yGy->!y(Fy&~Gy)  .:  @x(~Gx->~Fx)->~Fa"
+statement: " exists y Gy->exists y (Fy&~Gy)  .:  forall x (~Gx->~Fx)->~Fa"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.809
 
 problem: Deriv 3.810
-statement: " @x(Fx<->~Gx|~Hx).  ~@x(Gx&Hx)->!x(Ix&~Gx)  .:  !xFx->!x(Ix&Fx)"
+statement: " forall x (Fx<->~Gx|~Hx).  ~forall x (Gx&Hx)->exists x (Ix&~Gx)  .:  exists x Fx->exists x (Ix&Fx)"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.810
 
 problem: Deriv 3.811
-statement: " !x(Fx&Hx)|@x(Gx->Jx).  @x(Fx->~Hx).  @x(Ix->Fx|Gx)  .:  @x(Ix->Fx|Jx)"
+statement: " exists x (Fx&Hx)|forall x (Gx->Jx).  forall x (Fx->~Hx).  forall x (Ix->Fx|Gx)  .:  forall x (Ix->Fx|Jx)"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.811
 
 problem: Deriv 3.812
-statement: " @x@y(Fx->~(Gx&~Hy)).  @x(~Fx->~!x~Hx)  .:  !xGx->@xHx"
+statement: " forall x forall y (Fx->~(Gx&~Hy)).  forall x (~Fx->~exists x ~Hx)  .:  exists x Gx->forall x Hx"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.812
 
 problem: Deriv 3.813
-statement: " !x(Fx->@xGx)  .:  !x!y(~Fx|Gy)"
+statement: " exists x (Fx->forall x Gx)  .:  exists x exists y (~Fx|Gy)"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.813
 
 problem: Deriv 3.814
-statement: " .:  (~@y!x(Fy&Gx)|!x(Gx&Fx))"
+statement: " .:  (~forall y exists x (Fy&Gx)|exists x (Gx&Fx))"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.814
 
 problem: Deriv 3.815
-statement: " @x!y(Fx|~Gy).  !x@y(Gy|Hx)  .:  ~!xHx->@xFx"
+statement: " forall x exists y (Fx|~Gy).  exists x forall y (Gy|Hx)  .:  ~exists x Hx->forall x Fx"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.815
 
 problem: Deriv 3.816
-statement: " .:  @xGx->~@x!y(Gx->Fy&~Fx)"
+statement: " .:  forall x Gx->~forall x exists y (Gx->Fy&~Fx)"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.816
 
 problem: Deriv 3.817
-statement: " .:  @y!x(Fy&Gx)->!x(Gx&Fx)"
+statement: " .:  forall y exists x (Fy&Gx)->exists x (Gx&Fx)"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.817
 
 problem: Deriv 3.818
-statement: " Fx&!xGx.@x(Fx&Gx->Hx)  .:  !xHx"
+statement: " Fx&exists x Gx.forall x (Fx&Gx->Hx)  .:  exists x Hx"
 end-box:
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  All derived rules and theorems are enabled.  Command Mode and Show Commands remain enabled.  The only error message is "Error".  Show lines that are not yet cancelled will be marked "Error".
 common-name: Deriv 3.818
@@ -5261,7 +5261,7 @@ common-name: Deriv 3.818
 problem: Deriv 4.001
 flag: c
 flag: q
-statement: " Fb(a) .: !xFb(x)"
+statement: " Fb(a) .: exists x Fb(x)"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.001
@@ -5269,7 +5269,7 @@ common-name: Deriv 4.001
 problem: Deriv 4.002
 flag: c
 flag: q
-statement: " Fa. Gb(a) .: !x(Fx&Gb(x))"
+statement: " Fa. Gb(a) .: exists x (Fx&Gb(x))"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.002
@@ -5277,7 +5277,7 @@ common-name: Deriv 4.002
 problem: Deriv 4.003
 flag: c
 flag: q
-statement: " !xFb(x) .: !xFx"
+statement: " exists x Fb(x) .: exists x Fx"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.003
@@ -5285,7 +5285,7 @@ common-name: Deriv 4.003
 problem: Deriv 4.004
 flag: c
 flag: q
-statement: " @xFx .: !xFb(x)"
+statement: " forall x Fx .: exists x Fb(x)"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.004
@@ -5293,7 +5293,7 @@ common-name: Deriv 4.004
 problem: Deriv 4.005
 flag: c
 flag: q
-statement: " !yF(yy) .: !x!yF(xy)"
+statement: " exists y F(yy) .: exists x exists y F(xy)"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.005
@@ -5301,7 +5301,7 @@ common-name: Deriv 4.005
 problem: Deriv 4.006
 flag: c
 flag: q
-statement: " @x(~F(xx)->F(ax)) .: !xF(xx)"
+statement: " forall x (~F(xx)->F(ax)) .: exists x F(xx)"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.006
@@ -5309,7 +5309,7 @@ common-name: Deriv 4.006
 problem: Deriv 4.007
 flag: c
 flag: q
-statement: " @xFa(xb) .: !xFa(xx)"
+statement: " forall x Fa(xb) .: exists x Fa(xx)"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.007
@@ -5317,7 +5317,7 @@ common-name: Deriv 4.007
 problem: Deriv 4.008
 flag: c
 flag: q
-statement: " !xFa(xx) .: !xFx"
+statement: " exists x Fa(xx) .: exists x Fx"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.008
@@ -5325,7 +5325,7 @@ common-name: Deriv 4.008
 problem: Deriv 4.009
 flag: c
 flag: q
-statement: " @x@y(F(xy)->F(yx)). !xF(ax) .: !x(F(ax)&!yF(xy))"
+statement: " forall x forall y (F(xy)->F(yx)). exists x F(ax) .: exists x (F(ax)&exists y F(xy))"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.009
@@ -5333,7 +5333,7 @@ common-name: Deriv 4.009
 problem: Deriv 4.010
 flag: c
 flag: q
-statement: " @x(~!yF(xy)->F(ax)) .: !xF(ax)"
+statement: " forall x (~exists y F(xy)->F(ax)) .: exists x F(ax)"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.010
@@ -5341,7 +5341,7 @@ common-name: Deriv 4.010
 problem: Deriv 4.011
 flag: c
 flag: q
-statement: " @x(F(xa(x))->~F(xx)) .: ~!x@yF(a(x)y)"
+statement: " forall x (F(xa(x))->~F(xx)) .: ~exists x forall y F(a(x)y)"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.011
@@ -5349,7 +5349,7 @@ common-name: Deriv 4.011
 problem: Deriv 4.012
 flag: c
 flag: q
-statement: " @x@yFa(xb(y)c) .: !xFa(b(x)b(c)x)"
+statement: " forall x forall y Fa(xb(y)c) .: exists x Fa(b(x)b(c)x)"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.012
@@ -5357,7 +5357,7 @@ common-name: Deriv 4.012
 problem: Deriv 4.013
 flag: c
 flag: q
-statement: " @x@yFa(xb(y)c) .: !xFa(b(x)xc)"
+statement: " forall x forall y Fa(xb(y)c) .: exists x Fa(b(x)xc)"
 end-box:
 note: QN is disabled.  Use UI, EI, and EG in your derivations.
 common-name: Deriv 4.013
@@ -5365,49 +5365,49 @@ common-name: Deriv 4.013
 problem: Deriv 4.014
 flag: c
 flag: q
-statement: " @x(F(xa)->(G(bx)<->~G(xx))). F(ba) .: ~G(bb)"
+statement: " forall x (F(xa)->(G(bx)<->~G(xx))). F(ba) .: ~G(bb)"
 end-box:
 common-name: Deriv 4.014
 
 problem: Deriv 4.015
 flag: c
 flag: q
-statement: " @x(F(xa)->(G(bx)<->~G(xx))). F(ba) .: G(bb)"
+statement: " forall x (F(xa)->(G(bx)<->~G(xx))). F(ba) .: G(bb)"
 end-box:
 common-name: Deriv 4.015
 
 problem: Deriv 4.016
 flag: c
 flag: q
-statement: " @x(Fx<->@yG(xy)) .: !x@y(Fy->G(xy))"
+statement: " forall x (Fx<->forall y G(xy)) .: exists x forall y (Fy->G(xy))"
 end-box:
 common-name: Deriv 4.016
 
 problem: Deriv 4.017
 flag: c
 flag: q
-statement: " !xFx. @x(Fx->!y(Gy&Fy&H(xy))) .: !x(Gx&Fx&!y(Fy&H(yx)))"
+statement: " exists x Fx. forall x (Fx->exists y (Gy&Fy&H(xy))) .: exists x (Gx&Fx&exists y (Fy&H(yx)))"
 end-box:
 common-name: Deriv 4.017
 
 problem: Deriv 4.018
 flag: c
 flag: q
-statement: " @x(Fx->!y(Gy&H(xy))&!y(Gy&~H(xy))). !x(Jx&@y(Gy->H(xy))) .: !x(Jx&~Fx)"
+statement: " forall x (Fx->exists y (Gy&H(xy))&exists y (Gy&~H(xy))). exists x (Jx&forall y (Gy->H(xy))) .: exists x (Jx&~Fx)"
 end-box:
 common-name: Deriv 4.018
 
 problem: Deriv 4.019
 flag: c
 flag: q
-statement: " @x(Fx&@y(Gy&H(xy)->J(xy))->@y(Gy&H(xy)->Ky)). !x(Fx&@y(H(xy)->Ly)&@y(Gy&H(xy)->J(xy))). ~!y(Ly&Ky) .: !x(Fx&~!y(Gy&H(xy)))"
+statement: " forall x (Fx&forall y (Gy&H(xy)->J(xy))->forall y (Gy&H(xy)->Ky)). exists x (Fx&forall y (H(xy)->Ly)&forall y (Gy&H(xy)->J(xy))). ~exists y (Ly&Ky) .: exists x (Fx&~exists y (Gy&H(xy)))"
 end-box:
 common-name: Deriv 4.019
 
 problem: Deriv 4.020
 flag: c
 flag: q
-statement: " @x(Fx->Gx) .: @x(!y(H(xy)&Fy)->!y(H(xy)&Gy))"
+statement: " forall x (Fx->Gx) .: forall x (exists y (H(xy)&Fy)->exists y (H(xy)&Gy))"
 end-box:
 common-name: Deriv 4.020
 
@@ -5421,99 +5421,99 @@ common-name: Deriv 4.021
 problem: Deriv 4.022
 flag: c
 flag: q
-statement: " F(xy)&F(yz)->F(xz). F(xy)->F(yx) .: !yF(xy)->F(xx)"
+statement: " F(xy)&F(yz)->F(xz). F(xy)->F(yx) .: exists y F(xy)->F(xx)"
 end-box:
 common-name: Deriv 4.022
 
 problem: Deriv 4.023
 flag: c
 flag: q
-statement: " @x@y!zF(xyz). @x@y@z(F(xyz)->F(yzx)) .: @x@y!zF(zxy)"
+statement: " forall x forall y exists z F(xyz). forall x forall y forall z (F(xyz)->F(yzx)) .: forall x forall y exists z F(zxy)"
 end-box:
 common-name: Deriv 4.023
 
 problem: Deriv 4.024
 flag: c
 flag: q
-statement: " @x@y(F(xy)|F(yx)) .: @x!yF(xy)"
+statement: " forall x forall y (F(xy)|F(yx)) .: forall x exists y F(xy)"
 end-box:
 common-name: Deriv 4.024
 
 problem: Deriv 4.025
 flag: c
 flag: q
-statement: " .: !x!y(Fx<->~Fy)->@x!y(Fx<->~Fy)"
+statement: " .: exists x exists y (Fx<->~Fy)->forall x exists y (Fx<->~Fy)"
 end-box:
 common-name: Deriv 4.025
 
 problem: Deriv 4.026
 flag: c
 flag: q
-statement: " .: !y@x@z(~F(zx)->F(yx))<->!x@yF(xy)"
+statement: " .: exists y forall x forall z (~F(zx)->F(yx))<->exists x forall y F(xy)"
 end-box:
 common-name: Deriv 4.026
 
 problem: Deriv 4.027
 flag: c
 flag: q
-statement: " @x@y(Fx&Fy->Fa(xy)). !x(Fx&@y(Fy->Ga(xy))) .: !x(Fx&Gx)"
+statement: " forall x forall y (Fx&Fy->Fa(xy)). exists x (Fx&forall y (Fy->Ga(xy))) .: exists x (Fx&Gx)"
 end-box:
 common-name: Deriv 4.027
 
 problem: Deriv 4.028
 flag: c
 flag: q
-statement: " @x@y(F(xy)|G(xy)) .: !x@yF(xy)|@x!yG(xy)"
+statement: " forall x forall y (F(xy)|G(xy)) .: exists x forall y F(xy)|forall x exists y G(xy)"
 end-box:
 common-name: Deriv 4.028
 
 problem: Deriv 4.029
 flag: c
 flag: q
-statement: " .: !x(@yF(xy)->@yF(yx))"
+statement: " .: exists x (forall y F(xy)->forall y F(yx))"
 end-box:
 common-name: Deriv 4.029
 
 problem: Deriv 4.030
 flag: c
 flag: q
-statement: " .: !x@y(Fx<->Fy)<->~!xFx|@xFx"
+statement: " .: exists x forall y (Fx<->Fy)<->~exists x Fx|forall x Fx"
 end-box:
 common-name: Deriv 4.030
 
 problem: Deriv 4.031
 flag: c
 flag: q
-statement: " @x!z(F(xz)&(Gz->Gx)) .: !x!z(F(xz)&(Gz->@xGx))"
+statement: " forall x exists z (F(xz)&(Gz->Gx)) .: exists x exists z (F(xz)&(Gz->forall x Gx))"
 end-box:
 common-name: Deriv 4.031
 
 problem: Deriv 4.032
 flag: c
 flag: q
-statement: " G(a(c)c). !x(Fx&~H(xa(c))). @x(Fx&@y(G(yb)->H(xy))->@y(G(yc)->H(xy))) .: !y(G(yb)&!x(Fx&~H(xy)))"
+statement: " G(a(c)c). exists x (Fx&~H(xa(c))). forall x (Fx&forall y (G(yb)->H(xy))->forall y (G(yc)->H(xy))) .: exists y (G(yb)&exists x (Fx&~H(xy)))"
 end-box:
 common-name: Deriv 4.032
 
 problem: Deriv 4.033
-statement: .:  ~!x(Ax&R(xa))<->@x(Ax->~R(xa))
+statement: .:  ~exists x (Ax&R(xa))<->forall x (Ax->~R(xa))
 end-box:
 common-name: Deriv 4.033
 
 problem: Deriv 4.034
-statement: .:  !x(Ax<->!yR(xy))<->!x(Ax<->!zR(xz))
+statement: .:  exists x (Ax<->exists y R(xy))<->exists x (Ax<->exists z R(xz))
 end-box:
 common-name: Deriv 4.034
 
 problem: Deriv 4.035
-statement: @x(~~Ax|R(xx)).  @y(Ay|R(yy))->~Aa|Ab  .:  ~(Aa&~Ab)
+statement: forall x (~~Ax|R(xx)).  forall y (Ay|R(yy))->~Aa|Ab  .:  ~(Aa&~Ab)
 end-box:
 common-name: Deriv 4.035
 
 problem: Deriv 4.249 T249
 flag: c
 flag: q
-statement: " .: @x@yF(xy)->!x!yF(xy)"
+statement: " .: forall x forall y F(xy)->exists x exists y F(xy)"
 end-box:
 proves: T249
 common-name: Deriv 4.249 T249
@@ -5521,7 +5521,7 @@ common-name: Deriv 4.249 T249
 problem: Deriv 4.250 T250
 flag: c
 flag: q
-statement: " .: @x@y@zF(xyz)<->~!x!y!z~F(xyz)"
+statement: " .: forall x forall y forall z F(xyz)<->~exists x exists y exists z ~F(xyz)"
 end-box:
 proves: T250
 common-name: Deriv 4.250 T250
@@ -5531,7 +5531,7 @@ common-name: Deriv 4.250 T250
 problem: Deriv 4.251 T251
 flag: c
 flag: q
-statement: " .: @x@yF(xy)<->@y@xF(xy)"
+statement: " .: forall x forall y F(xy)<->forall y forall x F(xy)"
 end-box:
 proves: T251.QCOM1
 common-name: Deriv 4.251 T251
@@ -5539,7 +5539,7 @@ common-name: Deriv 4.251 T251
 problem: Deriv 4.252 T252
 flag: c
 flag: q
-statement: " .: !x!yF(xy)<->!y!xF(xy)"
+statement: " .: exists x exists y F(xy)<->exists y exists x F(xy)"
 end-box:
 proves: T252.QCOM2
 common-name: Deriv 4.252 T252
@@ -5547,7 +5547,7 @@ common-name: Deriv 4.252 T252
 problem: Deriv 4.253 T253
 flag: c
 flag: q
-statement: " .: !x@yF(xy)->@y!xF(xy)"
+statement: " .: exists x forall y F(xy)->forall y exists x F(xy)"
 end-box:
 proves: T253
 common-name: Deriv 4.253 T253
@@ -5555,7 +5555,7 @@ common-name: Deriv 4.253 T253
 problem: Deriv 4.254 T254
 flag: c
 flag: q
-statement: " .: !x!yF(xy)<->!x!y(F(xy)|F(yx))"
+statement: " .: exists x exists y F(xy)<->exists x exists y (F(xy)|F(yx))"
 end-box:
 proves: T254
 common-name: Deriv 4.254 T254
@@ -5563,7 +5563,7 @@ common-name: Deriv 4.254 T254
 problem: Deriv 4.255 T255
 flag: c
 flag: q
-statement: " .: @x@yF(xy)->@y@xF(yx)"
+statement: " .: forall x forall y F(xy)->forall y forall x F(yx)"
 end-box:
 proves: T255
 common-name: Deriv 4.255 T255
@@ -5571,7 +5571,7 @@ common-name: Deriv 4.255 T255
 problem: Deriv 4.256 T256
 flag: c
 flag: q
-statement: " .: @x!y(F(xy)&Gy)->!x!y(F(xy)&Gx)"
+statement: " .: forall x exists y (F(xy)&Gy)->exists x exists y (F(xy)&Gx)"
 end-box:
 proves: T256
 common-name: Deriv 4.256 T256
@@ -5579,7 +5579,7 @@ common-name: Deriv 4.256 T256
 problem: Deriv 4.257 T257
 flag: c
 flag: q
-statement: " .: @xFa(x)->!x(Fx&Fa(x))"
+statement: " .: forall x Fa(x)->exists x (Fx&Fa(x))"
 end-box:
 proves: T257
 common-name: Deriv 4.257 T257
@@ -5587,7 +5587,7 @@ common-name: Deriv 4.257 T257
 problem: Deriv 4.258 T258
 flag: c
 flag: q
-statement: " .: F(xa(x))<->!y(@z(F(zy)->F(za(x)))&F(xy))"
+statement: " .: F(xa(x))<->exists y (forall z (F(zy)->F(za(x)))&F(xy))"
 end-box:
 proves: T258
 common-name: Deriv 4.258 T258
@@ -5595,7 +5595,7 @@ common-name: Deriv 4.258 T258
 problem: Deriv 4.259 T259
 flag: c
 flag: q
-statement: " .: @x!z(Fx->!y(Gy->Hz))<->(!xFx&@xGx->!xHx)"
+statement: " .: forall x exists z (Fx->exists y (Gy->Hz))<->(exists x Fx&forall x Gx->exists x Hx)"
 end-box:
 proves: T259
 common-name: Deriv 4.259 T259
@@ -5603,7 +5603,7 @@ common-name: Deriv 4.259 T259
 problem: Deriv 4.260 T260
 flag: c
 flag: q
-statement: " .: @x(Fx->!y(Gy&(Hy|Hx)))<->!x(Gx&Hx)|~!xFx|(!xGx&@x(Fx->Hx))"
+statement: " .: forall x (Fx->exists y (Gy&(Hy|Hx)))<->exists x (Gx&Hx)|~exists x Fx|(exists x Gx&forall x (Fx->Hx))"
 end-box:
 proves: T260
 common-name: Deriv 4.260 T260
@@ -5611,7 +5611,7 @@ common-name: Deriv 4.260 T260
 problem: Deriv 4.261 T261
 flag: c
 flag: q
-statement: " .: @x(!yF(xy)->!yG(xy))<->@x@y!z(F(xy)->G(xz))"
+statement: " .: forall x (exists y F(xy)->exists y G(xy))<->forall x forall y exists z (F(xy)->G(xz))"
 end-box:
 proves: T261
 common-name: Deriv 4.261 T261
@@ -5619,7 +5619,7 @@ common-name: Deriv 4.261 T261
 problem: Deriv 4.262 T262
 flag: c
 flag: q
-statement: " .: !y(!xF(xy)<->Gy)<->!y@x!z((F(xy)->Gy)&(Gy->F(zy)))"
+statement: " .: exists y (exists x F(xy)<->Gy)<->exists y forall x exists z ((F(xy)->Gy)&(Gy->F(zy)))"
 end-box:
 proves: T262
 common-name: Deriv 4.262 T262
@@ -5627,7 +5627,7 @@ common-name: Deriv 4.262 T262
 problem: Deriv 4.263 T263
 flag: c
 flag: q
-statement: " .: @x!y(Fx->Gy)<->!y@x(Fx->Gy)"
+statement: " .: forall x exists y (Fx->Gy)<->exists y forall x (Fx->Gy)"
 end-box:
 proves: T263
 common-name: Deriv 4.263 T263
@@ -5635,7 +5635,7 @@ common-name: Deriv 4.263 T263
 problem: Deriv 4.264 T264
 flag: c
 flag: q
-statement: " .: @x!y(Fx&Gy)<->!y@x(Fx&Gy)"
+statement: " .: forall x exists y (Fx&Gy)<->exists y forall x (Fx&Gy)"
 end-box:
 proves: T264
 common-name: Deriv 4.264 T264
@@ -5643,7 +5643,7 @@ common-name: Deriv 4.264 T264
 problem: Deriv 4.265 T265
 flag: c
 flag: q
-statement: " .: @x!y(Fx|Gy)<->!y@x(Fx|Gy)"
+statement: " .: forall x exists y (Fx|Gy)<->exists y forall x (Fx|Gy)"
 end-box:
 proves: T265
 common-name: Deriv 4.265 T265
@@ -5651,7 +5651,7 @@ common-name: Deriv 4.265 T265
 problem: Deriv 4.266 T266
 flag: c
 flag: q
-statement: " .: @x@y!z(Fx&Gy->Hz)<->@y!z@x(Fx&Gy->Hz)"
+statement: " .: forall x forall y exists z (Fx&Gy->Hz)<->forall y exists z forall x (Fx&Gy->Hz)"
 end-box:
 proves: T266
 common-name: Deriv 4.266 T266
@@ -5659,7 +5659,7 @@ common-name: Deriv 4.266 T266
 problem: Deriv 4.267 T267
 flag: c
 flag: q
-statement: " .: @x(Fx<->~Fa(x))->!x(Fx&~Fa(x))"
+statement: " .: forall x (Fx<->~Fa(x))->exists x (Fx&~Fa(x))"
 end-box:
 proves: T267
 common-name: Deriv 4.267 T267
@@ -5667,7 +5667,7 @@ common-name: Deriv 4.267 T267
 problem: Deriv 4.268 T268
 flag: c
 flag: q
-statement: " .: @x(F(ax)|@yF(xy))->!x@yF(xy)"
+statement: " .: forall x (F(ax)|forall y F(xy))->exists x forall y F(xy)"
 end-box:
 proves: T268
 common-name: Deriv 4.268 T268
@@ -5675,7 +5675,7 @@ common-name: Deriv 4.268 T268
 problem: Deriv 4.269 T269
 flag: c
 flag: q
-statement: " .: ~!y@x(F(xy)<->~F(xx))"
+statement: " .: ~exists y forall x (F(xy)<->~F(xx))"
 end-box:
 proves: T269
 common-name: Deriv 4.269 T269
@@ -5683,7 +5683,7 @@ common-name: Deriv 4.269 T269
 problem: Deriv 4.270 T270
 flag: c
 flag: q
-statement: " .: @z!y@x(F(xy)<->F(xz)&~F(xx))->~!z@xF(xz)"
+statement: " .: forall z exists y forall x (F(xy)<->F(xz)&~F(xx))->~exists z forall x F(xz)"
 end-box:
 proves: T270
 common-name: Deriv 4.270 T270
@@ -5691,7 +5691,7 @@ common-name: Deriv 4.270 T270
 problem: Deriv 4.271 T271
 flag: c
 flag: q
-statement: " .: ~!y@x(F(xy)<->~!z(F(xz)&F(zx)))"
+statement: " .: ~exists y forall x (F(xy)<->~exists z (F(xz)&F(zx)))"
 end-box:
 proves: T271
 common-name: Deriv 4.271 T271
@@ -5699,7 +5699,7 @@ common-name: Deriv 4.271 T271
 problem: Deriv 4.272 T272
 flag: c
 flag: q
-statement: " .: !y@x(F(xy)<->F(xx))->~@x!y@z(F(zy)<->~F(zx))"
+statement: " .: exists y forall x (F(xy)<->F(xx))->~forall x exists y forall z (F(zy)<->~F(zx))"
 end-box:
 proves: T272
 common-name: Deriv 4.272 T272
@@ -5729,73 +5729,73 @@ note: "\"?CNF\" matches any formula with no conditionals or biconditionals, with
 common-name: Deriv 4.276
 
 problem: Deriv 4.278
-statement: .:!x(Fx&@y(H(xy)->Ly)&@y(Gy&H(xy)->J(xy)))<->?DNF
+statement: .:exists x (Fx&forall y (H(xy)->Ly)&forall y (Gy&H(xy)->J(xy)))<->?DNF
 end-box:
 note: "\"?DNF\" matches any formula with no conditionals or biconditionals, with no negations, conjunctions, or disjunctions in the IMMEDIATE scope of a negation, and no disjunctions in the IMMEDIATE scope of a conjunction."
 common-name: Deriv 4.278
 
 problem: Deriv 4.279
-statement: .:!x(Fx&@y(H(xy)->Ly)&@y(Gy&H(xy)->J(xy)))<->?CNF
+statement: .:exists x (Fx&forall y (H(xy)->Ly)&forall y (Gy&H(xy)->J(xy)))<->?CNF
 end-box:
 note: "\"?CNF\" matches any formula with no conditionals or biconditionals, with no negations, conjunctions, or disjunctions in the IMMEDIATE scope of a negation, and no conjunctions in the IMMEDIATE scope of a disjunction."
 common-name: Deriv 4.279
 
 problem: Deriv 4.280
-statement: " .:   ~@x~@y(Gx|Hy->Fx)<->?NOV"
+statement: " .:   ~forall x ~forall y (Gx|Hy->Fx)<->?NOV"
 end-box:
 note: Only Direct Derivation and Biconditional Derivation are enabled for this problem.  Begin with either a Biconditional Derivation or with T91, and then use Interchange of Equivalents to complete the derivation.  "?NOV" matches any formula with no overlay of quantifiers.
 common-name: Deriv 4.280
 
 problem: Deriv 4.281
-statement: " .:   ~!x~!y(Gx|Hy->Fx)<->?NOV"
+statement: " .:   ~exists x ~exists y (Gx|Hy->Fx)<->?NOV"
 end-box:
 note: Only Direct Derivation and Biconditional Derivation are enabled for this problem.  Begin with either a Biconditional Derivation or with T91, and then use Interchange of Equivalents to complete the derivation.  "?NOV" matches any formula with no overlay of quantifiers.
 common-name: Deriv 4.281
 
 problem: Deriv 4.282
-statement: " .:   ~@x~@y(Gx|Hy<->Fx)<->?NOV"
+statement: " .:   ~forall x ~forall y (Gx|Hy<->Fx)<->?NOV"
 end-box:
 note: Only Direct Derivation and Biconditional Derivation are enabled for this problem.  Begin with either a Biconditional Derivation or with T91, and then use Interchange of Equivalents to complete the derivation.  "?NOV" matches any formula with no overlay of quantifiers.
 common-name: Deriv 4.282
 
 problem: Deriv 4.283
-statement: " .:   ~!x~!y(Gx|Hy<->Fx)<->?NOV"
+statement: " .:   ~exists x ~exists y (Gx|Hy<->Fx)<->?NOV"
 end-box:
 note: Only Direct Derivation and Biconditional Derivation are enabled for this problem.  Begin with either a Biconditional Derivation or with T91, and then use Interchange of Equivalents to complete the derivation.  "?NOV" matches any formula with no overlay of quantifiers.
 common-name: Deriv 4.283
 
 problem: Deriv 4.283a
-statement: .: @y!x(Fx&(Gy<->Gx))<->?NOV
+statement: .: forall y exists x (Fx&(Gy<->Gx))<->?NOV
 end-box:
 note: Only Direct Derivation and Biconditional Derivation are enabled for this problem.  Begin with either a Biconditional Derivation or with T91, and then use Interchange of Equivalents to complete the derivation.  "?NOV" matches any formula with no overlay of quantifiers.
 common-name: Deriv 4.283a
 
 problem: Deriv 4.283b
-statement: .: @y!x(Fx&(Gy<->Gx|Fy))<->?NOV
+statement: .: forall y exists x (Fx&(Gy<->Gx|Fy))<->?NOV
 end-box:
 note: Only Direct Derivation and Biconditional Derivation are enabled for this problem.  Begin with either a Biconditional Derivation or with T91, and then use Interchange of Equivalents to complete the derivation.  "?NOV" matches any formula with no overlay of quantifiers.
 common-name: Deriv 4.283b
 
 problem: Deriv 4.284
-statement: " .:   (~@x~@yR(xy)->@xFx)<->?PNX"
+statement: " .:   (~forall x ~forall y R(xy)->forall x Fx)<->?PNX"
 end-box:
 note: Only Direct Derivation and Biconditional Derivation are enabled for this problem.  Begin with either a Biconditional Derivation or with T91, and then use Interchange of Equivalents to complete the derivation.  "?PNX" matches any formula in prenex form.
 common-name: Deriv 4.284
 
 problem: Deriv 4.285
-statement: " .:   (~!x~@yR(xy)->!xFx)<->?PNX"
+statement: " .:   (~exists x ~forall y R(xy)->exists x Fx)<->?PNX"
 end-box:
 note: Only Direct Derivation and Biconditional Derivation are enabled for this problem.  Begin with either a Biconditional Derivation or with T91, and then use Interchange of Equivalents to complete the derivation.  "?PNX" matches any formula in prenex form.
 common-name: Deriv 4.285
 
 problem: Deriv 4.286
-statement: " .:   (~@x~@yR(xy)<->@xFx)<->?PNX"
+statement: " .:   (~forall x ~forall y R(xy)<->forall x Fx)<->?PNX"
 end-box:
 note: Only Direct Derivation and Biconditional Derivation are enabled for this problem.  Begin with either a Biconditional Derivation or with T91, and then use Interchange of Equivalents to complete the derivation.  "?PNX" matches any formula in prenex form.
 common-name: Deriv 4.286
 
 problem: Deriv 4.287
-statement: " .:   (~!x~@yR(xy)<->!xFx)<->?PNX"
+statement: " .:   (~exists x ~forall y R(xy)<->exists x Fx)<->?PNX"
 end-box:
 note: Only Direct Derivation and Biconditional Derivation are enabled for this problem.  Begin with either a Biconditional Derivation or with T91, and then use Interchange of Equivalents to complete the derivation.  "?PNX" matches any formula in prenex form.
 common-name: Deriv 4.287
@@ -5825,25 +5825,25 @@ note: Command Mode is disabled for this problem.  Give a Biconditional Derivatio
 common-name: Deriv 4.293
 
 problem: Deriv 4.294
-statement: " .:   ~@x~@y(Gx|Hy->Fy)<->?NOV"
+statement: " .:   ~forall x ~forall y (Gx|Hy->Fy)<->?NOV"
 end-box:
 note: Command Mode is disabled for this problem.  Give a Biconditional Derivation.
 common-name: Deriv 4.294
 
 problem: Deriv 4.295
-statement: " .:   ~!x~!y(Gy&(Hy->Fx))<->?NOV"
+statement: " .:   ~exists x ~exists y (Gy&(Hy->Fx))<->?NOV"
 end-box:
 note: Command Mode is disabled for this problem.  Give a Biconditional Derivation.
 common-name: Deriv 4.295
 
 problem: Deriv 4.296
-statement: .: (~!x@yR(xy)->~@y!xR(xy))<->?PNX
+statement: .: (~exists x forall y R(xy)->~forall y exists x R(xy))<->?PNX
 end-box:
 note: Command Mode is disabled for this problem.  Give a Biconditional Derivation.
 common-name: Deriv 4.296
 
 problem: Deriv 4.297
-statement: .: (~@x(Fx&!yR(xyz))->~!z(Fz|@xR(xyz)))<->?PNX
+statement: .: (~forall x (Fx&exists y R(xyz))->~exists z (Fz|forall x R(xyz)))<->?PNX
 end-box:
 note: Command Mode is disabled for this problem.  Give a Biconditional Derivation.
 common-name: Deriv 4.297
@@ -5853,7 +5853,7 @@ common-name: Deriv 4.297
 ## 
 
 problem: Deriv 4.421
-statement: .:  @x(R(xz)<->!zR(zx))->!x(R(xx)<->!zR(zx))
+statement: .:  forall x (R(xz)<->exists z R(zx))->exists x (R(xx)<->exists z R(zx))
 end-box:
 note: All derived quantifier rules are disabled.  This is a very difficult problem unless an appropriate technique is used to deal with the free variable in the antecedent.
 common-name: Deriv 4.421
@@ -5866,125 +5866,125 @@ common-name: Deriv 4.421
 problem: Deriv 5.001
 flag: c
 flag: q
-statement: " .: @x@y(Fx<->x=y)<->!x(@yy=x&Fx)"
+statement: " .: forall x forall y (Fx<->x=y)<->exists x (forall y y=x&Fx)"
 end-box:
 common-name: Deriv 5.001
 
 problem: Deriv 5.002
 flag: c
 flag: q
-statement: " .: !x!y(Fx<->x=y)<->!x!yx<>y|@xFx"
+statement: " .: exists x exists y (Fx<->x=y)<->exists x exists y x<>y|forall x Fx"
 end-box:
 common-name: Deriv 5.002
 
 problem: Deriv 5.003
 flag: c
 flag: q
-statement: " .: !x@y(Fx<->x=y)<->!x(@yy=x&Fx)"
+statement: " .: exists x forall y (Fx<->x=y)<->exists x (forall y y=x&Fx)"
 end-box:
 common-name: Deriv 5.003
 
 problem: Deriv 5.004
 flag: c
 flag: q
-statement: " .: @y!x(Fx<->x=y)<->@xFx|!x!y(x<>y&~Fx&~Fy)"
+statement: " .: forall y exists x (Fx<->x=y)<->forall x Fx|exists x exists y (x<>y&~Fx&~Fy)"
 end-box:
 common-name: Deriv 5.004
 
 problem: Deriv 5.005
 flag: c
 flag: q
-statement: " .: @x!y@z(z<>x->z=y)<->!x!y@z(z=x|z=y)"
+statement: " .: forall x exists y forall z (z<>x->z=y)<->exists x exists y forall z (z=x|z=y)"
 end-box:
 common-name: Deriv 5.005
 
 problem: Deriv 5.006
 flag: c
 flag: q
-statement: " .: !y@x@z(z<>x->z=y)<->!y@xx=y"
+statement: " .: exists y forall x forall z (z<>x->z=y)<->exists y forall x x=y"
 end-box:
 common-name: Deriv 5.006
 
 problem: Deriv 5.007
 flag: c
 flag: q
-statement: " .: !x(Fx&!y(Fy&@z(Fz->x=z|y=z)))<->!xFx&@x@y@z(Fx&Fy&Fz->x=y|x=z|y=z)"
+statement: " .: exists x (Fx&exists y (Fy&forall z (Fz->x=z|y=z)))<->exists x Fx&forall x forall y forall z (Fx&Fy&Fz->x=y|x=z|y=z)"
 end-box:
 common-name: Deriv 5.007
 
 problem: Deriv 5.008
 flag: c
 flag: q
-statement: " .: @x(Fx->!z(Fz&@y(Fy->(x<>y->y=z))))<->@x@y@z(Fx&Fy&Fz->x=y|x=z|y=z)"
+statement: " .: forall x (Fx->exists z (Fz&forall y (Fy->(x<>y->y=z))))<->forall x forall y forall z (Fx&Fy&Fz->x=y|x=z|y=z)"
 end-box:
 common-name: Deriv 5.008
 
 problem: Deriv 5.009
 flag: c
 flag: q
-statement: " .: @x(Fx->!z(Fz&@y(Fy->(x<>y<->y=z))))<->~!xFx|!x!y(x<>y&@z(Fz<->z=x|z=y))"
+statement: " .: forall x (Fx->exists z (Fz&forall y (Fy->(x<>y<->y=z))))<->~exists x Fx|exists x exists y (x<>y&forall z (Fz<->z=x|z=y))"
 end-box:
 common-name: Deriv 5.009
 
 problem: Deriv 5.010
 flag: c
 flag: q
-statement: " .: @x@y(L(xx)&(L(xy)->x=y)->(L(yx)->x=y))<->@x(L(xx)->@y(L(yx)->L(xy)))"
+statement: " .: forall x forall y (L(xx)&(L(xy)->x=y)->(L(yx)->x=y))<->forall x (L(xx)->forall y (L(yx)->L(xy)))"
 end-box:
 common-name: Deriv 5.010
 
 problem: Deriv 5.011
 flag: c
 flag: q
-statement: " .: @x@y((L(xy)<->x=y)->(L(yx)<->x=y))<->@x@y(L(yx)->L(xy))"
+statement: " .: forall x forall y ((L(xy)<->x=y)->(L(yx)<->x=y))<->forall x forall y (L(yx)->L(xy))"
 end-box:
 common-name: Deriv 5.011
 
 problem: Deriv 5.012
 flag: c
 flag: q
-statement: " .: !z@x(!yL(xy)<->x=z)&!z@y(!xL(xy)<->y=z)<->!z!w@x@y(L(xy)<->x=z&y=w)"
+statement: " .: exists z forall x (exists y L(xy)<->x=z)&exists z forall y (exists x L(xy)<->y=z)<->exists z exists w forall x forall y (L(xy)<->x=z&y=w)"
 end-box:
 common-name: Deriv 5.012
 
 problem: Deriv 5.013
 flag: c
 flag: q
-statement: " .: !z!w@x@y(L(xy)<->x=z&y=w)->!z@x(!w@y(L(xy)<->y=w)<->x=z)&!w@y(!z@x(L(xy)<->x=z)<->y=w)"
+statement: " .: exists z exists w forall x forall y (L(xy)<->x=z&y=w)->exists z forall x (exists w forall y (L(xy)<->y=w)<->x=z)&exists w forall y (exists z forall x (L(xy)<->x=z)<->y=w)"
 end-box:
 common-name: Deriv 5.013
 
 problem: Deriv 5.014
 flag: c
 flag: q
-statement: " .: !x!y(x<>y&@z(z=x|z=y))->(!z@x(!w@y(L(xy)<->y=w)<->x=z)<->!w@y(!z@x(L(xy)<->x=z)<->y=w))"
+statement: " .: exists x exists y (x<>y&forall z (z=x|z=y))->(exists z forall x (exists w forall y (L(xy)<->y=w)<->x=z)<->exists w forall y (exists z forall x (L(xy)<->x=z)<->y=w))"
 end-box:
 common-name: Deriv 5.014
 
 problem: Deriv 5.015
 flag: c
 flag: q
-statement: " @y!z@x(F(xz)<->x=y) .: ~!w@x(F(xw)<->@u(F(xu)->!y(F(yu)&~!z(F(zu)&F(zy)))))"
+statement: " forall y exists z forall x (F(xz)<->x=y) .: ~exists w forall x (F(xw)<->forall u (F(xu)->exists y (F(yu)&~exists z (F(zu)&F(zy)))))"
 end-box:
 common-name: Deriv 5.015
 
 problem: Deriv 5.016
-statement: !x!y(x<>y & @z(z=x | z=y)).  @x@y(x<>y -> a(x)<>a(y))  .: @x!y x=a(y)
+statement: exists x exists y (x<>y & forall z (z=x | z=y)).  forall x forall y (x<>y -> a(x)<>a(y))  .: forall x exists y  x=a(y)
 end-box:
 common-name: Deriv 5.016
 
 problem: Deriv 5.017
-statement: !x!y@z(z=x|z=y).  @x@y@z(F(yx)&F(zx)->y=z).  @x!yF(xy)  .:  @y!xF(xy)
+statement: exists x exists y forall z (z=x|z=y).  forall x forall y forall z (F(yx)&F(zx)->y=z).  forall x exists y F(xy)  .:  forall y exists x F(xy)
 end-box:
 common-name: Deriv 5.017
 
 problem: Deriv 5.018
-statement: @xa(x)=x  .:  @xa(x)=a(a(a(x)))
+statement: forall x a(x)=x  .:  forall x a(x)=a(a(a(x)))
 end-box:
 common-name: Deriv 5.018
 
 problem: Deriv 5.019
-statement: @xa(a(x))=a(x)  .:  @x(!yx=a(y)->x=a(x))
+statement: forall x a(a(x))=a(x)  .:  forall x (exists y x=a(y)->x=a(x))
 end-box:
 common-name: Deriv 5.019
 
@@ -5995,13 +5995,13 @@ note: Hint: First derive the universal closure of the premise.
 common-name: Deriv 5.020
 
 problem: Deriv 5.021
-statement: a(a(xy)z)=a(x a(yz)).  a(ex)=x.  !ya(yx)=e  .:  a(xy)=a(xz)->y=z
+statement: a(a(xy)z)=a(x a(yz)).  a(ex)=x.  exists y a(yx)=e  .:  a(xy)=a(xz)->y=z
 end-box:
 note: Hint: First derive the universal closure of the premises.
 common-name: Deriv 5.021
 
 problem: Deriv 5.022
-statement: a(a(xy)z)=a(x a(yz)).  a(ex)=x.  !ya(yx)=e  .:  a(yx)=e->a(xy)=e
+statement: a(a(xy)z)=a(x a(yz)).  a(ex)=x.  exists y a(yx)=e  .:  a(yx)=e->a(xy)=e
 end-box:
 note: Hint: First derive the universal closures of the premises.
 common-name: Deriv 5.022
@@ -6015,97 +6015,97 @@ common-name: Deriv 5.023
 ## To enable QElim, derive Deriv 5.050-5.065.
 
 problem: Deriv 5.050
-statement: @zz=a  .: !xFx<->Fa
+statement: forall z z=a  .: exists x Fx<->Fa
 end-box:
 proves: QElim1U
 common-name: Deriv 5.050
 
 problem: Deriv 5.051
-statement: @zz=a  .: @xFx<->Fa
+statement: forall z z=a  .: forall x Fx<->Fa
 end-box:
 proves: QElim1E
 common-name: Deriv 5.051
 
 problem: Deriv 5.052
-statement: @z(Fz<->z=a)  .: !x(Fx&Gx)<->Ga
+statement: forall z (Fz<->z=a)  .: exists x (Fx&Gx)<->Ga
 end-box:
 proves: QElim1UR
 common-name: Deriv 5.052
 
 problem: Deriv 5.053
-statement: @z(Fz<->z=a)  .: @x(Fx->Gx)<->Ga
+statement: forall z (Fz<->z=a)  .: forall x (Fx->Gx)<->Ga
 end-box:
 proves: QElim1ER
 common-name: Deriv 5.053
 
 problem: Deriv 5.054
-statement: @z(z=a|z=b)  .: !xFx<->Fa|Fb
+statement: forall z (z=a|z=b)  .: exists x Fx<->Fa|Fb
 end-box:
 proves: QElim2U
 common-name: Deriv 5.054
 
 problem: Deriv 5.055
-statement: @z(z=a|z=b)  .: @xFx<->Fa&Fb
+statement: forall z (z=a|z=b)  .: forall x Fx<->Fa&Fb
 end-box:
 proves: QElim2E
 common-name: Deriv 5.055
 
 problem: Deriv 5.056
-statement: @z(Fz<->z=a|z=b)  .: !x(Fx&Gx)<->Ga|Gb
+statement: forall z (Fz<->z=a|z=b)  .: exists x (Fx&Gx)<->Ga|Gb
 end-box:
 proves: QElim2UR
 common-name: Deriv 5.056
 
 problem: Deriv 5.057
-statement: @z(Fz<->z=a|z=b)  .: @x(Fx->Gx)<->Ga&Gb
+statement: forall z (Fz<->z=a|z=b)  .: forall x (Fx->Gx)<->Ga&Gb
 end-box:
 proves: QElim2ER
 common-name: Deriv 5.057
 
 problem: Deriv 5.058
-statement: @z(z=a|z=b|z=c)  .: !xFx<->Fa|Fb|Fc
+statement: forall z (z=a|z=b|z=c)  .: exists x Fx<->Fa|Fb|Fc
 end-box:
 proves: QElim3U
 common-name: Deriv 5.058
 
 problem: Deriv 5.059
-statement: @z(z=a|z=b|z=c)  .: @xFx<->Fa&Fb&Fc
+statement: forall z (z=a|z=b|z=c)  .: forall x Fx<->Fa&Fb&Fc
 end-box:
 proves: QElim3E
 common-name: Deriv 5.059
 
 problem: Deriv 5.060
-statement: @z(Fz<->z=a|z=b|z=c)  .: !x(Fx&Gx)<->Ga|Gb|Gc
+statement: forall z (Fz<->z=a|z=b|z=c)  .: exists x (Fx&Gx)<->Ga|Gb|Gc
 end-box:
 proves: QElim3UR
 common-name: Deriv 5.060
 
 problem: Deriv 5.061
-statement: @z(Fz<->z=a|z=b|z=c)  .: @x(Fx->Gx)<->Ga&Gb&Gc
+statement: forall z (Fz<->z=a|z=b|z=c)  .: forall x (Fx->Gx)<->Ga&Gb&Gc
 end-box:
 proves: QElim3ER
 common-name: Deriv 5.061
 
 problem: Deriv 5.062
-statement: @z(z=a|z=b|z=c|z=d)  .: !xFx<->Fa|Fb|Fc|Fd
+statement: forall z (z=a|z=b|z=c|z=d)  .: exists x Fx<->Fa|Fb|Fc|Fd
 end-box:
 proves: QElim4U
 common-name: Deriv 5.062
 
 problem: Deriv 5.063
-statement: @z(z=a|z=b|z=c|z=d)  .: @xFx<->Fa&Fb&Fc&Fd
+statement: forall z (z=a|z=b|z=c|z=d)  .: forall x Fx<->Fa&Fb&Fc&Fd
 end-box:
 proves: QElim4E
 common-name: Deriv 5.063
 
 problem: Deriv 5.064
-statement: @z(Fz<->z=a|z=b|z=c|z=d)  .: !x(Fx&Gx)<->Ga|Gb|Gc|Gd
+statement: forall z (Fz<->z=a|z=b|z=c|z=d)  .: exists x (Fx&Gx)<->Ga|Gb|Gc|Gd
 end-box:
 proves: QElim4UR
 common-name: Deriv 5.064
 
 problem: Deriv 5.065
-statement: @z(Fz<->z=a|z=b|z=c|z=d)  .: @x(Fx->Gx)<->Ga&Gb&Gc&Gd
+statement: forall z (Fz<->z=a|z=b|z=c|z=d)  .: forall x (Fx->Gx)<->Ga&Gb&Gc&Gd
 end-box:
 proves: QElim4ER
 common-name: Deriv 5.065
@@ -6153,7 +6153,7 @@ common-name: Deriv 5.305 T305
 problem: Deriv 5.306 T306
 flag: c
 flag: q
-statement: " .: Fx<->@y(y=x->Fy)"
+statement: " .: Fx<->forall y (y=x->Fy)"
 end-box:
 proves: T306
 common-name: Deriv 5.306 T306
@@ -6161,7 +6161,7 @@ common-name: Deriv 5.306 T306
 problem: Deriv 5.307 T307
 flag: c
 flag: q
-statement: " .: Fx<->!y(y=x&Fy)"
+statement: " .: Fx<->exists y (y=x&Fy)"
 end-box:
 proves: T307
 common-name: Deriv 5.307 T307
@@ -6169,7 +6169,7 @@ common-name: Deriv 5.307 T307
 problem: Deriv 5.308 T308
 flag: c
 flag: q
-statement: " .: x=y<->@z(z=x->z=y)"
+statement: " .: x=y<->forall z (z=x->z=y)"
 end-box:
 proves: T308
 common-name: Deriv 5.308 T308
@@ -6177,7 +6177,7 @@ common-name: Deriv 5.308 T308
 problem: Deriv 5.309 T309
 flag: c
 flag: q
-statement: " .: x=y<->!z(z=x&z=y)"
+statement: " .: x=y<->exists z (z=x&z=y)"
 end-box:
 proves: T309
 common-name: Deriv 5.309 T309
@@ -6185,7 +6185,7 @@ common-name: Deriv 5.309 T309
 problem: Deriv 5.310 T310
 flag: c
 flag: q
-statement: " .: F(xy)<->@z@w(z=x&w=y->F(zw))"
+statement: " .: F(xy)<->forall z forall w (z=x&w=y->F(zw))"
 end-box:
 proves: T310
 common-name: Deriv 5.310 T310
@@ -6193,7 +6193,7 @@ common-name: Deriv 5.310 T310
 problem: Deriv 5.311 T311
 flag: c
 flag: q
-statement: " .: F(xy)<->!z!w(z=x&w=y&F(zw))"
+statement: " .: F(xy)<->exists z exists w (z=x&w=y&F(zw))"
 end-box:
 proves: T311
 common-name: Deriv 5.311 T311
@@ -6225,7 +6225,7 @@ common-name: Deriv 5.314 T314
 problem: Deriv 5.315 T315
 flag: c
 flag: q
-statement: " .: @x(!y(Fy&x=a(y))->Fx)<->@x(Fx->Fa(x))"
+statement: " .: forall x (exists y (Fy&x=a(y))->Fx)<->forall x (Fx->Fa(x))"
 end-box:
 proves: T315
 common-name: Deriv 5.315 T315
@@ -6233,7 +6233,7 @@ common-name: Deriv 5.315 T315
 problem: Deriv 5.316 T316
 flag: c
 flag: q
-statement: " .: !xFx&@x@y(Fx&Fy->x=y)<->!x(Fx&@y(Fy->x=y))"
+statement: " .: exists x Fx&forall x forall y (Fx&Fy->x=y)<->exists x (Fx&forall y (Fy->x=y))"
 end-box:
 proves: T316
 common-name: Deriv 5.316 T316
@@ -6241,7 +6241,7 @@ common-name: Deriv 5.316 T316
 problem: Deriv 5.317 T317
 flag: c
 flag: q
-statement: " .: !xFx&@x@y(Fx&Fy->x=y)<->!y@x(Fx<->x=y)"
+statement: " .: exists x Fx&forall x forall y (Fx&Fy->x=y)<->exists y forall x (Fx<->x=y)"
 end-box:
 proves: T317
 common-name: Deriv 5.317 T317
@@ -6249,7 +6249,7 @@ common-name: Deriv 5.317 T317
 problem: Deriv 5.318 T318
 flag: c
 flag: q
-statement: " .: !x!y(Fx&Fy&x<>y)&@x@y@z(Fx&Fy&Fz->x=y|x=z|y=z)<->!x!y(Fx&Fy&x<>y&@z(Fz->x=z|y=z))"
+statement: " .: exists x exists y (Fx&Fy&x<>y)&forall x forall y forall z (Fx&Fy&Fz->x=y|x=z|y=z)<->exists x exists y (Fx&Fy&x<>y&forall z (Fz->x=z|y=z))"
 end-box:
 proves: T318
 common-name: Deriv 5.318 T318
@@ -6257,7 +6257,7 @@ common-name: Deriv 5.318 T318
 problem: Deriv 5.319 T319
 flag: c
 flag: q
-statement: " .: !x!y(Fx&Fy&x<>y)&@x@y@z(Fx&Fy&Fz->x=y|x=z|y=z)<->!x!y(x<>y&@z(Fz<->x=z|y=z))"
+statement: " .: exists x exists y (Fx&Fy&x<>y)&forall x forall y forall z (Fx&Fy&Fz->x=y|x=z|y=z)<->exists x exists y (x<>y&forall z (Fz<->x=z|y=z))"
 end-box:
 proves: T319
 common-name: Deriv 5.319 T319
@@ -6265,7 +6265,7 @@ common-name: Deriv 5.319 T319
 problem: Deriv 5.320 T320
 flag: c
 flag: q
-statement: " .: ~!y@x(Fx<->x=y)<->~!xFx|!x!y(x<>y&Fx&Fy)"
+statement: " .: ~exists y forall x (Fx<->x=y)<->~exists x Fx|exists x exists y (x<>y&Fx&Fy)"
 end-box:
 proves: T320
 common-name: Deriv 5.320 T320
@@ -6273,7 +6273,7 @@ common-name: Deriv 5.320 T320
 problem: Deriv 5.321 T321
 flag: c
 flag: q
-statement: " .: ~!x!y(x<>y&@z(Fz<->z=x|z=y))<->@x@y(Fx&Fy->x=y)|!x!y!z(Fx&Fy&Fz&x<>y&x<>z&y<>z)"
+statement: " .: ~exists x exists y (x<>y&forall z (Fz<->z=x|z=y))<->forall x forall y (Fx&Fy->x=y)|exists x exists y exists z (Fx&Fy&Fz&x<>y&x<>z&y<>z)"
 end-box:
 proves: T321
 common-name: Deriv 5.321 T321
@@ -6281,7 +6281,7 @@ common-name: Deriv 5.321 T321
 problem: Deriv 5.322 T322
 flag: c
 flag: q
-statement: " .: !x@yy=x<->@x@yy=x"
+statement: " .: exists x forall y y=x<->forall x forall y y=x"
 end-box:
 proves: T322
 common-name: Deriv 5.322 T322
@@ -6289,7 +6289,7 @@ common-name: Deriv 5.322 T322
 problem: Deriv 5.323 T323
 flag: c
 flag: q
-statement: " .: !x!yx<>y<->@x!yx<>y"
+statement: " .: exists x exists y x<>y<->forall x exists y x<>y"
 end-box:
 proves: T323
 common-name: Deriv 5.323 T323
@@ -6297,7 +6297,7 @@ common-name: Deriv 5.323 T323
 problem: Deriv 5.324 T324
 flag: c
 flag: q
-statement: " .: ~!x!yx<>y->(!xFx<->@xFx)"
+statement: " .: ~exists x exists y x<>y->(exists x Fx<->forall x Fx)"
 end-box:
 proves: T324
 common-name: Deriv 5.324 T324
@@ -6305,7 +6305,7 @@ common-name: Deriv 5.324 T324
 problem: Deriv 5.325 T325
 flag: c
 flag: q
-statement: " .: !x!y@z(z=x|z=y)<->!x@yy=x|!x!y(x<>y&@z(z=x|z=y))"
+statement: " .: exists x exists y forall z (z=x|z=y)<->exists x forall y y=x|exists x exists y (x<>y&forall z (z=x|z=y))"
 end-box:
 proves: T325
 common-name: Deriv 5.325 T325
@@ -6313,7 +6313,7 @@ common-name: Deriv 5.325 T325
 problem: Deriv 5.326 T326
 flag: c
 flag: q
-statement: " .: !x!y@z(x<>y&(z=x|z=y))<->!x!y@z(x<>y<->(z=x|z=y))"
+statement: " .: exists x exists y forall z (x<>y&(z=x|z=y))<->exists x exists y forall z (x<>y<->(z=x|z=y))"
 end-box:
 proves: T326
 common-name: Deriv 5.326 T326
@@ -6321,7 +6321,7 @@ common-name: Deriv 5.326 T326
 problem: Deriv 5.327 T327
 flag: c
 flag: q
-statement: " .: @x!y(Fx<->x=y)<->!x!yx<>y|@xFx"
+statement: " .: forall x exists y (Fx<->x=y)<->exists x exists y x<>y|forall x Fx"
 end-box:
 proves: T327
 common-name: Deriv 5.327 T327
@@ -6329,7 +6329,7 @@ common-name: Deriv 5.327 T327
 problem: Deriv 5.328 T328
 flag: c
 flag: q
-statement: " .: @x@y(Fx&Fy<->x=y)<->!x(@yy=x&Fx)"
+statement: " .: forall x forall y (Fx&Fy<->x=y)<->exists x (forall y y=x&Fx)"
 end-box:
 proves: T328
 common-name: Deriv 5.328 T328
@@ -6337,7 +6337,7 @@ common-name: Deriv 5.328 T328
 problem: Deriv 5.329 T329
 flag: c
 flag: q
-statement: " .: !xx=y"
+statement: " .: exists x x=y"
 end-box:
 proves: T329
 common-name: Deriv 5.329 T329
@@ -6345,7 +6345,7 @@ common-name: Deriv 5.329 T329
 problem: Deriv 5.330 T330
 flag: c
 flag: q
-statement: " .: !z@x(x=y<->x=z)"
+statement: " .: exists z forall x (x=y<->x=z)"
 end-box:
 proves: T330
 common-name: Deriv 5.330 T330
@@ -6353,7 +6353,7 @@ common-name: Deriv 5.330 T330
 problem: Deriv 5.331 T331
 flag: c
 flag: q
-statement: " .: !y(@x(Fx<->x=y)&Gy)<->!y@x(Fx<->x=y)&@x(Fx->Gx)"
+statement: " .: exists y (forall x (Fx<->x=y)&Gy)<->exists y forall x (Fx<->x=y)&forall x (Fx->Gx)"
 end-box:
 proves: T331
 common-name: Deriv 5.331 T331
@@ -6361,7 +6361,7 @@ common-name: Deriv 5.331 T331
 problem: Deriv 5.332 T332
 flag: c
 flag: q
-statement: " .: ~!y(@x(Fx<->x=y)&Gy)<->~!y@x(Fx<->x=y)|!y(@x(Fx<->x=y)&~Gy)"
+statement: " .: ~exists y (forall x (Fx<->x=y)&Gy)<->~exists y forall x (Fx<->x=y)|exists y (forall x (Fx<->x=y)&~Gy)"
 end-box:
 proves: T332
 common-name: Deriv 5.332 T332
@@ -6369,7 +6369,7 @@ common-name: Deriv 5.332 T332
 problem: Deriv 5.333 T333
 flag: c
 flag: q
-statement: " .: !y@x(Fx<->x=y)->(@x(Fx->Gx)<->!x(Fx&Gx))"
+statement: " .: exists y forall x (Fx<->x=y)->(forall x (Fx->Gx)<->exists x (Fx&Gx))"
 end-box:
 proves: T333
 common-name: Deriv 5.333 T333
@@ -6377,7 +6377,7 @@ common-name: Deriv 5.333 T333
 problem: Deriv 5.334 T334
 flag: c
 flag: q
-statement: " .: ~!y@x(x<>x<->x=y)"
+statement: " .: ~exists y forall x (x<>x<->x=y)"
 end-box:
 proves: T334
 common-name: Deriv 5.334 T334
@@ -6385,7 +6385,7 @@ common-name: Deriv 5.334 T334
 problem: Deriv 5.335 T335
 flag: c
 flag: q
-statement: " .: !yy=x&P<->P"
+statement: " .: exists y y=x&P<->P"
 end-box:
 proves: T335
 common-name: Deriv 5.335 T335
@@ -6393,7 +6393,7 @@ common-name: Deriv 5.335 T335
 problem: Deriv 5.336 T336
 flag: c
 flag: q
-statement: " .: ~!yy=x|P<->P"
+statement: " .: ~exists y y=x|P<->P"
 end-box:
 proves: T336
 common-name: Deriv 5.336 T336
@@ -6406,7 +6406,7 @@ common-name: Deriv 5.336 T336
 problem: Deriv 6.401 T401
 flag: c
 flag: q
-statement: " .: @x(Fx<->x=y)->%xFx=y"
+statement: " .: forall x (Fx<->x=y)->%xFx=y"
 end-box:
 proves: T401
 common-name: Deriv 6.401 T401
@@ -6414,7 +6414,7 @@ common-name: Deriv 6.401 T401
 problem: Deriv 6.402 T402
 flag: c
 flag: q
-statement: " .: !y@x(Fx<->x=y)->F%xFx"
+statement: " .: exists y forall x (Fx<->x=y)->F%xFx"
 end-box:
 proves: T402
 common-name: Deriv 6.402 T402
@@ -6422,7 +6422,7 @@ common-name: Deriv 6.402 T402
 problem: Deriv 6.403 T403
 flag: c
 flag: q
-statement: " .: ~!y@x(Fx<->x=y)->%xFx=%xx<>x"
+statement: " .: ~exists y forall x (Fx<->x=y)->%xFx=%xx<>x"
 end-box:
 proves: T403
 common-name: Deriv 6.403 T403
@@ -6430,7 +6430,7 @@ common-name: Deriv 6.403 T403
 problem: Deriv 6.404 T404
 flag: c
 flag: q
-statement: " .: @x(Fx<->Gx)->%xFx=%xGx"
+statement: " .: forall x (Fx<->Gx)->%xFx=%xGx"
 end-box:
 proves: T404
 note: IE and CIE are disabled for this problem.
@@ -6447,7 +6447,7 @@ common-name: Deriv 6.405 T405
 problem: Deriv 6.406 T406
 flag: c
 flag: q
-statement: " .: !y@x(Fx<->x=y)->@x(Fx<->x=%xFx)"
+statement: " .: exists y forall x (Fx<->x=y)->forall x (Fx<->x=%xFx)"
 end-box:
 proves: T406.SPRD1.SPRD2
 common-name: Deriv 6.406 T406
@@ -6455,7 +6455,7 @@ common-name: Deriv 6.406 T406
 problem: Deriv 6.407 T407
 flag: c
 flag: q
-statement: " .: @x(Fx<->x=%xFx)->!y@x(Fx<->x=y)"
+statement: " .: forall x (Fx<->x=%xFx)->exists y forall x (Fx<->x=y)"
 end-box:
 proves: T407
 common-name: Deriv 6.407 T407
@@ -6463,7 +6463,7 @@ common-name: Deriv 6.407 T407
 problem: Deriv 6.408 T408
 flag: c
 flag: q
-statement: " .: !y@x(Fx<->x=y)&!y@x(Gx<->x=y)->(%xFx=%xGx->@x(Fx<->Gx))"
+statement: " .: exists y forall x (Fx<->x=y)&exists y forall x (Gx<->x=y)->(%xFx=%xGx->forall x (Fx<->Gx))"
 end-box:
 proves: T408
 common-name: Deriv 6.408 T408
@@ -6471,7 +6471,7 @@ common-name: Deriv 6.408 T408
 problem: Deriv 6.409 T409
 flag: c
 flag: q
-statement: " .: F%xFx<->!y@x(Fx<->x=y)|F%xx<>x"
+statement: " .: F%xFx<->exists y forall x (Fx<->x=y)|F%xx<>x"
 end-box:
 proves: T409
 common-name: Deriv 6.409 T409
@@ -6479,7 +6479,7 @@ common-name: Deriv 6.409 T409
 problem: Deriv 6.410 T410
 flag: c
 flag: q
-statement: " .: !y@x(Fx<->x=y)->(%xFx=y->@x(Fx<->x=y))"
+statement: " .: exists y forall x (Fx<->x=y)->(%xFx=y->forall x (Fx<->x=y))"
 end-box:
 proves: T410
 common-name: Deriv 6.410 T410
@@ -6487,7 +6487,7 @@ common-name: Deriv 6.410 T410
 problem: Deriv 6.411 T411
 flag: c
 flag: q
-statement: " .: ~!y@x(Fx<->x=y)&~!y@x(Gx<->x=y)->%xFx=%xGx"
+statement: " .: ~exists y forall x (Fx<->x=y)&~exists y forall x (Gx<->x=y)->%xFx=%xGx"
 end-box:
 proves: T411
 common-name: Deriv 6.411 T411
@@ -6495,7 +6495,7 @@ common-name: Deriv 6.411 T411
 problem: Deriv 6.412 T412
 flag: c
 flag: q
-statement: " .: G%xFx<->!y(@x(Fx<->x=y)&Gy)|(~!y@x(Fx<->x=y)&G%xx<>x)"
+statement: " .: G%xFx<->exists y (forall x (Fx<->x=y)&Gy)|(~exists y forall x (Fx<->x=y)&G%xx<>x)"
 end-box:
 proves: T412
 common-name: Deriv 6.412 T412
@@ -6535,84 +6535,84 @@ common-name: Deriv 6.416 T416
 problem: Deriv 6.417
 flag: c
 flag: q
-statement: " !y@x(Fx&Gx<->x=y). a=%x(Fx&Gx). @x(Gx->Hx) .: Ha"
+statement: " exists y forall x (Fx&Gx<->x=y). a=%x(Fx&Gx). forall x (Gx->Hx) .: Ha"
 end-box:
 common-name: Deriv 6.417
 
 problem: Deriv 6.418
 flag: c
 flag: q
-statement: " !y@x(x<>a<->x=y) .: @x(x=a|x=%xx<>a)"
+statement: " exists y forall x (x<>a<->x=y) .: forall x (x=a|x=%xx<>a)"
 end-box:
 common-name: Deriv 6.418
 
 problem: Deriv 6.419
 flag: c
 flag: q
-statement: " !y@x(F(ax)<->x=y). F(a%xF(xa)) .: %xF(xa)=%xF(ax)"
+statement: " exists y forall x (F(ax)<->x=y). F(a%xF(xa)) .: %xF(xa)=%xF(ax)"
 end-box:
 common-name: Deriv 6.419
 
 problem: Deriv 6.420
 flag: c
 flag: q
-statement: " @x!y@z(F(zx)<->z=y). %xF(xa)=b. @x@y(F(xy)->F(yx)) .: %xF(xb)=a"
+statement: " forall x exists y forall z (F(zx)<->z=y). %xF(xa)=b. forall x forall y (F(xy)->F(yx)) .: %xF(xb)=a"
 end-box:
 common-name: Deriv 6.420
 
 problem: Deriv 6.421
 flag: c
 flag: q
-statement: " %xGx<>%xx<>x. %xGx=%xFx .: !y(@x(Gx<->x=y)&Fy)"
+statement: " %xGx<>%xx<>x. %xGx=%xFx .: exists y (forall x (Gx<->x=y)&Fy)"
 end-box:
 common-name: Deriv 6.421
 
 problem: Deriv 6.422
 flag: c
 flag: q
-statement: " a=%x(Fx&G(xb)). Fc. H(cde). @x(H(xde)->G(xb)). !y@x(Fx&G(xb)<->x=y) .: a=c"
+statement: " a=%x(Fx&G(xb)). Fc. H(cde). forall x (H(xde)->G(xb)). exists y forall x (Fx&G(xb)<->x=y) .: a=c"
 end-box:
 common-name: Deriv 6.422
 
 problem: Deriv 6.423
 flag: c
 flag: q
-statement: " !y@x(Fx&G(ax)<->x=y). !y@x(Fx&G(xb)<->x=y). %x(Fx&G(ax))=%x(Fx&G(bx)). c=%x(Fx&G(bx)). G(a%x(Fx&G(xb))) .: %x(Fx&G(xb))=c"
+statement: " exists y forall x (Fx&G(ax)<->x=y). exists y forall x (Fx&G(xb)<->x=y). %x(Fx&G(ax))=%x(Fx&G(bx)). c=%x(Fx&G(bx)). G(a%x(Fx&G(xb))) .: %x(Fx&G(xb))=c"
 end-box:
 common-name: Deriv 6.423
 
 problem: Deriv 6.424
 flag: c
 flag: q
-statement: " a=%xFx. Fc(b). !y@x(Fx<->x=y) .: a=c(b)"
+statement: " a=%xFx. Fc(b). exists y forall x (Fx<->x=y) .: a=c(b)"
 end-box:
 common-name: Deriv 6.424
 
 problem: Deriv 6.425
 flag: c
 flag: q
-statement: " !y(@x(Fx&Gx<->x=y)&y=a). @x(Fx&x<>a->H(ax)). !x(Fx&Gx&H(bx)). @x@y(H(xy)->~H(yx)) .: ~Fb"
+statement: " exists y (forall x (Fx&Gx<->x=y)&y=a). forall x (Fx&x<>a->H(ax)). exists x (Fx&Gx&H(bx)). forall x forall y (H(xy)->~H(yx)) .: ~Fb"
 end-box:
 common-name: Deriv 6.425
 
 problem: Deriv 6.426
 flag: c
 flag: q
-statement: " @x@y(Fx&Fy&H(yx)->G(xy)). @x@y(G(xy)->~G(yx)). @x@y(~H(xy)&~J(xy)->H(yx)). @x@y(H(xy)|J(xy)->~K(xy)) .: !x(Fx&@y(Fy&y<>x->K(xy)))->%x(Fx&@y(Fy&y<>x->K(xy)))=%x(Fx&@y(Fy&y<>x->G(xy)))"
+statement: " forall x forall y (Fx&Fy&H(yx)->G(xy)). forall x forall y (G(xy)->~G(yx)). forall x forall y (~H(xy)&~J(xy)->H(yx)). forall x forall y (H(xy)|J(xy)->~K(xy)) .: exists x (Fx&forall y (Fy&y<>x->K(xy)))->%x(Fx&forall y (Fy&y<>x->K(xy)))=%x(Fx&forall y (Fy&y<>x->G(xy)))"
 end-box:
 common-name: Deriv 6.426
 
 problem: Deriv 6.427
 flag: c
 flag: q
-statement: " ~!x(Gx&Hx&@y(Gy&Hy&y<>x->F(xy))). @y@x(y<>x->F(yx)|F(xy)) .: @x(Gx&Hx->!y(Gy&Hy&F(yx)))"
+statement: " ~exists x (Gx&Hx&forall y (Gy&Hy&y<>x->F(xy))). forall y forall x (y<>x->F(yx)|F(xy)) .: forall x (Gx&Hx->exists y (Gy&Hy&F(yx)))"
 end-box:
 common-name: Deriv 6.427
 
 problem: Deriv 6.428
 flag: c
 flag: q
-statement: " @x(Gx&Hx->!y(Gy&Hy&F(yx))). @y@x(F(xy)->~F(yx)) .: ~!x(Gx&Hx&@y(Gy&Hy&y<>x->F(xy)))"
+statement: " forall x (Gx&Hx->exists y (Gy&Hy&F(yx))). forall y forall x (F(xy)->~F(yx)) .: ~exists x (Gx&Hx&forall y (Gy&Hy&y<>x->F(xy)))"
 end-box:
 common-name: Deriv 6.428
 

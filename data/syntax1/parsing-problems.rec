@@ -149,46 +149,46 @@ formula: ~(P|(Q&R)->((P|Q)&(P|R)<->P&Q))
 ## 
 
 problem: Pars 3.001
-formula: !xFx
+formula: exists x Fx
 
 problem: Pars 3.002
-formula: !x~(Fx)
+formula: exists x ~(Fx)
 
 problem: Pars 3.003
-formula: !xF~x
+formula: exists x F~x
 
 problem: Pars 3.004
-formula: ~!x~Fx
+formula: ~exists x ~Fx
 
 problem: Pars 3.005
 formula: FA->GB
 
 problem: Pars 3.006
-formula: !xFx->Gx
+formula: exists x Fx->Gx
 
 problem: Pars 3.007
-formula: !x(Fx->Gx)
+formula: exists x (Fx->Gx)
 
 problem: Pars 3.008
-formula: !x~Dx
+formula: exists x ~Dx
 
 problem: Pars 3.009
-formula: ((@x(Fx->Gx)&FB)->GB)
+formula: ((forall x (Fx->Gx)&FB)->GB)
 
 problem: Pars 3.010
-formula: ((!x~Fx)->(~@xFx))
+formula: ((exists x ~Fx)->(~forall x Fx))
 
 problem: Pars 3.011
-formula: !x(E->Fx)
+formula: exists x (E->Fx)
 
 problem: Pars 3.012
 formula: @A(FA->~GA)
 
 problem: Pars 3.013
-formula: ~(~@x~Fx|Gy)
+formula: ~(~forall x ~Fx|Gy)
 
 problem: Pars 3.014
-formula: !x(P<->Q&R)
+formula: exists x (P<->Q&R)
 
 problem: Pars 3.015
 formula: (FA->~GK)
@@ -197,46 +197,46 @@ problem: Pars 3.016
 formula: (Fxy->Gyx)
 
 problem: Pars 3.017
-formula: @a(Hx<->Gy)
+formula: forall a (Hx<->Gy)
 
 problem: Pars 3.018
-formula: !@x(Hx<->Gx)
+formula: !forall x (Hx<->Gx)
 
 problem: Pars 3.019
-formula: !x@y!z(~Fx&Gy->~Fz)
+formula: exists x forall y exists z (~Fx&Gy->~Fz)
 
 problem: Pars 3.020
-formula: @y~!~x(Hx&Gy)
+formula: forall y ~!~x(Hx&Gy)
 
 problem: Pars 3.021
-formula: @y(Hy->!xHx)
+formula: forall y (Hy->exists x Hx)
 
 problem: Pars 3.022
-formula: ~!x~!y~(~@x~@y->!z~Fz)
+formula: ~exists x ~exists y ~(~forall x ~forall y ->exists z ~Fz)
 
 problem: Pars 3.023
-formula: @x(@x(Hx->~!y~Gy)|Fx)
+formula: forall x (forall x (Hx->~exists y ~Gy)|Fx)
 
 problem: Pars 3.024
-formula: (!x)~Fx
+formula: (exists x)~Fx
 
 problem: Pars 3.025
-formula: ~@x~!y(Fx&~Gy)
+formula: ~forall x ~exists y (Fx&~Gy)
 
 problem: Pars 3.026
-formula: ~@x~!yFx&~Gy
+formula: ~forall x ~exists y Fx&~Gy
 
 problem: Pars 3.027
-formula: @x(FGx->Gy)
+formula: forall x (FGx->Gy)
 
 problem: Pars 3.028
-formula: !xFx&!xGx->!x(Fx&Gx)
+formula: exists x Fx&exists x Gx->exists x (Fx&Gx)
 
 problem: Pars 3.029
-formula: ~!x~Fx&((FA->!y~Hy)<->!z(~Fz->Hz))
+formula: ~exists x ~Fx&((FA->exists y ~Hy)<->exists z (~Fz->Hz))
 
 problem: Pars 3.030
-formula: !x(P->@x~Qx)
+formula: exists x (P->forall x ~Qx)
 
 ## 
 ##                          CHAPTER IV
@@ -265,7 +265,7 @@ problem: Pars 4.037
 formula: A(A(A(A)A)AA)
 
 problem: Pars 4.038
-formula: (@xF(xA)->GA(B(x))
+formula: (forall x F(xA)->GA(B(x))
 
 problem: Pars 4.039
 formula: A(Fx)
@@ -292,22 +292,22 @@ problem: Pars 4.046
 formula: G(C(y)D(x)A(A))
 
 problem: Pars 4.047
-formula: !x!y@xF(xy)
+formula: exists x exists y forall x F(xy)
 
 problem: Pars 4.048
-formula: @x(F->B(x))
+formula: forall x (F->B(x))
 
 problem: Pars 4.049
 formula: (F(Ay)|B(Ax))
 
 problem: Pars 4.050
-formula: @x(A(x)->B(x))
+formula: forall x (A(x)->B(x))
 
 problem: Pars 4.051
-formula: @x(FA(x)->GB(x))
+formula: forall x (FA(x)->GB(x))
 
 problem: Pars 4.052
-formula: (!x(@y(F(yA)->G(xB))->HA(B(AxB)))<->Fz)
+formula: (exists x (forall y (F(yA)->G(xB))->HA(B(AxB)))<->Fz)
 
 problem: Pars 4.053
 formula: Bx
@@ -340,10 +340,10 @@ problem: Pars 4.062
 formula: B(xyF(xy))
 
 problem: Pars 4.063
-formula: !x(B(x)&Fx)
+formula: exists x (B(x)&Fx)
 
 problem: Pars 4.064
-formula: @xFx|G
+formula: forall x Fx|G
 
 problem: Pars 4.065
 formula: H(A(xy)(B(xz)))
@@ -355,19 +355,19 @@ problem: Pars 4.067
 formula: H(A(B(xy)((x)))
 
 problem: Pars 4.068
-formula: @xC(D(x)y)
+formula: forall x C(D(x)y)
 
 problem: Pars 4.069
-formula: @xF(D(x)y)
+formula: forall x F(D(x)y)
 
 problem: Pars 4.070
-formula: @xF->P
+formula: forall x F->P
 
 problem: Pars 4.071
-formula: @xFx->P
+formula: forall x Fx->P
 
 problem: Pars 4.072
-formula: @x(F->Px)
+formula: forall x (F->Px)
 
 ## 
 ##                          CHAPTER VI

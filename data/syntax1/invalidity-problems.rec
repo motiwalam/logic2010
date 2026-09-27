@@ -20,46 +20,46 @@
 ## 
 
 problem: Inval 3.113
-argument: .:  @x(Fx->@xFx)
+argument: .:  forall x (Fx->forall x Fx)
 
 problem: Inval 3.114
-argument: @xFx->P  .:  @x(Fx->P)
+argument: forall x Fx->P  .:  forall x (Fx->P)
 
 problem: Inval 3.115
-argument: !x(Fx->P)  .:  !xFx->P
+argument: exists x (Fx->P)  .:  exists x Fx->P
 
 problem: Inval 3.116
-argument: .:~(!x~Fx&(FA&FB))
+argument: .:~(exists x ~Fx&(FA&FB))
 
 problem: Inval 3.117
-argument: @x!y(Fx<->Gy)  .:  !y@x(Fx<->Gy)
+argument: forall x exists y (Fx<->Gy)  .:  exists y forall x (Fx<->Gy)
 
 problem: Inval 3.118(i)
-argument: !x(Fx&~Gx).  !x(Gx&~Fx)  .:  @x(Fx|Gx)
+argument: exists x (Fx&~Gx).  exists x (Gx&~Fx)  .:  forall x (Fx|Gx)
 
 problem: Inval 3.118(iii)
-argument: !xFx.  !xGx.  !xHx.  @x((Fx&Gx)|(Fx&Hx)|(Gx&Hx)->Jx)  .:  !xJx
+argument: exists x Fx.  exists x Gx.  exists x Hx.  forall x ((Fx&Gx)|(Fx&Hx)|(Gx&Hx)->Jx)  .:  exists x Jx
 
 problem: Inval 3.201
-argument: @xFx->@xGx  .:  @x(Fx->Gx)
+argument: forall x Fx->forall x Gx  .:  forall x (Fx->Gx)
 
 problem: Inval 3.202
-argument: .:  !x(@yFy<->~Fx)
+argument: .:  exists x (forall y Fy<->~Fx)
 
 problem: Inval 3.203
-argument: @x(Fx<->Gx)  .:  (~!xFx&~!xGx)|(@xFx&@xGx)
+argument: forall x (Fx<->Gx)  .:  (~exists x Fx&~exists x Gx)|(forall x Fx&forall x Gx)
 
 problem: Inval 3.204
-argument: !xFx.  @xGx  .:  ~@x(Fx<->Gx)
+argument: exists x Fx.  forall x Gx  .:  ~forall x (Fx<->Gx)
 
 problem: Inval 3.205
-argument: @x(Fx<->Gx)  .:  (!x~Fx->!xGx)
+argument: forall x (Fx<->Gx)  .:  (exists x ~Fx->exists x Gx)
 
 problem: Inval 3.206
-argument: ~@x(Fx->Gx)  .:  ~!x@y(Fy->Gx)
+argument: ~forall x (Fx->Gx)  .:  ~exists x forall y (Fy->Gx)
 
 problem: Inval 3.207
-argument: !x(Fx&Gx)  .:  @x!y(Fy&Gx)
+argument: exists x (Fx&Gx)  .:  forall x exists y (Fy&Gx)
 
 ## 
 ## The following problems are in Blue Book mode.
@@ -67,23 +67,23 @@ argument: !x(Fx&Gx)  .:  @x!y(Fy&Gx)
 ## 
 
 problem: Inval 3.701
-argument: " !xGx.  @x(Gx->Hx)  .:  @xHx"
+argument: " exists x Gx.  forall x (Gx->Hx)  .:  forall x Hx"
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  The Expand facility is disabled.  All error messages are disabled.
 
 problem: Inval 3.702
-argument: " FA.  FB.  !xFx  .:  @xFx"
+argument: " FA.  FB.  exists x Fx  .:  forall x Fx"
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  The Expand facility is disabled.  All error messages are disabled.
 
 problem: Inval 3.703
-argument: " @y(Fy->@xGx).  !xFx  .:  @xFx"
+argument: " forall y (Fy->forall x Gx).  exists x Fx  .:  forall x Fx"
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  The Expand facility is disabled.  All error messages are disabled.
 
 problem: Inval 3.704
-argument: " @x(Fx<->Gx).  !x(Fx&Gx)  .:  @x(Gx|Hx)"
+argument: " forall x (Fx<->Gx).  exists x (Fx&Gx)  .:  forall x (Gx|Hx)"
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  The Expand facility is disabled.  All error messages are disabled.
 
 problem: Inval 3.705
-argument: " !x(Fx->@xFx)  .:  @x(!yFy->Fx)"
+argument: " exists x (Fx->forall x Fx)  .:  forall x (exists y Fy->Fx)"
 note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  The Expand facility is disabled.  All error messages are disabled.
 
 ## 
@@ -92,23 +92,23 @@ note: This is a Practice Blue Book Exam problem.  Checking remains enabled.  The
 ## 
 
 problem: Inval 3.801
-argument: " !xGx.  @x(Gx->Hx)  .:  @xHx"
+argument: " exists x Gx.  forall x (Gx->Hx)  .:  forall x Hx"
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  The Expand facility remains enabled.  All error messages are disabled.
 
 problem: Inval 3.802
-argument: " FA.  FB.  !xFx  .:  @xFx"
+argument: " FA.  FB.  exists x Fx  .:  forall x Fx"
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  The Expand facility remains enabled.  All error messages are disabled.
 
 problem: Inval 3.803
-argument: " @y(Fy->@xGx).  !xFx  .:  @xFx"
+argument: " forall y (Fy->forall x Gx).  exists x Fx  .:  forall x Fx"
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  The Expand facility remains enabled.  All error messages are disabled.
 
 problem: Inval 3.804
-argument: " @x(Fx<->Gx).  !x(Fx&Gx)  .:  @x(Gx|Hx)"
+argument: " forall x (Fx<->Gx).  exists x (Fx&Gx)  .:  forall x (Gx|Hx)"
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  The Expand facility remains enabled.  All error messages are disabled.
 
 problem: Inval 3.805
-argument: " !x(Fx->@xFx)  .:  @x(!yFy->Fx)"
+argument: " exists x (Fx->forall x Fx)  .:  forall x (exists y Fy->Fx)"
 note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It will be disabled on an actual exam.)  The Expand facility remains enabled.  All error messages are disabled.
 
 ## 
@@ -117,28 +117,28 @@ note: This is a Practice Computer Exam problem.  Checking remains enabled.  (It 
 ## 
 
 problem: Inval 4.001
-argument: @x!yF(xy).  ~!xF(xx)  .:  @x@y(F(xy)->F(yx))
+argument: forall x exists y F(xy).  ~exists x F(xx)  .:  forall x forall y (F(xy)->F(yx))
 
 problem: Inval 4.002
-argument: !x!yF(xy).  @y(!xF(xy)->@xF(xy))  .:  @xF(xx)
+argument: exists x exists y F(xy).  forall y (exists x F(xy)->forall x F(xy))  .:  forall x F(xx)
 
 problem: Inval 4.003
-argument: @x!y@z(R(zy)<->Gz&R(zx))  .:  !x@y(R(yx)<->Gy)
+argument: forall x exists y forall z (R(zy)<->Gz&R(zx))  .:  exists x forall y (R(yx)<->Gy)
 
 problem: Inval 4.004
-argument: @x(Fx->!y(Gy&R(xy)))  .:  @x(Gx->!y(Fy&R(yx)))
+argument: forall x (Fx->exists y (Gy&R(xy)))  .:  forall x (Gx->exists y (Fy&R(yx)))
 
 problem: Inval 4.155
-argument: @x@y@z(F(xy)&F(yz)->F(xz)).  @x@y(F(xy)->F(yx))  .:  @xF(xx)
+argument: forall x forall y forall z (F(xy)&F(yz)->F(xz)).  forall x forall y (F(xy)->F(yx))  .:  forall x F(xx)
 
 problem: Inval 4.156
-argument: !x!yF(xy)  .:  !yF(yy)
+argument: exists x exists y F(xy)  .:  exists y F(yy)
 
 problem: Inval 4.157
-argument: @x!y(F(xy)|F(yx))  .:  @x!yF(xy)
+argument: forall x exists y (F(xy)|F(yx))  .:  forall x exists y F(xy)
 
 problem: Inval 4.160
-argument: @xF(xA(x))  .:  !xF(A(x)x)
+argument: forall x F(xA(x))  .:  exists x F(A(x)x)
 
 ## 
 ##                          CHAPTER V
@@ -146,10 +146,10 @@ argument: @xF(xA(x))  .:  !xF(A(x)x)
 ## 
 
 problem: Inval 5.001
-argument: !x@y(Fy&Gy<->x=y)  .:  !x@y(Fx&(Gy<->x=y))
+argument: exists x forall y (Fy&Gy<->x=y)  .:  exists x forall y (Fx&(Gy<->x=y))
 
 problem: Inval 5.002
-argument: @x(Fx->!y@z(Gz&R(xz)<->y=z)).  @x(Gx->!y@z(Fz&R(xz)<->y=z))  .:  @x@y(Fx&Gy&R(xy)->R(yx))
+argument: forall x (Fx->exists y forall z (Gz&R(xz)<->y=z)).  forall x (Gx->exists y forall z (Fz&R(xz)<->y=z))  .:  forall x forall y (Fx&Gy&R(xy)->R(yx))
 
 ## 
 ##                          CHAPTER VI
@@ -157,49 +157,49 @@ argument: @x(Fx->!y@z(Gz&R(xz)<->y=z)).  @x(Gx->!y@z(Fz&R(xz)<->y=z))  .:  @x@y(
 ## 
 
 problem: Inval 6.001
-argument: %xFx=A  .:  @x(Fx<->x=A)
+argument: %xFx=A  .:  forall x (Fx<->x=A)
 interpretation: F(1)
 
 problem: Inval 6.002
-argument: F%xFx  .:  !y@x(Fx<->x=y)
+argument: F%xFx  .:  exists y forall x (Fx<->x=y)
 interpretation: F(1)
 
 problem: Inval 6.003
-argument: %xFx=%xx<>x  .:  ~!y@x(Fx<->x=y)
+argument: %xFx=%xx<>x  .:  ~exists y forall x (Fx<->x=y)
 interpretation: F(1)
 
 problem: Inval 6.004
-argument: %xFx=%xGx  .:  @x(Fx<->Gx)
+argument: %xFx=%xGx  .:  forall x (Fx<->Gx)
 interpretation: F(1).G(1)
 
 problem: Inval 6.005
-argument: !x A(x)=B(x)  .:  @y %xA(x)=y = %xB(x)=y
+argument: exists x  A(x)=B(x)  .:  forall y  %xA(x)=y = %xB(x)=y
 interpretation: A(1).B(1)
 
 problem: Inval 6.006
-argument: F%xR(xA(x))  .:  !yF%xR(xy)
+argument: F%xR(xA(x))  .:  exists y F%xR(xy)
 interpretation: F(1).R(2).A(1)
 
 problem: Inval 6.007
-argument: .:  !y y=%xR(xy)
+argument: .:  exists y  y=%xR(xy)
 interpretation: R(2)
 
 problem: Inval 6.008
-argument: @z~!y@x(Hz<->x=y)  .:  %zHz = %xx<>x
+argument: forall z ~exists y forall x (Hz<->x=y)  .:  %zHz = %xx<>x
 interpretation: H(1)
 
 problem: Inval 6.009
-argument: !y@x(R(xy)<->x=y)  .:  R(%xR(xy) y)
+argument: exists y forall x (R(xy)<->x=y)  .:  R(%xR(xy) y)
 interpretation: R(2)
 
 problem: Inval 6.010
-argument: !y!x(R(xx)<->x=y)  .:  !y@x(R(x%xR(xx))<->x=y)
+argument: exists y exists x (R(xx)<->x=y)  .:  exists y forall x (R(x%xR(xx))<->x=y)
 interpretation: R(2)
 
 problem: Inval 6.011
-argument: !y@x(Fx<->x=y).  ~!y@x(~Fx<->x=y)  .:  %xFx=%x~Fx
+argument: exists y forall x (Fx<->x=y).  ~exists y forall x (~Fx<->x=y)  .:  %xFx=%x~Fx
 interpretation: F(1)
 
 problem: Inval 6.012
-argument: !y@x(Fx<->x=y).  ~!y@x(Gx<->x=y)  .:  %xFx<>%xGx
+argument: exists y forall x (Fx<->x=y).  ~exists y forall x (Gx<->x=y)  .:  %xFx<>%xGx
 interpretation: F(1).G(1)

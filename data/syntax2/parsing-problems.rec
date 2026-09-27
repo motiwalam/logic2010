@@ -189,19 +189,19 @@ common-name: Pars 2.020
 ## 
 
 problem: Pars 3.001
-formula: !xFx
+formula: exists x Fx
 common-name: Pars 3.001
 
 problem: Pars 3.002
-formula: !x~(Fx)
+formula: exists x ~(Fx)
 common-name: Pars 3.002
 
 problem: Pars 3.003
-formula: !xF~x
+formula: exists x F~x
 common-name: Pars 3.003
 
 problem: Pars 3.004
-formula: ~!x~Fx
+formula: ~exists x ~Fx
 common-name: Pars 3.004
 
 problem: Pars 3.005
@@ -209,39 +209,39 @@ formula: Fa->Gb
 common-name: Pars 3.005
 
 problem: Pars 3.006
-formula: !xFx->Gx
+formula: exists x Fx->Gx
 common-name: Pars 3.006
 
 problem: Pars 3.007
-formula: !x(Fx->Gx)
+formula: exists x (Fx->Gx)
 common-name: Pars 3.007
 
 problem: Pars 3.008
-formula: !x~dx
+formula: exists x ~dx
 common-name: Pars 3.008
 
 problem: Pars 3.009
-formula: ((@x(Fx->Gx)&Fb)->Gb)
+formula: ((forall x (Fx->Gx)&Fb)->Gb)
 common-name: Pars 3.009
 
 problem: Pars 3.010
-formula: ((!x~Fx)->(~@xFx))
+formula: ((exists x ~Fx)->(~forall x Fx))
 common-name: Pars 3.010
 
 problem: Pars 3.011
-formula: !x(E->Fx)
+formula: exists x (E->Fx)
 common-name: Pars 3.011
 
 problem: Pars 3.012
-formula: @a(Fa->~Ga)
+formula: forall a (Fa->~Ga)
 common-name: Pars 3.012
 
 problem: Pars 3.013
-formula: ~(~@x~Fx|Gy)
+formula: ~(~forall x ~Fx|Gy)
 common-name: Pars 3.013
 
 problem: Pars 3.014
-formula: !x(P<->Q&R)
+formula: exists x (P<->Q&R)
 common-name: Pars 3.014
 
 problem: Pars 3.015
@@ -253,59 +253,59 @@ formula: (Fxy->Gyx)
 common-name: Pars 3.016
 
 problem: Pars 3.017
-formula: @a(Hx<->Gy)
+formula: forall a (Hx<->Gy)
 common-name: Pars 3.017
 
 problem: Pars 3.018
-formula: !@x(Hx<->Gx)
+formula: !forall x (Hx<->Gx)
 common-name: Pars 3.018
 
 problem: Pars 3.019
-formula: !x@y!z(~Fx&Gy->~Fz)
+formula: exists x forall y exists z (~Fx&Gy->~Fz)
 common-name: Pars 3.019
 
 problem: Pars 3.020
-formula: @y~!~x(Hx&Gy)
+formula: forall y ~!~x(Hx&Gy)
 common-name: Pars 3.020
 
 problem: Pars 3.021
-formula: @y(Hy->!xHx)
+formula: forall y (Hy->exists x Hx)
 common-name: Pars 3.021
 
 problem: Pars 3.022
-formula: ~!x~!y~(~@x~@y->!z~Fz)
+formula: ~exists x ~exists y ~(~forall x ~forall y ->exists z ~Fz)
 common-name: Pars 3.022
 
 problem: Pars 3.023
-formula: @x(@x(Hx->~!y~Gy)|Fx)
+formula: forall x (forall x (Hx->~exists y ~Gy)|Fx)
 common-name: Pars 3.023
 
 problem: Pars 3.024
-formula: (!x)~Fx
+formula: (exists x)~Fx
 common-name: Pars 3.024
 
 problem: Pars 3.025
-formula: ~@x~!y(Fx&~Gy)
+formula: ~forall x ~exists y (Fx&~Gy)
 common-name: Pars 3.025
 
 problem: Pars 3.026
-formula: ~@x~!yFx&~Gy
+formula: ~forall x ~exists y Fx&~Gy
 common-name: Pars 3.026
 
 problem: Pars 3.027
-formula: @x(FGx->Gy)
+formula: forall x (FGx->Gy)
 common-name: Pars 3.027
 
 problem: Pars 3.028
-formula: !xFx&!xGx->!x(Fx&Gx)
+formula: exists x Fx&exists x Gx->exists x (Fx&Gx)
 common-name: Pars 3.028
 
 problem: Pars 3.029
-formula: ~!x~Fx&((Fa->!y~Hy)<->!z(~Fz->Hz))
+formula: ~exists x ~Fx&((Fa->exists y ~Hy)<->exists z (~Fz->Hz))
 common-name: Pars 3.029
 
 problem: Pars 3.030
-formula: !x(P->@x~Qx)
+formula: exists x (P->forall x ~Qx)
 common-name: Pars 3.030
 
 ## 
@@ -334,27 +334,27 @@ formula: Pa
 common-name: Pars 4.005
 
 problem: Pars 4.006
-formula: !xS(xy)
+formula: exists x S(xy)
 common-name: Pars 4.006
 
 problem: Pars 4.007
-formula: @x(Fx->!yR(yx))
+formula: forall x (Fx->exists y R(yx))
 common-name: Pars 4.007
 
 problem: Pars 4.008
-formula: @x(Fxx->P)
+formula: forall x (Fxx->P)
 common-name: Pars 4.008
 
 problem: Pars 4.009
-formula: !y!z(R(yz)&A(zy))
+formula: exists y exists z (R(yz)&A(zy))
 common-name: Pars 4.009
 
 problem: Pars 4.010
-formula: @x!y(R(xy)<->!zS(yzx))
+formula: forall x exists y (R(xy)<->exists z S(yzx))
 common-name: Pars 4.010
 
 problem: Pars 4.011
-formula: @x@y(F(xx)->Fx)
+formula: forall x forall y (F(xx)->Fx)
 common-name: Pars 4.011
 
 problem: Pars 4.031
@@ -386,7 +386,7 @@ formula: a(a(a(a)a)aa)
 common-name: Pars 4.037
 
 problem: Pars 4.038
-formula: (@xF(xa)->Ga(b(x))
+formula: (forall x F(xa)->Ga(b(x))
 common-name: Pars 4.038
 
 problem: Pars 4.039
@@ -398,7 +398,7 @@ formula: L(a(x)b(y))
 common-name: Pars 4.040
 
 problem: Pars 4.041
-formula: @b(Fb->Gb)
+formula: forall b (Fb->Gb)
 common-name: Pars 4.041
 
 problem: Pars 4.042
@@ -422,11 +422,11 @@ formula: G(c(y)d(x)a(a))
 common-name: Pars 4.046
 
 problem: Pars 4.047
-formula: !x!y@xF(xy)
+formula: exists x exists y forall x F(xy)
 common-name: Pars 4.047
 
 problem: Pars 4.048
-formula: @x(F->b(x))
+formula: forall x (F->b(x))
 common-name: Pars 4.048
 
 problem: Pars 4.049
@@ -434,15 +434,15 @@ formula: (F(ay)|b(ax))
 common-name: Pars 4.049
 
 problem: Pars 4.050
-formula: @x(a(x)->b(x))
+formula: forall x (a(x)->b(x))
 common-name: Pars 4.050
 
 problem: Pars 4.051
-formula: @x(Fa(x)->Gb(x))
+formula: forall x (Fa(x)->Gb(x))
 common-name: Pars 4.051
 
 problem: Pars 4.052
-formula: (!x(@y(F(ya)->G(xb))->Ha(b(axb)))<->Fz)
+formula: (exists x (forall y (F(ya)->G(xb))->Ha(b(axb)))<->Fz)
 common-name: Pars 4.052
 
 problem: Pars 4.053
@@ -486,11 +486,11 @@ formula: b(xyF(xy))
 common-name: Pars 4.062
 
 problem: Pars 4.063
-formula: !x(b(x)&Fx)
+formula: exists x (b(x)&Fx)
 common-name: Pars 4.063
 
 problem: Pars 4.064
-formula: @xFx|G
+formula: forall x Fx|G
 common-name: Pars 4.064
 
 problem: Pars 4.065
@@ -506,23 +506,23 @@ formula: H(a(b(xy)((x)))
 common-name: Pars 4.067
 
 problem: Pars 4.068
-formula: @xc(d(x)y)
+formula: forall x c(d(x)y)
 common-name: Pars 4.068
 
 problem: Pars 4.069
-formula: @xF(d(x)y)
+formula: forall x F(d(x)y)
 common-name: Pars 4.069
 
 problem: Pars 4.070
-formula: @xF->P
+formula: forall x F->P
 common-name: Pars 4.070
 
 problem: Pars 4.071
-formula: @xFx->P
+formula: forall x Fx->P
 common-name: Pars 4.071
 
 problem: Pars 4.072
-formula: @x(F->Px)
+formula: forall x (F->Px)
 common-name: Pars 4.072
 
 ## 

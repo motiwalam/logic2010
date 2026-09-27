@@ -1135,7 +1135,7 @@ common-name: Symb 3.001
 problem: Symb 3.001EG1
 english: Everything is good.
 original-name: Symb 3.001
-node: @x:Everything is good.
+node: forall x:Everything is good.
 node: *Fx{}0:x is good
 options: eg
 common-name: Symb 3.001EG1
@@ -1179,7 +1179,7 @@ common-name: Symb 3.007
 problem: Symb 3.007EG1
 english: Some sweets are good.
 original-name: Symb 3.007
-node: !x:Some sweets are good.
+node: exists x:Some sweets are good.
 node: "&:    "
 node: *Hx{}0:x is a sweet
 node: *Fx{}0:x is good
@@ -1225,7 +1225,7 @@ common-name: Symb 3.013
 problem: Symb 3.013EG1
 english: Chocolates that are good should be enjoyed.
 original-name: Symb 3.013
-node: @x:Chocolates that are good should be enjoyed.
+node: forall x:Chocolates that are good should be enjoyed.
 node: "->:    "
 node: &:x is a chocolate that is good
 node: *Ix{}0:X is chocolate
@@ -1244,11 +1244,11 @@ problem: Symb 3.014EG1
 english: Chocolates, which are good, should be enjoyed.
 original-name: Symb 3.014
 node: &:Chocolates, which are good, should be enjoyed.
-node: @x:chocolates should be enjoyed
+node: forall x:chocolates should be enjoyed
 node: "->:    "
 node: *Ix{}0:x is a chocolate
 node: *Kx{}0:x should be enjoyed
-node: @x:chocolates are good
+node: forall x:chocolates are good
 node: "->:    "
 node: *Ix{}0:x is a chocolate
 node: *Fx{}0:x is good
