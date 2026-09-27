@@ -1707,7 +1707,7 @@ public class Syntax2Parser extends FormulaParser implements Syntax2Constants {
             }
 
             syntax2parser$jjcalls = syntax2parser$jjcalls.next;
-         } while (syntax2parser$jjcalls == null);
+         } while (syntax2parser$jjcalls != null);
       }
 
       jj_rescan = false;

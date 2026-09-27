@@ -1707,7 +1707,7 @@ public class Syntax1Parser extends FormulaParser implements Syntax1Constants {
             }
 
             syntax1parser$jjcalls = syntax1parser$jjcalls.next;
-         } while (syntax1parser$jjcalls == null);
+         } while (syntax1parser$jjcalls != null);
       }
 
       jj_rescan = false;
