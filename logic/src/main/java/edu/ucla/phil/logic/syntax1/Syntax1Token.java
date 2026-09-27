@@ -1,4 +1,4 @@
-package edu.ucla.phil.logic.pkgB;
+package edu.ucla.phil.logic.syntax1;
 
 public class Syntax1Token {
    public int kind;

@@ -1,11 +1,11 @@
-package edu.ucla.phil.logic.pkgB;
+package edu.ucla.phil.logic.syntax2;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-public final class Syntax1CharStream {
+public final class Syntax2CharStream {
    public static final boolean staticFlag = true;
    static int bufsize;
    static int available;
@@ -188,7 +188,7 @@ public final class Syntax1CharStream {
       }
    }
 
-   public Syntax1CharStream(Reader reader, int i, int j, int k) {
+   public Syntax2CharStream(Reader reader, int i, int j, int k) {
       if (inputStream != null) {
          throw new Error(
             "\n   ERROR: Second call to the constructor of a static ASCII_CharStream.  You must\n       either use ReInit() or set the JavaCC option STATIC to false\n       during the generation of this class."
@@ -205,7 +205,7 @@ public final class Syntax1CharStream {
       }
    }
 
-   public Syntax1CharStream(Reader reader, int i, int j) {
+   public Syntax2CharStream(Reader reader, int i, int j) {
       this(reader, i, j, 4096);
    }
 
@@ -233,11 +233,11 @@ public final class Syntax1CharStream {
       ReInit(reader, i, j, 4096);
    }
 
-   public Syntax1CharStream(InputStream inputstream, int i, int j, int k) {
+   public Syntax2CharStream(InputStream inputstream, int i, int j, int k) {
       this(new InputStreamReader(inputstream), i, j, 4096);
    }
 
-   public Syntax1CharStream(InputStream inputstream, int i, int j) {
+   public Syntax2CharStream(InputStream inputstream, int i, int j) {
       this(inputstream, i, j, 4096);
    }
 

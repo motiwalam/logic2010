@@ -26,7 +26,7 @@ first time a class appears.
 | `BoundVariableNames` (`C_L`) | A `Vector` of bound-variable names in binder order. Its text form is `x.y.z.` |
 | `LetterGenerator` (`C_CF`) | Enumerates fresh letters: `a b c … a0 b0 … a1 …` |
 | `LabeledExpression` (`C_VD`) / `PremiseExpression` (`C_KF`) | An expression with a label such as "Premise 2". `C_ZA` (the derivations group) is the "Line n" variant. |
-| `FormulaParser` (`C_FB`) | Static front end. `syntax` (1 or 2) selects `Syntax1Parser` (pkgB) or `Syntax2Parser` (pkgA). |
+| `FormulaParser` (`C_FB`) | Static front end. `syntax` (1 or 2) selects `Syntax1Parser` (syntax1) or `Syntax2Parser` (syntax2). |
 | `FormulaParseException` (`C_k_B`), `FormulaLexerError` (`C_IC`) | Syntax-neutral bases of the two JavaCC exceptions. |
 | `SchematicLetter` (`C_i_A`) and `TermLetter` (`C_PB`), `OperationLetter` (`C_W`), `PredicateLetter` (`C_w_C`) | Keys of a scheme instantiation: a letter plus its arity. |
 | `LetterReplacement` (`C_GF`) | `pattern` → `replacement`, or a validation `error` (`ErrorRef`). |
@@ -124,7 +124,7 @@ All letters may carry a numeric subscript (`0` or `[1-9][0-9]*`). Internally
 everything is the ASCII "Maggie" notation. The UI maps to and from the display
 fonts with `LogicProgram.m995`.
 
-| token | syntax 1 (pkgB) | syntax 2 (pkgA) |
+| token | syntax 1 (syntax1) | syntax 2 (syntax2) |
 |---|---|---|
 | `VAR` (variables and names) | `[a-z]` | `[i-z]` |
 | `OP` (operation letters) | `[A-E]` | `[a-h]` |
@@ -312,7 +312,7 @@ suffixed forms such as `O0`.
 
 * The two parser packages are byte-for-byte the same grammar. Only the
   token manager's letter classes (the NFA bitmasks) and `jjnextStates` order
-  differ, so the member ids of pkgA and pkgB correspond one-to-one in source
+  differ, so the member ids of syntax2 and syntax1 correspond one-to-one in source
   order. The mapping was generated that way.
 * `<>` has no node of its own. It becomes `~(a=b)` with `displayAsInequality`
   set, so that the printer can reproduce what the user typed.
@@ -322,7 +322,7 @@ suffixed forms such as `O0`.
   from earlier versions.
 * `jj_3R_n` numbers are assigned in declaration order. JavaCC's original
   numbering can't be recovered.
-* Class names: core.mapping already names the pkgA/pkgB classes `Syntax2Token`
+* Class names: core.mapping already names the syntax2/syntax1 classes `Syntax2Token`
   and so on, so the standard JavaCC class names (`Token`, `SimpleCharStream`,
   `ParseException`, `TokenMgrError`) appear here only as descriptions. Using
   them for both packages would break the program-wide rule that class names are

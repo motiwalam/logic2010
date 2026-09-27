@@ -401,9 +401,9 @@ diff -ruN a/edu/ucla/phil/logic/ParseTreeFormulaText.java b/edu/ucla/phil/logic/
           return true;
        }
     }
-diff -ruN a/edu/ucla/phil/logic/pkgA/Syntax2Parser.java b/edu/ucla/phil/logic/pkgA/Syntax2Parser.java
---- a/edu/ucla/phil/logic/pkgA/Syntax2Parser.java
-+++ b/edu/ucla/phil/logic/pkgA/Syntax2Parser.java
+diff -ruN a/edu/ucla/phil/logic/syntax2/Syntax2Parser.java b/edu/ucla/phil/logic/syntax2/Syntax2Parser.java
+--- a/edu/ucla/phil/logic/syntax2/Syntax2Parser.java
++++ b/edu/ucla/phil/logic/syntax2/Syntax2Parser.java
 @@ -1355,8 +1355,8 @@
     }
  
@@ -415,9 +415,9 @@ diff -ruN a/edu/ucla/phil/logic/pkgA/Syntax2Parser.java b/edu/ucla/phil/logic/pk
           token = token.next;
        } else {
           token = token.next = Syntax2TokenManager.getNextToken();
-diff -ruN a/edu/ucla/phil/logic/pkgB/Syntax1Parser.java b/edu/ucla/phil/logic/pkgB/Syntax1Parser.java
---- a/edu/ucla/phil/logic/pkgB/Syntax1Parser.java
-+++ b/edu/ucla/phil/logic/pkgB/Syntax1Parser.java
+diff -ruN a/edu/ucla/phil/logic/syntax1/Syntax1Parser.java b/edu/ucla/phil/logic/syntax1/Syntax1Parser.java
+--- a/edu/ucla/phil/logic/syntax1/Syntax1Parser.java
++++ b/edu/ucla/phil/logic/syntax1/Syntax1Parser.java
 @@ -1355,8 +1355,8 @@
     }
  

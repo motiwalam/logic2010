@@ -130,20 +130,20 @@ m195 reinit
 m205 disableTracing
 class kB FormulaParseException        # C_k_B
 class IC FormulaLexerError            # C_IC
-class A/E Syntax2Parser               # pkgA/C_E
-class A/D Syntax2TokenManager         # pkgA/C_D
-class A/B Syntax2CharStream           # pkgA/C_B
-class A/A Syntax2ParseException       # pkgA/C_A
-class A/C Syntax2TokenMgrError        # pkgA/C_C
-class A/F Syntax2Constants            # pkgA/C_F
-class A/G Syntax2Token                # pkgA/C_G
-class B/E Syntax1Parser               # pkgB/C_E
-class B/D Syntax1TokenManager         # pkgB/C_D
-class B/B Syntax1CharStream           # pkgB/C_B
-class B/A Syntax1ParseException       # pkgB/C_A
-class B/C Syntax1TokenMgrError        # pkgB/C_C
-class B/F Syntax1Constants            # pkgB/C_F
-class B/G Syntax1Token                # pkgB/C_G
+class A/E syntax2.Syntax2Parser               # pkgA/C_E
+class A/D syntax2.Syntax2TokenManager         # pkgA/C_D
+class A/B syntax2.Syntax2CharStream           # pkgA/C_B
+class A/A syntax2.Syntax2ParseException       # pkgA/C_A
+class A/C syntax2.Syntax2TokenMgrError        # pkgA/C_C
+class A/F syntax2.Syntax2Constants            # pkgA/C_F
+class A/G syntax2.Syntax2Token                # pkgA/C_G
+class B/E syntax1.Syntax1Parser               # pkgB/C_E
+class B/D syntax1.Syntax1TokenManager         # pkgB/C_D
+class B/B syntax1.Syntax1CharStream           # pkgB/C_B
+class B/A syntax1.Syntax1ParseException       # pkgB/C_A
+class B/C syntax1.Syntax1TokenMgrError        # pkgB/C_C
+class B/F syntax1.Syntax1Constants            # pkgB/C_F
+class B/G syntax1.Syntax1Token                # pkgB/C_G
 
 ## ---------------------------------------------------------------- schemes, rules, theorems
 class jD SchemeInstantiation          # C_j_D: maps SchematicLetter -> LetterReplacement

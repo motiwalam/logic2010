@@ -1,4 +1,4 @@
-package edu.ucla.phil.logic.pkgB;
+package edu.ucla.phil.logic.syntax1;
 
 import edu.ucla.phil.logic.FormulaParseException;
 

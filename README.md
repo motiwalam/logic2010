@@ -104,7 +104,7 @@ Xvfb and xdotool were installed without root by extracting the distribution pack
 ## Notes and caveats
 
 - **Java version:** the original was compiled for Java 6. The rebuild targets Java 8 bytecode, the oldest that modern javac can emit.
-- **Parser packages:** `pkgA` and `pkgB` are the two JavaCC-generated formula parsers, for syntax 2 and syntax 1. Standard JavaCC member names were used, but `jj_3R_N` numbering follows declaration order.
+- **Parser packages:** `syntax1` and `syntax2` are the two JavaCC-generated formula parsers (obfuscated packages `B` and `A`). Standard JavaCC member names were used, but `jj_3R_N` numbering follows declaration order.
 - **Remaining awkwardness:**
   - Local-variable names are mechanical (`jad` style, e.g. `formulaparsenode1`, `s1`).
   - Some methods contain decompiler-shaped control flow.

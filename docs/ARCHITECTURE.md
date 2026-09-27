@@ -204,8 +204,8 @@ indexes. Internally formulas are ASCII ("Maggie-talk": `@ ! % ~ & | -> <-> <>
 `html1..3`.
 
 **Parsing.** `FormulaParser` (`C_FB`) is a static front end that picks one of
-two JavaCC-generated parsers. `pkgB` is syntax 1 (`Syntax1Parser` ...) and
-`pkgA` is syntax 2 (`Syntax2Parser` ...). Each package has the usual JavaCC
+two JavaCC-generated parsers. `syntax1` is syntax 1 (`Syntax1Parser` ...) and
+`syntax2` is syntax 2 (`Syntax2Parser` ...). Each package has the usual JavaCC
 classes: Parser, TokenManager, SimpleCharStream, ParseException,
 TokenMgrError, Constants and Token. The two copies are almost identical. They
 differ in their letter conventions: syntax 1 uses operation letters `ABCDE` and

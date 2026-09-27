@@ -1,4 +1,4 @@
-package edu.ucla.phil.logic.pkgB;
+package edu.ucla.phil.logic.syntax1;
 
 public interface Syntax1Constants {
    int EOF = 0;

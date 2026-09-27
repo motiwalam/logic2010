@@ -1,7 +1,7 @@
 package edu.ucla.phil.logic;
 
-import edu.ucla.phil.logic.pkgA.Syntax2Parser;
-import edu.ucla.phil.logic.pkgB.Syntax1Parser;
+import edu.ucla.phil.logic.syntax1.Syntax1Parser;
+import edu.ucla.phil.logic.syntax2.Syntax2Parser;
 import java.io.Reader;
 
 public class FormulaParser {

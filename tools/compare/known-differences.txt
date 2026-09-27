@@ -3,13 +3,13 @@
 
 # JavaCC lexer: `do { switch (jjstateSet[--i]) { default: break; } } while (...)` for
 # non-ASCII input has no cases; the empty switch is dropped but the --i side effect kept.
-edu/ucla/phil/logic/pkgA/Syntax2TokenManager: jjMoveNfa_0(II)I
-edu/ucla/phil/logic/pkgB/Syntax1TokenManager: jjMoveNfa_0(II)I
+edu/ucla/phil/logic/syntax2/Syntax2TokenManager: jjMoveNfa_0(II)I
+edu/ucla/phil/logic/syntax1/Syntax1TokenManager: jjMoveNfa_0(II)I
 
 # JavaCC TokenMgrError.LexicalError: "\"" + " (" were separate constants in the original
 # concatenation; the decompiler merged adjacent literals into "\" (". Same string at runtime.
-edu/ucla/phil/logic/pkgA/Syntax2TokenMgrError: LexicalError(ZIIILjava/lang/String;C)Ljava/lang/String;
-edu/ucla/phil/logic/pkgB/Syntax1TokenMgrError: LexicalError(ZIIILjava/lang/String;C)Ljava/lang/String;
+edu/ucla/phil/logic/syntax2/Syntax2TokenMgrError: LexicalError(ZIIILjava/lang/String;C)Ljava/lang/String;
+edu/ucla/phil/logic/syntax1/Syntax1TokenMgrError: LexicalError(ZIIILjava/lang/String;C)Ljava/lang/String;
 
 # `if (x) return true; else return false;` decompiled as `return x;`
 edu/ucla/phil/logic/UserProblemDialogHandler: handleChoice(Ledu/ucla/phil/logic/MessageDialog;)Z [dataflow]
