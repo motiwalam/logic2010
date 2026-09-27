@@ -37,6 +37,7 @@ The program is only the code. The course data comes from an installation:
 | `mappings/*.mapping` | Human-chosen names for every obfuscated class, field and method, grouped by subsystem. |
 | `mappings/ids.txt` | Generated. Every placeholder id with the original obfuscated owner, name and descriptor. |
 | `patches/logic/*.patch` | Hand fixes applied on top of the decompiler output. |
+| `docs/DATA-FORMATS-LEGACY.md` | The original data files: what each one is, the scrambling, the tagged-record format and every tag, and how they map to the readable files on `main`. |
 | `docs/ARCHITECTURE.md` | Overview: startup, file layout, the data-file scrambling, formulas, modules, the server protocol. |
 | `docs/modules/*.md` | Detailed notes per subsystem: formula/parsers, rules and derivation checking, derivation UI, symbolizer, truth tables and invalidity, parsing and the UI toolkit, server, and app core. |
 | `tools/` | See below. |
@@ -98,6 +99,7 @@ Xvfb and xdotool were installed without root by extracting the distribution pack
 
 ### Other tools
 
+- `tools/convert-data.py LEGACY_DIR OUT_DIR`: converts an installation's data files (`Contents/Resources`) into the readable formats used on `main` (`data/`). `tools/check-data-conversion.sh LEGACY_DIR OUT_DIR MAIN_CHECKOUT` verifies a conversion with the program's own reader. The old formats, and what each file is, are documented in `docs/DATA-FORMATS-LEGACY.md`.
 - `tools/unscramble.py FILE`: decodes the program's scrambled data files. It is a running-key cipher with a fixed key; see ARCHITECTURE.md §3. `--scramble` does the reverse.
 - `tools/fetch-tools.sh`: downloads Vineflower and ASM into `tools/`. They are not committed.
 
