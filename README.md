@@ -12,50 +12,77 @@ It has six exercise modules:
 | Invalidity | `LPInvalidation` | Give interpretations showing that arguments are invalid. |
 | Recognizing Rules | `LPRecognition` | Identify rule instances. |
 
-Students' work is checked locally and submitted to the course server.
+Students' work is checked locally. Normally it is also submitted to, and backed up on,
+UCLA's course server. This repository is self-contained, though: it includes all the
+course data, and it has a **local mode** that needs no server or account at all.
 
-## Requirements
+## Quick start
 
-- A JDK, version 8 or newer (tested with OpenJDK 25). No other build tools or libraries are needed.
-- To run the program, the course data from an existing Logic 2010 installation (see *Running*).
-
-## Building
+On any machine with a JDK (version 8 or newer; tested with OpenJDK 25):
 
 ```sh
-./build.sh
+git clone <this repo> logic2010 && cd logic2010
+./build.sh           # compile build/logic.jar and build/loader.jar
+./run.sh --local     # start Logic 2010, fully offline
 ```
 
-This compiles two jars into `build/`:
-- `build/logic.jar`: the program. Its main class is `edu.ucla.phil.logic.LogicProgram`.
-- `build/loader.jar`: the updater. Its main class is `edu.ucla.phil.logic.LPUpdateLoader`. The program runs it to install core updates downloaded from the server.
+In local mode you go straight to the main menu; the first launch just asks for display preferences. Every module and problem is available, and work is saved in `runtime/local/Contents/Resources/work/`.
 
 ## Running
 
-```sh
-./run.sh [INSTALL_DIR]      # default INSTALL_DIR: /data/logic2010
+```
+./run.sh --local [--syntax 1|2]   fully offline (see below)
+./run.sh                          normal mode, using the course server
+./run.sh --install DIR            normal mode, using an existing installation's data and work
+./run.sh --help
 ```
 
-The jar holds only code. Everything course-specific comes from an installation directory, laid out like the macOS app bundle:
+Options:
 
-```
-INSTALL_DIR/
-  Contents/Resources/     course data: problem, rule, theorem and message files,
-                          links (server URLs, institution/term/course), options, help PDFs
-  Contents/Resources/work/  the student's files: user.txt, prefs.txt, *work.txt, logs
-  Contents/Java/          the installed program (used by the updater)
-  certs/truststore.jks    optional, see below
-```
+| Option | Meaning |
+|---|---|
+| `--local` | Local mode. |
+| `--syntax 1\|2` | Formula notation in local mode. The default is 1, taken from `data/ghost.txt`. Notation 2 is the one used by the current textbook; it also enables the *Logic Text* menu button, which opens the textbook chapters. |
+| `--home DIR` | Runtime directory to use instead of `runtime/local` or `runtime/server`. |
 
-`run.sh` starts `build/logic.jar` with the system properties the official launcher sets:
-- `root.dir` is set to `INSTALL_DIR`.
-- `config.dir` and `link.dir` are set to `Contents/Resources`.
-- `prog.dir` is set to `Contents/Java`.
+### Local mode
 
-The program then reads and writes the student's work there, just like the official build.
+`--local` passes `-Dlogic.local=true` to the program (`LogicProgram.localMode`), which does three things:
 
-Things to know:
-- **Certificates:** the course server `logiclx.humnet.ucla.edu` sends an incomplete certificate chain. If `INSTALL_DIR/certs/truststore.jks` exists (the JDK cacerts plus the missing "InCommon RSA Server CA 2" intermediate, password `changeit`), `run.sh` uses it through `JAVA_TOOL_OPTIONS`. Processes the program spawns, such as the updater, inherit it that way too.
-- **Updates:** if the program downloads a core update, the update is installed into the installation (`Contents/Java/logic.jar`), and the program restarts from there. You are then running the official build until you use `run.sh` again.
+- **Turns on the program's own `nonet` option.** This means:
+  - no server verification, update checks, submissions, backups or uploads
+  - the *Submit* and *Backup* buttons are hidden
+- **Turns on the program's demo mode.** There is no institution, term or course selection and no registration: a local user ("Logic User") is created automatically.
+- **Blocks network access** as a safety net (`ServerConnection.checkNetworkAllowed`). If anything tries to reach the course server anyway, the attempt fails and a stack trace is printed.
+
+The course-specific *Assignments* web link is also hidden. *Feedback* and the help links still open in your browser.
+
+### Normal mode
+
+Without `--local`, the program behaves like the official release:
+- First run: choose an institution, term and course, then register or log in.
+- Your work is verified with, submitted to and backed up on `logiclx.humnet.ucla.edu`.
+- The server can push course files and core updates.
+
+This needs a valid course account.
+
+The server sends an incomplete TLS certificate chain. `run.sh` therefore builds a truststore on first use (`runtime/server/truststore.jks`): this JDK's CA certificates plus the missing intermediate, `certs/InCommonRSAServerCA2.pem`. It passes the truststore via `JAVA_TOOL_OPTIONS`, so the updater that the program launches inherits it too.
+
+If the server installs a core update, it replaces the program in `runtime/server/Contents/Java` and restarts it. The next `./run.sh` puts your build back.
+
+### Where things live
+
+| Path | Contents |
+|---|---|
+| `data/` | The course data shipped with the program:<br>• problem, answer, rule and theorem files (`syntax1/`, `syntax2/`)<br>• message catalogues<br>• options (`wraith.txt`)<br>• links (`ghost.txt`: the demo course, notation, file names, server URLs)<br>• help PDFs (`docs/`) and textbook chapters (`syntax2/text/`)<br>The `.txt` files are "scrambled" with a fixed running-key cipher (`Scrambler`/`ScrambledReader`). |
+| `runtime/local/`, `runtime/server/` | Created by `run.sh` (git-ignored), laid out like the macOS app bundle that the program expects:<br>• `Contents/Resources/` is a copy of `data/`, refreshed from `data/` whenever a file there is newer<br>• `Contents/Resources/work/` holds the student's work: `user.txt`, `prefs.txt`, `*work.txt` and logs<br>• `Contents/Java/` holds the jars from `build/` |
+
+Local and normal mode keep separate runtime directories, so local work never gets mixed into a server account. To start over, delete the runtime directory.
+
+`run.sh` runs the program with the system properties the official launcher sets:
+- `root.dir` points at the runtime directory
+- `config.dir` and `link.dir` point at `Contents/Resources`
+- `prog.dir` points at `Contents/Java`
 
 ## Source layout
 
@@ -93,8 +120,8 @@ Where to start reading:
 
 | Branch | Purpose |
 |---|---|
-| `main` | Working branch. Make your own changes here. |
-| `base-logic2010` | The unmodified source, exactly equivalent to the installed Logic 2010 (version 20161225 core). Keep it untouched as the reference point. |
+| `main` | Working branch: `base-logic2010` plus your changes (so far: bundled course data, local mode, and a menu-layout fix for modern Java). |
+| `base-logic2010` | The unmodified source, exactly equivalent to the official Logic 2010 program (core version 20200601), still needing an existing installation to run. Keep it untouched as the reference point. |
 | `reverse-engineering` | How this source was recovered. It holds the original jars, the naming mappings, the build pipeline that regenerates `base-logic2010`'s source, the equivalence checker, a decoder for the scrambled data files, and detailed architecture notes (`docs/`). |
 
 Common tasks:
