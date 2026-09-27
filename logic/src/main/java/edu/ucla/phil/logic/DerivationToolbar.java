@@ -106,6 +106,17 @@ class DerivationToolbar extends CellPanel {
       actionbutton.setHelpText("Ctrl+K");
       inputmap.put(KeyStroke.getKeyStroke(75, 128), "Check");
       actionmap.put("Check", abstractaction1);
+      final ActionButton stackbutton = new ActionButton("Stack");
+      stackbutton.primaryAction = new AbstractAction() {
+         @Override
+         public void actionPerformed(ActionEvent actionevent) {
+            DerivationToolbar.this.module.toggleStackView();
+            stackbutton.setText(DerivationToolbar.this.module.stackView.isVisible() ? "Hide Stack" : "Stack");
+            DerivationToolbar.this.module.requestFocus();
+         }
+      };
+      jpanel.add(stackbutton);
+      stackbutton.setHelpText("Show the formulas on the stack of the justification at the cursor");
       abstractaction = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {

@@ -32,6 +32,7 @@ class LPDerivation extends LogicModule implements RulePropertySource, Derivation
    LinePanel bottomFeeder;
    DerivationLineEditor focus;
    DerivationLineEditor lastFocus;
+   DerivationStackView stackView;
    JScrollPane scroller;
    LinePanel problemPanel;
    LinePanel scrollPanel;
@@ -613,6 +614,19 @@ class LPDerivation extends LogicModule implements RulePropertySource, Derivation
 
    int getMaxDepth(boolean flag) {
       return this.problem == null ? -1 : this.problem.getMaxBoxDepth(flag);
+   }
+
+   /** Shows or hides the stack view (the Stack button). */
+   void toggleStackView() {
+      if (this.stackView == null) {
+         this.stackView = new DerivationStackView(this);
+         this.stackView.setVisible(false);
+         this.add(this.stackView, "East");
+      }
+
+      this.stackView.setOn(!this.stackView.isVisible());
+      this.revalidate();
+      this.repaint();
    }
 
    @Override

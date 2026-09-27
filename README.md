@@ -112,7 +112,14 @@ pr2 pr1 SWAP[R]      after SWAP the top formula must be R
 
 For example, `pr1 DUP pr2 MP MP` derives Q from P and P->(P->Q). Each formula keeps the line it was cited from, so box-closing rules still check where their lines come from. A stack operation cannot be the last step, which must be a rule that gives the line's formula.
 
-Implementation: `DerivationLineChecker` (`readAssertion`, `checkStep`, `applyStackOperation`); messages `DerErr110`–`DerErr114` in `data/messages/derivation.rec`.
+**Stack view.** The **Stack** button in the Derivation window opens a panel showing the stack of the justification you are editing, as it stands after the steps before the cursor:
+- The top formula is first, and each formula is labeled with where it came from (`line 2`, `by MP`).
+- It follows the cursor as you type or move it. A word the cursor is inside, or a bracket not yet closed, is not counted yet.
+- If a step does not apply, the panel says why. That includes a step that would need a dialog, where a formula in brackets settles the choice.
+- The steps run as the Check button runs them, but nothing in the derivation changes. Choices you already made in dialogs are used.
+- With the cursor in a line's formula, the panel shows the stack after that line's whole justification.
+
+Implementation: `DerivationLineChecker` (`readAssertion`, `checkStep`, `applyStackOperation`, and the preview mode used by `DerivationStackView`); messages `DerErr110`–`DerErr114` in `data/messages/derivation.rec`.
 
 ## Source layout
 

@@ -28,6 +28,8 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
    Vector presetAnswers;
    Expression assertion;
    Expression target;
+   boolean preview;
+   ErrorRef previewError;
    SchematicRule[] allForms;
    SchematicRule[] enabledForms;
    SchematicRule[] automaticForms;
@@ -39,6 +41,17 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
       this.line = derivationline;
       this.interactive = flag;
       this.reset();
+   }
+
+   /**
+    * A checker that previews justification text s (the stack view): it records the first
+    * error instead of showing it and caches nothing. The caller also sets serialMode so
+    * that no dialog opens, and restores the state the checker changes (DerivationStackView).
+    */
+   DerivationLineChecker(DerivationLine derivationline, String s) {
+      this(derivationline, false);
+      this.preview = true;
+      this.remaining = s;
    }
 
    void reset() {
@@ -401,6 +414,10 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
    }
 
    private void cacheJustification(Justification justification) {
+      if (this.preview) {
+         return;
+      }
+
       this.line.justifications.setElementAt(justification, this.stepIndex);
    }
 
@@ -730,7 +747,7 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                      this.reportError("dererr015", Message.params("remote line number", derivationnode4.getLineNumber() + ""));
                      return this.fail();
                   } else {
-                     if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode) {
+                     if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode && !this.preview) {
                         int i2 = this.line.box.assumptionType;
                         if (this.line.box.module.mixedModeDisabled && i2 != 2) {
                            this.reportError("dererr101");
@@ -768,7 +785,7 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                } else {
                   DerivationNode derivationnode3;
                   if ((derivationnode3 = this.getCitedNodeOutsideBox(-2)) == null && (derivationnode3 = this.getCitedNodeOutsideBox(-1)) == null) {
-                     if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode) {
+                     if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode && !this.preview) {
                         int l1 = this.line.box.assumptionType;
                         if (this.line.box.module.mixedModeDisabled && l1 != 1) {
                            this.reportError("dererr101");
@@ -815,7 +832,7 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                      this.reportError("dererr015", Message.params("remote line number", derivationnode2.getLineNumber() + ""));
                      return this.fail();
                   } else {
-                     if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode) {
+                     if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode && !this.preview) {
                         int k1 = this.line.box.assumptionType;
                         if (this.line.box.module.mixedModeDisabled && k1 != 0) {
                            this.reportError("dererr101");
@@ -902,7 +919,7 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                      }
                   }
 
-                  if (this.line.box.module.serialMode && !this.line.box.strategyConsistent) {
+                  if (this.line.box.module.serialMode && !this.line.box.strategyConsistent && !this.preview) {
                      this.reportError("dererr091");
                      return this.fail();
                   } else {
@@ -911,7 +928,7 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
                         this.reportError("dererr015", Message.params("remote line number", derivationnode.getLineNumber() + ""));
                         return this.fail();
                      } else {
-                        if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode) {
+                        if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode && !this.preview) {
                            int i3 = this.line.box.assumptionType;
                            if (i3 != 3) {
                               this.reportError("dererr101");
@@ -2304,15 +2321,25 @@ class DerivationLineChecker implements MessageParamSource, DerivationConstants {
    }
 
    void reportError(String s) {
-      this.line.showMessage(s, this);
+      this.reportError(s, null);
    }
 
    void reportError(String s, Hashtable hashtable) {
-      this.line.showMessage(s, this, hashtable);
+      if (this.preview) {
+         if (this.previewError == null) {
+            this.previewError = new ErrorRef(s, hashtable);
+         }
+      } else if (hashtable == null) {
+         this.line.showMessage(s, this);
+      } else {
+         this.line.showMessage(s, this, hashtable);
+      }
    }
 
    void putMessageObject(String s, Object object) {
-      this.line.setMessageButtonParam(s, object);
+      if (!this.preview) {
+         this.line.setMessageButtonParam(s, object);
+      }
    }
 
    void clearMessage() {
