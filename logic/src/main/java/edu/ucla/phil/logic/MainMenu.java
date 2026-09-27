@@ -17,131 +17,132 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 
 class MainMenu extends LogicModule implements LogicConstants, ActionListener {
-   int f1473;
-   static final String[] f1474 = new String[]{"Using " + LPInfo.programName, "About " + LPInfo.programName, "Menu Help", "Logic Text", "Notices"};
-   static final int f1475 = 0;
-   static final int f1476 = 1;
-   static final int f1477 = 2;
-   static final int f1478 = 3;
-   static final int f1479 = 4;
-   static final String[] f1480 = new String[]{"Assignments", "Course Website"};
-   static final int f1481 = 0;
-   static final int f1482 = 1;
-   static final String[] f1483 = new String[]{"User Information", "Backup", "Copy", "Delete Work/Quit", "Quit"};
-   static final int f1484 = 0;
-   static final int f1485 = 1;
-   static final int f1486 = 2;
-   static final int f1487 = 3;
-   static final int f1488 = 4;
-   static Point f1489 = null;
+   int baseFontSize;
+   static final String[] HELP_BUTTONS = new String[]{"Using " + LPInfo.programName, "About " + LPInfo.programName, "Menu Help", "Logic Text", "Notices"};
+   static final int HELP_USING = 0;
+   static final int HELP_ABOUT = 1;
+   static final int HELP_MENU = 2;
+   static final int HELP_TEXT = 3;
+   static final int HELP_NOTICES = 4;
+   static final String[] WEB_BUTTONS = new String[]{"Assignments", "Course Website"};
+   static final int WEB_ASSIGNMENTS = 0;
+   static final int WEB_COURSE_SITE = 1;
+   static final String[] USER_BUTTONS = new String[]{"User Information", "Backup", "Copy", "Delete Work/Quit", "Quit"};
+   static final int USER_INFO = 0;
+   static final int USER_BACKUP = 1;
+   static final int USER_COPY = 2;
+   static final int USER_DELETE_WORK_QUIT = 3;
+   static final int USER_QUIT = 4;
+   static Point lastModuleLocation = null;
 
    MainMenu(boolean flag) {
       super(flag);
       this.titlePanel = null;
-      this.f1473 = LogicProgram.fontSize;
-      JButton[] ajbutton = new JButton[moduleNames.length + f1474.length + f1480.length + f1483.length];
+      this.baseFontSize = LogicProgram.fontSize;
+      JButton[] ajbutton = new JButton[moduleNames.length + HELP_BUTTONS.length + WEB_BUTTONS.length + USER_BUTTONS.length];
       this.setLayout(new BorderLayout());
       CellPanel cellpanel = new CellPanel();
-      cellpanel.setLayout(new C_m_A(1));
-      cellpanel.add(new C_CC(this.f1473 * 3 / 5, 0, false, this.colors[7]));
-      C_ZE c_ze = new C_ZE("  " + LPInfo.programName + ": A Workbook  ");
-      c_ze.setFont(LogicProgram.getFont(this.f1473 * 2, 1));
-      cellpanel.add(c_ze);
+      cellpanel.setLayout(new VerticalStackLayout(1));
+      cellpanel.add(new SizedSeparator(this.baseFontSize * 3 / 5, 0, false, this.colors[7]));
+      LogicLabel logiclabel = new LogicLabel("  " + LPInfo.programName + ": A Workbook  ");
+      logiclabel.setFont(LogicProgram.getFont(this.baseFontSize * 2, 1));
+      cellpanel.add(logiclabel);
       CellPanel cellpanel1 = new CellPanel();
       cellpanel1.setLayout(new FlowLayout(1, 0, 0));
-      C_ZE c_ze1 = new C_ZE("code version " + LogicProgram.codeVersion, 0);
-      c_ze1.setFont(LogicProgram.getFont(this.f1473 * 6 / 7, 1));
-      cellpanel1.add(c_ze1);
+      LogicLabel logiclabel1 = new LogicLabel("code version " + LogicProgram.codeVersion, 0);
+      logiclabel1.setFont(LogicProgram.getFont(this.baseFontSize * 6 / 7, 1));
+      cellpanel1.add(logiclabel1);
       cellpanel.add(cellpanel1);
       CellPanel cellpanel2 = new CellPanel();
       cellpanel2.setLayout(new FlowLayout(1, 0, 0));
-      C_ZE c_ze2 = new C_ZE("text version " + ServerConnection.textVersion, 0);
-      c_ze2.setFont(LogicProgram.getFont(this.f1473 * 6 / 7, 1));
-      cellpanel2.add(c_ze2);
+      LogicLabel logiclabel2 = new LogicLabel("text version " + ServerConnection.textVersion, 0);
+      logiclabel2.setFont(LogicProgram.getFont(this.baseFontSize * 6 / 7, 1));
+      cellpanel2.add(logiclabel2);
       cellpanel.add(cellpanel2);
       if (LogicProgram.getCredentials("exam") != null) {
-         String s = C_GE.m644(".");
+         String s = SocketLineClient.getLocalIpString(".");
          CellPanel cellpanel3 = new CellPanel();
          cellpanel3.setLayout(new FlowLayout(1, 0, 0));
-         cellpanel3.add(new C_ZE("IP address: " + s));
-         cellpanel3.setFont(LogicProgram.getFont(this.f1473 * 6 / 7, 1));
+         cellpanel3.add(new LogicLabel("IP address: " + s));
+         cellpanel3.setFont(LogicProgram.getFont(this.baseFontSize * 6 / 7, 1));
          cellpanel.add(cellpanel3);
       }
 
-      if (ServerConnection.f480) {
+      if (ServerConnection.adminInstall) {
          CellPanel cellpanel4 = new CellPanel();
          cellpanel4.setLayout(new FlowLayout(1, 0, 0));
-         C_ZE c_ze3;
-         if (ServerConnection.f482) {
-            c_ze3 = new C_ZE("projector version " + ServerConnection.f479);
+         LogicLabel logiclabel3;
+         if (ServerConnection.linkedFromNonetDir) {
+            logiclabel3 = new LogicLabel("projector version " + ServerConnection.adminVersion);
          } else {
-            c_ze3 = new C_ZE("instructor version " + ServerConnection.f479);
+            logiclabel3 = new LogicLabel("instructor version " + ServerConnection.adminVersion);
          }
 
-         c_ze3.setFont(LogicProgram.getFont(this.f1473 * 6 / 7, 1));
-         cellpanel4.add(c_ze3);
+         logiclabel3.setFont(LogicProgram.getFont(this.baseFontSize * 6 / 7, 1));
+         cellpanel4.add(logiclabel3);
          cellpanel.add(cellpanel4);
       }
 
-      cellpanel.add(new C_CC(this.f1473 * 2, 0, false, this.colors[7]));
-      cellpanel.setFont(LogicProgram.getFont(this.f1473 * 2, 1));
+      cellpanel.add(new SizedSeparator(this.baseFontSize * 2, 0, false, this.colors[7]));
+      cellpanel.setFont(LogicProgram.getFont(this.baseFontSize * 2, 1));
       this.add(cellpanel, "North");
-      this.add(new C_CC(this.f1473 * 10 / 7, 0, true, this.colors[7]), "West");
+      this.add(new SizedSeparator(this.baseFontSize * 10 / 7, 0, true, this.colors[7]), "West");
       cellpanel = new CellPanel();
       cellpanel1 = new CellPanel();
       cellpanel1.setLayout(new BoxLayout(cellpanel1, 1));
-      c_ze1 = new C_ZE("Please Choose a Module");
-      c_ze1.setFont(LogicProgram.getFont(this.f1473, 1));
-      cellpanel1.add(c_ze1);
+      logiclabel1 = new LogicLabel("Please Choose a Module");
+      logiclabel1.setFont(LogicProgram.getFont(this.baseFontSize, 1));
+      cellpanel1.add(logiclabel1);
       int i = 0;
 
       for (int j = 0; j < moduleNames.length; j++) {
-         if (LogicProgram.f584) {
+         if (LogicProgram.noCoreProblems) {
             String s1 = LogicProgram.getLink(moduleWorks[j]);
-            File file1 = ServerConnection.f467;
-            s1 = s1 != null && file1 != null ? new File(file1, new File(s1).getName()).getPath() : null;
-            if (s1 == null) {
+            File file1 = ServerConnection.localDir;
+            String s2 = s1 != null && file1 != null ? new File(file1, new File(s1).getName()).getPath() : null;
+            if (s2 == null) {
                continue;
             }
 
-            File file2 = new File(s1);
+            File file2 = new File(s2);
             if (file2.length() <= 2L) {
                continue;
             }
          }
 
-         C_g_C c_g_c = new C_g_C(moduleNames[j]);
-         c_g_c.addActionListener(this);
-         cellpanel1.add(ajbutton[i++] = c_g_c);
+         WideMenuButton widemenubutton = new WideMenuButton(moduleNames[j]);
+         widemenubutton.addActionListener(this);
+         cellpanel1.add(ajbutton[i++] = widemenubutton);
       }
 
-      cellpanel1.add(new C_CC(this.f1473, 2, false, this.colors[7]));
+      cellpanel1.add(new SizedSeparator(this.baseFontSize, 2, false, this.colors[7]));
 
-      for (int k = 0; k < f1474.length; k++) {
-         if ((!f1474[k].equals(f1474[4]) || LogicProgram.getLink("headlines") != null) && (!f1474[k].equals(f1474[3]) || LogicProgram.f562 != null)) {
-            C_g_C c_g_c1 = new C_g_C(f1474[k]);
-            c_g_c1.addActionListener(this);
-            cellpanel1.add(ajbutton[i++] = c_g_c1);
+      for (int k = 0; k < HELP_BUTTONS.length; k++) {
+         if ((!HELP_BUTTONS[k].equals(HELP_BUTTONS[4]) || LogicProgram.getLink("headlines") != null)
+            && (!HELP_BUTTONS[k].equals(HELP_BUTTONS[3]) || LogicProgram.textDir != null)) {
+            WideMenuButton widemenubutton1 = new WideMenuButton(HELP_BUTTONS[k]);
+            widemenubutton1.addActionListener(this);
+            cellpanel1.add(ajbutton[i++] = widemenubutton1);
          }
       }
 
-      cellpanel1.add(new C_CC(this.f1473, 2, false, this.colors[7]));
+      cellpanel1.add(new SizedSeparator(this.baseFontSize, 2, false, this.colors[7]));
 
-      for (int l = 0; l < f1480.length; l++) {
-         if ((!f1480[l].equals(f1480[1]) || ServerConnection.websiteUrl != null)
-            && (!f1480[l].equals(f1480[0]) || LogicProgram.getCredentials("exam") == null || ServerConnection.f480)) {
-            C_g_C c_g_c2 = new C_g_C(f1480[l]);
-            c_g_c2.addActionListener(this);
-            cellpanel1.add(ajbutton[i++] = c_g_c2);
+      for (int l = 0; l < WEB_BUTTONS.length; l++) {
+         if ((!WEB_BUTTONS[l].equals(WEB_BUTTONS[1]) || ServerConnection.websiteUrl != null)
+            && (!WEB_BUTTONS[l].equals(WEB_BUTTONS[0]) || LogicProgram.getCredentials("exam") == null || ServerConnection.adminInstall)) {
+            WideMenuButton widemenubutton2 = new WideMenuButton(WEB_BUTTONS[l]);
+            widemenubutton2.addActionListener(this);
+            cellpanel1.add(ajbutton[i++] = widemenubutton2);
          }
       }
 
-      for (int i1 = 0; i1 < f1483.length; i1++) {
-         if ((LogicProgram.f567 != null && !LogicProgram.noNetwork || !f1483[i1].equals(f1483[1]))
-            && (LogicProgram.f551 != null || !f1483[i1].equals(f1483[2]))) {
-            C_g_C c_g_c3 = new C_g_C(f1483[i1]);
-            c_g_c3.addActionListener(this);
-            cellpanel1.add(ajbutton[i++] = c_g_c3);
+      for (int i1 = 0; i1 < USER_BUTTONS.length; i1++) {
+         if ((LogicProgram.backupName != null && !LogicProgram.noNetwork || !USER_BUTTONS[i1].equals(USER_BUTTONS[1]))
+            && (LogicProgram.copyDir != null || !USER_BUTTONS[i1].equals(USER_BUTTONS[2]))) {
+            WideMenuButton widemenubutton3 = new WideMenuButton(USER_BUTTONS[i1]);
+            widemenubutton3.addActionListener(this);
+            cellpanel1.add(ajbutton[i++] = widemenubutton3);
          }
       }
 
@@ -150,11 +151,11 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
       cellpanel.add(cellpanel1, "Center");
       this.add(cellpanel, "West");
       cellpanel = new CellPanel();
-      cellpanel.setLayout(new C_m_A(1));
-      cellpanel.add(new C_CC(this.f1473 * 2, 0, false, this.colors[7]));
-      c_ze = new C_ZE(LPInfo.programName + " is a product of the UCLA Logic Software Project");
-      c_ze.setFont(LogicProgram.getFont(this.f1473 * 6 / 7));
-      cellpanel.add(c_ze);
+      cellpanel.setLayout(new VerticalStackLayout(1));
+      cellpanel.add(new SizedSeparator(this.baseFontSize * 2, 0, false, this.colors[7]));
+      logiclabel = new LogicLabel(LPInfo.programName + " is a product of the UCLA Logic Software Project");
+      logiclabel.setFont(LogicProgram.getFont(this.baseFontSize * 6 / 7));
+      cellpanel.add(logiclabel);
       this.add(cellpanel, "South");
       this.setForeground(this.colors[7]);
       this.setBackground(this.colors[8]);
@@ -172,12 +173,12 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
       return 4;
    }
 
-   static MainMenu m2207(Rectangle rectangle) {
+   static MainMenu open(Rectangle rectangle) {
       MainMenu mainmenu = new MainMenu(false);
-      mainmenu.m2208(LPInfo.programName + ": Menu");
+      mainmenu.createMenuFrame(LPInfo.programName + ": Menu");
       mainmenu.frame.pack();
       Dimension dimension = mainmenu.getSize();
-      mainmenu.frame.setLocation(ProgressDialog.m1291(dimension));
+      mainmenu.frame.setLocation(ProgressDialog.centeredLocation(dimension));
       mainmenu.frame.setResizable(false);
       mainmenu.frame.setVisible(true);
       mainmenu.frame.invalidate();
@@ -185,24 +186,24 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
       return mainmenu;
    }
 
-   void m2208(String s) {
+   void createMenuFrame(String s) {
       this.frame = new ModuleFrame(s);
       this.frame.add(this, "Center");
       this.frame.module = this;
    }
 
-   boolean m2209(boolean flag) {
-      if (!m2210(LPDerivation.instances, flag)) {
+   boolean closeAllModules(boolean flag) {
+      if (!shutdownInstances(LPDerivation.instances, flag)) {
          return false;
-      } else if (!m2210(LPInvalidation.instances, flag)) {
+      } else if (!shutdownInstances(LPInvalidation.instances, flag)) {
          return false;
-      } else if (!m2210(LPParsing.instances, flag)) {
+      } else if (!shutdownInstances(LPParsing.instances, flag)) {
          return false;
-      } else if (!m2210(LPRecognition.instances, flag)) {
+      } else if (!shutdownInstances(LPRecognition.instances, flag)) {
          return false;
-      } else if (!m2210(LPSymbolizer.instances, flag)) {
+      } else if (!shutdownInstances(LPSymbolizer.instances, flag)) {
          return false;
-      } else if (!m2210(LPTruthAnalysis.instances, flag)) {
+      } else if (!shutdownInstances(LPTruthAnalysis.instances, flag)) {
          return false;
       } else {
          Hashtable hashtable = new Hashtable();
@@ -220,14 +221,20 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
          } else if (!LPTruthAnalysis.checkQuit(hashtable, hashtable1)) {
             return false;
          } else {
-            return !m2213(hashtable, hashtable1) ? false : UserSetup.m2115(new BusyIndicator(this));
+            if (!showSubmitSummary(hashtable, hashtable1)) {
+               return false;
+            } else if (!UserSetup.offerBackupBeforeQuit(new BusyIndicator(this))) {
+               return false;
+            } else {
+               return true;
+            }
          }
       }
    }
 
    @Override
    public boolean shutdown(boolean flag) {
-      if (!this.m2209(flag)) {
+      if (!this.closeAllModules(flag)) {
          return false;
       } else {
          LogicProgram.exit();
@@ -235,7 +242,7 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
       }
    }
 
-   static boolean m2210(Vector vector, boolean flag) {
+   static boolean shutdownInstances(Vector vector, boolean flag) {
       int i = vector == null ? 0 : vector.size();
 
       for (int j = 0; j < i; j++) {
@@ -252,24 +259,30 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
 
    @Override
    public boolean save() {
-      return m2211();
+      return saveAll();
    }
 
-   static boolean m2211() {
-      if (!m2212(LPDerivation.instances)) {
+   static boolean saveAll() {
+      if (!saveInstances(LPDerivation.instances)) {
          return false;
-      } else if (!m2212(LPInvalidation.instances)) {
+      } else if (!saveInstances(LPInvalidation.instances)) {
          return false;
-      } else if (!m2212(LPParsing.instances)) {
+      } else if (!saveInstances(LPParsing.instances)) {
          return false;
-      } else if (!m2212(LPRecognition.instances)) {
+      } else if (!saveInstances(LPRecognition.instances)) {
          return false;
       } else {
-         return !m2212(LPSymbolizer.instances) ? false : m2212(LPTruthAnalysis.instances);
+         if (!saveInstances(LPSymbolizer.instances)) {
+            return false;
+         } else if (!saveInstances(LPTruthAnalysis.instances)) {
+            return false;
+         } else {
+            return true;
+         }
       }
    }
 
-   static boolean m2212(Vector vector) {
+   static boolean saveInstances(Vector vector) {
       int i = vector == null ? 0 : vector.size();
 
       for (int j = 0; j < i; j++) {
@@ -281,7 +294,7 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
       return true;
    }
 
-   static boolean m2213(Hashtable hashtable, Hashtable hashtable1) {
+   static boolean showSubmitSummary(Hashtable hashtable, Hashtable hashtable1) {
       Vector vector = (Vector)hashtable.get("handled");
       Vector vector1 = (Vector)hashtable.get("missing");
       Vector vector2 = (Vector)hashtable.get("changed");
@@ -301,56 +314,56 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
          SizedPanel sizedpanel = new SizedPanel();
          sizedpanel.setLayout(new BorderLayout());
          SizedPanel sizedpanel1 = new SizedPanel();
-         sizedpanel1.setLayout(new C_m_A());
+         sizedpanel1.setLayout(new VerticalStackLayout());
          if (vector4 != null) {
-            sizedpanel1.add(new C_ZE("The following problems were"));
-            sizedpanel1.add(new C_ZE("not submitted:"));
+            sizedpanel1.add(new LogicLabel("The following problems were"));
+            sizedpanel1.add(new LogicLabel("not submitted:"));
             int j = vector4.size();
 
             for (int i = 0; i < j; i++) {
-               sizedpanel1.add(new C_ZE("  " + LogicProgram.m1000(TaggedRecord.m1493((String)vector4.elementAt(i)))));
+               sizedpanel1.add(new LogicLabel("  " + LogicProgram.stripNamePrefix(TaggedRecord.nameOf((String)vector4.elementAt(i)))));
             }
          }
 
          if (vector5 != null) {
-            sizedpanel1.add(new C_ZE("The following problems were"));
-            sizedpanel1.add(new C_ZE("changed since submission:"));
+            sizedpanel1.add(new LogicLabel("The following problems were"));
+            sizedpanel1.add(new LogicLabel("changed since submission:"));
             int i1 = vector5.size();
 
             for (int k = 0; k < i1; k++) {
-               sizedpanel1.add(new C_ZE("  " + LogicProgram.m1000(TaggedRecord.m1493((String)vector5.elementAt(k)))));
+               sizedpanel1.add(new LogicLabel("  " + LogicProgram.stripNamePrefix(TaggedRecord.nameOf((String)vector5.elementAt(k)))));
             }
          }
 
          if (vector3 != null) {
-            sizedpanel1.add(new C_ZE("The following problems were"));
-            sizedpanel1.add(new C_ZE("properly submitted:"));
+            sizedpanel1.add(new LogicLabel("The following problems were"));
+            sizedpanel1.add(new LogicLabel("properly submitted:"));
             int j1 = vector3.size();
 
             for (int l = 0; l < j1; l++) {
-               sizedpanel1.add(new C_ZE("  " + LogicProgram.m1000(TaggedRecord.m1493((String)vector3.elementAt(l)))));
+               sizedpanel1.add(new LogicLabel("  " + LogicProgram.stripNamePrefix(TaggedRecord.nameOf((String)vector3.elementAt(l)))));
             }
          }
 
          SizedPanel sizedpanel2 = new SizedPanel();
-         sizedpanel2.setLayout(new C_m_A());
-         sizedpanel2.add(new C_ZE("           STOP"));
-         sizedpanel2.add(new C_ZE("You should submit everything."));
-         sizedpanel2.add(new C_ZE("Do you wish to resume the"));
-         sizedpanel2.add(new C_ZE("program or quit?"));
+         sizedpanel2.setLayout(new VerticalStackLayout());
+         sizedpanel2.add(new LogicLabel("           STOP"));
+         sizedpanel2.add(new LogicLabel("You should submit everything."));
+         sizedpanel2.add(new LogicLabel("Do you wish to resume the"));
+         sizedpanel2.add(new LogicLabel("program or quit?"));
          sizedpanel.add(sizedpanel2, "South");
          JScrollPane jscrollpane = new JScrollPane(sizedpanel1);
          sizedpanel.add(jscrollpane, "Center");
          String[] astring = new String[]{"Resume", "Quit"};
          MessageDialog messagedialog = new MessageDialog(moduleframe, "Submit Summary", sizedpanel, astring);
          messagedialog.setSize(dimension);
-         messagedialog.m1323(MessageDialog.m1321(dimension), true);
+         messagedialog.showAt(MessageDialog.centeredLocation(dimension), true);
          moduleframe.dispose();
-         return messagedialog.f790 != 0;
+         return messagedialog.selectedButton != 0;
       }
    }
 
-   static Vector m2214(Vector vector, Vector vector1) {
+   static Vector appendAll(Vector vector, Vector vector1) {
       int i = vector == null ? 0 : vector.size();
       if (vector1 == null && i != 0) {
          vector1 = new Vector();
@@ -363,16 +376,16 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
       return vector1;
    }
 
-   static void m2215(Hashtable hashtable, String s, String s1, ProblemSelector problemselector, C_a_A c_a_a) {
+   static void mergeSubmitStatus(Hashtable hashtable, String s, String s1, ProblemSelector problemselector, ProblemRecordEnumeration problemrecordenumeration) {
       if (hashtable != null) {
          Vector vector = (Vector)hashtable.get("handled");
          Vector vector1 = (Vector)hashtable.get("missing");
          Vector vector2 = (Vector)hashtable.get("changed");
-         Hashtable hashtable1 = LogicProgram.m1084(s, s1, problemselector, c_a_a);
+         Hashtable hashtable1 = LogicProgram.checkSubmitLog(s, s1, problemselector, problemrecordenumeration);
          if (hashtable1 != null) {
-            vector = m2214((Vector)hashtable1.get("handled"), vector);
-            vector1 = m2214((Vector)hashtable1.get("missing"), vector1);
-            vector2 = m2214((Vector)hashtable1.get("changed"), vector2);
+            vector = appendAll((Vector)hashtable1.get("handled"), vector);
+            vector1 = appendAll((Vector)hashtable1.get("missing"), vector1);
+            vector2 = appendAll((Vector)hashtable1.get("changed"), vector2);
          }
 
          if (vector != null) {
@@ -398,23 +411,23 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
       return this.frame;
    }
 
-   static Rectangle m2216() {
-      if (f1489 == null) {
-         f1489 = MessageDialog.m1321(moduleSize);
+   static Rectangle nextModuleBounds() {
+      if (lastModuleLocation == null) {
+         lastModuleLocation = MessageDialog.centeredLocation(moduleSize);
       } else {
-         f1489.x -= 24;
-         f1489.y += 24;
+         lastModuleLocation.x -= 24;
+         lastModuleLocation.y += 24;
       }
 
-      if (f1489.x < 5) {
-         f1489.x = f1489.x + (LogicProgram.f541.width - moduleSize.width - f1489.x - 5) / 24 * 24;
+      if (lastModuleLocation.x < 5) {
+         lastModuleLocation.x += (LogicProgram.screenSize.width - moduleSize.width - lastModuleLocation.x - 5) / 24 * 24;
       }
 
-      if (f1489.y + moduleSize.height >= LogicProgram.f541.height - 30) {
-         f1489.y = f1489.y - (f1489.y - 5) / 24 * 24;
+      if (lastModuleLocation.y + moduleSize.height >= LogicProgram.screenSize.height - 30) {
+         lastModuleLocation.y -= (lastModuleLocation.y - 5) / 24 * 24;
       }
 
-      return new Rectangle(f1489.x, f1489.y, moduleSize.width, moduleSize.height);
+      return new Rectangle(lastModuleLocation.x, lastModuleLocation.y, moduleSize.width, moduleSize.height);
    }
 
    @Override
@@ -422,70 +435,70 @@ class MainMenu extends LogicModule implements LogicConstants, ActionListener {
       BusyIndicator busyindicator = new BusyIndicator(this);
       String s = actionevent.getActionCommand();
       if (s.equals(moduleNames[0])) {
-         busyindicator.m2162(true);
-         LPDerivation.startup(m2216(), busyindicator, null);
+         busyindicator.setBusy(true);
+         LPDerivation.startup(nextModuleBounds(), busyindicator, null);
       } else if (s.equals(moduleNames[1])) {
-         busyindicator.m2162(true);
-         LPInvalidation.startup(m2216(), busyindicator, null);
+         busyindicator.setBusy(true);
+         LPInvalidation.startup(nextModuleBounds(), busyindicator, null);
       } else if (s.equals(moduleNames[2])) {
-         busyindicator.m2162(true);
-         LPParsing.startup(m2216(), busyindicator, null);
+         busyindicator.setBusy(true);
+         LPParsing.startup(nextModuleBounds(), busyindicator, null);
       } else if (s.equals(moduleNames[3])) {
-         busyindicator.m2162(true);
-         LPRecognition.startup(m2216(), busyindicator, null);
+         busyindicator.setBusy(true);
+         LPRecognition.startup(nextModuleBounds(), busyindicator, null);
       } else if (s.equals(moduleNames[4])) {
-         busyindicator.m2162(true);
-         LPSymbolizer.startup(m2216(), busyindicator, null);
+         busyindicator.setBusy(true);
+         LPSymbolizer.startup(nextModuleBounds(), busyindicator, null);
       } else if (s.equals(moduleNames[5])) {
-         busyindicator.m2162(true);
-         LPTruthAnalysis.startup(m2216(), busyindicator, null);
-      } else if (s.equals(f1474[2])) {
+         busyindicator.setBusy(true);
+         LPTruthAnalysis.startup(nextModuleBounds(), busyindicator, null);
+      } else if (s.equals(HELP_BUTTONS[2])) {
          String s1 = LogicProgram.getLink("menuHelp");
-         C_Q.m1186(LogicProgram.configDir, s1);
-      } else if (s.equals(f1474[0])) {
+         DesktopLauncher.open(LogicProgram.configDir, s1);
+      } else if (s.equals(HELP_BUTTONS[0])) {
          String s2 = LogicProgram.getLink("using");
-         C_Q.m1186(LogicProgram.configDir, s2);
-      } else if (s.equals(f1474[1])) {
+         DesktopLauncher.open(LogicProgram.configDir, s2);
+      } else if (s.equals(HELP_BUTTONS[1])) {
          String s3 = LogicProgram.getLink("about");
-         C_Q.m1186(LogicProgram.configDir, s3);
-      } else if (s.equals(f1474[3])) {
-         String s4 = LogicProgram.m1031(null, "Logic Text", LogicProgram.f562.getPath());
+         DesktopLauncher.open(LogicProgram.configDir, s3);
+      } else if (s.equals(HELP_BUTTONS[3])) {
+         String s4 = LogicProgram.chooseOpenFile(null, "Logic Text", LogicProgram.textDir.getPath());
          if (s4 != null) {
-            C_Q.m1185(s4);
+            DesktopLauncher.open(s4);
          }
-      } else if (s.equals(f1474[4])) {
-         LogicProgram.m1053(false);
-      } else if (s.equals(f1480[1])) {
+      } else if (s.equals(HELP_BUTTONS[4])) {
+         LogicProgram.showHeadlines(false);
+      } else if (s.equals(WEB_BUTTONS[1])) {
          String s5 = ServerConnection.websiteUrl + "";
-         C_Q.m1184(s5);
-      } else if (s.equals(f1480[0])) {
+         DesktopLauncher.browse(s5);
+      } else if (s.equals(WEB_BUTTONS[0])) {
          String s6 = LogicProgram.getLink("assignments");
-         int i = LogicProgram.user.f664;
-         C_Q.m1184(s6 + "?user=" + i);
-      } else if (s.equals(f1483[1])) {
-         if (LogicProgram.f567 != null) {
-            ServerConnection.m896(LogicProgram.f567, busyindicator);
+         int i = LogicProgram.user.userUid;
+         DesktopLauncher.browse(s6 + "?user=" + i);
+      } else if (s.equals(USER_BUTTONS[1])) {
+         if (LogicProgram.backupName != null) {
+            ServerConnection.backupWork(LogicProgram.backupName, busyindicator);
          }
-      } else if (s.equals(f1483[2])) {
-         if (LogicProgram.f551 != null) {
-            ServerConnection.m900(LogicProgram.workDir, LogicProgram.f551);
+      } else if (s.equals(USER_BUTTONS[2])) {
+         if (LogicProgram.copyDir != null) {
+            ServerConnection.copyWork(LogicProgram.workDir, LogicProgram.copyDir);
          }
-      } else if (s.equals(f1483[3])) {
-         if (this.m2209(false) && ServerConnection.m902() != 1) {
+      } else if (s.equals(USER_BUTTONS[3])) {
+         if (this.closeAllModules(false) && ServerConnection.deleteWork() != 1) {
             LogicProgram.exit();
          }
-      } else if (s.equals(f1483[0])) {
-         LogicProgram.user.m1170();
+      } else if (s.equals(USER_BUTTONS[0])) {
+         LogicProgram.user.editInfo();
          if (LogicProgram.user.dirty) {
             LogicProgram.user.save();
             ServerSession serversession = ServerConnection.openSession(busyindicator);
             if (serversession != null) {
-               C_a_F c_a_f = C_a_F.m1642(serversession, LogicProgram.user, busyindicator, 2);
-               ServerConnection.m832(serversession, busyindicator);
+               LoginResult loginresult = LoginResult.login(serversession, LogicProgram.user, busyindicator, 2);
+               ServerConnection.closeSession(serversession, busyindicator);
             }
          }
-      } else if (s.equals(f1483[4])) {
-         this.frame.m62(false);
+      } else if (s.equals(USER_BUTTONS[4])) {
+         this.frame.closeModule(false);
       }
    }
 }

@@ -19,25 +19,25 @@ import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
-class KeypadDialog extends BaseDialog implements C_r_B, Runnable, WindowListener, C_LC, WindowFocusListener {
-   EditableTextPane f776;
-   boolean f777;
-   Point f778;
+class KeypadDialog extends BaseDialog implements KeypadTarget, Runnable, WindowListener, ModuleComponentMarker, WindowFocusListener {
+   EditableTextPane target;
+   boolean disposed;
+   Point anchor;
 
    public KeypadDialog(Frame frame, String s, boolean flag, EditableTextPane editabletextpane) {
       super(frame, s, flag);
-      this.m1300(editabletextpane);
+      this.init(editabletextpane);
    }
 
    public KeypadDialog(Dialog dialog, String s, boolean flag, EditableTextPane editabletextpane) {
       super(dialog, s, flag);
-      this.m1300(editabletextpane);
+      this.init(editabletextpane);
    }
 
-   public void m1300(EditableTextPane editabletextpane) {
-      this.f776 = editabletextpane;
-      this.f777 = false;
-      this.setLayout(new C_m_A());
+   public void init(EditableTextPane editabletextpane) {
+      this.target = editabletextpane;
+      this.disposed = false;
+      this.setLayout(new VerticalStackLayout());
       this.addWindowListener(this);
       this.addWindowFocusListener(this);
       JRootPane jrootpane = this.getRootPane();
@@ -46,14 +46,14 @@ class KeypadDialog extends BaseDialog implements C_r_B, Runnable, WindowListener
          @Override
          public void actionPerformed(ActionEvent actionevent) {
             KeypadDialog.this.dispose();
-            KeypadDialog.this.m1303();
+            KeypadDialog.this.refocusTarget();
          }
       });
       this.setFocusTraversalKeys(0, Collections.EMPTY_SET);
       this.setFocusTraversalKeys(1, Collections.EMPTY_SET);
    }
 
-   void m1301() {
+   void showLater() {
       this.pack();
       SwingUtilities.invokeLater(this);
    }
@@ -64,28 +64,28 @@ class KeypadDialog extends BaseDialog implements C_r_B, Runnable, WindowListener
       this.toFront();
    }
 
-   void m1302(Point point) {
-      this.f778 = point;
+   void setAnchor(Point point) {
+      this.anchor = point;
       this.setLocation(point);
    }
 
    @Override
    public void windowOpened(WindowEvent windowevent) {
       Rectangle rectangle = this.getBounds();
-      if (rectangle.y != this.f778.y || rectangle.x != this.f778.x) {
-         this.setLocation(this.f778);
+      if (rectangle.y != this.anchor.y || rectangle.x != this.anchor.x) {
+         this.setLocation(this.anchor);
       }
    }
 
    @Override
    public void windowClosing(WindowEvent windowevent) {
       this.dispose();
-      this.f776.requestFocus();
+      this.target.requestFocus();
    }
 
    @Override
    public void windowClosed(WindowEvent windowevent) {
-      this.f776.requestFocus();
+      this.target.requestFocus();
    }
 
    @Override
@@ -95,18 +95,18 @@ class KeypadDialog extends BaseDialog implements C_r_B, Runnable, WindowListener
    @Override
    public void windowDeactivated(WindowEvent windowevent) {
       Window window = windowevent.getOppositeWindow();
-      Frame frame = LogicProgram.m1044(this.f776);
+      Frame frame = LogicProgram.findFrame(this.target);
       if (window != frame) {
          this.dispose();
       }
 
-      this.f776.requestFocus();
+      this.target.requestFocus();
    }
 
    @Override
    public void windowIconified(WindowEvent windowevent) {
       this.dispose();
-      this.f776.requestFocus();
+      this.target.requestFocus();
    }
 
    @Override
@@ -124,23 +124,23 @@ class KeypadDialog extends BaseDialog implements C_r_B, Runnable, WindowListener
 
    @Override
    public void dispose() {
-      if (!this.f777) {
-         this.f777 = true;
+      if (!this.disposed) {
+         this.disposed = true;
          super.dispose();
       }
    }
 
-   public void m1303() {
-      this.f776.requestFocus();
+   public void refocusTarget() {
+      this.target.requestFocus();
    }
 
    @Override
-   public String m375(String s) {
+   public String translateKey(String s) {
       if (s == null) {
          return null;
       } else {
          if (s.equals("\b")) {
-            C_JF.m740(this);
+            KeypadGrid.deleteBackward(this);
             s = null;
          } else if (s.equals("paste")) {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -152,7 +152,7 @@ class KeypadDialog extends BaseDialog implements C_r_B, Runnable, WindowListener
             }
          } else if (s.equals("copy")) {
             Clipboard clipboard1 = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard1.setContents(new StringSelection(this.m1304().substring(this.m376(), this.m377())), null);
+            clipboard1.setContents(new StringSelection(this.getTargetText().substring(this.getTargetSelectionStart(), this.getTargetSelectionEnd())), null);
             s = null;
          }
 
@@ -161,53 +161,53 @@ class KeypadDialog extends BaseDialog implements C_r_B, Runnable, WindowListener
    }
 
    @Override
-   public String m1304() {
-      return this.f776.getText();
+   public String getTargetText() {
+      return this.target.getText();
    }
 
    @Override
-   public int m376() {
-      return this.f776.getSelectionStart();
+   public int getTargetSelectionStart() {
+      return this.target.getSelectionStart();
    }
 
    @Override
-   public int m377() {
-      return this.f776.getSelectionEnd();
+   public int getTargetSelectionEnd() {
+      return this.target.getSelectionEnd();
    }
 
    @Override
-   public int m378() {
-      return this.f776.getCaretPosition();
+   public int getTargetCaret() {
+      return this.target.getCaretPosition();
    }
 
    @Override
-   public void m379(int i, int j) {
-      this.f776.select(i, j);
+   public void selectInTarget(int i, int j) {
+      this.target.select(i, j);
    }
 
    @Override
-   public void m380(int i) {
-      this.f776.setCaretPosition(i);
+   public void setTargetCaret(int i) {
+      this.target.setCaretPosition(i);
    }
 
    @Override
-   public void m381(String s, int i) {
-      this.f776.m1796(s, i);
+   public void insertIntoTarget(String s, int i) {
+      this.target.insertText(s, i);
    }
 
    @Override
-   public void m1305(int i, int j) {
-      this.f776.m1795(null, i, i + j);
+   public void deleteFromTarget(int i, int j) {
+      this.target.replaceRange(null, i, i + j);
    }
 
    @Override
    public void invalidate() {
-      this.f776.invalidate();
+      this.target.invalidate();
       super.invalidate();
    }
 
    @Override
-   public boolean m1306() {
-      return !this.f776.isEditable();
+   public boolean isTargetReadOnly() {
+      return !this.target.isEditable();
    }
 }

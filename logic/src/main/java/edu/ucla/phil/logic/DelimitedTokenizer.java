@@ -1,42 +1,42 @@
 package edu.ucla.phil.logic;
 
 class DelimitedTokenizer {
-   char f650;
-   String f651;
-   String f652;
+   char delimiter;
+   String remaining;
+   String delimiters;
 
    DelimitedTokenizer(String s) {
       if (s == null || s.length() == 0) {
          s = "\\";
       }
 
-      this.f652 = s;
-      this.f650 = s.charAt(0);
-      this.f651 = null;
+      this.delimiters = s;
+      this.delimiter = s.charAt(0);
+      this.remaining = null;
    }
 
-   void m1132(String s) {
-      this.f650 = this.f652.charAt(0);
-      this.f651 = s;
+   void setInput(String s) {
+      this.delimiter = this.delimiters.charAt(0);
+      this.remaining = s;
    }
 
-   String m1133() {
-      return this.f651;
+   String getRemaining() {
+      return this.remaining;
    }
 
-   char m1134() {
-      return this.f650;
+   char getDelimiter() {
+      return this.delimiter;
    }
 
-   String m1135() {
-      return this.m1136(false);
+   String nextToken() {
+      return this.nextToken(false);
    }
 
-   String m1136(boolean flag) {
-      if (this.f651 == null) {
+   String nextToken(boolean flag) {
+      if (this.remaining == null) {
          return null;
       } else {
-         int i = this.f652.length();
+         int i = this.delimiters.length();
          String s = "";
 
          while (true) {
@@ -44,7 +44,7 @@ class DelimitedTokenizer {
             int k = -1;
 
             for (int l = 0; l < i; l++) {
-               int i1 = this.f651.indexOf(this.f652.charAt(l));
+               int i1 = this.remaining.indexOf(this.delimiters.charAt(l));
                if (i1 != -1 && (j == -1 || i1 < j)) {
                   j = i1;
                   k = l;
@@ -52,48 +52,48 @@ class DelimitedTokenizer {
             }
 
             if (k == -1) {
-               s = s + this.f651;
-               this.f650 = this.f652.charAt(0);
-               this.f651 = null;
+               s = s + this.remaining;
+               this.delimiter = this.delimiters.charAt(0);
+               this.remaining = null;
                return s;
             }
 
-            s = s + this.f651.substring(0, j);
+            String s1 = s + this.remaining.substring(0, j);
             if (k != 0) {
-               this.f650 = this.f651.charAt(j);
-               this.f651 = this.f651.substring(j + 1);
-               return s;
+               this.delimiter = this.remaining.charAt(j);
+               this.remaining = this.remaining.substring(j + 1);
+               return s1;
             }
 
             if (flag) {
-               s = s + this.f652.charAt(0);
+               s1 = s1 + this.delimiters.charAt(0);
             }
 
-            if (j >= this.f651.length() - 1) {
-               this.f650 = this.f652.charAt(0);
-               this.f651 = null;
-               return s;
+            if (j >= this.remaining.length() - 1) {
+               this.delimiter = this.delimiters.charAt(0);
+               this.remaining = null;
+               return s1;
             }
 
-            s = s + this.f651.charAt(j + 1);
-            this.f651 = this.f651.substring(j + 2);
+            s = s1 + this.remaining.charAt(j + 1);
+            this.remaining = this.remaining.substring(j + 2);
          }
       }
    }
 
-   String m1137(String s) {
-      return m1140(s, this.f652, false);
+   String escape(String s) {
+      return escape(s, this.delimiters, false);
    }
 
-   String m1138(String s, boolean flag) {
-      return m1140(s, this.f652, flag);
+   String escape(String s, boolean flag) {
+      return escape(s, this.delimiters, flag);
    }
 
-   static String m1139(String s, String s1) {
-      return m1140(s, s1, false);
+   static String escape(String s, String s1) {
+      return escape(s, s1, false);
    }
 
-   static String m1140(String s, String s1, boolean flag) {
+   static String escape(String s, String s1, boolean flag) {
       if (s == null) {
          return null;
       } else {

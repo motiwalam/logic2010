@@ -21,33 +21,33 @@ class SchematicRule extends Rule {
 
    SchematicRule(String s, String s1) {
       this(s);
-      this.m948(s1);
+      this.parseForm(s1);
    }
 
-   void m948(String s) {
+   void parseForm(String s) {
       ArgumentParser argumentparser = new ArgumentParser(s);
-      this.premises = argumentparser.f827;
-      this.conclusion = argumentparser.f828;
-      String s1 = argumentparser.m1384();
+      this.premises = argumentparser.premises;
+      this.conclusion = argumentparser.conclusion;
+      String s1 = argumentparser.getUnparsedText();
       if (s1 != null) {
-         this.f823 = "parse error: " + s1;
+         this.error = "parse error: " + s1;
       } else {
-         int i = argumentparser.m1385();
+         int i = argumentparser.getErrorCode();
          if (i != 0) {
-            this.f823 = ArgumentParser.f832[i];
+            this.error = ArgumentParser.ERROR_MESSAGES[i];
          }
       }
    }
 
-   Expression[] m949() {
+   Expression[] getPremises() {
       return this.premises;
    }
 
-   Expression m950() {
+   Expression getConclusion() {
       return this.conclusion;
    }
 
-   SchematicRule m951() {
+   SchematicRule copyRule() {
       int i = this.premises.length;
       Expression[] aexpression = new Expression[i];
 
@@ -55,19 +55,19 @@ class SchematicRule extends Rule {
          aexpression[j] = this.premises[j].copy();
       }
 
-      return new SchematicRule(this.f820, aexpression, this.conclusion.copy());
+      return new SchematicRule(this.name, aexpression, this.conclusion.copy());
    }
 
    @Override
-   boolean m952(C_w_E c_w_e) {
-      Vector vector = this.m954(c_w_e);
-      if (vector != null && !this.m1193(c_w_e, "weakAss", false)) {
-         String s = c_w_e.excludedProof();
+   boolean isProven(RulePropertySource rulepropertysource) {
+      Vector vector = this.getProofProblems(rulepropertysource);
+      if (vector != null && !this.testProperty(rulepropertysource, "weakAss", false)) {
+         String s = rulepropertysource.excludedProof();
          int i = vector.size();
 
          for (int j = 0; j < i; j++) {
             String s1 = (String)vector.elementAt(j);
-            if ((s == null || !s.equals(s1)) && c_w_e.checkProof(s1)) {
+            if ((s == null || !s.equals(s1)) && rulepropertysource.checkProof(s1)) {
                return true;
             }
          }
@@ -79,26 +79,26 @@ class SchematicRule extends Rule {
    }
 
    @Override
-   boolean m953(C_w_E c_w_e) {
-      return this.m952(c_w_e);
+   boolean isAnyFormProven(RulePropertySource rulepropertysource) {
+      return this.isProven(rulepropertysource);
    }
 
-   Vector m954(C_w_E c_w_e) {
-      return this.f822 != null ? this.f822.m954(c_w_e) : c_w_e.getProofs(this);
+   Vector getProofProblems(RulePropertySource rulepropertysource) {
+      return this.sourceTheorem != null ? this.sourceTheorem.getProofProblems(rulepropertysource) : rulepropertysource.getProofs(this);
    }
 
    @Override
-   void m955(Vector vector, C_w_E c_w_e, String s) {
-      if (c_w_e == null || !c_w_e.hasProperty(this, s)) {
+   void collectForms(Vector vector, RulePropertySource rulepropertysource, String s) {
+      if (rulepropertysource == null || !rulepropertysource.hasProperty(this, s)) {
          vector.addElement(this);
       }
    }
 
-   int m956(SchematicRule[] aschematicrule) {
+   int indexByName(SchematicRule[] aschematicrule) {
       int i = aschematicrule == null ? 0 : aschematicrule.length;
 
       for (int j = 0; j < i; j++) {
-         if (this.f820.equals(aschematicrule[j].f820)) {
+         if (this.name.equals(aschematicrule[j].name)) {
             return j;
          }
       }
@@ -106,7 +106,7 @@ class SchematicRule extends Rule {
       return -1;
    }
 
-   String m957(int[] aint) {
+   String formatInOrder(int[] aint) {
       String s = "";
       boolean flag = false;
       int i = Math.min(this.premises.length, aint.length);
@@ -120,7 +120,7 @@ class SchematicRule extends Rule {
    }
 
    @Override
-   String m958(String s, String s1) {
+   String format(String s, String s1) {
       String s2 = "";
       boolean flag = false;
 

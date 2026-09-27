@@ -5,29 +5,29 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 class SchemeInstantiation extends Hashtable implements ExpressionKinds {
-   Vector f1189;
-   String f1190 = null;
-   Hashtable f1191 = null;
+   Vector pendingLetters;
+   String errorId = null;
+   Hashtable errorParams = null;
 
    SchemeInstantiation() {
-      this.f1189 = new Vector();
+      this.pendingLetters = new Vector();
    }
 
    SchemeInstantiation(SchemeInstantiation schemeinstantiation1) {
       this();
-      this.m1877(schemeinstantiation1);
+      this.mergeFrom(schemeinstantiation1);
    }
 
    @Override
    public Object clone() {
       SchemeInstantiation schemeinstantiation1 = (SchemeInstantiation)super.clone();
-      schemeinstantiation1.f1189 = (Vector)this.f1189.clone();
-      schemeinstantiation1.f1190 = null;
-      schemeinstantiation1.f1191 = null;
+      schemeinstantiation1.pendingLetters = (Vector)this.pendingLetters.clone();
+      schemeinstantiation1.errorId = null;
+      schemeinstantiation1.errorParams = null;
       return schemeinstantiation1;
    }
 
-   boolean m1877(SchemeInstantiation schemeinstantiation1) {
+   boolean mergeFrom(SchemeInstantiation schemeinstantiation1) {
       String s = null;
       Hashtable hashtable = null;
       if (schemeinstantiation1 != null) {
@@ -35,54 +35,54 @@ class SchemeInstantiation extends Hashtable implements ExpressionKinds {
 
          while (enumeration.hasMoreElements()) {
             SchematicLetter schematicletter = (SchematicLetter)enumeration.nextElement();
-            LetterReplacement letterreplacement = schemeinstantiation1.m1878(schematicletter);
-            if (!this.m1880(schematicletter, letterreplacement) && s == null) {
-               s = this.f1190;
-               hashtable = this.f1191;
+            LetterReplacement letterreplacement = schemeinstantiation1.getReplacement(schematicletter);
+            if (!this.putReplacement(schematicletter, letterreplacement) && s == null) {
+               s = this.errorId;
+               hashtable = this.errorParams;
             }
          }
 
-         enumeration = schemeinstantiation1.f1189.elements();
+         enumeration = schemeinstantiation1.pendingLetters.elements();
 
          while (enumeration.hasMoreElements()) {
             SchematicLetter schematicletter1 = (SchematicLetter)enumeration.nextElement();
-            if (!this.m1879(schematicletter1.m1176(false)) && s == null) {
-               s = this.f1190;
-               hashtable = this.f1191;
+            if (!this.checkDeferredMatches(schematicletter1.getDeferredMatches(false)) && s == null) {
+               s = this.errorId;
+               hashtable = this.errorParams;
             }
 
-            this.m1886(schematicletter1);
+            this.addPendingLetter(schematicletter1);
          }
       }
 
-      this.f1190 = s;
-      this.f1191 = hashtable;
-      return this.f1190 == null;
+      this.errorId = s;
+      this.errorParams = hashtable;
+      return this.errorId == null;
    }
 
    @Override
    public void clear() {
       super.clear();
-      this.f1189.setSize(0);
-      this.f1190 = null;
-      this.f1191 = null;
+      this.pendingLetters.setSize(0);
+      this.errorId = null;
+      this.errorParams = null;
    }
 
-   LetterReplacement m1878(SchematicLetter schematicletter) {
+   LetterReplacement getReplacement(SchematicLetter schematicletter) {
       return (LetterReplacement)this.get(schematicletter);
    }
 
-   boolean m1879(Vector vector) {
+   boolean checkDeferredMatches(Vector vector) {
       if (vector == null) {
          return true;
       } else {
          Enumeration enumeration = vector.elements();
 
          while (enumeration.hasMoreElements()) {
-            C_m_B c_m_b = (C_m_B)enumeration.nextElement();
-            if (!c_m_b.f1276.m1268(null, c_m_b.f1277, this, c_m_b.f1278, C_o_D.m2008(c_m_b.f1279))) {
-               this.f1190 = "dererr062";
-               this.f1191 = Message.params("pattern", "\\l" + c_m_b.f1276 + "\\l", "instance", "\\l" + c_m_b.f1277 + "\\l");
+            DeferredMatch deferredmatch = (DeferredMatch)enumeration.nextElement();
+            if (!deferredmatch.pattern.match(null, deferredmatch.instance, this, deferredmatch.binderMap, BinderKey.toVector(deferredmatch.contextTerms))) {
+               this.errorId = "dererr062";
+               this.errorParams = Message.params("pattern", "\\l" + deferredmatch.pattern + "\\l", "instance", "\\l" + deferredmatch.instance + "\\l");
                return false;
             }
          }
@@ -91,29 +91,29 @@ class SchemeInstantiation extends Hashtable implements ExpressionKinds {
       }
    }
 
-   boolean m1880(SchematicLetter schematicletter, LetterReplacement letterreplacement) {
-      LetterReplacement letterreplacement1 = this.m1878(schematicletter);
+   boolean putReplacement(SchematicLetter schematicletter, LetterReplacement letterreplacement) {
+      LetterReplacement letterreplacement1 = this.getReplacement(schematicletter);
       if (letterreplacement1 == null) {
          Vector vector = null;
          int i;
-         if ((i = this.f1189.indexOf(schematicletter)) != -1) {
-            vector = ((SchematicLetter)this.f1189.elementAt(i)).m1176(false);
-            this.f1189.removeElementAt(i);
+         if ((i = this.pendingLetters.indexOf(schematicletter)) != -1) {
+            vector = ((SchematicLetter)this.pendingLetters.elementAt(i)).getDeferredMatches(false);
+            this.pendingLetters.removeElementAt(i);
          }
 
          this.put(schematicletter, letterreplacement);
-         if (!this.m1879(vector)) {
+         if (!this.checkDeferredMatches(vector)) {
             return false;
          }
-      } else if (!letterreplacement1.m656(letterreplacement)) {
-         this.f1190 = "dererr073";
-         this.f1191 = Message.params(
+      } else if (!letterreplacement1.sameReplacementAs(letterreplacement)) {
+         this.errorId = "dererr073";
+         this.errorParams = Message.params(
             "pattern",
-            "\\l" + letterreplacement.f367 + "\\l",
+            "\\l" + letterreplacement.pattern + "\\l",
             "new replacement",
-            "\\l" + letterreplacement.f368 + "\\l",
+            "\\l" + letterreplacement.replacement + "\\l",
             "old replacement",
-            "\\l" + letterreplacement1.f368 + "\\l"
+            "\\l" + letterreplacement1.replacement + "\\l"
          );
          return false;
       }
@@ -121,57 +121,57 @@ class SchemeInstantiation extends Hashtable implements ExpressionKinds {
       return true;
    }
 
-   boolean m1881(Expression expression, Expression expression1) {
+   boolean addReplacement(Expression expression, Expression expression1) {
       LetterReplacement letterreplacement = new LetterReplacement(expression, expression1);
-      if (letterreplacement.f369 != null) {
-         this.f1190 = letterreplacement.f369.f427;
-         this.f1191 = letterreplacement.f369.f428;
+      if (letterreplacement.error != null) {
+         this.errorId = letterreplacement.error.id;
+         this.errorParams = letterreplacement.error.params;
          return false;
       } else {
-         return this.m1880(expression.getSchematicLetter(), letterreplacement);
+         return this.putReplacement(expression.getSchematicLetter(), letterreplacement);
       }
    }
 
-   boolean m1882(String s, String s1) {
+   boolean addReplacement(String s, String s1) {
       String s2 = null;
 
       Expression expression;
       Expression expression1;
       try {
          s2 = s;
-         expression = LogicProgram.m1008(s, true, true);
+         expression = LogicProgram.parseFormula(s, true, true);
          s2 = s1;
-         expression1 = LogicProgram.m1008(s1, true, true);
+         expression1 = LogicProgram.parseFormula(s1, true, true);
       } catch (FormulaParseException formulaparseexception) {
-         this.f1190 = "dererr059";
-         this.f1191 = Message.params("parser error", s2);
+         this.errorId = "dererr059";
+         this.errorParams = Message.params("parser error", s2);
          return false;
       }
 
-      return this.m1881(expression, expression1);
+      return this.addReplacement(expression, expression1);
    }
 
-   boolean m1883(String s) {
+   boolean parseReplacement(String s) {
       int i = s.indexOf(":");
       if (i == -1) {
-         this.f1190 = "dererr059";
-         this.f1191 = Message.params("parser error", "scheme map needs pattern:replacement");
+         this.errorId = "dererr059";
+         this.errorParams = Message.params("parser error", "scheme map needs pattern:replacement");
          return false;
       } else {
-         return this.m1882(s.substring(0, i), s.substring(i + 1));
+         return this.addReplacement(s.substring(0, i), s.substring(i + 1));
       }
    }
 
-   static ErrorRef m1884(Expression expression, Expression expression1) {
+   static ErrorRef validateReplacement(Expression expression, Expression expression1) {
       Hashtable hashtable = Message.params("pattern", "\\l" + expression + "\\l", "replacement", "\\l" + expression1 + "\\l");
       if (expression.kind != 0 && expression.kind != 4) {
-         if (expression instanceof SimpleTerm && ((SimpleTerm)expression).m1262()) {
+         if (expression instanceof SimpleTerm && ((SimpleTerm)expression).isBoundVariable()) {
             return new ErrorRef("dererr067", hashtable);
          }
       } else {
          for (int i = 0; i < expression.childCount; i++) {
             Expression expression2 = expression.getChild(i);
-            if (!(expression2 instanceof SimpleTerm) || ((SimpleTerm)expression2).m1262()) {
+            if (!(expression2 instanceof SimpleTerm) || ((SimpleTerm)expression2).isBoundVariable()) {
                return new ErrorRef("dererr094", Message.putParam(hashtable, "n", i + 1 + ""));
             }
          }
@@ -186,7 +186,7 @@ class SchemeInstantiation extends Hashtable implements ExpressionKinds {
             return new ErrorRef("dererr071", hashtable);
          case 3:
          case 4:
-            if (expression1 instanceof SimpleTerm && ((SimpleTerm)expression1).m1262()) {
+            if (expression1 instanceof SimpleTerm && ((SimpleTerm)expression1).isBoundVariable()) {
                return new ErrorRef("dererr069", hashtable);
             } else {
                return expression1 instanceof Term ? null : new ErrorRef("dererr070", hashtable);
@@ -194,40 +194,40 @@ class SchemeInstantiation extends Hashtable implements ExpressionKinds {
       }
    }
 
-   boolean m1885(Expression expression) {
+   boolean addPendingLetter(Expression expression) {
       SchematicLetter schematicletter = expression.getSchematicLetter();
       if (schematicletter != null) {
-         this.m1886(schematicletter);
+         this.addPendingLetter(schematicletter);
          return true;
       } else {
-         if (expression instanceof SimpleTerm && ((SimpleTerm)expression).m1262()) {
-            this.f1190 = "dererr067";
-            this.f1191 = Message.params("pattern", "\\l" + expression + "\\l");
+         if (expression instanceof SimpleTerm && ((SimpleTerm)expression).isBoundVariable()) {
+            this.errorId = "dererr067";
+            this.errorParams = Message.params("pattern", "\\l" + expression + "\\l");
          } else {
-            this.f1190 = "dererr071";
-            this.f1191 = Message.params("pattern", "\\l" + expression + "\\l");
+            this.errorId = "dererr071";
+            this.errorParams = Message.params("pattern", "\\l" + expression + "\\l");
          }
 
          return false;
       }
    }
 
-   void m1886(SchematicLetter schematicletter) {
+   void addPendingLetter(SchematicLetter schematicletter) {
       if (schematicletter != null && !this.containsKey(schematicletter)) {
-         int i = this.f1189.indexOf(schematicletter);
+         int i = this.pendingLetters.indexOf(schematicletter);
          if (i == -1) {
-            this.f1189.addElement(schematicletter);
+            this.pendingLetters.addElement(schematicletter);
          } else {
             Vector vector;
-            if ((vector = schematicletter.m1176(false)) != null) {
-               SchematicLetter schematicletter1 = (SchematicLetter)this.f1189.elementAt(i);
-               Vector vector1 = schematicletter1.m1176(true);
+            if ((vector = schematicletter.getDeferredMatches(false)) != null) {
+               SchematicLetter schematicletter1 = (SchematicLetter)this.pendingLetters.elementAt(i);
+               Vector vector1 = schematicletter1.getDeferredMatches(true);
                Enumeration enumeration = vector.elements();
 
                while (enumeration.hasMoreElements()) {
-                  C_m_B c_m_b = (C_m_B)enumeration.nextElement();
-                  if (!vector1.contains(c_m_b)) {
-                     vector1.addElement(c_m_b);
+                  DeferredMatch deferredmatch = (DeferredMatch)enumeration.nextElement();
+                  if (!vector1.contains(deferredmatch)) {
+                     vector1.addElement(deferredmatch);
                   }
                }
             }
@@ -235,20 +235,20 @@ class SchemeInstantiation extends Hashtable implements ExpressionKinds {
       }
    }
 
-   boolean m1887(Expression expression, Expression expression1, C_MB c_mb, Vector vector) {
-      return this.m1888(new C_m_B(expression, expression1, c_mb, vector));
+   boolean deferMatch(Expression expression, Expression expression1, BinderMap bindermap, Vector vector) {
+      return this.deferMatch(new DeferredMatch(expression, expression1, bindermap, vector));
    }
 
-   boolean m1888(C_m_B c_m_b) {
-      SchematicLetter schematicletter = c_m_b.f1276.getSchematicLetter();
+   boolean deferMatch(DeferredMatch deferredmatch) {
+      SchematicLetter schematicletter = deferredmatch.pattern.getSchematicLetter();
       if (schematicletter == null) {
          return false;
       } else {
-         int i = this.f1189.indexOf(schematicletter);
+         int i = this.pendingLetters.indexOf(schematicletter);
          if (i != -1) {
-            Vector vector = ((SchematicLetter)this.f1189.elementAt(i)).m1176(true);
-            if (!vector.contains(c_m_b)) {
-               vector.addElement(c_m_b);
+            Vector vector = ((SchematicLetter)this.pendingLetters.elementAt(i)).getDeferredMatches(true);
+            if (!vector.contains(deferredmatch)) {
+               vector.addElement(deferredmatch);
             }
          }
 
@@ -256,15 +256,15 @@ class SchemeInstantiation extends Hashtable implements ExpressionKinds {
       }
    }
 
-   Vector m1889() {
-      return this.f1189;
+   Vector getPendingLetters() {
+      return this.pendingLetters;
    }
 
-   boolean m1890() {
-      Enumeration enumeration = this.f1189.elements();
+   boolean hasNoDeferredMatches() {
+      Enumeration enumeration = this.pendingLetters.elements();
 
       while (enumeration.hasMoreElements()) {
-         if (((SchematicLetter)enumeration.nextElement()).m1176(false) != null) {
+         if (((SchematicLetter)enumeration.nextElement()).getDeferredMatches(false) != null) {
             return false;
          }
       }
@@ -272,17 +272,17 @@ class SchemeInstantiation extends Hashtable implements ExpressionKinds {
       return true;
    }
 
-   String m1891() {
-      if (this.f1189 == null) {
+   String pendingLettersToString() {
+      if (this.pendingLetters == null) {
          return "null";
       } else {
-         Object object = "";
-         Enumeration enumeration = this.f1189.elements();
+         String object = "";
+         Enumeration enumeration = this.pendingLetters.elements();
 
          while (enumeration.hasMoreElements()) {
             SchematicLetter schematicletter = (SchematicLetter)enumeration.nextElement();
             object = object + (object.equals("") ? "" : ".") + schematicletter;
-            Vector vector = schematicletter.m1176(false);
+            Vector vector = schematicletter.getDeferredMatches(false);
             if (vector != null && !vector.isEmpty()) {
                object = object + vector;
             }
@@ -292,60 +292,60 @@ class SchemeInstantiation extends Hashtable implements ExpressionKinds {
       }
    }
 
-   Vector m1892(Expression expression) {
+   Vector collectUsedLetters(Expression expression) {
       SchemeInstantiation schemeinstantiation1 = new SchemeInstantiation();
       if (expression != null) {
-         expression.m1273(schemeinstantiation1);
+         expression.addPendingLetters(schemeinstantiation1);
       }
 
       Enumeration enumeration = this.elements();
 
       while (enumeration.hasMoreElements()) {
          LetterReplacement letterreplacement = (LetterReplacement)enumeration.nextElement();
-         letterreplacement.f368.m1273(schemeinstantiation1);
+         letterreplacement.replacement.addPendingLetters(schemeinstantiation1);
       }
 
-      return schemeinstantiation1.f1189;
+      return schemeinstantiation1.pendingLetters;
    }
 
-   SchemeInstantiation m1893(Expression expression) {
-      Vector vector = this.m1892(expression);
-      int i = this.f1189.size();
+   SchemeInstantiation assignFreshLetters(Expression expression) {
+      Vector vector = this.collectUsedLetters(expression);
+      int i = this.pendingLetters.size();
       SchemeInstantiation schemeinstantiation1 = new SchemeInstantiation();
 
       for (int j = 0; j < i; j++) {
-         SchematicLetter schematicletter = (SchematicLetter)this.f1189.elementAt(0);
-         if (schematicletter.m1176(false) != null) {
-            SchematicLetter schematicletter1 = schematicletter.m1177(vector);
-            schemeinstantiation1.m1886(schematicletter1);
-            this.m1881(schematicletter.m1175(), schematicletter1.m1175());
+         SchematicLetter schematicletter = (SchematicLetter)this.pendingLetters.elementAt(0);
+         if (schematicletter.getDeferredMatches(false) != null) {
+            SchematicLetter schematicletter1 = schematicletter.freshLetter(vector);
+            schemeinstantiation1.addPendingLetter(schematicletter1);
+            this.addReplacement(schematicletter.toExpression(), schematicletter1.toExpression());
          }
       }
 
       return schemeinstantiation1;
    }
 
-   String m1894() {
-      return this.f1190;
+   String getErrorId() {
+      return this.errorId;
    }
 
-   Hashtable m1895() {
-      return this.f1191;
+   Hashtable getErrorParams() {
+      return this.errorParams;
    }
 
-   String m1896() {
+   String encode() {
       String s = "";
       boolean flag = false;
 
       for (Enumeration enumeration = this.keys(); enumeration.hasMoreElements(); flag = true) {
          SchematicLetter schematicletter = (SchematicLetter)enumeration.nextElement();
-         s = s + (flag ? "." : "") + this.m1878(schematicletter);
+         s = s + (flag ? "." : "") + this.getReplacement(schematicletter);
       }
 
       return s;
    }
 
-   static SchemeInstantiation m1897(String s) {
+   static SchemeInstantiation decode(String s) {
       SchemeInstantiation schemeinstantiation = new SchemeInstantiation();
 
       while (!s.equals("")) {
@@ -359,7 +359,7 @@ class SchemeInstantiation extends Hashtable implements ExpressionKinds {
             s = s.substring(i + 1);
          }
 
-         if (!schemeinstantiation.m1883(s1)) {
+         if (!schemeinstantiation.parseReplacement(s1)) {
             return null;
          }
       }

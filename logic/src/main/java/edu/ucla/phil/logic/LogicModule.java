@@ -14,14 +14,14 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-abstract class LogicModule extends CellPanel implements ModuleConstants, C_LC {
+abstract class LogicModule extends CellPanel implements ModuleConstants, ModuleComponentMarker {
    static Dimension moduleSize = new Dimension(64 * LogicProgram.fontSize, 40 * LogicProgram.fontSize);
    ModuleFrame frame = null;
    boolean forPrint;
    int problemIndex = -1;
    Color[] colors;
    static String[] kaplan = LogicProgram.symbols;
-   static String[] html = LogicProgram.f598;
+   static String[] html = LogicProgram.htmlSymbols;
    ProblemTitlePanel titlePanel;
    static ProblemEditorFrame[] problemEditors = new ProblemEditorFrame[moduleClasses.length];
    static boolean eraseWork = false;
@@ -39,7 +39,7 @@ abstract class LogicModule extends CellPanel implements ModuleConstants, C_LC {
    abstract int getProblemState(TaggedRecord taggedrecord);
 
    LogicModule(boolean flag) {
-      this.colors = (this.forPrint = flag) ? LogicProgram.f605 : LogicProgram.f607;
+      this.colors = (this.forPrint = flag) ? LogicProgram.printColors : LogicProgram.moduleColors;
       this.setForeground(this.colors[0]);
       this.setBackground(this.colors[1]);
       this.titlePanel = new ProblemTitlePanel(this.colors);
@@ -138,8 +138,8 @@ abstract class LogicModule extends CellPanel implements ModuleConstants, C_LC {
          scrambledreader = new ScrambledReader(reader, LogicProgram.scrambleKey);
       }
 
-      if (flag && problemset.f1075 == null) {
-         problemset.f1075 = new Hashtable();
+      if (flag && problemset.headingsByName == null) {
+         problemset.headingsByName = new Hashtable();
       }
 
       try {
@@ -155,18 +155,18 @@ abstract class LogicModule extends CellPanel implements ModuleConstants, C_LC {
 
                   vector.addElement(s.substring(2));
                } else if (s.indexOf(35) == 0) {
-                  problemset.f1076 = s.substring(1).trim();
+                  problemset.storedDigest = s.substring(1).trim();
                }
             } else {
-               if (problemset.m1098(s, vector, flag1) != -1) {
+               if (problemset.addProblem(s, vector, flag1) != -1) {
                   vector = null;
                }
 
-               if (LogicProgram.debug && !problemset.f1080 && flag) {
-                  ArgumentParser argumentparser = new ArgumentParser(problemset.m1768(s), true);
-                  String s1 = argumentparser.m1388(true, true);
+               if (LogicProgram.debug && !problemset.skipArgumentCheck && flag) {
+                  ArgumentParser argumentparser = new ArgumentParser(problemset.getStatement(s), true);
+                  String s1 = argumentparser.describeError(true, true);
                   if (s1 != null) {
-                     String s2 = TaggedRecord.m1493(s);
+                     String s2 = TaggedRecord.nameOf(s);
                      System.out.println(s2 + ": " + s1);
                   }
                }
@@ -181,7 +181,7 @@ abstract class LogicModule extends CellPanel implements ModuleConstants, C_LC {
    }
 
    static void writeProblems(ProblemSet problemset, Writer writer) throws IOException {
-      String s = problemset.m1786();
+      String s = problemset.getDigestVersKey();
       if (!LogicProgram.user.getField(s, "").equals("1")) {
          LogicProgram.user.put(s, "1");
          LogicProgram.user.save();
@@ -202,19 +202,19 @@ abstract class LogicModule extends CellPanel implements ModuleConstants, C_LC {
          int i = problemset.size();
 
          for (int j = 0; j < i; j++) {
-            String s1 = problemset.m1778(j);
+            String s1 = problemset.getRecordAt(j);
             bufferedwriter.write(s1, 0, s1.length());
             bufferedwriter.newLine();
          }
 
-         String s2 = "# " + problemset.m1777(LogicProgram.user);
+         String s2 = "# " + problemset.computeDigest(LogicProgram.user);
          bufferedwriter.write(s2, 0, s2.length());
          bufferedwriter.newLine();
          bufferedwriter.close();
       }
 
-      LogicProgram.f581 = true;
-      LogicProgram.f582 = true;
+      LogicProgram.backupNeeded = true;
+      LogicProgram.copyNeeded = true;
    }
 
    static void writeExercises(ProblemSet problemset, Writer writer) throws IOException {
@@ -230,10 +230,10 @@ abstract class LogicModule extends CellPanel implements ModuleConstants, C_LC {
 
          while (enumeration.hasMoreElements()) {
             ProblemEntry problementry = (ProblemEntry)enumeration.nextElement();
-            String s = TaggedRecord.m1493(problementry.name);
+            String s = TaggedRecord.nameOf(problementry.name);
             Vector vector;
-            if (problemset.f1075 != null && s != null) {
-               vector = (Vector)problemset.f1075.get(s);
+            if (problemset.headingsByName != null && s != null) {
+               vector = (Vector)problemset.headingsByName.get(s);
             } else {
                vector = null;
             }
@@ -324,24 +324,24 @@ abstract class LogicModule extends CellPanel implements ModuleConstants, C_LC {
       this.repaint();
    }
 
-   abstract static class C__A implements Runnable {
-      BusyIndicator f782;
-      Rectangle f783;
-      String f784;
+   abstract static class ModuleStartupTask implements Runnable {
+      BusyIndicator busyIndicator;
+      Rectangle bounds;
+      String problemName;
 
-      C__A(BusyIndicator busyindicator, Rectangle rectangle, String s) {
-         this.f782 = busyindicator;
-         this.f783 = rectangle;
-         this.f784 = s;
+      ModuleStartupTask(BusyIndicator busyindicator, Rectangle rectangle, String s) {
+         this.busyIndicator = busyindicator;
+         this.bounds = rectangle;
+         this.problemName = s;
       }
 
-      void m1310() {
-         if (this.f782 != null) {
-            this.f782.m2162(false);
-            this.f782 = null;
+      void stopBusyIndicator() {
+         if (this.busyIndicator != null) {
+            this.busyIndicator.setBusy(false);
+            this.busyIndicator = null;
          }
       }
 
-      public abstract void m959();
+      public abstract void continueStartup();
    }
 }

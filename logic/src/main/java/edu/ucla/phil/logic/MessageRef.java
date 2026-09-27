@@ -3,28 +3,28 @@ package edu.ucla.phil.logic;
 import java.util.Hashtable;
 
 class MessageRef {
-   String f427;
-   Hashtable f428;
+   String id;
+   Hashtable params;
 
    MessageRef(String s, Hashtable hashtable) {
-      this.f427 = s;
-      this.f428 = hashtable;
+      this.id = s;
+      this.params = hashtable;
    }
 
-   String m716() {
-      return this.f427;
+   String getId() {
+      return this.id;
    }
 
-   Hashtable m717() {
-      return this.f428;
+   Hashtable getParams() {
+      return this.params;
    }
 
-   MessageRef m718(String s, String s1) {
-      if (this.f428 == null) {
-         this.f428 = new Hashtable();
+   MessageRef putParam(String s, String s1) {
+      if (this.params == null) {
+         this.params = new Hashtable();
       }
 
-      Message.putParam(this.f428, s, s1);
+      Message.putParam(this.params, s, s1);
       return this;
    }
 }

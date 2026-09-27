@@ -1,10 +1,10 @@
 package edu.ucla.phil.logic;
 
 public abstract class Justification implements DerivationConstants, Cloneable {
-   String f384;
+   String label;
 
    Justification(String s) {
-      this.f384 = s;
+      this.label = s;
    }
 
    @Override
@@ -16,24 +16,24 @@ public abstract class Justification implements DerivationConstants, Cloneable {
       }
    }
 
-   abstract boolean m600(DerivationLineChecker derivationlinechecker);
+   abstract boolean reapply(DerivationLineChecker derivationlinechecker);
 
-   abstract String m609();
+   abstract String encode();
 
-   static Justification m686(String s, LPDerivation lpderivation) {
+   static Justification decode(String s, LPDerivation lpderivation) {
       int i = s.indexOf(":");
       if (i == -1) {
          return null;
       } else {
          int j = Integer.parseInt(s.substring(0, i));
          if (j == 1) {
-            return C_HF.m698(s);
+            return RuleApplication.decode(s);
          } else if (j == 2) {
-            return C_l_.m1915(s);
+            return PremiseJustification.decode(s);
          } else if (j == 3) {
-            return C_p_E.m2027(s);
+            return IndirectAssumptionJustification.decode(s);
          } else {
-            return j == 4 ? C_GA.m610(s, lpderivation) : null;
+            return j == 4 ? InterchangeJustification.decodeInterchange(s, lpderivation) : null;
          }
       }
    }

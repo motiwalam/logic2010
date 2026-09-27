@@ -12,22 +12,22 @@ public class IdentityFormula extends Formula {
       this.kind = 6;
    }
 
-   public void m2176(Term term) {
+   public void setLeft(Term term) {
       this.children.addElement(term);
       this.childCount++;
    }
 
-   public void m2177(Term term) {
+   public void setRight(Term term) {
       this.children.addElement(term);
       this.childCount++;
    }
 
    @Override
-   Expression m1247(Vector vector, int i, SchemeInstantiation schemeinstantiation) {
-      super.m1247(vector, i, schemeinstantiation);
+   Expression abstractQuantifiers(Vector vector, int i, SchemeInstantiation schemeinstantiation) {
+      super.abstractQuantifiers(vector, i, schemeinstantiation);
       Expression expression = this.getChild(0);
       Expression expression1 = this.getChild(1);
-      if (expression.m1206().compareTo(expression1.m1206()) > 0) {
+      if (expression.toCanonicalString().compareTo(expression1.toCanonicalString()) > 0) {
          this.children.setElementAt(expression, 1);
          this.children.setElementAt(expression1, 0);
       }
@@ -36,29 +36,32 @@ public class IdentityFormula extends Formula {
    }
 
    @Override
-   Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, C_MB c_mb, Vector vector) {
+   Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, BinderMap bindermap, Vector vector) {
       IdentityFormula identityformula1 = new IdentityFormula(this.symbol);
 
       for (int i = 0; i < this.childCount; i++) {
-         identityformula1.addChild(this.getChild(i).instantiate(expression, schemeinstantiation, c_mb, vector));
+         identityformula1.addChild(this.getChild(i).instantiate(expression, schemeinstantiation, bindermap, vector));
       }
 
       return identityformula1;
    }
 
    @Override
-   String m1207(int i) {
-      return this.getChild(0).m1207(i) + this.symbol + this.getChild(1).m1207(i);
+   String formatMinimal(int i) {
+      return this.getChild(0).formatMinimal(i) + this.symbol + this.getChild(1).formatMinimal(i);
    }
 
    @Override
-   String m1209(int i) {
-      return this.getChild(0).m1209(i) + this.symbol + this.getChild(1).m1209(i);
+   String formatFull(int i) {
+      return this.getChild(0).formatFull(i) + this.symbol + this.getChild(1).formatFull(i);
    }
 
    @Override
-   void m1211(C_DD c_dd) {
-      super.m1211(c_dd);
-      c_dd.f283 = (c_dd.m458(1).f282 = (c_dd.m458(0).f282 = 0) + c_dd.m458(0).f283 + this.symbol.length()) + c_dd.m458(1).f283;
+   void layoutDisplayTree(FormulaParseNode formulaparsenode) {
+      super.layoutDisplayTree(formulaparsenode);
+      formulaparsenode.length = (
+            formulaparsenode.getChild(1).offset = (formulaparsenode.getChild(0).offset = 0) + formulaparsenode.getChild(0).length + this.symbol.length()
+         )
+         + formulaparsenode.getChild(1).length;
    }
 }

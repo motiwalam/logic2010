@@ -4,51 +4,51 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 class NewUserInfo extends UserInfo {
-   String f381 = null;
+   String passwordHash = null;
 
    public NewUserInfo() {
    }
 
    @Override
-   boolean m682(String s) {
+   boolean editInfo(String s) {
       if (s == null) {
-         return this.m1170();
+         return this.editInfo();
       } else {
          String[] astring = new String[]{"OK", "Cancel"};
          String[] astring1 = new String[]{"Institution: ", "Term: ", "Course: "};
          String[] astring2 = new String[]{"Student ID: "};
          short short1 = 250;
-         Institution institution = Institution.m1293(this.getInstitution());
-         C_ZE c_ze = new C_ZE(this.getInstitution());
-         C_ZE c_ze1 = new C_ZE(institution.m1299(this.getTerm()));
-         C_ZE c_ze2 = new C_ZE(this.getClassName());
+         Institution institution = Institution.forName(this.getInstitution());
+         LogicLabel logiclabel = new LogicLabel(this.getInstitution());
+         LogicLabel logiclabel1 = new LogicLabel(institution.displayTerm(this.getTerm()));
+         LogicLabel logiclabel2 = new LogicLabel(this.getClassName());
          EditableTextPane editabletextpane = new EditableTextPane(this.getStudentId(), short1);
-         C_ZE[] ac_ze = new C_ZE[]{c_ze, c_ze1, c_ze2};
+         LogicLabel[] alogiclabel = new LogicLabel[]{logiclabel, logiclabel1, logiclabel2};
          EditableTextPane[] aeditabletextpane = new EditableTextPane[]{editabletextpane};
          SizedPanel sizedpanel = new SizedPanel();
          GridBagLayout gridbaglayout = new GridBagLayout();
          GridBagConstraints gridbagconstraints = new GridBagConstraints();
          sizedpanel.setLayout(gridbaglayout);
 
-         for (int i = 0; i < ac_ze.length; i++) {
-            C_d_D c_d_d = new C_d_D(ac_ze[i].getText());
-            C_d_D c_d_d1 = new C_d_D(astring1[i]);
+         for (int i = 0; i < alogiclabel.length; i++) {
+            FontLabel fontlabel = new FontLabel(alogiclabel[i].getText());
+            FontLabel fontlabel1 = new FontLabel(astring1[i]);
             gridbagconstraints.gridwidth = -1;
             gridbagconstraints.fill = 0;
             gridbagconstraints.weightx = 0.0;
-            sizedpanel.add(c_d_d1, gridbagconstraints);
+            sizedpanel.add(fontlabel1, gridbagconstraints);
             gridbagconstraints.gridwidth = 0;
             gridbagconstraints.fill = 2;
             gridbagconstraints.weightx = 1.0;
-            sizedpanel.add(c_d_d, gridbagconstraints);
+            sizedpanel.add(fontlabel, gridbagconstraints);
          }
 
          for (int j = 0; j < aeditabletextpane.length; j++) {
-            C_d_D c_d_d2 = new C_d_D(astring2[j]);
+            FontLabel fontlabel2 = new FontLabel(astring2[j]);
             gridbagconstraints.gridwidth = -1;
             gridbagconstraints.fill = 0;
             gridbagconstraints.weightx = 0.0;
-            sizedpanel.add(c_d_d2, gridbagconstraints);
+            sizedpanel.add(fontlabel2, gridbagconstraints);
             gridbagconstraints.gridwidth = 0;
             gridbagconstraints.fill = 2;
             gridbagconstraints.weightx = 1.0;
@@ -57,11 +57,11 @@ class NewUserInfo extends UserInfo {
 
          ModuleFrame moduleframe = new ModuleFrame();
          MessageDialog messagedialog = new MessageDialog(moduleframe, s, sizedpanel, astring);
-         messagedialog.m1314(0);
+         messagedialog.setDefaultButtonIndex(0);
          aeditabletextpane[0].requestFocus();
-         messagedialog.m1322(null);
+         messagedialog.showAt(null);
          moduleframe.dispose();
-         if (messagedialog.f790 != 0) {
+         if (messagedialog.selectedButton != 0) {
             return false;
          } else {
             this.put("studentID", editabletextpane.getText());
@@ -71,8 +71,8 @@ class NewUserInfo extends UserInfo {
    }
 
    @Override
-   boolean m683() {
-      return !this.m1154(true).equals("");
+   boolean isComplete() {
+      return !this.getStudentId(true).equals("");
    }
 
    @Override

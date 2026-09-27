@@ -3,43 +3,43 @@ package edu.ucla.phil.logic;
 import java.util.Vector;
 
 class Theorem extends SchematicRule {
-   Integer f700;
+   Integer number;
 
    Theorem(Integer integer, String s) {
       super("T" + integer, ".:" + s);
-      this.f700 = integer;
+      this.number = integer;
    }
 
    Theorem(Integer integer, Expression expression) {
       super("T" + integer, null, expression);
-      this.f700 = integer;
+      this.number = integer;
    }
 
-   Integer m1191() {
-      return this.f700;
+   Integer getNumber() {
+      return this.number;
    }
 
-   Expression m1192() {
+   Expression getFormula() {
       return this.conclusion;
    }
 
    @Override
-   boolean m1193(C_w_E c_w_e, String s, boolean flag) {
-      return c_w_e.hasProperty(this.f700, s);
+   boolean testProperty(RulePropertySource rulepropertysource, String s, boolean flag) {
+      return rulepropertysource.hasProperty(this.number, s);
    }
 
    @Override
-   Vector m954(C_w_E c_w_e) {
-      return c_w_e.getProofs(this.f700);
+   Vector getProofProblems(RulePropertySource rulepropertysource) {
+      return rulepropertysource.getProofs(this.number);
    }
 
    @Override
    public String toString() {
-      return this.m958("", "");
+      return this.format("", "");
    }
 
    @Override
-   String m958(String s1, String s) {
+   String format(String s1, String s) {
       return s + this.conclusion.toString();
    }
 }

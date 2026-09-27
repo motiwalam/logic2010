@@ -5,42 +5,42 @@ import java.awt.Cursor;
 import java.util.Hashtable;
 
 class BusyIndicator {
-   Cursor f1432;
-   Component f1433;
-   BaseDialog f1434;
+   Cursor savedCursor;
+   Component component;
+   BaseDialog dialog;
 
-   BusyIndicator(Component component, boolean flag) {
-      this(component);
-      this.m2162(flag);
+   BusyIndicator(Component componentx, boolean flag) {
+      this(componentx);
+      this.setBusy(flag);
    }
 
-   BusyIndicator(Component component) {
-      this.f1433 = component;
-      this.f1432 = null;
-      this.f1434 = null;
+   BusyIndicator(Component componentx) {
+      this.component = componentx;
+      this.savedCursor = null;
+      this.dialog = null;
    }
 
-   void m2162(boolean flag) {
-      if (!flag && this.f1434 != null) {
-         MessageDialog.m1331(this.f1434);
-         this.f1434 = null;
+   void setBusy(boolean flag) {
+      if (!flag && this.dialog != null) {
+         MessageDialog.closeNotice(this.dialog);
+         this.dialog = null;
       }
 
-      if (this.f1433 != null) {
-         if (flag && this.f1432 == null) {
-            this.f1432 = this.f1433.getCursor();
-            this.f1433.setCursor(Cursor.getPredefinedCursor(3));
-         } else if (!flag && this.f1432 != null) {
-            this.f1433.setCursor(this.f1432);
-            this.f1432 = null;
+      if (this.component != null) {
+         if (flag && this.savedCursor == null) {
+            this.savedCursor = this.component.getCursor();
+            this.component.setCursor(Cursor.getPredefinedCursor(3));
+         } else if (!flag && this.savedCursor != null) {
+            this.component.setCursor(this.savedCursor);
+            this.savedCursor = null;
          }
       }
    }
 
-   void m2163(Message message, Hashtable hashtable) {
-      if (this.f1432 == null) {
-         this.f1434 = MessageDialog.m1330(message, hashtable);
-         this.m2162(true);
+   void showBusyMessage(Message message, Hashtable hashtable) {
+      if (this.savedCursor == null) {
+         this.dialog = MessageDialog.showNotice(message, hashtable);
+         this.setBusy(true);
       }
    }
 }

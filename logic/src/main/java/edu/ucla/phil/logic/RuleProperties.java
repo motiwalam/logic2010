@@ -4,7 +4,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-class RuleProperties extends Hashtable implements C_w_E {
+class RuleProperties extends Hashtable implements RulePropertySource {
    @Override
    public boolean hasProperty(Rule rule, String s) {
       if (s.equals("notConditional")) {
@@ -16,7 +16,7 @@ class RuleProperties extends Hashtable implements C_w_E {
                return true;
             } else {
                int j = schematicrule2.premises.length;
-               return j == 0 ? m2061(schematicrule2.conclusion) == null : j != 1;
+               return j == 0 ? getEquivalenceOrConditional(schematicrule2.conclusion) == null : j != 1;
             }
          }
       } else if (s.equals("notConditionalBC")) {
@@ -29,7 +29,7 @@ class RuleProperties extends Hashtable implements C_w_E {
             } else {
                int i = schematicrule1.premises.length;
                if (i == 0) {
-                  return m2065(schematicrule1.conclusion) == null;
+                  return getConditionalEquivalence(schematicrule1.conclusion) == null;
                } else {
                   return i == 1 ? !schematicrule1.conclusion.symbol.equals("<->") : true;
                }
@@ -40,20 +40,20 @@ class RuleProperties extends Hashtable implements C_w_E {
             return false;
          } else {
             SchematicRule schematicrule = (SchematicRule)rule;
-            return schematicrule.premises != null && schematicrule.premises.length != 0 ? false : m2062(schematicrule.conclusion, false) != null;
+            return schematicrule.premises != null && schematicrule.premises.length != 0 ? false : getEquivalence(schematicrule.conclusion, false) != null;
          }
       } else if (s.equals("hasConverse")) {
-         return !(rule instanceof SchematicRule) ? false : this.m2067((SchematicRule)rule) != null;
+         return !(rule instanceof SchematicRule) ? false : this.getConverses((SchematicRule)rule) != null;
       } else {
          throw new IllegalArgumentException("unknown property: " + s);
       }
    }
 
-   static Expression m2061(Expression expression) {
-      return m2062(expression, true);
+   static Expression getEquivalenceOrConditional(Expression expression) {
+      return getEquivalence(expression, true);
    }
 
-   static Expression m2062(Expression expression, boolean flag) {
+   static Expression getEquivalence(Expression expression, boolean flag) {
       if (expression == null) {
          return null;
       } else if (expression.symbol.equals("->")) {
@@ -72,17 +72,17 @@ class RuleProperties extends Hashtable implements C_w_E {
       }
    }
 
-   static Expression m2063(Expression expression, int i) {
-      Expression expression1 = m2062(expression, true);
+   static Expression getEquivalenceSide(Expression expression, int i) {
+      Expression expression1 = getEquivalence(expression, true);
       return expression1 == null ? null : expression1.getChild(i);
    }
 
-   static Expression m2064(Expression expression, boolean flag, int i) {
-      Expression expression1 = m2062(expression, flag);
+   static Expression getEquivalenceSide(Expression expression, boolean flag, int i) {
+      Expression expression1 = getEquivalence(expression, flag);
       return expression1 == null ? null : expression1.getChild(i);
    }
 
-   static Expression m2065(Expression expression) {
+   static Expression getConditionalEquivalence(Expression expression) {
       if (expression == null) {
          return null;
       } else {
@@ -111,49 +111,50 @@ class RuleProperties extends Hashtable implements C_w_E {
       }
    }
 
-   static Expression m2066(Expression expression, int i, int j) {
-      Expression expression1 = m2065(expression);
+   static Expression getConditionalEquivalencePart(Expression expression, int i, int j) {
+      Expression expression1 = getConditionalEquivalence(expression);
       return expression1 == null ? null : expression1.getChild(i).getChild(j);
    }
 
    @Override
    public boolean hasProperty(Integer integer, String s) {
-      Theorem theorem = LogicProgram.m1025(integer);
+      Theorem theorem = LogicProgram.getTheorem(integer);
       return theorem == null ? true : this.hasProperty(theorem, s);
    }
 
-   Vector m2067(SchematicRule schematicrule) {
-      if (schematicrule.f822 != null && m2062(schematicrule.f822.conclusion, false) != null) {
+   Vector getConverses(SchematicRule schematicrule) {
+      if (schematicrule.sourceTheorem != null && getEquivalence(schematicrule.sourceTheorem.conclusion, false) != null) {
          Vector vector1 = new Vector();
-         vector1.addElement(schematicrule.f822.f820);
+         vector1.addElement(schematicrule.sourceTheorem.name);
          return vector1;
       } else if (this.hasProperty(schematicrule, "biconditional")) {
          Vector vector = new Vector();
-         vector.addElement(schematicrule.f820);
+         vector.addElement(schematicrule.name);
          return vector;
       } else {
-         return (Vector)this.get(schematicrule.f820);
+         return (Vector)this.get(schematicrule.name);
       }
    }
 
-   void m2068(Rule rule) {
-      SchematicRule[] aschematicrule = rule.m1373(this, "notConditional");
+   void registerConverses(Rule rule) {
+      SchematicRule[] aschematicrule = rule.getForms(this, "notConditional");
       int i = aschematicrule.length;
 
       for (int j = 0; j < i; j++) {
          SchematicRule schematicrule = aschematicrule[j];
          if (!this.hasProperty(schematicrule, "biconditional")) {
-            Expression expression = m2073(schematicrule, false);
-            Expression expression1 = m2075(schematicrule, false);
+            Expression expression = getFromSide(schematicrule, false);
+            Expression expression1 = getToSide(schematicrule, false);
 
             for (int k = 0; k < i; k++) {
                SchematicRule schematicrule1 = aschematicrule[k];
                boolean flag = this.hasProperty(schematicrule1, "biconditional");
                if (k >= j || flag) {
-                  Expression expression2 = m2073(schematicrule1, false);
-                  Expression expression3 = m2075(schematicrule1, false);
-                  if (this.m2069(expression2, expression3, expression, expression1) || flag && this.m2069(expression3, expression2, expression, expression1)) {
-                     this.m2070(schematicrule, schematicrule1);
+                  Expression expression2 = getFromSide(schematicrule1, false);
+                  Expression expression3 = getToSide(schematicrule1, false);
+                  if (this.isConversePair(expression2, expression3, expression, expression1)
+                     || flag && this.isConversePair(expression3, expression2, expression, expression1)) {
+                     this.addConverse(schematicrule, schematicrule1);
                   }
                }
             }
@@ -161,51 +162,51 @@ class RuleProperties extends Hashtable implements C_w_E {
       }
    }
 
-   boolean m2069(Expression expression, Expression expression1, Expression expression2, Expression expression3) {
+   boolean isConversePair(Expression expression, Expression expression1, Expression expression2, Expression expression3) {
       SchemeInstantiation schemeinstantiation = new SchemeInstantiation();
-      C_MB c_mb = new C_MB();
-      C__B c__b = new C__B();
-      if (!expression.m1267(expression3, schemeinstantiation, c_mb)) {
+      BinderMap bindermap = new BinderMap();
+      BoundVariableMap boundvariablemap = new BoundVariableMap();
+      if (!expression.match(expression3, schemeinstantiation, bindermap)) {
          return false;
-      } else if (!expression1.m1267(expression2, schemeinstantiation, c_mb)) {
+      } else if (!expression1.match(expression2, schemeinstantiation, bindermap)) {
          return false;
-      } else if (!c__b.m1572(expression, expression3, c_mb)) {
+      } else if (!boundvariablemap.matchBinders(expression, expression3, bindermap)) {
          return false;
       } else {
-         return !c__b.m1572(expression1, expression2, c_mb) ? false : schemeinstantiation.m1890();
+         return !boundvariablemap.matchBinders(expression1, expression2, bindermap) ? false : schemeinstantiation.hasNoDeferredMatches();
       }
    }
 
-   void m2070(SchematicRule schematicrule, SchematicRule schematicrule1) {
+   void addConverse(SchematicRule schematicrule, SchematicRule schematicrule1) {
       Vector vector;
-      if ((vector = (Vector)this.get(schematicrule.f820)) == null) {
-         this.put(schematicrule.f820, vector = new Vector());
+      if ((vector = (Vector)this.get(schematicrule.name)) == null) {
+         this.put(schematicrule.name, vector = new Vector());
       }
 
-      if (!vector.contains(schematicrule1.f820)) {
+      if (!vector.contains(schematicrule1.name)) {
       }
 
-      vector.addElement(schematicrule1.f820);
+      vector.addElement(schematicrule1.name);
       if (!this.hasProperty(schematicrule1, "biconditional")) {
-         if ((vector = (Vector)this.get(schematicrule1.f820)) == null) {
-            this.put(schematicrule1.f820, vector = new Vector());
+         if ((vector = (Vector)this.get(schematicrule1.name)) == null) {
+            this.put(schematicrule1.name, vector = new Vector());
          }
 
-         if (!vector.contains(schematicrule.f820)) {
-            vector.addElement(schematicrule.f820);
+         if (!vector.contains(schematicrule.name)) {
+            vector.addElement(schematicrule.name);
          }
       }
    }
 
-   Vector m2071(RuleTable ruletable) {
+   Vector getRulesWithConverse(RuleTable ruletable) {
       Vector vector = new Vector();
-      Vector vector1 = ruletable.f1469;
+      Vector vector1 = ruletable.ruleNames;
       int i = vector1.size();
 
       for (int j = 0; j < i; j++) {
          String s = (String)vector1.elementAt(j);
-         Rule rule = ruletable.m2203(s);
-         if (rule.m1193(this, "hasConverse", true)) {
+         Rule rule = ruletable.getRule(s);
+         if (rule.testProperty(this, "hasConverse", true)) {
             vector.addElement(s);
          }
       }
@@ -213,38 +214,38 @@ class RuleProperties extends Hashtable implements C_w_E {
       return vector;
    }
 
-   C_n_F m2072(TheoremTable theoremtable) {
-      C_n_F c_n_f = new C_n_F();
-      Enumeration enumeration = theoremtable.f1464.m1985();
+   IntervalSet getTheoremsWithConverse(TheoremTable theoremtable) {
+      IntervalSet intervalset = new IntervalSet();
+      Enumeration enumeration = theoremtable.theoremNumbers.elements();
 
       while (enumeration.hasMoreElements()) {
          Integer integer = (Integer)enumeration.nextElement();
-         Theorem theorem = theoremtable.m2199(integer);
-         if (theorem.m1193(this, "hasConverse", true)) {
-            c_n_f.m1975(C_n_F.m1970(theorem.f700));
+         Theorem theorem = theoremtable.getTheorem(integer);
+         if (theorem.testProperty(this, "hasConverse", true)) {
+            intervalset.union(IntervalSet.singleton(theorem.number));
          }
       }
 
-      return c_n_f;
+      return intervalset;
    }
 
-   static Expression m2073(SchematicRule schematicrule, boolean flag) {
-      return schematicrule.premises.length == 0 ? m2063(schematicrule.conclusion, flag ? 1 : 0) : schematicrule.premises[0];
+   static Expression getFromSide(SchematicRule schematicrule, boolean flag) {
+      return schematicrule.premises.length == 0 ? getEquivalenceSide(schematicrule.conclusion, flag ? 1 : 0) : schematicrule.premises[0];
    }
 
-   static Expression m2074(SchematicRule schematicrule, boolean flag, boolean flag1) {
+   static Expression getConditionalFromSide(SchematicRule schematicrule, boolean flag, boolean flag1) {
       return schematicrule.premises.length == 0
-         ? m2066(schematicrule.conclusion, flag ? 0 : 1, flag1 ? 1 : 0)
+         ? getConditionalEquivalencePart(schematicrule.conclusion, flag ? 0 : 1, flag1 ? 1 : 0)
          : schematicrule.conclusion.getChild(flag1 ? 1 : 0);
    }
 
-   static Expression m2075(SchematicRule schematicrule, boolean flag) {
-      return schematicrule.premises.length == 0 ? m2063(schematicrule.conclusion, flag ? 0 : 1) : schematicrule.conclusion;
+   static Expression getToSide(SchematicRule schematicrule, boolean flag) {
+      return schematicrule.premises.length == 0 ? getEquivalenceSide(schematicrule.conclusion, flag ? 0 : 1) : schematicrule.conclusion;
    }
 
-   static Expression m2076(SchematicRule schematicrule, boolean flag, boolean flag1) {
+   static Expression getConditionalToSide(SchematicRule schematicrule, boolean flag, boolean flag1) {
       return schematicrule.premises.length == 0
-         ? m2066(schematicrule.conclusion, flag ? 0 : 1, flag1 ? 0 : 1)
+         ? getConditionalEquivalencePart(schematicrule.conclusion, flag ? 0 : 1, flag1 ? 0 : 1)
          : schematicrule.conclusion.getChild(flag1 ? 0 : 1);
    }
 

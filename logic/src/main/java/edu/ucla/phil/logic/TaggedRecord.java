@@ -9,23 +9,23 @@ class TaggedRecord {
    String tags;
    Vector values;
    ScrambledReader reader;
-   boolean f877;
-   String f878;
+   boolean clearOnRead;
+   String rawLine;
 
-   TaggedRecord(Reader reader, boolean flag) {
-      this.m1472(readerx, flag);
+   TaggedRecord(Reader readerx, boolean flag) {
+      this.open(readerx, flag);
       if (!flag) {
          while (this.readNext()) {
          }
       }
    }
 
-   TaggedRecord(Reader reader) {
+   TaggedRecord(Reader readerx) {
       this(readerx, false);
    }
 
    TaggedRecord() {
-      this.m1471();
+      this.clear();
    }
 
    TaggedRecord(String s) {
@@ -37,7 +37,7 @@ class TaggedRecord {
       if (this.reader == null) {
          return false;
       } else {
-         if (this.f877) {
+         if (this.clearOnRead) {
             this.tags = "";
             this.values = new Vector();
          }
@@ -67,16 +67,16 @@ class TaggedRecord {
       }
    }
 
-   void m1471() {
+   void clear() {
       this.tags = "";
       this.values = new Vector();
       this.reader = null;
-      this.f878 = null;
+      this.rawLine = null;
    }
 
-   void m1472(Reader reader, boolean flag) {
-      this.m1471();
-      this.f877 = flag;
+   void open(Reader readerx, boolean flag) {
+      this.clear();
+      this.clearOnRead = flag;
       if (readerx instanceof ScrambledReader) {
          this.reader = (ScrambledReader)readerx;
       } else {
@@ -85,7 +85,7 @@ class TaggedRecord {
    }
 
    void parse(String s) {
-      this.f878 = s;
+      this.rawLine = s;
       if (s != null && !s.equals("") && s.charAt(0) != '#') {
          String s1 = "";
          if (s.charAt(0) == '`') {
@@ -99,13 +99,13 @@ class TaggedRecord {
             }
 
             char c0 = s.charAt(i + 1);
-            s1 = s1 + s.substring(0, i);
+            String s2 = s1 + s.substring(0, i);
             s = s.substring(i + 2);
             if (c0 == '`') {
-               s1 = s1 + c0;
+               s1 = s2 + c0;
             } else {
                this.tags = this.tags + c0;
-               this.values.addElement(s1);
+               this.values.addElement(s2);
                s1 = "";
             }
          }
@@ -120,44 +120,44 @@ class TaggedRecord {
       return this.tags.indexOf(c0);
    }
 
-   int m1476(char c0, int i) {
+   int indexOfTag(char c0, int i) {
       int j = this.tags.substring(i).indexOf(c0);
       return j == -1 ? -1 : j + i;
    }
 
-   int[] m1477(char c0) {
+   int[] indexesOfTag(char c0) {
       int i = 0;
       ExpressionPath expressionpath = new ExpressionPath();
 
       while (true) {
-         i = this.m1476(c0, i);
+         i = this.indexOfTag(c0, i);
          if (i == -1) {
-            return expressionpath.m1752();
+            return expressionpath.toArray();
          }
 
-         expressionpath.m1749(i);
+         expressionpath.push(i);
          i++;
       }
    }
 
-   int m1478(String s) {
-      return this.m1479(s, 0);
+   int indexOfAnyTag(String s) {
+      return this.indexOfAnyTag(s, 0);
    }
 
-   int m1479(String s, int i) {
+   int indexOfAnyTag(String s, int i) {
       String s1 = this.tags.substring(i);
       int j = -1;
       int k = s.length();
 
       for (int l = 0; l < k; l++) {
          int i1 = s1.indexOf(s.charAt(l));
-         j = m1480(j, i1);
+         j = minNonNegative(j, i1);
       }
 
       return j == -1 ? -1 : j + i;
    }
 
-   static int m1480(int i, int j) {
+   static int minNonNegative(int i, int j) {
       if (j < 0) {
          return i;
       } else {
@@ -165,22 +165,22 @@ class TaggedRecord {
       }
    }
 
-   int[] m1481(String s) {
+   int[] indexesOfAnyTag(String s) {
       int i = 0;
       ExpressionPath expressionpath = new ExpressionPath();
 
       while (true) {
-         i = this.m1479(s, i);
+         i = this.indexOfAnyTag(s, i);
          if (i == -1) {
-            return expressionpath.m1752();
+            return expressionpath.toArray();
          }
 
-         expressionpath.m1749(i);
+         expressionpath.push(i);
          i++;
       }
    }
 
-   int m1482() {
+   int getFieldCount() {
       return this.values.size();
    }
 
@@ -188,19 +188,19 @@ class TaggedRecord {
       return i == -1 ? null : (String)this.values.elementAt(i);
    }
 
-   String m1484(String s) {
+   String formatFields(String s) {
       String s1 = "";
-      int[] aint = this.m1481(s);
+      int[] aint = this.indexesOfAnyTag(s);
       int i = aint.length;
 
       for (int j = 0; j < i; j++) {
-         s1 = s1 + m1508(this.valueAt(aint[j]), this.tagAt(aint[j]));
+         s1 = s1 + formatField(this.valueAt(aint[j]), this.tagAt(aint[j]));
       }
 
       return s1;
    }
 
-   Integer m1485(int i) {
+   Integer intValueAt(int i) {
       Integer integer = null;
       String s = this.valueAt(i);
       if (s != null) {
@@ -213,7 +213,7 @@ class TaggedRecord {
       return integer;
    }
 
-   Long m1486(int i) {
+   Long longValueAt(int i) {
       Long olong = null;
       String s = this.valueAt(i);
       if (s != null) {
@@ -226,38 +226,38 @@ class TaggedRecord {
       return olong;
    }
 
-   String m1487() {
-      return this.f878;
+   String getRawLine() {
+      return this.rawLine;
    }
 
-   void m1488(int i) {
+   void removeField(int i) {
       this.tags = this.tags.substring(0, i) + this.tags.substring(i + 1);
       this.values.removeElementAt(i);
    }
 
-   void m1489(int[] aint) {
+   void removeFields(int[] aint) {
       int i = aint == null ? 0 : aint.length;
 
       for (int j = 0; j < i; j++) {
-         this.m1488(aint[j]);
+         this.removeField(aint[j]);
       }
    }
 
-   void m1490(String s, int i) {
+   void setValueAt(String s, int i) {
       this.values.setElementAt(s, i);
    }
 
-   void m1491(char c0, String s, int i) {
+   void insertField(char c0, String s, int i) {
       this.tags = this.tags.substring(0, i) + c0 + this.tags.substring(i);
       this.values.insertElementAt(s, i);
    }
 
-   void m1492(char c0, String s) {
+   void addField(char c0, String s) {
       this.tags = this.tags + c0;
       this.values.addElement(s);
    }
 
-   static String m1493(String s) {
+   static String nameOf(String s) {
       return new TaggedRecord(s).getName();
    }
 
@@ -265,77 +265,77 @@ class TaggedRecord {
       return this.valueAt(this.indexOfTag('$'));
    }
 
-   static String m1495(String s, String s1) {
+   static String withName(String s, String s1) {
       TaggedRecord taggedrecord = new TaggedRecord(s);
-      taggedrecord.m1496(s1);
+      taggedrecord.setName(s1);
       return taggedrecord.toString();
    }
 
-   void m1496(String s) {
+   void setName(String s) {
       int i = this.indexOfTag('$');
       if (i == -1) {
-         this.m1491('$', s, 0);
+         this.insertField('$', s, 0);
       } else {
-         this.m1490(s, i);
+         this.setValueAt(s, i);
       }
    }
 
-   String m1497() {
+   String getOriginalName() {
       return this.valueAt(this.indexOfTag('o'));
    }
 
-   int m1498() {
-      Integer integer = this.m1485(this.indexOfTag('e'));
+   int getErrorCount() {
+      Integer integer = this.intValueAt(this.indexOfTag('e'));
       return integer == null ? 0 : integer;
    }
 
-   long m1499() {
-      Long olong = this.m1486(this.indexOfTag('t'));
+   long getTimestamp() {
+      Long olong = this.longValueAt(this.indexOfTag('t'));
       return olong == null ? 0L : olong;
    }
 
-   static String m1500(String s) {
-      return m1501(s, "t");
+   static String stripTimestamp(String s) {
+      return removeTags(s, "t");
    }
 
-   static String m1501(String s, String s1) {
+   static String removeTags(String s, String s1) {
       TaggedRecord taggedrecord = new TaggedRecord(s);
-      taggedrecord.m1489(taggedrecord.m1481(s1));
+      taggedrecord.removeFields(taggedrecord.indexesOfAnyTag(s1));
       return taggedrecord.toString();
    }
 
-   static boolean m1502(String s) {
+   static boolean isExample(String s) {
       if (s == null) {
          return false;
       } else {
          TaggedRecord taggedrecord = new TaggedRecord(s);
-         Hashtable hashtable = taggedrecord.m1506('%');
+         Hashtable hashtable = taggedrecord.getKeyValues('%');
          return hashtable != null && hashtable.containsKey("eg");
       }
    }
 
-   static String m1503(String s) {
+   static String clearExampleFlag(String s) {
       TaggedRecord taggedrecord = new TaggedRecord(s);
-      int[] aint = taggedrecord.m1477('%');
+      int[] aint = taggedrecord.indexesOfTag('%');
 
       for (int i = aint.length - 1; i >= 0; i--) {
          String s1 = taggedrecord.valueAt(aint[i]);
          if (s1 != null && s1.equals("eg")) {
-            taggedrecord.m1488(aint[i]);
+            taggedrecord.removeField(aint[i]);
          }
       }
 
       return taggedrecord.toString();
    }
 
-   static String m1504(String s, char c0, String s1) {
+   static String appendField(String s, char c0, String s1) {
       TaggedRecord taggedrecord = new TaggedRecord(s);
-      taggedrecord.m1492(c0, s1);
+      taggedrecord.addField(c0, s1);
       return taggedrecord.toString();
    }
 
-   boolean m1505() {
-      int[] aint = this.m1477('%');
+   boolean isHidden() {
+      int[] aint = this.indexesOfTag('%');
 
       for (int i = aint.length - 1; i >= 0; i--) {
          String s = this.valueAt(aint[i]);
@@ -347,8 +347,8 @@ class TaggedRecord {
       return false;
    }
 
-   Hashtable m1506(char c0) {
-      int[] aint = this.m1477(c0);
+   Hashtable getKeyValues(char c0) {
+      int[] aint = this.indexesOfTag(c0);
       int i = aint.length;
       Hashtable hashtable = new Hashtable();
 
@@ -363,7 +363,7 @@ class TaggedRecord {
       return hashtable;
    }
 
-   private static String m1507(String s) {
+   private static String escapeBackquotes(String s) {
       String s1 = "";
 
       int i;
@@ -375,23 +375,23 @@ class TaggedRecord {
       return s1 + s;
    }
 
-   static String m1508(String s, char c0) {
-      return s == null ? "" : m1507(s) + "`" + c0;
+   static String formatField(String s, char c0) {
+      return s == null ? "" : escapeBackquotes(s) + "`" + c0;
    }
 
-   static String m1509(String s) {
-      s = m1510(s, '\n');
-      if (s != null && s.length() != 0) {
-         char c0 = s.charAt(0);
+   static String toLine(String s) {
+      String s1 = removeChar(s, '\n');
+      if (s1 != null && s1.length() != 0) {
+         char c0 = s1.charAt(0);
          if (c0 == '#' || c0 == '`') {
-            s = '`' + s;
+            s1 = '`' + s1;
          }
       }
 
-      return s;
+      return s1;
    }
 
-   static String m1510(String s, char c0) {
+   static String removeChar(String s, char c0) {
       if (s == null) {
          return s;
       } else {
@@ -417,9 +417,9 @@ class TaggedRecord {
       int i = this.tags.length();
 
       for (int j = 0; j < i; j++) {
-         s = s + m1508((String)this.values.elementAt(j), this.tags.charAt(j));
+         s = s + formatField((String)this.values.elementAt(j), this.tags.charAt(j));
       }
 
-      return m1509(s);
+      return toLine(s);
    }
 }

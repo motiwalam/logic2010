@@ -21,22 +21,22 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
-class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
+class LPDerivation extends LogicModule implements RulePropertySource, DerivationConstants {
    int fontSize;
    Font font;
    DerivationBox problem;
-   C_M numbers;
-   C_M topHat;
-   C_l_A userComment;
-   C_M commentSpacer;
-   C_M bottomFeeder;
-   C_l_E focus;
-   C_l_E lastFocus;
+   LinePanel numbers;
+   LinePanel topHat;
+   CommentPanel userComment;
+   LinePanel commentSpacer;
+   LinePanel bottomFeeder;
+   DerivationLineEditor focus;
+   DerivationLineEditor lastFocus;
    JScrollPane scroller;
-   C_M problemPanel;
-   C_M scrollPanel;
-   C_PE buttonPanel;
-   C_R menuPanel;
+   LinePanel problemPanel;
+   LinePanel scrollPanel;
+   DerivationToolbar buttonPanel;
+   DerivationMenuBar menuPanel;
    int[] proofWidths;
    int[] problemWidths;
    Dimension hSpacer;
@@ -59,10 +59,10 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    Vector manualRules;
    Vector weakAssRules;
    Vector assumedRules;
-   C_n_F disabledRange;
-   C_n_F manualRange;
-   C_n_F weakAssRange;
-   C_n_F assumedRange;
+   IntervalSet disabledRange;
+   IntervalSet manualRange;
+   IntervalSet weakAssRange;
+   IntervalSet assumedRange;
    static Vector disabledRuleXRefs = null;
    static Vector manualRuleXRefs = null;
    static Vector weakAssRuleXRefs = null;
@@ -95,14 +95,14 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    static final String workFileName = "derwork.txt";
    static final String logFileName = "derdata.txt";
    static final String digestVersKey = "derDigestVers";
-   static Class messageClass = C_n_.class;
-   static C_MD exercises = null;
-   static C_MD problems = null;
+   static Class messageClass = DerivationMessage.class;
+   static DerivationProblemSet exercises = null;
+   static DerivationProblemSet problems = null;
    static Vector instances = new Vector();
-   static C_c_C printQueue = new C_c_C("Derivation");
+   static PrintQueue printQueue = new PrintQueue("Derivation");
    static RuleTable userRules = null;
    static RuleTable derivationRules = null;
-   static C_d_F ruleQuery = null;
+   static RuleListDialog ruleQuery = null;
    static String newProblem = null;
    static Vector startups;
    String problemTitle;
@@ -122,14 +122,14 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    static int moduleIndex = 0;
 
    static boolean getExercises() {
-      if (!C_n_.loadMessages()) {
-         LogicProgram.m971("not001", "the derivation messages file");
+      if (!DerivationMessage.loadMessages()) {
+         LogicProgram.showFileError("not001", "the derivation messages file");
          return false;
       } else {
          derivationRules = getDerivationRules();
          resetOptions();
          readOptions(LogicProgram.openDataFile("options", false));
-         readOptions(LogicProgram.m1065("options", false));
+         readOptions(LogicProgram.openLocalFile("options", false));
          logNeeds();
          if ((exercises = readExercises()) == null) {
             return false;
@@ -141,34 +141,35 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       }
    }
 
-   static C_MD readExercises() {
-      return readExercises(LogicProgram.f584, false, false);
+   static DerivationProblemSet readExercises() {
+      return readExercises(LogicProgram.noCoreProblems, false, false);
    }
 
-   static C_MD readExercises(boolean flag, boolean flag1, boolean flag2) {
-      C_MD c_md = new C_MD();
+   static DerivationProblemSet readExercises(boolean flag, boolean flag1, boolean flag2) {
+      DerivationProblemSet derivationproblemset = new DerivationProblemSet();
       if (!flag) {
          ScrambledReader scrambledreader = LogicProgram.openDataFile("derwork.txt", false);
          if (scrambledreader == null) {
-            LogicProgram.m971("not001", "the core Derivation exercise file");
+            LogicProgram.showFileError("not001", "the core Derivation exercise file");
             return null;
          }
 
-         if (!readProblems(scrambledreader, c_md, true)) {
-            LogicProgram.m971("not002", "the core Derivation exercise file");
+         if (!readProblems(scrambledreader, derivationproblemset, true)) {
+            LogicProgram.showFileError("not002", "the core Derivation exercise file");
             return null;
          }
       }
 
       if (!flag1) {
-         ScrambledReader scrambledreader1 = LogicProgram.m1065("derwork.txt", flag2);
-         if (scrambledreader1 != null && (flag ? !readProblems(scrambledreader1, c_md, true) : !mergeProblems(scrambledreader1, c_md, true))) {
-            LogicProgram.m971("not002", "the local Derivation exercise file");
+         ScrambledReader scrambledreader1 = LogicProgram.openLocalFile("derwork.txt", flag2);
+         if (scrambledreader1 != null
+            && (flag ? !readProblems(scrambledreader1, derivationproblemset, true) : !mergeProblems(scrambledreader1, derivationproblemset, true))) {
+            LogicProgram.showFileError("not002", "the local Derivation exercise file");
             return null;
          }
       }
 
-      return c_md;
+      return derivationproblemset;
    }
 
    LPDerivation(boolean flag) {
@@ -188,20 +189,20 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       this.add(this.titlePanel, "North");
       this.scroller = new JScrollPane();
       this.add(this.scroller, "Center");
-      this.scroller.setViewportView(this.scrollPanel = new C_M());
+      this.scroller.setViewportView(this.scrollPanel = new LinePanel());
       this.scroller.getVerticalScrollBar().setUnitIncrement(22);
       this.scrollPanel.setLayout(new BoxLayout(this.scrollPanel, 3));
-      this.scrollPanel.add(this.problemPanel = new C_M());
-      this.scrollPanel.add(this.bottomFeeder = new C_M());
-      this.problemPanel.add(this.topHat = new C_M(), "North");
-      this.topHat.add(this.userComment = new C_l_A(true), "Center");
-      this.topHat.add(this.commentSpacer = new C_M(), "South");
-      this.problemPanel.add(this.numbers = new C_M(this.numberSize), "West");
+      this.scrollPanel.add(this.problemPanel = new LinePanel());
+      this.scrollPanel.add(this.bottomFeeder = new LinePanel());
+      this.problemPanel.add(this.topHat = new LinePanel(), "North");
+      this.topHat.add(this.userComment = new CommentPanel(true), "Center");
+      this.topHat.add(this.commentSpacer = new LinePanel(), "South");
+      this.problemPanel.add(this.numbers = new LinePanel(this.numberSize), "West");
       this.problemPanel.add(this.problem = new DerivationBox(this), "Center");
-      this.numbers.f608 = this.problem.f917;
-      this.numbers.setLayout(new C_ZF(this));
-      this.problem.f917.f323.setEditable(false);
-      this.buttonPanel = C_PE.m1180(this);
+      this.numbers.line = this.problem.showLine;
+      this.numbers.setLayout(new DerivationOverlayLayout(this));
+      this.problem.showLine.formulaEditor.setEditable(false);
+      this.buttonPanel = DerivationToolbar.create(this);
       this.add(this.buttonPanel, "South");
       this.focus = null;
       this.lastFocus = this.focus;
@@ -246,23 +247,23 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       }
 
       if (exercises != null || getExercises()) {
-         LPDerivation.C__A lpderivation$c__a = new LPDerivation.C__A(busyindicator, rectangle, s);
-         startups.add(lpderivation$c__a);
+         LPDerivation.DerivationStartupTask lpderivation$derivationstartuptask = new LPDerivation.DerivationStartupTask(busyindicator, rectangle, s);
+         startups.add(lpderivation$derivationstartuptask);
          if (startups.size() <= 1) {
             if (problems == null) {
                if (!getProblems()) {
-                  lpderivation$c__a.m1310();
-                  startups.remove(lpderivation$c__a);
+                  lpderivation$derivationstartuptask.stopBusyIndicator();
+                  startups.remove(lpderivation$derivationstartuptask);
                   return;
                }
 
-               if (problems.m1773()) {
+               if (problems.mergeExercises()) {
                   saveProblems();
                }
 
-               problems.m1099(lpderivation$c__a);
+               problems.restateProblems(lpderivation$derivationstartuptask);
             } else {
-               lpderivation$c__a.m959();
+               lpderivation$derivationstartuptask.continueStartup();
             }
          }
       }
@@ -273,18 +274,18 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       int i = startups.size();
 
       for (int j = 0; j < i; j++) {
-         ((LogicModule.C__A)startups.get(i - 1 - j)).m1310();
+         ((LogicModule.ModuleStartupTask)startups.get(i - 1 - j)).stopBusyIndicator();
       }
 
       while (!startups.isEmpty()) {
-         LogicModule.C__A logicmodule$c__a = (LogicModule.C__A)startups.remove(0);
-         SwingUtilities.invokeLater(logicmodule$c__a);
+         LogicModule.ModuleStartupTask logicmodule$modulestartuptask = (LogicModule.ModuleStartupTask)startups.remove(0);
+         SwingUtilities.invokeLater(logicmodule$modulestartuptask);
       }
    }
 
    Rectangle fixModuleRect(Rectangle rectangle) {
-      C_PE c_pe = C_PE.m1180(this);
-      Dimension dimension = c_pe.getPreferredSize();
+      DerivationToolbar derivationtoolbar = DerivationToolbar.create(this);
+      Dimension dimension = derivationtoolbar.getPreferredSize();
       if (rectangle.width < dimension.width) {
          rectangle.width = dimension.width;
       }
@@ -292,35 +293,35 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       return rectangle;
    }
 
-   static void allocateDerModule(LogicModule.C__A logicmodule$c__a) {
+   static void allocateDerModule(LogicModule.ModuleStartupTask logicmodule$modulestartuptask) {
       LPDerivation lpderivation = new LPDerivation(false);
       instances.addElement(lpderivation);
-      if (logicmodule$c__a.f784 == null || newProblem == null) {
+      if (logicmodule$modulestartuptask.problemName == null || newProblem == null) {
          lpderivation.loadProblem((String)null);
          if (newProblem == null) {
             newProblem = lpderivation.saveProblem();
          }
       }
 
-      if (logicmodule$c__a.f784 != null) {
-         lpderivation.loadProblem(logicmodule$c__a.f784);
-         logicmodule$c__a.f784 = null;
+      if (logicmodule$modulestartuptask.problemName != null) {
+         lpderivation.loadProblem(logicmodule$modulestartuptask.problemName);
+         logicmodule$modulestartuptask.problemName = null;
       }
 
       lpderivation.setupFrame(LPInfo.programName + ": Derivation");
-      lpderivation.frame.setBounds(lpderivation.fixModuleRect(logicmodule$c__a.f783));
+      lpderivation.frame.setBounds(lpderivation.fixModuleRect(logicmodule$modulestartuptask.bounds));
       lpderivation.frame.setVisible(true);
       lpderivation.requestFocus();
    }
 
    static void insertDBProbs(ProblemSelector problemselector) {
-      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
+      if (problemselector != null && !problemselector.isEmpty() && UserSetup.hasAccess("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.getRecordAt(j));
             String s = taggedrecord.getName();
-            if (problemselector.m404(s)) {
+            if (problemselector.contains(s)) {
                if (DiagnosticsLog.out != null) {
                   DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
                   DiagnosticsLog.out.println("adding " + s);
@@ -333,30 +334,30 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
                }
 
                String s3 = Scrambler.md5Base64(s1.trim());
-               String s4 = LogicProgram.m995(s1, maggie, html);
+               String s4 = LogicProgram.translateSymbols(s1, maggie, html);
                String s5 = taggedrecord.valueAt(taggedrecord.indexOfTag('C'));
                if (s5 == null) {
                   s5 = s;
                }
 
                String s6 = "insert into logic_problem (COMMENT,DTCREATION,PROBLEM_NAME,TPROBLEM,TPROBLEM_MD5,TWEB_FORM_PROBLEM,VERSION,SYNTAX,COMMON_NAME)";
-               s6 = s6 + " values (" + ServerConnection.m815(s2) + ",GETDATE()," + ServerConnection.m815(s) + "," + ServerConnection.m815(s1) + ",";
-               s6 = s6 + ServerConnection.m815(s3) + "," + ServerConnection.m815(s4) + "," + nameVersion(s) + "," + FormulaParser.getSyntax() + ",";
-               s6 = s6 + ServerConnection.m815(s5) + ")";
-               ServerConnection.m814(s6);
+               s6 = s6 + " values (" + ServerConnection.sqlQuote(s2) + ",GETDATE()," + ServerConnection.sqlQuote(s) + "," + ServerConnection.sqlQuote(s1) + ",";
+               s6 = s6 + ServerConnection.sqlQuote(s3) + "," + ServerConnection.sqlQuote(s4) + "," + nameVersion(s) + "," + FormulaParser.getSyntax() + ",";
+               s6 = s6 + ServerConnection.sqlQuote(s5) + ")";
+               ServerConnection.stubReturnsNull(s6);
             }
          }
       }
    }
 
    static void updateDBProbs(ProblemSelector problemselector) {
-      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
+      if (problemselector != null && !problemselector.isEmpty() && UserSetup.hasAccess("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.getRecordAt(j));
             String s = taggedrecord.getName();
-            if (problemselector.m404(s)) {
+            if (problemselector.contains(s)) {
                if (DiagnosticsLog.out != null) {
                   DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
                   DiagnosticsLog.out.println("updating " + s);
@@ -369,17 +370,17 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
                }
 
                String s3 = Scrambler.md5Base64(s1.trim());
-               String s4 = LogicProgram.m995(s1, maggie, html);
+               String s4 = LogicProgram.translateSymbols(s1, maggie, html);
                String s5 = taggedrecord.valueAt(taggedrecord.indexOfTag('C'));
                if (s5 == null) {
                   s5 = s;
                }
 
-               String s6 = "update logic_problem set tproblem = " + ServerConnection.m815(s1) + ", tproblem_md5 = " + ServerConnection.m815(s3);
-               s6 = s6 + ", tweb_form_problem = " + ServerConnection.m815(s4) + ", comment = " + ServerConnection.m815(s2);
-               s6 = s6 + ", version = " + nameVersion(s) + ", common_name = " + ServerConnection.m815(s5);
-               s6 = s6 + " where problem_name = " + ServerConnection.m815(s) + " and syntax = " + FormulaParser.getSyntax();
-               ServerConnection.m814(s6);
+               String s6 = "update logic_problem set tproblem = " + ServerConnection.sqlQuote(s1) + ", tproblem_md5 = " + ServerConnection.sqlQuote(s3);
+               s6 = s6 + ", tweb_form_problem = " + ServerConnection.sqlQuote(s4) + ", comment = " + ServerConnection.sqlQuote(s2);
+               s6 = s6 + ", version = " + nameVersion(s) + ", common_name = " + ServerConnection.sqlQuote(s5);
+               s6 = s6 + " where problem_name = " + ServerConnection.sqlQuote(s) + " and syntax = " + FormulaParser.getSyntax();
+               ServerConnection.stubReturnsNull(s6);
             }
          }
       }
@@ -401,14 +402,14 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
 
    @Override
    public boolean shutdown(boolean flag) {
-      if (!flag && !C_KB.m766(this, null)) {
+      if (!flag && !DerivationDialogs.confirmSaveChanges(this, null)) {
          return false;
       } else {
          this.newProblem();
          synchronized (moduleClasses[0]) {
             instances.removeElement(this);
             if (instances.isEmpty()) {
-               C_l_B.m1924(printQueue);
+               PrintTask.waitForQueue(printQueue);
                problems = null;
                userRules = null;
                derivationRules = null;
@@ -416,7 +417,7 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
                newProblem = null;
                startups = null;
                if (ruleQuery != null) {
-                  ruleQuery.m1325();
+                  ruleQuery.close();
                }
 
                resetOptions();
@@ -450,7 +451,7 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
 
    @Override
    public boolean save() {
-      return C_KB.m766(this, null);
+      return DerivationDialogs.confirmSaveChanges(this, null);
    }
 
    static void resetOptions() {
@@ -486,14 +487,14 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       derivationRules = getDerivationRules();
       resetOptions();
       readOptions(LogicProgram.openDataFile("options", false));
-      readOptions(LogicProgram.m1065("options", false));
+      readOptions(LogicProgram.openLocalFile("options", false));
       logNeeds();
-      if (needPrint != null && !needPrint.m402() || needSubmit != null && !needSubmit.m402()) {
-         C_a_A c_a_a = new C_a_A(readWork());
-         c_a_a.m1634(readExercises());
-         MainMenu.m2215(hashtable, "derdata.txt", "P", needPrint, c_a_a);
-         c_a_a.m1635();
-         MainMenu.m2215(hashtable1, "derdata.txt", "S", needSubmit, c_a_a);
+      if (needPrint != null && !needPrint.isEmpty() || needSubmit != null && !needSubmit.isEmpty()) {
+         ProblemRecordEnumeration problemrecordenumeration = new ProblemRecordEnumeration(readWork());
+         problemrecordenumeration.retainExisting(readExercises());
+         MainMenu.mergeSubmitStatus(hashtable, "derdata.txt", "P", needPrint, problemrecordenumeration);
+         problemrecordenumeration.reset();
+         MainMenu.mergeSubmitStatus(hashtable1, "derdata.txt", "S", needSubmit, problemrecordenumeration);
       }
 
       resetOptions();
@@ -501,17 +502,17 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    }
 
    static Vector getChangedProblems() {
-      C_a_A c_a_a = new C_a_A(readWork());
-      Hashtable hashtable = LogicProgram.m1084("derdata.txt", "S", needSubmit, c_a_a);
+      ProblemRecordEnumeration problemrecordenumeration = new ProblemRecordEnumeration(readWork());
+      Hashtable hashtable = LogicProgram.checkSubmitLog("derdata.txt", "S", needSubmit, problemrecordenumeration);
       if (hashtable == null) {
          return null;
       } else {
          Vector vector = (Vector)hashtable.get("handled");
          Vector vector1 = new Vector();
-         c_a_a.m1635();
+         problemrecordenumeration.reset();
 
-         while (c_a_a.hasMoreElements()) {
-            String s = (String)c_a_a.nextElement();
+         while (problemrecordenumeration.hasMoreElements()) {
+            String s = (String)problemrecordenumeration.nextElement();
             if ((vector == null || !vector.contains(s)) && hasWork(new TaggedRecord(s))) {
                vector1.add(s);
             }
@@ -539,7 +540,7 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
 
    void setColors(Color[] acolor) {
       this.colors = acolor;
-      this.problem.m35(acolor);
+      this.problem.applyColors(acolor);
       if (this.scrollPanel != null) {
          this.scrollPanel.setForeground(acolor[0]);
          this.scrollPanel.setBackground(acolor[1]);
@@ -566,7 +567,7 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
 
    synchronized void setWidths(boolean flag) {
       if (this.frame != null) {
-         this.setWidths(flag, this.fontSize, LogicProgram.m1038(this.scroller).width - 15);
+         this.setWidths(flag, this.fontSize, LogicProgram.getInteriorBounds(this.scroller).width - 15);
       }
    }
 
@@ -594,24 +595,24 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
          this.lastWidthsSet[0] = i;
          this.lastWidthsSet[1] = j;
          this.lastWidthsSet[2] = j1;
-         this.commentSpacer.m935(this.vSpacer.height);
-         this.bottomFeeder.m935(this.indent * 10);
+         this.commentSpacer.setLimitHeight(this.vSpacer.height);
+         this.bottomFeeder.setLimitHeight(this.indent * 10);
 
          for (int l1 = 1; l1 < this.lineColumns; l1++) {
             this.proofWidths[l1 - 1] = this.widthInfo[l1][0] * this.indent + this.widthInfo[l1][1] * i2 / l;
          }
 
-         this.proofWidths[0] = this.proofWidths[0] + j1 * this.indent;
+         this.proofWidths[0] += j1 * this.indent;
          System.arraycopy(this.proofWidths, 0, this.problemWidths, 0, this.lineColumns - 1);
-         this.problemWidths[0] = this.problemWidths[0] + this.problemWidths[1];
+         this.problemWidths[0] += this.problemWidths[1];
          this.problemWidths[1] = 0;
-         this.userComment.m1920(this.numberSize.width, this.problemWidths[0] + this.problemWidths[2]);
-         this.problem.m34();
+         this.userComment.setColumnWidths(this.numberSize.width, this.problemWidths[0] + this.problemWidths[2]);
+         this.problem.layoutColumns();
       }
    }
 
    int getMaxDepth(boolean flag) {
-      return this.problem == null ? -1 : this.problem.m36(flag);
+      return this.problem == null ? -1 : this.problem.getMaxBoxDepth(flag);
    }
 
    @Override
@@ -619,13 +620,13 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       if (this.lastFocus != null) {
          this.lastFocus.requestFocus();
       } else if (this.problem != null) {
-         this.problem.f917.f323.requestFocus();
+         this.problem.showLine.formulaEditor.requestFocus();
       }
    }
 
    void removeWork() {
-      while (this.problem.m1555() > 1) {
-         this.problem.remove((Component)this.problem.m1560(1));
+      while (this.problem.getContentCount() > 1) {
+         this.problem.remove((Component)this.problem.getNode(1));
          this.numbers.remove(1);
       }
 
@@ -633,13 +634,13 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
          this.numbers.remove(1);
       }
 
-      this.problem.m22(false);
+      this.problem.focusEditor(false);
    }
 
    static String removeWork(TaggedRecord taggedrecord) {
-      String s = TaggedRecord.m1508(taggedrecord.getName(), '$');
-      s = s + TaggedRecord.m1508(getProblemStatement(taggedrecord), '-') + "`=";
-      return s + taggedrecord.m1484("%u!");
+      String s = TaggedRecord.formatField(taggedrecord.getName(), '$');
+      s = s + TaggedRecord.formatField(getProblemStatement(taggedrecord), '-') + "`=";
+      return s + taggedrecord.formatFields("%u!");
    }
 
    void newProblem() {
@@ -648,21 +649,21 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
 
    void reset() {
       if (this.focus != null) {
-         this.focus.f1258.m568();
+         this.focus.line.suppressEditorFocusLoss();
       }
 
       this.problemPanel.remove(this.problem);
       this.problemPanel.remove(this.numbers);
-      this.titlePanel.m1829();
-      this.userComment.m1916(null);
+      this.titlePanel.clearFields();
+      this.userComment.setComment(null);
       this.problem = null;
       this.lastUserProblem = null;
-      this.problemPanel.add(this.numbers = new C_M(this.numberSize), "West");
+      this.problemPanel.add(this.numbers = new LinePanel(this.numberSize), "West");
       this.problemPanel.add(this.problem = new DerivationBox(this), "Center");
-      this.numbers.f608 = this.problem.f917;
-      this.numbers.setLayout(new C_ZF(this));
+      this.numbers.line = this.problem.showLine;
+      this.numbers.setLayout(new DerivationOverlayLayout(this));
       this.numbers.setFont(this.font);
-      this.problem.f917.f323.setEditable(false);
+      this.problem.showLine.formulaEditor.setEditable(false);
       this.setWidths(true);
       this.focus = null;
       this.lastFocus = this.focus;
@@ -692,18 +693,18 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
 
    void resetVarNames() {
       this.varNames = null;
-      this.problem.m1559();
+      this.problem.resetVariables();
    }
 
    String getChangedProblem() {
       String s = this.saveProblem();
-      String s1 = this.problemIndex == -1 ? newProblem : problems.m1778(this.problemIndex);
-      return TaggedRecord.m1500(s).equals(TaggedRecord.m1500(s1)) ? null : s;
+      String s1 = this.problemIndex == -1 ? newProblem : problems.getRecordAt(this.problemIndex);
+      return TaggedRecord.stripTimestamp(s).equals(TaggedRecord.stripTimestamp(s1)) ? null : s;
    }
 
    static boolean saveProblems(int i) {
       if (i != -1) {
-         ProblemEntry problementry = problems.m1779(i);
+         ProblemEntry problementry = problems.getEntryAt(i);
          problementry.state = getProblemState(problementry.name);
       }
 
@@ -711,14 +712,14 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    }
 
    static boolean saveProblems() {
-      if (!LogicProgram.m976()) {
+      if (!LogicProgram.checkSameUser()) {
          return false;
       } else {
          try {
             writeProblems(problems, new FileWriter(new File(LogicProgram.workDir, "derwork.txt")));
             return true;
          } catch (IOException ioexception) {
-            LogicProgram.m971("not004", "derwork.txt");
+            LogicProgram.showFileError("not004", "derwork.txt");
             return false;
          }
       }
@@ -730,29 +731,29 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
          int i = problems.size();
 
          for (int j = 0; j < i; j++) {
-            if (isExercise(TaggedRecord.m1493(problems.m1778(j)))) {
-               expressionpath.m1749(j);
+            if (isExercise(TaggedRecord.nameOf(problems.getRecordAt(j)))) {
+               expressionpath.push(j);
             }
          }
 
-         return expressionpath.m1752();
+         return expressionpath.toArray();
       } else {
          return null;
       }
    }
 
    void submitExam() {
-      if (UserSetup.m2105("Derivation")) {
+      if (UserSetup.confirmSubmitAll("Derivation")) {
          int[] aint = getExerciseIndices();
          BusyIndicator busyindicator = new BusyIndicator(this);
          Submission submission = ServerConnection.prepareSubmission(busyindicator);
          if (submission != null) {
-            if (C_KB.m766(this, null)) {
+            if (DerivationDialogs.confirmSaveChanges(this, null)) {
                submit(submission, aint, busyindicator);
-               ServerConnection.m838(submission, busyindicator);
-               AccountManager.m1873(submission);
+               ServerConnection.finishSubmission(submission, busyindicator);
+               AccountManager.showSubmissionResults(submission);
             } else {
-               ServerConnection.m838(submission, busyindicator);
+               ServerConnection.finishSubmission(submission, busyindicator);
             }
          }
       }
@@ -762,13 +763,13 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       BusyIndicator busyindicator = new BusyIndicator(this);
       Submission submission = ServerConnection.prepareSubmission(busyindicator);
       if (submission != null) {
-         int[] aint = C_KB.m771(this);
+         int[] aint = DerivationDialogs.chooseProblemsToSubmit(this);
          if (aint == null) {
-            ServerConnection.m838(submission, busyindicator);
+            ServerConnection.finishSubmission(submission, busyindicator);
          } else {
             submit(submission, aint, busyindicator);
-            ServerConnection.m838(submission, busyindicator);
-            AccountManager.m1873(submission);
+            ServerConnection.finishSubmission(submission, busyindicator);
+            AccountManager.showSubmissionResults(submission);
          }
       }
    }
@@ -780,86 +781,86 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
          int i = aint.length;
 
          for (int j = 0; j < i; j++) {
-            submission.m1();
+            submission.reset();
             LPDerivation lpderivation = new LPDerivation(false);
             lpderivation.doSubs = true;
-            String s = problems.m1778(aint[j]);
+            String s = problems.getRecordAt(aint[j]);
             TaggedRecord taggedrecord = new TaggedRecord(s);
             String s1 = getProblemStatement(taggedrecord);
             submission.problemMd5 = Scrambler.md5Base64(s1 == null ? "" : s1.trim());
-            submission.evaluation = C_EE.f1128[lpderivation.getProblemState(taggedrecord)];
+            submission.evaluation = DerivationProblemEntry.STATE_CODES[lpderivation.getProblemState(taggedrecord)];
             submission.work = s + lpderivation.saveMessages();
             submission.problemName = taggedrecord.getName();
             submission.module = moduleAbbrs[moduleIndex];
-            submission.helpCount = taggedrecord.m1498();
-            submission.duration = taggedrecord.m1499();
-            boolean flag = LogicProgram.m1060(logSubmit, getExerciseTitle(submission.problemName));
+            submission.helpCount = taggedrecord.getErrorCount();
+            submission.duration = taggedrecord.getTimestamp();
+            boolean flag = LogicProgram.selectorMatches(logSubmit, getExerciseTitle(submission.problemName));
             if (ServerConnection.submit(submission, busyindicator)) {
                vector.addElement(trimTitle(submission.problemName));
                if (flag) {
-                  LogicProgram.m1083("derdata.txt", "S", s, submission.m3());
+                  LogicProgram.appendSubmitLog("derdata.txt", "S", s, submission.getLogRecord());
                }
             } else {
                vector1.addElement(trimTitle(submission.problemName));
                if (flag) {
-                  LogicProgram.m1082("derdata.txt", "F", s);
+                  LogicProgram.appendSubmitLog("derdata.txt", "F", s);
                }
             }
          }
 
-         submission.m1();
-         vector.copyInto(submission.f15 = new String[vector.size()]);
-         vector1.copyInto(submission.f16 = new String[vector1.size()]);
+         submission.reset();
+         vector.copyInto(submission.succeededNames = new String[vector.size()]);
+         vector1.copyInto(submission.failedNames = new String[vector1.size()]);
       }
    }
 
    void uploadProblems() {
       BusyIndicator busyindicator = new BusyIndicator(this);
-      C_LD c_ld = ServerConnection.m840(busyindicator);
-      if (c_ld != null) {
-         c_ld.f520 = null;
-         int[] aint = C_KB.m772(this);
+      ProblemUpload problemupload = ServerConnection.prepareUpload(busyindicator);
+      if (problemupload != null) {
+         problemupload.resultText = null;
+         int[] aint = DerivationDialogs.chooseProblemsToUpload(this);
          if (aint == null) {
-            ServerConnection.m843(c_ld, busyindicator);
+            ServerConnection.finishUpload(problemupload, busyindicator);
          } else {
-            upload(c_ld, aint, busyindicator);
-            ServerConnection.m843(c_ld, busyindicator);
-            AccountManager.m1875(c_ld);
+            upload(problemupload, aint, busyindicator);
+            ServerConnection.finishUpload(problemupload, busyindicator);
+            AccountManager.showUploadResults(problemupload);
          }
       }
    }
 
-   static void upload(C_LD c_ld, int[] aint, BusyIndicator busyindicator) {
+   static void upload(ProblemUpload problemupload, int[] aint, BusyIndicator busyindicator) {
       synchronized (problems) {
          Vector vector = new Vector();
          Vector vector1 = new Vector();
          int i = aint.length;
 
          for (int j = 0; j < i; j++) {
-            c_ld.m944();
-            String s = problems.m1778(aint[j]);
-            ProblemEntry problementry = problems.m1779(aint[j]);
+            problemupload.reset();
+            String s = problems.getRecordAt(aint[j]);
+            ProblemEntry problementry = problems.getEntryAt(aint[j]);
             TaggedRecord taggedrecord = new TaggedRecord(s);
             String s1 = getProblemStatement(taggedrecord);
-            c_ld.f510 = taggedrecord.getName();
-            c_ld.f511 = s1;
-            c_ld.f512 = LogicProgram.m995(s1, maggie, html);
-            c_ld.f514 = null;
-            c_ld.f513 = moduleAbbrs[moduleIndex];
-            c_ld.f515 = null;
+            problemupload.problemName = taggedrecord.getName();
+            problemupload.text = s1;
+            problemupload.webText = LogicProgram.translateSymbols(s1, maggie, html);
+            problemupload.aux = null;
+            problemupload.type = moduleAbbrs[moduleIndex];
+            problemupload.answers = null;
             if (problementry != null
                && problementry.state == 2
-               && !isExercise(c_ld.f510)
-               && taggedrecord.m1497() == null
-               && ServerConnection.m841(c_ld, busyindicator)) {
-               vector.addElement(trimTitle(c_ld.f510));
+               && !isExercise(problemupload.problemName)
+               && taggedrecord.getOriginalName() == null
+               && ServerConnection.uploadProblem(problemupload, busyindicator)) {
+               vector.addElement(trimTitle(problemupload.problemName));
             } else {
-               vector1.addElement(trimTitle(c_ld.f510));
+               vector1.addElement(trimTitle(problemupload.problemName));
             }
          }
 
-         vector.copyInto(c_ld.f518 = new String[vector.size()]);
-         vector1.copyInto(c_ld.f519 = new String[vector1.size()]);
+         vector.copyInto(problemupload.succeededNames = new String[vector.size()]);
+         vector1.copyInto(problemupload.failedNames = new String[vector1.size()]);
       }
    }
 
@@ -891,33 +892,33 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
          String s1 = null;
          synchronized (problems) {
             if (this.problemIndex == -1) {
-               String s2 = C_KB.m796(flag ? this.problemTitle : null);
+               String s2 = DerivationDialogs.askProblemName(flag ? this.problemTitle : null);
                if (s2 == null) {
                   return false;
                }
 
                this.setProblemTitle(s2);
-               C_EE c_ee = new C_EE(TaggedRecord.m1495(s, this.problemTitle), false);
-               this.problemIndex = problems.m1771(c_ee, false);
+               DerivationProblemEntry derivationproblementry = new DerivationProblemEntry(TaggedRecord.withName(s, this.problemTitle), false);
+               this.problemIndex = problems.registerEntry(derivationproblementry, false);
                this.problemIndex = this.problemIndex == -1 ? problems.size() : this.problemIndex + 1;
-               problems.insertElementAt(c_ee, this.problemIndex);
+               problems.insertElementAt(derivationproblementry, this.problemIndex);
             } else {
-               s1 = problems.m1778(this.problemIndex);
-               problems.m1776(s, this.problemIndex);
+               s1 = problems.getRecordAt(this.problemIndex);
+               problems.replaceProblem(s, this.problemIndex);
             }
 
             if (saveProblems(this.problemIndex)) {
                if (this.problemTitle != null && this.problemTitle.toUpperCase().startsWith("UR")) {
-                  C_DB c_db = (C_DB)userRules.m2203(this.problemTitle);
-                  if (c_db == null) {
-                     c_db = new C_DB(this.problemTitle);
-                     if (c_db.f823 == null) {
-                        userRules.m2202(c_db);
+                  UserRule userrule = (UserRule)userRules.getRule(this.problemTitle);
+                  if (userrule == null) {
+                     userrule = new UserRule(this.problemTitle);
+                     if (userrule.error == null) {
+                        userRules.addRule(userrule);
                      }
                   } else {
-                     c_db.m453(this.problemTitle);
-                     if (c_db.f823 != null) {
-                        userRules.m2206(c_db);
+                     userrule.loadFromProblem(this.problemTitle);
+                     if (userrule.error != null) {
+                        userRules.removeRule(userrule);
                      }
                   }
                }
@@ -925,10 +926,10 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
                return true;
             } else {
                if (s1 == null) {
-                  problems.m1101(this.problemIndex);
+                  problems.removeProblem(this.problemIndex);
                   this.problemIndex = -1;
                } else {
-                  problems.m1776(s1, this.problemIndex);
+                  problems.replaceProblem(s1, this.problemIndex);
                }
 
                return false;
@@ -938,11 +939,11 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    }
 
    String saveProblem() {
-      if (this.focus != null && this.focus == this.focus.f1258.f324) {
-         this.focus.f1258.m585();
+      if (this.focus != null && this.focus == this.focus.line.annotationEditor) {
+         this.focus.line.resolveRelativeReferences();
       }
 
-      String s = this.saveTitle() + this.problem.m47();
+      String s = this.saveTitle() + this.problem.encodeWork();
       if (this.errorCount != 0) {
          s = s + this.errorCount + "`e";
       }
@@ -951,22 +952,22 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
          s = s + this.workTime + "`t";
       }
 
-      return TaggedRecord.m1509(s);
+      return TaggedRecord.toLine(s);
    }
 
    String saveMessages() {
-      return this.problem.m48();
+      return this.problem.encodeMessages();
    }
 
    String saveTitle() {
-      return TaggedRecord.m1508(this.problemTitle, '$');
+      return TaggedRecord.formatField(this.problemTitle, '$');
    }
 
    static String trimTitle(String s) {
       if (s == null) {
          return null;
       } else {
-         return isExercise(s) ? LogicProgram.m1000(s) : s.trim();
+         return isExercise(s) ? LogicProgram.stripNamePrefix(s) : s.trim();
       }
    }
 
@@ -980,62 +981,62 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       DerivationBox derivationbox = this.problem;
       DerivationLine derivationline = null;
       this.loadExerciseInfo(taggedrecord);
-      int j = taggedrecord.m1482();
+      int j = taggedrecord.getFieldCount();
 
       for (int k = 0; k < j; k++) {
          char c0 = taggedrecord.tagAt(k);
          String s = taggedrecord.valueAt(k);
          if ((c0 == '-' || c0 == '+') && derivationbox != null) {
             if (derivationline == null) {
-               this.titlePanel.m1823(LogicProgram.m995(s, maggie, kaplan));
+               this.titlePanel.setStatement(LogicProgram.translateSymbols(s, maggie, kaplan));
             } else {
                i++;
-               derivationbox = derivationbox.m1557(-1);
+               derivationbox = derivationbox.insertBox(-1);
                if (c0 == '+') {
-                  derivationbox.m2123(false);
+                  derivationbox.setExpanded(false);
                }
             }
 
-            derivationline = derivationbox.f917;
-            derivationline.m581(i);
-            derivationline.m6(s);
-            derivationline.m594();
+            derivationline = derivationbox.showLine;
+            derivationline.setLineNumber(i);
+            derivationline.setFormulaText(s);
+            derivationline.parseFormula();
          } else if (c0 == '<' && derivationbox != null) {
             i++;
-            derivationline = derivationbox.m1556(-1);
-            derivationline.m581(i);
-            derivationline.m6(s);
-            derivationline.m594();
+            derivationline = derivationbox.insertLine(-1);
+            derivationline.setLineNumber(i);
+            derivationline.setFormulaText(s);
+            derivationline.parseFormula();
          } else if (c0 == '>' && derivationbox != null) {
-            derivationline.m8(LogicProgram.m995(s, rob, kaplan));
-            derivationline.m587(false);
+            derivationline.setAnnotationText(LogicProgram.translateSymbols(s, rob, kaplan));
+            derivationline.parseReferences(false);
          } else if (c0 == '#' && derivationbox != null) {
             i++;
-            derivationline = derivationbox.m1556(-1);
-            derivationline.m581(i);
-            derivationline.m8(LogicProgram.m995(s, rob, kaplan));
-            derivationline.m587(false);
-            derivationline.m574();
-            derivationbox = derivationbox.f916;
+            derivationline = derivationbox.insertLine(-1);
+            derivationline.setLineNumber(i);
+            derivationline.setAnnotationText(LogicProgram.translateSymbols(s, rob, kaplan));
+            derivationline.parseReferences(false);
+            derivationline.boxAndCancel();
+            derivationbox = derivationbox.parentBox;
          } else if (c0 == '=' && derivationbox != null) {
-            derivationbox = derivationbox.f916;
+            derivationbox = derivationbox.parentBox;
          } else if (c0 == ':' && derivationbox != null) {
-            if (derivationline.f336 == null) {
-               derivationline.f336 = new Vector();
+            if (derivationline.justifications == null) {
+               derivationline.justifications = new Vector();
             }
 
-            derivationline.f336.addElement(Justification.m686(s, this));
+            derivationline.justifications.addElement(Justification.decode(s, this));
          } else if (c0 == '$') {
             this.setProblemTitle(s);
          } else if (c0 == 's') {
-            if (derivationline.f340 != null) {
-               derivationline.f340.setText(LogicProgram.m995(s, rob, kaplan));
+            if (derivationline.commandLog != null) {
+               derivationline.commandLog.setText(LogicProgram.translateSymbols(s, rob, kaplan));
             }
          } else if (c0 == 'e') {
             Integer integer = LogicProgram.parseInteger(s);
             this.errorCount = integer == null ? 0 : integer;
          } else if (c0 == 't') {
-            Long olong = LogicProgram.m1012(s);
+            Long olong = LogicProgram.parseLong(s);
             this.workTime = olong == null ? 0L : olong;
          } else if (c0 == 'm' && !restating) {
             int i1 = s.indexOf(58);
@@ -1044,9 +1045,9 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
                if (integer1 != null) {
                   int l = integer1;
                   if (l >= 0) {
-                     Object object = l == 0 ? this.problem : this.problem.m32(l);
+                     Object object = l == 0 ? this.problem : this.problem.findLine(l);
                      if (object != null) {
-                        ((DerivationNode)object).m10(s.substring(i1 + 1), true);
+                        ((DerivationNode)object).setMessageText(s.substring(i1 + 1), true);
                      }
                   }
                }
@@ -1070,14 +1071,14 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
 
    void loadUserProblem(String s) {
       ArgumentParser argumentparser = new ArgumentParser(s, true);
-      String s1 = argumentparser.m1384();
+      String s1 = argumentparser.getUnparsedText();
       if (s1 != null) {
-         Hashtable hashtable = Message.params("expression", LogicProgram.m995(s1, maggie, kaplan));
-         MessageDialog.showMessage(C_n_.get("dererr082"), hashtable, null, null);
-      } else if (!argumentparser.f829 && argumentparser.m1385() == 0) {
-         this.loadProblem(TaggedRecord.m1509(TaggedRecord.m1508(ArgumentParser.m1383(s), '-') + TaggedRecord.m1508("", '=')));
+         Hashtable hashtable = Message.params("expression", LogicProgram.translateSymbols(s1, maggie, kaplan));
+         MessageDialog.showMessage(DerivationMessage.get("dererr082"), hashtable, null, null);
+      } else if (!argumentparser.conclusionOnly && argumentparser.getErrorCode() == 0) {
+         this.loadProblem(TaggedRecord.toLine(TaggedRecord.formatField(ArgumentParser.normalizeDots(s), '-') + TaggedRecord.formatField("", '=')));
       } else {
-         MessageDialog.showMessage(C_n_.get("dererr083"), null, null, null);
+         MessageDialog.showMessage(DerivationMessage.get("dererr083"), null, null, null);
       }
    }
 
@@ -1085,12 +1086,12 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       if (s != null && !(s = s.trim()).equals("")) {
          this.problemTitle = s;
          s = trimTitle(this.problemTitle);
-         this.problem.f917.f322.setText(s + ": ");
-         this.titlePanel.m1821(s);
+         this.problem.showLine.showLabel.setText(s + ": ");
+         this.titlePanel.setTitleLabel(s);
       } else {
          this.problemTitle = null;
-         this.problem.f917.f322.setText("Problem: ");
-         this.titlePanel.m1821(null);
+         this.problem.showLine.showLabel.setText("Problem: ");
+         this.titlePanel.setTitleLabel(null);
       }
    }
 
@@ -1098,73 +1099,73 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       RuleTable ruletable = new RuleTable(null);
       Rule rule = new Rule("CD");
       SchematicRule schematicrule;
-      rule.m1370(schematicrule = new SchematicRule("CD/C"));
-      ruletable.m2202(schematicrule);
-      rule.m1370(schematicrule = new SchematicRule("CD/D"));
-      ruletable.m2202(schematicrule);
-      rule.m1370(schematicrule = new SchematicRule("CD/I"));
-      ruletable.m2202(schematicrule);
-      ruletable.m2202(rule);
+      rule.addComponent(schematicrule = new SchematicRule("CD/C"));
+      ruletable.addRule(schematicrule);
+      rule.addComponent(schematicrule = new SchematicRule("CD/D"));
+      ruletable.addRule(schematicrule);
+      rule.addComponent(schematicrule = new SchematicRule("CD/I"));
+      ruletable.addRule(schematicrule);
+      ruletable.addRule(rule);
       rule = new Rule("DD");
-      rule.m1370(schematicrule = new SchematicRule("DD/C"));
-      ruletable.m2202(schematicrule);
-      rule.m1370(schematicrule = new SchematicRule("DD/D"));
-      ruletable.m2202(schematicrule);
-      rule.m1370(schematicrule = new SchematicRule("DD/I"));
-      ruletable.m2202(schematicrule);
-      ruletable.m2202(rule);
+      rule.addComponent(schematicrule = new SchematicRule("DD/C"));
+      ruletable.addRule(schematicrule);
+      rule.addComponent(schematicrule = new SchematicRule("DD/D"));
+      ruletable.addRule(schematicrule);
+      rule.addComponent(schematicrule = new SchematicRule("DD/I"));
+      ruletable.addRule(schematicrule);
+      ruletable.addRule(rule);
       rule = new Rule("ID");
-      rule.m1370(schematicrule = new SchematicRule("ID/C"));
-      ruletable.m2202(schematicrule);
-      rule.m1370(schematicrule = new SchematicRule("ID/D"));
-      ruletable.m2202(schematicrule);
-      rule.m1370(schematicrule = new SchematicRule("ID/I"));
-      ruletable.m2202(schematicrule);
-      ruletable.m2202(rule);
-      ruletable.m2202(new SchematicRule("UD"));
-      ruletable.m2202(new SchematicRule("IE"));
-      ruletable.m2202(new SchematicRule("CIE"));
+      rule.addComponent(schematicrule = new SchematicRule("ID/C"));
+      ruletable.addRule(schematicrule);
+      rule.addComponent(schematicrule = new SchematicRule("ID/D"));
+      ruletable.addRule(schematicrule);
+      rule.addComponent(schematicrule = new SchematicRule("ID/I"));
+      ruletable.addRule(schematicrule);
+      ruletable.addRule(rule);
+      ruletable.addRule(new SchematicRule("UD"));
+      ruletable.addRule(new SchematicRule("IE"));
+      ruletable.addRule(new SchematicRule("CIE"));
       rule = new Rule("BD");
-      rule.m1370(schematicrule = new SchematicRule("BD/B"));
-      ruletable.m2202(schematicrule);
-      ruletable.m2202(rule);
+      rule.addComponent(schematicrule = new SchematicRule("BD/B"));
+      ruletable.addRule(schematicrule);
+      ruletable.addRule(rule);
       return ruletable;
    }
 
-   static void listRules(String s, Vector vector, C_n_F c_n_f, boolean flag) {
-      s = s.trim();
+   static void listRules(String s, Vector vector, IntervalSet intervalset, boolean flag) {
+      String s2 = s.trim();
 
-      while (!s.equals("")) {
-         int i = s.indexOf(".");
+      while (!s2.equals("")) {
+         int i = s2.indexOf(".");
          String s1;
          if (i == -1) {
-            s1 = s;
-            s = "";
+            s1 = s2;
+            s2 = "";
          } else {
-            s1 = s.substring(0, i).trim();
-            s = s.substring(i + 1).trim();
+            s1 = s2.substring(0, i).trim();
+            s2 = s2.substring(i + 1).trim();
          }
 
          if ("~{".indexOf(s1.charAt(0)) != -1) {
-            c_n_f.m1975(new C_n_F(s1));
+            intervalset.union(new IntervalSet(s1));
          } else {
             Integer integer;
-            if ((integer = SchematicRule.m1366(s1)) != null) {
-               c_n_f.m1975(C_n_F.m1970(integer));
+            if ((integer = SchematicRule.parseTheoremNumber(s1)) != null) {
+               intervalset.union(IntervalSet.singleton(integer));
             } else {
                Rule rule;
                if ((rule = getRule(s1)) != null) {
                   if (flag) {
-                     SchematicRule[] aschematicrule = rule.m1374();
+                     SchematicRule[] aschematicrule = rule.getAllForms();
                      int j = aschematicrule.length;
 
                      for (int k = 0; k < j; k++) {
-                        if (!vector.contains(aschematicrule[k].f820)) {
-                           vector.addElement(aschematicrule[k].f820);
+                        if (!vector.contains(aschematicrule[k].name)) {
+                           vector.addElement(aschematicrule[k].name);
                         }
                      }
-                  } else if (!vector.contains(rule.f820)) {
-                     vector.addElement(rule.f820);
+                  } else if (!vector.contains(rule.name)) {
+                     vector.addElement(rule.name);
                   }
                } else if (s1.equalsIgnoreCase("UR")) {
                   if (!vector.contains("UR")) {
@@ -1179,7 +1180,7 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    }
 
    ErrorRef checkDerivationRule(String s, boolean flag) {
-      Rule rule = derivationRules == null ? null : derivationRules.m2203(s);
+      Rule rule = derivationRules == null ? null : derivationRules.getRule(s);
       if (rule == null) {
          return null;
       } else if (this.hasProperty(rule, "disabled")) {
@@ -1187,18 +1188,18 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       } else if (flag && this.hasProperty(rule, "manual")) {
          return new ErrorRef("dererr040");
       } else {
-         return rule.m952(this) ? null : new ErrorRef("dererr016");
+         return rule.isProven(this) ? null : new ErrorRef("dererr016");
       }
    }
 
    static Rule getRule(String s) {
-      Rule rule = LogicProgram.m1026(s);
+      Rule rule = LogicProgram.getRule(s);
       if (rule == null && derivationRules != null) {
-         rule = derivationRules.m2203(s);
+         rule = derivationRules.getRule(s);
       }
 
       if (rule == null && userRules != null) {
-         rule = userRules.m2203(s);
+         rule = userRules.getRule(s);
       }
 
       return rule;
@@ -1206,13 +1207,13 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
 
    Vector enabledRules(RuleTable ruletable) {
       Vector vector = new Vector();
-      Vector vector1 = ruletable.f1469;
+      Vector vector1 = ruletable.ruleNames;
       int i = vector1.size();
 
       for (int j = 0; j < i; j++) {
          String s = (String)vector1.elementAt(j);
-         Rule rule = ruletable.m2203(s);
-         if (!rule.m1193(this, "disabled", false) && rule.m953(this)) {
+         Rule rule = ruletable.getRule(s);
+         if (!rule.testProperty(this, "disabled", false) && rule.isAnyFormProven(this)) {
             vector.addElement(s);
          }
       }
@@ -1220,24 +1221,24 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       return vector;
    }
 
-   C_n_F enabledTheorems(TheoremTable theoremtable) {
-      C_n_F c_n_f = new C_n_F();
-      Enumeration enumeration = theoremtable.f1464.m1985();
+   IntervalSet enabledTheorems(TheoremTable theoremtable) {
+      IntervalSet intervalset = new IntervalSet();
+      Enumeration enumeration = theoremtable.theoremNumbers.elements();
 
       while (enumeration.hasMoreElements()) {
          Integer integer = (Integer)enumeration.nextElement();
-         Theorem theorem = theoremtable.m2199(integer);
-         if (!theorem.m1193(this, "disabled", false) && theorem.m953(this)) {
-            c_n_f.m1975(C_n_F.m1970(theorem.f700));
+         Theorem theorem = theoremtable.getTheorem(integer);
+         if (!theorem.testProperty(this, "disabled", false) && theorem.isAnyFormProven(this)) {
+            intervalset.union(IntervalSet.singleton(theorem.number));
          }
       }
 
-      return c_n_f;
+      return intervalset;
    }
 
    @Override
    public boolean hasProperty(Rule rule, String s) {
-      String s1 = rule instanceof C_DB ? "UR" : rule.f820;
+      String s1 = rule instanceof UserRule ? "UR" : rule.name;
       if (s.equals("disabled")) {
          return this.disabledRules != null && this.disabledRules.contains(s1) || this.isWeaklyDisabled(rule);
       } else if (s.equals("manual")) {
@@ -1257,32 +1258,34 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    public boolean hasProperty(Integer integer, String s) {
       int i = integer;
       if (s.equals("disabled")) {
-         return this.disabledRange != null && this.disabledRange.m1983(i) || this.isWeaklyDisabled(integer);
+         return this.disabledRange != null && this.disabledRange.contains(i) || this.isWeaklyDisabled(integer);
       } else if (s.equals("manual")) {
-         return this.manualRange != null && this.manualRange.m1983(i);
+         return this.manualRange != null && this.manualRange.contains(i);
       } else if (s.equals("manualOrDisabled")) {
-         return this.manualRange != null && this.manualRange.m1983(i) || this.hasProperty(integer, "disabled");
+         return this.manualRange != null && this.manualRange.contains(i) || this.hasProperty(integer, "disabled");
       } else if (s.equals("weakAss")) {
-         return this.weakAssRange != null && this.weakAssRange.m1983(i);
+         return this.weakAssRange != null && this.weakAssRange.contains(i);
       } else if (!s.equals("assumed")) {
          throw new IllegalArgumentException("unknown property: " + s);
       } else {
-         return this.assumedRange != null && this.assumedRange.m1983(i);
+         return this.assumedRange != null && this.assumedRange.contains(i);
       }
    }
 
    @Override
    public Vector getProofs(SchematicRule schematicrule) {
-      if (schematicrule instanceof C_DB) {
-         return ((C_DB)schematicrule).m452();
+      if (schematicrule instanceof UserRule) {
+         return ((UserRule)schematicrule).getSourceProblems();
       } else {
-         return exercises.f618 != null && !schematicrule.m1193(this, "assumed", false) ? (Vector)exercises.f618.get(schematicrule.f820) : null;
+         return exercises.ruleProofIndex != null && !schematicrule.testProperty(this, "assumed", false)
+            ? (Vector)exercises.ruleProofIndex.get(schematicrule.name)
+            : null;
       }
    }
 
    @Override
    public Vector getProofs(Integer integer) {
-      return exercises.f618 != null && !this.hasProperty(integer, "assumed") ? (Vector)exercises.f618.get(integer) : null;
+      return exercises.ruleProofIndex != null && !this.hasProperty(integer, "assumed") ? (Vector)exercises.ruleProofIndex.get(integer) : null;
    }
 
    boolean isWeaklyDisabled(Rule rule) {
@@ -1308,37 +1311,37 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
 
    @Override
    public boolean checkProof(String s) {
-      ProblemEntry problementry = problems.m1772(s);
+      ProblemEntry problementry = problems.getEntry(s);
       return problementry != null && problementry.state == 2;
    }
 
    static void readOptions(Reader reader) {
       if (reader != null) {
-         C_TB c_tb = new C_TB();
+         DerivationRuleLister derivationrulelister = new DerivationRuleLister();
          TaggedRecord taggedrecord = new TaggedRecord(reader, true);
          String s = "";
 
          while (taggedrecord.readNext()) {
             String s1 = taggedrecord.getName();
             if (s1 != null && s1.trim().equalsIgnoreCase("derivation")) {
-               int[] aint = taggedrecord.m1481("dDmMaA+?");
+               int[] aint = taggedrecord.indexesOfAnyTag("dDmMaA+?");
                int i = aint.length;
 
                for (int j = 0; j < i; j++) {
                   char c0 = taggedrecord.tagAt(aint[j]);
                   String s2 = taggedrecord.valueAt(aint[j]);
                   if (c0 == 'd') {
-                     disabledRuleXRefs.addElement(new C_y_E(s2, c_tb).m2195(s));
+                     disabledRuleXRefs.addElement(new RuleCrossReference(s2, derivationrulelister).withPrefix(s));
                   } else if (c0 == 'D') {
-                     disabledRuleXRefs.addElement(new C_y_E(s2, c_tb, true).m2195(s));
+                     disabledRuleXRefs.addElement(new RuleCrossReference(s2, derivationrulelister, true).withPrefix(s));
                   } else if (c0 == 'm') {
-                     manualRuleXRefs.addElement(new C_y_E(s2, c_tb).m2195(s));
+                     manualRuleXRefs.addElement(new RuleCrossReference(s2, derivationrulelister).withPrefix(s));
                   } else if (c0 == 'M') {
-                     manualRuleXRefs.addElement(new C_y_E(s2, c_tb, true).m2195(s));
+                     manualRuleXRefs.addElement(new RuleCrossReference(s2, derivationrulelister, true).withPrefix(s));
                   } else if (c0 == 'a') {
-                     weakAssRuleXRefs.addElement(new C_y_E(s2, c_tb, true).m2195(s));
+                     weakAssRuleXRefs.addElement(new RuleCrossReference(s2, derivationrulelister, true).withPrefix(s));
                   } else if (c0 == 'A') {
-                     assumedRuleXRefs.addElement(new C_y_E(s2, c_tb, true).m2195(s));
+                     assumedRuleXRefs.addElement(new RuleCrossReference(s2, derivationrulelister, true).withPrefix(s));
                   } else if (c0 == '+') {
                      if (s2.equalsIgnoreCase("officialIE")) {
                         officialIE = true;
@@ -1358,109 +1361,109 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
                               noCommand = new ProblemSelector();
                            }
 
-                           noCommand.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noCommand.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noQueue")) {
                            if (noQueue == null) {
                               noQueue = new ProblemSelector();
                            }
 
-                           noQueue.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noQueue.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("chap1")) {
                            if (chap1 == null) {
                               chap1 = new ProblemSelector();
                            }
 
-                           chap1.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           chap1.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("chap2")) {
                            if (chap2 == null) {
                               chap2 = new ProblemSelector();
                            }
 
-                           chap2.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           chap2.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("addToDB")) {
                            if (addToDB == null) {
                               addToDB = new ProblemSelector();
                            }
 
-                           addToDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           addToDB.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("updateDB")) {
                            if (updateDB == null) {
                               updateDB = new ProblemSelector();
                            }
 
-                           updateDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           updateDB.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noCheck")) {
                            if (noCheck == null) {
                               noCheck = new ProblemSelector();
                            }
 
-                           noCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noCheck.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noErrMess")) {
                            if (noErrMess == null) {
                               noErrMess = new ProblemSelector();
                            }
 
-                           noErrMess.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noErrMess.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("monoProbs")) {
                            if (monoProbs == null) {
                               monoProbs = new ProblemSelector();
                            }
 
-                           monoProbs.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           monoProbs.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrint")) {
                            if (noPrint == null) {
                               noPrint = new ProblemSelector();
                            }
 
-                           noPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrintCheck")) {
                            if (noPrintCheck == null) {
                               noPrintCheck = new ProblemSelector();
                            }
 
-                           noPrintCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrintCheck.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrintErr")) {
                            if (noPrintErr == null) {
                               noPrintErr = new ProblemSelector();
                            }
 
-                           noPrintErr.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrintErr.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("logPrint")) {
                            if (logPrint == null) {
                               logPrint = new ProblemSelector();
                            }
 
-                           logPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           logPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("logSubmit")) {
                            if (logSubmit == null) {
                               logSubmit = new ProblemSelector();
                            }
 
-                           logSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           logSubmit.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("needPrint")) {
                            if (needPrint == null) {
                               needPrint = new ProblemSelector();
                            }
 
-                           needPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           needPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("needSubmit")) {
                            if (needSubmit == null) {
                               needSubmit = new ProblemSelector();
                            }
 
-                           needSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           needSubmit.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("logShowCmd")) {
                            if (logShowCmd == null) {
                               logShowCmd = new ProblemSelector();
                            }
 
-                           logShowCmd.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           logShowCmd.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noMixedMode")) {
                            if (noMixedMode == null) {
                               noMixedMode = new ProblemSelector();
                            }
 
-                           noMixedMode.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noMixedMode.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("prefix")) {
                            s = s2.substring(k + 1);
                         } else if (s3.equalsIgnoreCase("termprefix")) {
@@ -1482,51 +1485,51 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    }
 
    static void logNeeds() {
-      if (needPrint != null && !needPrint.m402()) {
+      if (needPrint != null && !needPrint.isEmpty()) {
          if (logPrint == null) {
             logPrint = new ProblemSelector();
          }
 
-         logPrint.m395(needPrint);
+         logPrint.union(needPrint);
       }
 
-      if (needSubmit != null && !needSubmit.m402()) {
+      if (needSubmit != null && !needSubmit.isEmpty()) {
          if (logSubmit == null) {
             logSubmit = new ProblemSelector();
          }
 
-         logSubmit.m395(needSubmit);
+         logSubmit.union(needSubmit);
       }
    }
 
    static String getExerciseTitle(String s) {
       String s1;
-      return exercises != null && (s1 = exercises.m1780(s)) != null ? TaggedRecord.m1493(s1) : null;
+      return exercises != null && (s1 = exercises.getRecord(s)) != null ? TaggedRecord.nameOf(s1) : null;
    }
 
    static boolean isExercise(String s) {
-      return exercises != null && s != null && exercises.m1780(s) != null;
+      return exercises != null && s != null && exercises.getRecord(s) != null;
    }
 
    static boolean isExample(String s) {
-      return exercises != null && s != null && TaggedRecord.m1502(exercises.m1780(s));
+      return exercises != null && s != null && TaggedRecord.isExample(exercises.getRecord(s));
    }
 
    void loadExerciseInfo(TaggedRecord taggedrecord) {
-      taggedrecord = new TaggedRecord(exercises == null ? null : exercises.m1780(taggedrecord.getName()));
+      taggedrecord = new TaggedRecord(exercises == null ? null : exercises.getRecord(taggedrecord.getName()));
       String s = taggedrecord.getName();
-      this.probOptions = taggedrecord.m1506('%');
+      this.probOptions = taggedrecord.getKeyValues('%');
       this.dontChange = this.probOptions != null && this.probOptions.containsKey("eg");
-      this.titlePanel.m1827(taggedrecord.valueAt(taggedrecord.indexOfTag('!')));
-      this.commandMode = !LogicProgram.m1060(noCommand, s);
-      this.queuedMode = !LogicProgram.m1060(noQueue, s);
-      this.checkDisabled = LogicProgram.m1060(this.forPrint ? noPrintCheck : noCheck, s);
-      this.errorMessagesDisabled = LogicProgram.m1060(this.forPrint ? noPrintErr : noErrMess, s);
-      this.mixedModeDisabled = LogicProgram.m1060(noMixedMode, s);
-      this.doShowLog = LogicProgram.m1060(logShowCmd, s);
-      if (LogicProgram.m1060(chap1, s)) {
+      this.titlePanel.setNote(taggedrecord.valueAt(taggedrecord.indexOfTag('!')));
+      this.commandMode = !LogicProgram.selectorMatches(noCommand, s);
+      this.queuedMode = !LogicProgram.selectorMatches(noQueue, s);
+      this.checkDisabled = LogicProgram.selectorMatches(this.forPrint ? noPrintCheck : noCheck, s);
+      this.errorMessagesDisabled = LogicProgram.selectorMatches(this.forPrint ? noPrintErr : noErrMess, s);
+      this.mixedModeDisabled = LogicProgram.selectorMatches(noMixedMode, s);
+      this.doShowLog = LogicProgram.selectorMatches(logShowCmd, s);
+      if (LogicProgram.selectorMatches(chap1, s)) {
          this.chapter = new Integer(1);
-      } else if (LogicProgram.m1060(chap2, s)) {
+      } else if (LogicProgram.selectorMatches(chap2, s)) {
          this.chapter = new Integer(2);
       } else {
          this.chapter = null;
@@ -1536,32 +1539,32 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       this.manualRules = new Vector();
       this.weakAssRules = new Vector();
       this.assumedRules = new Vector();
-      this.disabledRange = new C_n_F();
-      this.manualRange = new C_n_F();
-      this.weakAssRange = new C_n_F();
-      this.assumedRange = new C_n_F();
+      this.disabledRange = new IntervalSet();
+      this.manualRange = new IntervalSet();
+      this.weakAssRange = new IntervalSet();
+      this.assumedRange = new IntervalSet();
       int j = disabledRuleXRefs.size();
 
       for (int i = 0; i < j; i++) {
-         ((C_y_E)disabledRuleXRefs.elementAt(i)).m2196(s, this.disabledRules, this.disabledRange);
+         ((RuleCrossReference)disabledRuleXRefs.elementAt(i)).applyTo(s, this.disabledRules, this.disabledRange);
       }
 
       j = manualRuleXRefs.size();
 
       for (int k = 0; k < j; k++) {
-         ((C_y_E)manualRuleXRefs.elementAt(k)).m2196(s, this.manualRules, this.manualRange);
+         ((RuleCrossReference)manualRuleXRefs.elementAt(k)).applyTo(s, this.manualRules, this.manualRange);
       }
 
       j = weakAssRuleXRefs.size();
 
       for (int l = 0; l < j; l++) {
-         ((C_y_E)weakAssRuleXRefs.elementAt(l)).m2196(s, this.weakAssRules, this.weakAssRange);
+         ((RuleCrossReference)weakAssRuleXRefs.elementAt(l)).applyTo(s, this.weakAssRules, this.weakAssRange);
       }
 
       j = assumedRuleXRefs.size();
 
       for (int i1 = 0; i1 < j; i1++) {
-         ((C_y_E)assumedRuleXRefs.elementAt(i1)).m2196(s, this.assumedRules, this.assumedRange);
+         ((RuleCrossReference)assumedRuleXRefs.elementAt(i1)).applyTo(s, this.assumedRules, this.assumedRange);
       }
    }
 
@@ -1589,7 +1592,7 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    }
 
    static String getProblemStatement(TaggedRecord taggedrecord) {
-      return taggedrecord.valueAt(taggedrecord.m1478("-+"));
+      return taggedrecord.valueAt(taggedrecord.indexOfAnyTag("-+"));
    }
 
    static int countProblemLines(String s) {
@@ -1597,7 +1600,7 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    }
 
    static int countProblemLines(TaggedRecord taggedrecord) {
-      int i = taggedrecord.m1482();
+      int i = taggedrecord.getFieldCount();
       int j = 0;
       int k = 0;
 
@@ -1624,7 +1627,7 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    }
 
    static String getWork(TaggedRecord taggedrecord) {
-      return taggedrecord.m1484("-+<#=");
+      return taggedrecord.formatFields("-+<#=");
    }
 
    static String getProblemRuleProven(String s) {
@@ -1641,18 +1644,18 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       this.resetVarNames();
       this.serialMode = true;
       this.proofMissing = false;
-      if (this.focus != null && this.focus == this.focus.f1258.f324) {
-         this.focus.f1258.m585();
+      if (this.focus != null && this.focus == this.focus.line.annotationEditor) {
+         this.focus.line.resolveRelativeReferences();
       }
 
-      if (this.problem.m43() & this.problem.m46()) {
-         this.problem.m1561("derinf005", 4);
-         this.titlePanel.m1825("Correct");
+      if (this.problem.checkSyntax() & this.problem.verify()) {
+         this.problem.showMessage("derinf005", 4);
+         this.titlePanel.setStatus("Correct");
          this.serialMode = false;
          return true;
       } else {
-         this.problem.m1561(this.aborted ? "dererr056" : (this.complete ? "dererr057" : "dererr058"), 4);
-         this.titlePanel.m1825(this.aborted ? "" : (this.complete ? "Incorrect" : "Incomplete"));
+         this.problem.showMessage(this.aborted ? "dererr056" : (this.complete ? "dererr057" : "dererr058"), 4);
+         this.titlePanel.setStatus(this.aborted ? "" : (this.complete ? "Incorrect" : "Incomplete"));
          this.serialMode = false;
          return false;
       }
@@ -1670,58 +1673,58 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       if (problems != null) {
          return true;
       } else {
-         C_MD c_md = readWork();
-         if (c_md == null) {
+         DerivationProblemSet derivationproblemset = readWork();
+         if (derivationproblemset == null) {
             return false;
          } else {
-            if (c_md.f1079 && !c_md.m1777(LogicProgram.user).equals(c_md.f1076)) {
+            if (derivationproblemset.readFromPlainFile && !derivationproblemset.computeDigest(LogicProgram.user).equals(derivationproblemset.storedDigest)) {
                System.out.println("Could not digest file: derwork.txt");
-               if (!UserSetup.m2101("indigestion", "instructor")) {
-                  LogicProgram.m971("not003", "derwork.txt");
+               if (!UserSetup.hasAccess("indigestion", "instructor")) {
+                  LogicProgram.showFileError("not003", "derwork.txt");
                   return false;
                }
             }
 
-            problems = c_md;
-            c_md.m1100();
-            C_EE.f297 = ProblemEntry.m1816("derwork.txt", problems);
-            ProblemEntry.m1815(exercises, C_EE.f297);
+            problems = derivationproblemset;
+            derivationproblemset.rebuildUserRules();
+            DerivationProblemEntry.workProblemNames = ProblemEntry.findExtraProblems("derwork.txt", problems);
+            ProblemEntry.markExtraProblems(exercises, DerivationProblemEntry.workProblemNames);
             return true;
          }
       }
    }
 
-   static C_MD readWork() {
-      if (!LogicProgram.m976()) {
+   static DerivationProblemSet readWork() {
+      if (!LogicProgram.checkSameUser()) {
          return null;
       } else {
-         C_MD c_md = new C_MD();
+         DerivationProblemSet derivationproblemset = new DerivationProblemSet();
          ScrambledReader scrambledreader = LogicProgram.openDataFile("derwork.txt", true);
-         if (!LogicProgram.f584 || scrambledreader instanceof PlainRecordReader) {
+         if (!LogicProgram.noCoreProblems || scrambledreader instanceof PlainRecordReader) {
             if (scrambledreader == null) {
-               LogicProgram.m971("not001", "derwork.txt");
+               LogicProgram.showFileError("not001", "derwork.txt");
                return null;
             }
 
             if (scrambledreader instanceof PlainRecordReader) {
-               c_md.f1079 = true;
+               derivationproblemset.readFromPlainFile = true;
             }
 
-            if (!readProblems(scrambledreader, c_md, false)) {
-               LogicProgram.m971("not002", "derwork.txt");
+            if (!readProblems(scrambledreader, derivationproblemset, false)) {
+               LogicProgram.showFileError("not002", "derwork.txt");
                return null;
             }
          }
 
          if (!(scrambledreader instanceof PlainRecordReader)) {
-            scrambledreader = LogicProgram.m1065("derwork.txt", false);
-            if (scrambledreader != null && !mergeProblems(scrambledreader, c_md, false)) {
-               LogicProgram.m971("not002", "derwork.txt");
+            scrambledreader = LogicProgram.openLocalFile("derwork.txt", false);
+            if (scrambledreader != null && !mergeProblems(scrambledreader, derivationproblemset, false)) {
+               LogicProgram.showFileError("not002", "derwork.txt");
                return null;
             }
          }
 
-         return c_md;
+         return derivationproblemset;
       }
    }
 
@@ -1729,20 +1732,20 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       return countProblemLines(taggedrecord) > 1;
    }
 
-   static boolean readProblems(Reader reader, C_MD c_md, boolean flag) {
-      return readProblems(reader, c_md, flag, false);
+   static boolean readProblems(Reader reader, DerivationProblemSet derivationproblemset, boolean flag) {
+      return readProblems(reader, derivationproblemset, flag, false);
    }
 
-   static boolean mergeProblems(Reader reader, C_MD c_md, boolean flag) {
-      return readProblems(reader, c_md, flag, true);
+   static boolean mergeProblems(Reader reader, DerivationProblemSet derivationproblemset, boolean flag) {
+      return readProblems(reader, derivationproblemset, flag, true);
    }
 
-   static boolean readProblems(Reader reader, C_MD c_md, boolean flag, boolean flag1) {
-      if (flag && c_md.f618 == null) {
-         c_md.f618 = new Hashtable();
+   static boolean readProblems(Reader reader, DerivationProblemSet derivationproblemset, boolean flag, boolean flag1) {
+      if (flag && derivationproblemset.ruleProofIndex == null) {
+         derivationproblemset.ruleProofIndex = new Hashtable();
       }
 
-      return LogicModule.readProblems(reader, c_md, flag, flag1);
+      return LogicModule.readProblems(reader, derivationproblemset, flag, flag1);
    }
 
    void setupPrintProblem(Dimension dimension) {
@@ -1755,17 +1758,17 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         ProblemEntry problementry = problems.m1779(aint[j]);
+         ProblemEntry problementry = problems.getEntryAt(aint[j]);
          TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
          String s = taggedrecord.getName();
          String s1 = getProblemStatement(taggedrecord);
          JPanel jpanel = new JPanel();
-         jpanel.setLayout(new C_u_A(null, 1, new int[]{dimension.width}));
-         C_NC c_nc;
-         jpanel.add(c_nc = new C_NC(LogicProgram.m1004("\\l" + s + ": " + s1)));
-         c_nc.setLineWrap(true);
-         c_nc.setWrapStyleWord(true);
-         c_nc.setBackground(LogicProgram.f605[1]);
+         jpanel.setLayout(new FixedColumnLineLayout(null, 1, new int[]{dimension.width}));
+         LogicTextArea logictextarea;
+         jpanel.add(logictextarea = new LogicTextArea(LogicProgram.expandEscapes("\\l" + s + ": " + s1)));
+         logictextarea.setLineWrap(true);
+         logictextarea.setWrapStyleWord(true);
+         logictextarea.setBackground(LogicProgram.printColors[1]);
          vector.add(jpanel);
       }
 
@@ -1777,27 +1780,27 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         ProblemEntry problementry = problems.m1779(aint[j]);
+         ProblemEntry problementry = problems.getEntryAt(aint[j]);
          int k = problementry.state;
          TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
          String s = taggedrecord.getName();
          String s1 = getExerciseTitle(s);
          if (!printIncorrect || k == 1 || k == 3) {
-            boolean flag = LogicProgram.m1060(noPrintCheck, s1);
+            boolean flag = LogicProgram.selectorMatches(noPrintCheck, s1);
             String s2 = getProblemStatement(taggedrecord);
             JPanel jpanel = new JPanel();
-            jpanel.setLayout(new C_u_A(null, 2, new int[]{20, dimension.width - 20}));
-            jpanel.add(new C_f_E(flag ? " " : C_EE.f1128[k]));
-            C_NC c_nc;
-            jpanel.add(c_nc = new C_NC(LogicProgram.m1004("\\l" + s + ": " + s2)));
-            c_nc.setLineWrap(true);
-            c_nc.setWrapStyleWord(true);
-            c_nc.setBackground(LogicProgram.f605[1]);
+            jpanel.setLayout(new FixedColumnLineLayout(null, 2, new int[]{20, dimension.width - 20}));
+            jpanel.add(new WrappedTextPanel(flag ? " " : DerivationProblemEntry.STATE_CODES[k]));
+            LogicTextArea logictextarea;
+            jpanel.add(logictextarea = new LogicTextArea(LogicProgram.expandEscapes("\\l" + s + ": " + s2)));
+            logictextarea.setLineWrap(true);
+            logictextarea.setWrapStyleWord(true);
+            logictextarea.setBackground(LogicProgram.printColors[1]);
             vector.add(jpanel);
          }
 
-         if (LogicProgram.m1060(logPrint, s1)) {
-            LogicProgram.m1082("derdata.txt", "R", problementry.name);
+         if (LogicProgram.selectorMatches(logPrint, s1)) {
+            LogicProgram.appendSubmitLog("derdata.txt", "R", problementry.name);
          }
       }
 
@@ -1808,17 +1811,17 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       Vector vector = new Vector(aint.length);
 
       for (int i = 0; i < aint.length; i++) {
-         ProblemEntry problementry = problems.m1779(aint[i]);
-         String s = getExerciseTitle(TaggedRecord.m1493(problementry.name));
-         if (LogicProgram.m1060(logPrint, s)) {
-            LogicProgram.m1082("derdata.txt", "P", problementry.name);
+         ProblemEntry problementry = problems.getEntryAt(aint[i]);
+         String s = getExerciseTitle(TaggedRecord.nameOf(problementry.name));
+         if (LogicProgram.selectorMatches(logPrint, s)) {
+            LogicProgram.appendSubmitLog("derdata.txt", "P", problementry.name);
          }
 
          if (!printIncorrect || problementry.state == 1 || problementry.state == 3) {
             LPDerivation lpderivation = new LPDerivation(true);
             lpderivation.setupFrame("Logic Program: Print");
             lpderivation.loadProblem(problementry.name);
-            lpderivation.problem.m1550();
+            lpderivation.problem.expandAll();
             lpderivation.checkProblem();
             lpderivation.setupPrintProblem(dimension);
             vector.add(lpderivation.problemPanel);
@@ -1830,16 +1833,16 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    }
 
    void parseProblem() {
-      ArgumentParser argumentparser = new ArgumentParser(this.problem.m7(true), true);
-      this.conclusion = argumentparser.f828;
-      this.premises = argumentparser.f827;
-      String s = argumentparser.m1384();
-      this.problem.m13();
+      ArgumentParser argumentparser = new ArgumentParser(this.problem.getFormulaText(true), true);
+      this.conclusion = argumentparser.conclusion;
+      this.premises = argumentparser.premises;
+      String s = argumentparser.getUnparsedText();
+      this.problem.clearMessage();
       if (s != null) {
-         this.problem.m12("dererr059", Message.params("parser error", s));
-         this.problem.f917.f333 = false;
+         this.problem.showMessage("dererr059", Message.params("parser error", s));
+         this.problem.showLine.syntaxOk = false;
       } else {
-         this.problem.f917.f333 = true;
+         this.problem.showLine.syntaxOk = true;
       }
    }
 
@@ -1849,7 +1852,7 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
          return false;
       } else {
          for (int j = 0; j < i; j++) {
-            if (expression.m1235(this.premises[j])) {
+            if (expression.isIdentical(this.premises[j])) {
                return true;
             }
          }
@@ -1863,11 +1866,11 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
    }
 
    boolean isConclusion(Expression expression) {
-      return expression == null ? false : expression.m1235(this.conclusion);
+      return expression == null ? false : expression.isIdentical(this.conclusion);
    }
 
-   static class C__A extends LogicModule.C__A {
-      C__A(BusyIndicator busyindicator, Rectangle rectangle, String s) {
+   static class DerivationStartupTask extends LogicModule.ModuleStartupTask {
+      DerivationStartupTask(BusyIndicator busyindicator, Rectangle rectangle, String s) {
          super(busyindicator, rectangle, s);
       }
 
@@ -1877,7 +1880,7 @@ class LPDerivation extends LogicModule implements C_w_E, DerivationConstants {
       }
 
       @Override
-      public void m959() {
+      public void continueStartup() {
          LPDerivation.continueStartup();
       }
    }

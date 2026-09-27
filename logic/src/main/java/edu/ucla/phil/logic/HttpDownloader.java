@@ -9,37 +9,37 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class HttpDownloader {
-   public boolean m1855(ServerUrl serverurl, File file1, NetworkTask networktask, boolean flag) {
-      File file2 = flag ? file1 : new File(file1, m1860(serverurl.m2012()));
-      return this.m1856(serverurl, file2, networktask);
+   public boolean downloadInto(ServerUrl serverurl, File file1, NetworkTask networktask, boolean flag) {
+      File file2 = flag ? file1 : new File(file1, baseName(serverurl.getFile()));
+      return this.download(serverurl, file2, networktask);
    }
 
-   public boolean m1856(ServerUrl serverurl, File file1, NetworkTask networktask) {
+   public boolean download(ServerUrl serverurl, File file1, NetworkTask networktask) {
       if (networktask == null) {
-         return this.m1857(serverurl, file1, networktask);
+         return this.downloadDirect(serverurl, file1, networktask);
       } else {
-         networktask.m2051(new C_s_E(serverurl, file1, this, networktask));
-         return (Boolean)networktask.m2052();
+         networktask.execute(new DownloadWorker(serverurl, file1, this, networktask));
+         return (Boolean)networktask.getResult();
       }
    }
 
-   public boolean m1857(ServerUrl serverurl, File file1, NetworkTask networktask) {
-      return "http".equalsIgnoreCase(serverurl.m2015()) ? this.m1858(serverurl, file1, networktask) : false;
+   public boolean downloadDirect(ServerUrl serverurl, File file1, NetworkTask networktask) {
+      return "http".equalsIgnoreCase(serverurl.getProtocol()) ? this.downloadHttp(serverurl, file1, networktask) : false;
    }
 
-   public boolean m1858(ServerUrl serverurl, File file1, NetworkTask networktask) {
+   public boolean downloadHttp(ServerUrl serverurl, File file1, NetworkTask networktask) {
       boolean flag = false;
 
       try {
-         InputStream inputstream = serverurl.m2017();
+         InputStream inputstream = serverurl.openStream();
          if (networktask != null) {
-            networktask.m2057(inputstream);
+            networktask.setInputStream(inputstream);
          }
 
          flag = true;
-         flag = m1859(inputstream, file1);
+         flag = saveOrUnzip(inputstream, file1);
          if (networktask != null) {
-            networktask.m2057(null);
+            networktask.setInputStream(null);
          }
       } catch (IOException ioexception) {
       }
@@ -47,7 +47,7 @@ public class HttpDownloader {
       return flag;
    }
 
-   static boolean m1859(InputStream inputstream, File file1) throws IOException {
+   static boolean saveOrUnzip(InputStream inputstream, File file1) throws IOException {
       ZipInputStream zipinputstream = null;
       FileOutputStream fileoutputstream = null;
       byte[] abyte = new byte[16384];
@@ -131,11 +131,11 @@ public class HttpDownloader {
       return flag;
    }
 
-   public static String m1860(String s) {
+   public static String baseName(String s) {
       return s.substring(s.lastIndexOf("/") + 1);
    }
 
-   public static boolean m1861(File file1, File file2) {
+   public static boolean unzip(File file1, File file2) {
       FileOutputStream fileoutputstream = null;
       ZipInputStream zipinputstream = null;
       boolean flag = true;

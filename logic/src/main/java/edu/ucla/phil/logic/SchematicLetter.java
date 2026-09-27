@@ -12,25 +12,25 @@ abstract class SchematicLetter implements LogicConstants {
    @Override
    public abstract String toString();
 
-   abstract String m1173();
+   abstract String getLetter();
 
-   abstract int m1174();
+   abstract int getArity();
 
-   abstract SchematicLetter m1177(Vector vector);
+   abstract SchematicLetter freshLetter(Vector vector);
 
-   abstract Vector m1176(boolean flag);
+   abstract Vector getDeferredMatches(boolean flag);
 
-   abstract Expression m1175();
+   abstract Expression toExpression();
 
-   static String m1853(int i) {
+   static String placeholder(int i) {
       return "{" + (i + 1) + "}";
    }
 
-   static String m1854(int i, int j) {
+   static String placeholders(int i, int j) {
       String s = "";
 
       for (int k = 0; k < j; k++) {
-         s = s + m1853(i + k);
+         s = s + placeholder(i + k);
       }
 
       return s;

@@ -5,11 +5,11 @@ import edu.ucla.phil.logic.pkgB.Syntax1Parser;
 import java.io.Reader;
 
 public class FormulaParser {
-   static int f303 = 2;
+   static int syntaxCount = 2;
    static int syntax = 2;
 
    static void setSyntax(int i) {
-      if (i >= 1 && i <= f303) {
+      if (i >= 1 && i <= syntaxCount) {
          syntax = i;
       }
    }

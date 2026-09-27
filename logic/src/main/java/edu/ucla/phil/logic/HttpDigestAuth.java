@@ -4,116 +4,116 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 class HttpDigestAuth {
-   String f629;
-   String f630;
-   String f631;
-   int f632;
-   String f633;
-   boolean f634;
-   String f635;
-   Vector f636;
-   String f637;
-   Credentials f638;
-   static Hashtable f639 = new Hashtable();
+   String scheme;
+   String realm;
+   String nonce;
+   int nonceCount;
+   String opaque;
+   boolean stale;
+   String algorithm;
+   Vector qopOptions;
+   String cnonce;
+   Credentials credentials;
+   static Hashtable credentialCache = new Hashtable();
 
    HttpDigestAuth(String s, String s1) {
-      this.m1121(s, s1);
-      this.f638 = null;
+      this.parseChallenge(s, s1);
+      this.credentials = null;
    }
 
-   void m1121(String s, String s1) {
-      C_OD c_od = new C_OD(s, false);
-      this.f629 = c_od.m1142();
-      this.f630 = c_od.m1143("realm");
-      this.f631 = c_od.m1143("nonce");
-      this.f632 = 0;
-      this.f633 = c_od.m1143("opaque");
-      this.f634 = "true".equalsIgnoreCase(c_od.m1143("stale"));
-      this.f635 = c_od.m1143("algorithm");
-      this.f636 = m1128(c_od.m1143("qop"), true, true);
-      this.f637 = s1;
+   void parseChallenge(String s, String s1) {
+      AuthHeaderParams authheaderparams = new AuthHeaderParams(s, false);
+      this.scheme = authheaderparams.getScheme();
+      this.realm = authheaderparams.getParam("realm");
+      this.nonce = authheaderparams.getParam("nonce");
+      this.nonceCount = 0;
+      this.opaque = authheaderparams.getParam("opaque");
+      this.stale = "true".equalsIgnoreCase(authheaderparams.getParam("stale"));
+      this.algorithm = authheaderparams.getParam("algorithm");
+      this.qopOptions = splitList(authheaderparams.getParam("qop"), true, true);
+      this.cnonce = s1;
    }
 
-   boolean m1122() {
-      if (this.f630 == null) {
+   boolean lookupCachedCredentials() {
+      if (this.realm == null) {
          return false;
       } else {
-         Credentials credentials = (Credentials)f639.get(this.f630.toLowerCase());
-         if (credentials == null) {
+         Credentials credentialsx = (Credentials)credentialCache.get(this.realm.toLowerCase());
+         if (credentialsx == null) {
             return false;
          } else {
-            this.f638 = credentials;
+            this.credentials = credentialsx;
             return true;
          }
       }
    }
 
-   void m1123(String s, String s1) {
-      this.f638 = new Credentials(s, s1);
-      if (this.f630 != null) {
-         f639.put(this.f630.toLowerCase(), this.f638);
+   void setCredentials(String s, String s1) {
+      this.credentials = new Credentials(s, s1);
+      if (this.realm != null) {
+         credentialCache.put(this.realm.toLowerCase(), this.credentials);
       }
    }
 
-   String m1124(String s, String s1, String s2) {
+   String getAuthorizationHeader(String s, String s1, String s2) {
       String s3;
-      if (this.f636 == null) {
+      if (this.qopOptions == null) {
          s3 = null;
-      } else if (s2 != null && this.f636.contains("auth-int")) {
+      } else if (s2 != null && this.qopOptions.contains("auth-int")) {
          s3 = "auth-int";
-      } else if (this.f636.contains("auth")) {
+      } else if (this.qopOptions.contains("auth")) {
          s3 = "auth";
       } else {
          s3 = null;
       }
 
-      if (this.f629 == null) {
+      if (this.scheme == null) {
          return null;
-      } else if (this.f629.equalsIgnoreCase("Basic")) {
-         String s6 = this.m1126();
+      } else if (this.scheme.equalsIgnoreCase("Basic")) {
+         String s6 = this.getBasicToken();
          return s6 == null ? null : "Basic " + s6;
-      } else if (this.f629.equalsIgnoreCase("Digest")) {
-         String s4 = this.m1127(s3, s, s1, s2);
+      } else if (this.scheme.equalsIgnoreCase("Digest")) {
+         String s4 = this.computeDigestResponse(s3, s, s1, s2);
          if (s4 == null) {
             return null;
          } else {
             String s5 = "Digest ";
-            s5 = s5 + "username=\"" + this.f638.user + "\"";
-            s5 = s5 + ", realm=\"" + this.f630 + "\"";
-            s5 = s5 + ", nonce=\"" + this.f631 + "\"";
+            s5 = s5 + "username=\"" + this.credentials.user + "\"";
+            s5 = s5 + ", realm=\"" + this.realm + "\"";
+            s5 = s5 + ", nonce=\"" + this.nonce + "\"";
             s5 = s5 + ", uri=\"" + s1 + "\"";
-            s5 = s5 + ", response=\"" + s4 + "\"";
-            if (this.f635 != null) {
-               s5 = s5 + ", algorithm=\"" + this.f635 + "\"";
+            String s7 = s5 + ", response=\"" + s4 + "\"";
+            if (this.algorithm != null) {
+               s7 = s7 + ", algorithm=\"" + this.algorithm + "\"";
             }
 
             if (s3 != null) {
-               s5 = s5 + ", nc=\"" + LogicProgram.m1014(this.f632) + "\"";
-               s5 = s5 + ", cnonce=\"" + this.f637 + "\"";
-               s5 = s5 + ", qop=\"" + s3 + "\"";
+               s5 = s7 + ", nc=\"" + LogicProgram.toHex8(this.nonceCount) + "\"";
+               s5 = s5 + ", cnonce=\"" + this.cnonce + "\"";
+               s7 = s5 + ", qop=\"" + s3 + "\"";
             }
 
-            if (this.f633 != null) {
-               s5 = s5 + ", opaque=\"" + this.f633 + "\"";
+            if (this.opaque != null) {
+               s7 = s7 + ", opaque=\"" + this.opaque + "\"";
             }
 
-            return s5;
+            return s7;
          }
       } else {
          return null;
       }
    }
 
-   String m1125(String s, String s1, String s2, boolean flag) {
-      C_OD c_od = new C_OD(s, true);
-      String s3 = c_od.m1143("nextnonce");
-      String s4 = c_od.m1143("rspauth");
-      String s5 = c_od.m1143("qop");
-      String s6 = c_od.m1143("cnonce");
-      Integer integer = LogicProgram.m1011(c_od.m1143("nc"), 16);
+   String checkAuthenticationInfo(String s, String s1, String s2, boolean flag) {
+      AuthHeaderParams authheaderparams = new AuthHeaderParams(s, true);
+      String s3 = authheaderparams.getParam("nextnonce");
+      String s4 = authheaderparams.getParam("rspauth");
+      String s5 = authheaderparams.getParam("qop");
+      String s6 = authheaderparams.getParam("cnonce");
+      Integer integer = LogicProgram.parseInteger(authheaderparams.getParam("nc"), 16);
       if (!flag) {
          return s3;
-      } else if (s4 != null && s6.equals(this.f637) && integer != null && integer == this.f632) {
+      } else if (s4 != null && s6.equals(this.cnonce) && integer != null && integer == this.nonceCount) {
          if (s5 != null) {
             if (s5.equalsIgnoreCase("auth")) {
                s5 = "auth";
@@ -126,32 +126,32 @@ class HttpDigestAuth {
             }
          }
 
-         String s7 = this.m1127(s5, "", s1, s2);
+         String s7 = this.computeDigestResponse(s5, "", s1, s2);
          return !s4.equals(s7) ? null : s3;
       } else {
          return null;
       }
    }
 
-   String m1126() {
-      return this.f630 == null ? null : Scrambler.md5Base64(this.f638.user + ":" + this.f638.password);
+   String getBasicToken() {
+      return this.realm == null ? null : Scrambler.md5Base64(this.credentials.user + ":" + this.credentials.password);
    }
 
-   String m1127(String s, String s1, String s2, String s3) {
-      if (this.f630 == null || this.f631 == null) {
+   String computeDigestResponse(String s, String s1, String s2, String s3) {
+      if (this.realm == null || this.nonce == null) {
          return null;
-      } else if (s == null && this.f636 != null) {
+      } else if (s == null && this.qopOptions != null) {
          return null;
       } else {
          String s4;
-         if (this.f635 != null && !this.f635.equalsIgnoreCase("MD5")) {
-            if (!this.f635.equalsIgnoreCase("MD5-sess")) {
+         if (this.algorithm != null && !this.algorithm.equalsIgnoreCase("MD5")) {
+            if (!this.algorithm.equalsIgnoreCase("MD5-sess")) {
                return null;
             }
 
-            s4 = Scrambler.md5Hex(this.f638.user + ":" + this.f630 + ":" + this.f638.password) + ":" + this.f631 + ":" + this.f637;
+            s4 = Scrambler.md5Hex(this.credentials.user + ":" + this.realm + ":" + this.credentials.password) + ":" + this.nonce + ":" + this.cnonce;
          } else {
-            s4 = this.f638.user + ":" + this.f630 + ":" + this.f638.password;
+            s4 = this.credentials.user + ":" + this.realm + ":" + this.credentials.password;
          }
 
          String s5;
@@ -162,17 +162,17 @@ class HttpDigestAuth {
          }
 
          if (s == null) {
-            return Scrambler.md5Hex(Scrambler.md5Hex(s4) + ":" + this.f631 + ":" + Scrambler.md5Hex(s5));
+            return Scrambler.md5Hex(Scrambler.md5Hex(s4) + ":" + this.nonce + ":" + Scrambler.md5Hex(s5));
          } else {
-            this.f632++;
+            this.nonceCount++;
             return Scrambler.md5Hex(
-               Scrambler.md5Hex(s4) + ":" + this.f631 + ":" + LogicProgram.m1014(this.f632) + ":" + this.f637 + ":" + s + ":" + Scrambler.md5Hex(s5)
+               Scrambler.md5Hex(s4) + ":" + this.nonce + ":" + LogicProgram.toHex8(this.nonceCount) + ":" + this.cnonce + ":" + s + ":" + Scrambler.md5Hex(s5)
             );
          }
       }
    }
 
-   static Vector m1128(String s, boolean flag, boolean flag1) {
+   static Vector splitList(String s, boolean flag, boolean flag1) {
       if (s == null) {
          return null;
       } else {

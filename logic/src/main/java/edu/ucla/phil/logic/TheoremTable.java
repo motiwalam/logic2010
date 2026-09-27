@@ -6,10 +6,10 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 class TheoremTable extends Hashtable {
-   C_n_F f1464 = new C_n_F();
-   Hashtable f1465 = new Hashtable();
+   IntervalSet theoremNumbers = new IntervalSet();
+   Hashtable headings = new Hashtable();
 
-   void m2197(String s, Vector vector) {
+   void addTheoremLine(String s, Vector vector) {
       int i = s.length();
       int j = 0;
 
@@ -32,20 +32,20 @@ class TheoremTable extends Hashtable {
       }
 
       Theorem theorem = new Theorem(integer, s.substring(k));
-      String s1 = theorem.m1381();
+      String s1 = theorem.getError();
       if (s1 != null) {
          System.out.println("error in theorem T" + integer + ": " + s1);
       } else {
          if (vector != null) {
-            this.f1465.put(integer, vector);
+            this.headings.put(integer, vector);
          }
 
-         this.f1464.m1975(C_n_F.m1970(integer));
+         this.theoremNumbers.union(IntervalSet.singleton(integer));
          this.put(integer, theorem);
       }
    }
 
-   static TheoremTable m2198(Reader reader) {
+   static TheoremTable read(Reader reader) {
       if (reader == null) {
          return null;
       } else {
@@ -72,7 +72,7 @@ class TheoremTable extends Hashtable {
                      vector.addElement(s.substring(2));
                   }
                } else {
-                  theoremtable.m2197(s, vector);
+                  theoremtable.addTheoremLine(s, vector);
                   vector = null;
                }
             }
@@ -89,7 +89,7 @@ class TheoremTable extends Hashtable {
       }
    }
 
-   Theorem m2199(Integer integer) {
+   Theorem getTheorem(Integer integer) {
       return integer == null ? null : (Theorem)this.get(integer);
    }
 }

@@ -1,41 +1,41 @@
 package edu.ucla.phil.logic;
 
 public class Base64Codec {
-   int f1319;
-   byte[] f1320;
-   private int f1321;
-   private byte f1322;
-   static final String f1323 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-   static final String[] f1324 = new String[]{"", "==", "="};
+   int length;
+   byte[] bytes;
+   private int decodeState;
+   private byte pendingBits;
+   static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+   static final String[] PADDING = new String[]{"", "==", "="};
 
    public Base64Codec() {
-      this.m1996();
+      this.reset();
    }
 
    public Base64Codec(byte[] abyte) {
       this();
-      this.m1998(abyte);
+      this.addBytes(abyte);
    }
 
    public Base64Codec(byte[] abyte, int i, int j) {
       this();
-      this.m1999(abyte, i, j);
+      this.addBytes(abyte, i, j);
    }
 
    public Base64Codec(String s) {
       this();
-      this.m2003(s);
+      this.addBase64String(s);
    }
 
-   public void m1996() {
-      this.f1319 = 0;
-      this.f1320 = new byte[3];
-      this.f1321 = 0;
-      this.f1322 = 0;
+   public void reset() {
+      this.length = 0;
+      this.bytes = new byte[3];
+      this.decodeState = 0;
+      this.pendingBits = 0;
    }
 
-   private void m1997(int i) {
-      int j = this.f1320.length;
+   private void ensureCapacity(int i) {
+      int j = this.bytes.length;
       if (i > j) {
          int k = j;
 
@@ -44,93 +44,93 @@ public class Base64Codec {
          }
 
          byte[] abyte = new byte[k];
-         System.arraycopy(this.f1320, 0, abyte, 0, j);
-         this.f1320 = abyte;
+         System.arraycopy(this.bytes, 0, abyte, 0, j);
+         this.bytes = abyte;
       }
    }
 
-   public void m1998(byte[] abyte) {
+   public void addBytes(byte[] abyte) {
       if (abyte != null) {
-         this.m1999(abyte, 0, abyte.length);
+         this.addBytes(abyte, 0, abyte.length);
       }
    }
 
-   public void m1999(byte[] abyte, int i, int j) {
-      this.m1997(this.f1319 + j);
-      System.arraycopy(abyte, i, this.f1320, this.f1319, j);
-      this.f1319 += j;
+   public void addBytes(byte[] abyte, int i, int j) {
+      this.ensureCapacity(this.length + j);
+      System.arraycopy(abyte, i, this.bytes, this.length, j);
+      this.length += j;
    }
 
-   public byte[] m2000() {
-      return this.m2001(false);
+   public byte[] getBytes() {
+      return this.getBytes(false);
    }
 
-   public byte[] m2001(boolean flag) {
-      byte[] abyte = new byte[this.f1319];
-      System.arraycopy(this.f1320, 0, abyte, 0, this.f1319);
+   public byte[] getBytes(boolean flag) {
+      byte[] abyte = new byte[this.length];
+      System.arraycopy(this.bytes, 0, abyte, 0, this.length);
       if (flag) {
-         this.f1319 = 0;
+         this.length = 0;
       }
 
       return abyte;
    }
 
-   public void m2002(char c0) {
+   public void addBase64Char(char c0) {
       int i = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf(c0);
       if (i != -1) {
-         if (this.f1321 != 0) {
-            this.m1997(this.f1319 + 1);
+         if (this.decodeState != 0) {
+            this.ensureCapacity(this.length + 1);
          }
 
-         if (this.f1321 == 0) {
-            this.f1322 = (byte)(i << 2);
-            this.f1321 = 1;
-         } else if (this.f1321 == 1) {
-            this.f1320[this.f1319++] = (byte)(this.f1322 | i >> 4);
-            this.f1322 = (byte)(i << 4);
-            this.f1321 = 2;
-         } else if (this.f1321 == 2) {
-            this.f1320[this.f1319++] = (byte)(this.f1322 | i >> 2);
-            this.f1322 = (byte)(i << 6);
-            this.f1321 = 3;
-         } else if (this.f1321 == 3) {
-            this.f1320[this.f1319++] = (byte)(this.f1322 | i);
-            this.f1321 = 0;
+         if (this.decodeState == 0) {
+            this.pendingBits = (byte)(i << 2);
+            this.decodeState = 1;
+         } else if (this.decodeState == 1) {
+            this.bytes[this.length++] = (byte)(this.pendingBits | i >> 4);
+            this.pendingBits = (byte)(i << 4);
+            this.decodeState = 2;
+         } else if (this.decodeState == 2) {
+            this.bytes[this.length++] = (byte)(this.pendingBits | i >> 2);
+            this.pendingBits = (byte)(i << 6);
+            this.decodeState = 3;
+         } else if (this.decodeState == 3) {
+            this.bytes[this.length++] = (byte)(this.pendingBits | i);
+            this.decodeState = 0;
          }
       }
    }
 
-   public void m2003(String s) {
+   public void addBase64String(String s) {
       if (s != null) {
          int i = s.length();
 
          for (int j = 0; j < i; j++) {
-            this.m2002(s.charAt(j));
+            this.addBase64Char(s.charAt(j));
          }
       }
    }
 
    @Override
    public String toString() {
-      return this.m2006(false, true);
+      return this.encode(false, true);
    }
 
-   public String m2004(boolean flag) {
-      return this.m2006(false, flag);
+   public String encodeAll(boolean flag) {
+      return this.encode(false, flag);
    }
 
-   public String m2005(boolean flag) {
-      return this.m2006(flag, true);
+   public String encodeChunk(boolean flag) {
+      return this.encode(flag, true);
    }
 
-   public String m2006(boolean flag, boolean flag1) {
+   public String encode(boolean flag, boolean flag1) {
       StringBuffer stringbuffer = new StringBuffer();
       byte b0 = 0;
-      int j = flag ? this.f1319 / 3 * 3 : this.f1319;
+      int j = flag ? this.length / 3 * 3 : this.length;
       byte b1 = 0;
 
       for (int i = 0; i < j; i++) {
-         int k = this.f1320[i] & 255;
+         int k = this.bytes[i] & 255;
          if (b0 == 0) {
             stringbuffer.append("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(k >> 2));
             b1 = (byte)(k << 4 & 63);
@@ -149,16 +149,16 @@ public class Base64Codec {
       if (b0 != 0) {
          stringbuffer.append("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(b1));
          if (flag1) {
-            stringbuffer.append(f1324[b0]);
+            stringbuffer.append(PADDING[b0]);
          }
       }
 
       if (flag) {
-         for (int l = j; l < this.f1319; l++) {
-            this.f1320[l - j] = this.f1320[l];
+         for (int l = j; l < this.length; l++) {
+            this.bytes[l - j] = this.bytes[l];
          }
 
-         this.f1319 -= j;
+         this.length -= j;
       }
 
       return stringbuffer.toString();

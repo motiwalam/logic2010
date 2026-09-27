@@ -12,88 +12,88 @@ public class OperationTerm extends Term {
       this.kind = 4;
    }
 
-   public void m1963(Term term) {
+   public void addArgument(Term term) {
       this.children.addElement(term);
       this.childCount++;
    }
 
    @Override
-   Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, C_MB c_mb, Vector vector) {
+   Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, BinderMap bindermap, Vector vector) {
       if (expression == null && schemeinstantiation != null) {
-         LetterReplacement letterreplacement = schemeinstantiation.m1878(this.getSchematicLetter());
+         LetterReplacement letterreplacement = schemeinstantiation.getReplacement(this.getSchematicLetter());
          if (letterreplacement != null) {
-            return letterreplacement.f368.instantiate(this, schemeinstantiation, c_mb, vector);
+            return letterreplacement.replacement.instantiate(this, schemeinstantiation, bindermap, vector);
          }
       }
 
       OperationTerm operationterm1 = new OperationTerm(this.symbol);
 
       for (int i = 0; i < this.childCount; i++) {
-         operationterm1.addChild(this.getChild(i).instantiate(expression, schemeinstantiation, c_mb, vector));
+         operationterm1.addChild(this.getChild(i).instantiate(expression, schemeinstantiation, bindermap, vector));
       }
 
       return operationterm1;
    }
 
    @Override
-   boolean m1268(Expression expression, Expression expression1, SchemeInstantiation schemeinstantiation, C_MB c_mb, Vector vector) {
+   boolean match(Expression expression, Expression expression1, SchemeInstantiation schemeinstantiation, BinderMap bindermap, Vector vector) {
       return expression != null
-         ? super.m1268(expression, expression1, schemeinstantiation, c_mb, vector)
-         : this.m1269(expression1, schemeinstantiation, c_mb, vector);
+         ? super.match(expression, expression1, schemeinstantiation, bindermap, vector)
+         : this.matchLetter(expression1, schemeinstantiation, bindermap, vector);
    }
 
    @Override
-   ErrorRef m1270(Expression expression) {
-      return expression != null && (!(expression instanceof Term) || expression.m1262())
+   ErrorRef checkReplacementType(Expression expression) {
+      return expression != null && (!(expression instanceof Term) || expression.isBoundVariable())
          ? new ErrorRef("dererr070", Message.params("pattern", "\\l" + this + "\\l", "replacement", "\\l" + expression + "\\l"))
          : null;
    }
 
    @Override
-   void m1246(Vector vector) {
+   void collectSchematicLetters(Vector vector) {
       SchematicLetter schematicletter = this.getSchematicLetter();
       if (vector.indexOf(schematicletter) == -1) {
          vector.addElement(schematicletter);
       }
 
-      super.m1246(vector);
+      super.collectSchematicLetters(vector);
    }
 
    @Override
    SchematicLetter getSchematicLetter() {
-      return new C_W(this);
+      return new OperationLetter(this);
    }
 
    @Override
-   boolean m1273(SchemeInstantiation schemeinstantiation) {
-      return schemeinstantiation.m1885(this) & super.m1273(schemeinstantiation);
+   boolean addPendingLetters(SchemeInstantiation schemeinstantiation) {
+      return schemeinstantiation.addPendingLetter(this) & super.addPendingLetters(schemeinstantiation);
    }
 
    @Override
-   boolean m1274(SchemeInstantiation schemeinstantiation) {
-      return schemeinstantiation.m1878(this.getSchematicLetter()) == null ? false : super.m1274(schemeinstantiation);
+   boolean isFullyInstantiated(SchemeInstantiation schemeinstantiation) {
+      return schemeinstantiation.getReplacement(this.getSchematicLetter()) == null ? false : super.isFullyInstantiated(schemeinstantiation);
    }
 
    @Override
-   boolean m1263() {
+   boolean bindsArguments() {
       return true;
    }
 
    @Override
-   boolean m1210() {
+   boolean usesArgumentParens() {
       return true;
    }
 
    @Override
-   String m1207(int i) {
+   String formatMinimal(int i) {
       String s = this.symbol;
-      boolean flag = this.childCount > 1 || this.childCount > 0 && this.m1210();
+      boolean flag = this.childCount > 1 || this.childCount > 0 && this.usesArgumentParens();
       if (flag) {
          s = s + "(";
       }
 
       for (int j = 0; j < this.childCount; j++) {
-         s = s + this.getChild(j).m1207(i);
+         s = s + this.getChild(j).formatMinimal(i);
       }
 
       if (flag) {
@@ -104,15 +104,15 @@ public class OperationTerm extends Term {
    }
 
    @Override
-   String m1209(int i) {
+   String formatFull(int i) {
       String s = this.symbol;
-      boolean flag = this.childCount > 1 || this.childCount > 0 && this.m1210();
+      boolean flag = this.childCount > 1 || this.childCount > 0 && this.usesArgumentParens();
       if (flag) {
          s = s + "(";
       }
 
       for (int j = 0; j < this.childCount; j++) {
-         s = s + this.getChild(j).m1209(i);
+         s = s + this.getChild(j).formatFull(i);
       }
 
       if (flag) {
@@ -123,15 +123,15 @@ public class OperationTerm extends Term {
    }
 
    @Override
-   void m1211(C_DD c_dd) {
-      super.m1211(c_dd);
-      c_dd.f283 = this.symbol.length();
-      int i = c_dd.m457();
+   void layoutDisplayTree(FormulaParseNode formulaparsenode) {
+      super.layoutDisplayTree(formulaparsenode);
+      formulaparsenode.length = this.symbol.length();
+      int i = formulaparsenode.getChildCount();
 
       for (int j = 0; j < i; j++) {
-         C_DD c_dd1 = c_dd.m458(j);
-         c_dd1.f282 = c_dd.f283;
-         c_dd.f283 = c_dd.f283 + c_dd1.f283;
+         FormulaParseNode formulaparsenode1 = formulaparsenode.getChild(j);
+         formulaparsenode1.offset = formulaparsenode.length;
+         formulaparsenode.length = formulaparsenode.length + formulaparsenode1.length;
       }
    }
 }

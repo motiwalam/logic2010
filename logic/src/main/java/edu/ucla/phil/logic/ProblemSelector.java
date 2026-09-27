@@ -1,156 +1,160 @@
 package edu.ucla.phil.logic;
 
 public class ProblemSelector {
-   boolean f242;
-   int f243;
-   private int f244;
-   C_0D[] f245;
-   String f246;
+   boolean complemented;
+   int boundaryCount;
+   private int cursor;
+   SelectorBoundary[] boundaries;
+   String flagChars;
 
    public ProblemSelector() {
-      this.m399();
+      this.clear();
    }
 
    public ProblemSelector(String s) {
       this();
       int i = s.indexOf(123);
       if (i != -1) {
-         this.f246 = s.substring(0, i);
-         this.f242 = this.f246.indexOf(126) != -1;
-         this.f246 = m409(this.f246, "~", true);
+         this.flagChars = s.substring(0, i);
+         this.complemented = this.flagChars.indexOf(126) != -1;
+         this.flagChars = combineChars(this.flagChars, "~", true);
          DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\\"");
-         delimitedtokenizer.m1132(s.substring(i + 1));
+         delimitedtokenizer.setInput(s.substring(i + 1));
          ProblemSelector problemselector1 = new ProblemSelector();
 
          while (true) {
-            String s1 = delimitedtokenizer.m1135();
-            if (delimitedtokenizer.m1134() == '\\' || s1.indexOf(125) != -1) {
+            String s1 = delimitedtokenizer.nextToken();
+            if (delimitedtokenizer.getDelimiter() == '\\' || s1.indexOf(125) != -1) {
                break;
             }
 
             boolean flag = s1.indexOf(126) == -1;
-            s1 = delimitedtokenizer.m1135();
-            if (delimitedtokenizer.m1134() == '\\') {
+            s1 = delimitedtokenizer.nextToken();
+            if (delimitedtokenizer.getDelimiter() == '\\') {
                break;
             }
 
-            problemselector1.m406(s1, flag);
+            problemselector1.toggleBoundary(s1, flag);
          }
 
-         if ((this.f243 = problemselector1.f243) == 0) {
-            this.f245 = null;
+         if ((this.boundaryCount = problemselector1.boundaryCount) == 0) {
+            this.boundaries = null;
          } else {
-            this.f245 = new C_0D[this.f243];
-            System.arraycopy(problemselector1.f245, 0, this.f245, 0, this.f243);
+            this.boundaries = new SelectorBoundary[this.boundaryCount];
+            System.arraycopy(problemselector1.boundaries, 0, this.boundaries, 0, this.boundaryCount);
          }
       }
    }
 
-   public static ProblemSelector m391(String s) {
-      return new ProblemSelector().m406(s, true).m406(s, false);
+   public static ProblemSelector single(String s) {
+      return new ProblemSelector().toggleBoundary(s, true).toggleBoundary(s, false);
    }
 
-   public static ProblemSelector m392(String s) {
-      return new ProblemSelector().m406(s, true);
+   public static ProblemSelector startingAt(String s) {
+      return new ProblemSelector().toggleBoundary(s, true);
    }
 
-   public static ProblemSelector m393(String s) {
-      return new ProblemSelector().m406(s, false);
+   public static ProblemSelector after(String s) {
+      return new ProblemSelector().toggleBoundary(s, false);
    }
 
-   public ProblemSelector m394(boolean flag) {
+   public ProblemSelector copy(boolean flag) {
       ProblemSelector problemselector1 = new ProblemSelector();
-      problemselector1.f242 = this.f242;
-      problemselector1.f243 = this.f243;
-      problemselector1.f246 = this.f246;
-      problemselector1.f245 = this.f243 == 0 ? null : (flag ? new C_0D[this.f243] : this.f245);
-      if (this.f243 != 0 && flag) {
-         System.arraycopy(this.f245, 0, problemselector1.f245, 0, this.f243);
+      problemselector1.complemented = this.complemented;
+      problemselector1.boundaryCount = this.boundaryCount;
+      problemselector1.flagChars = this.flagChars;
+      problemselector1.boundaries = this.boundaryCount == 0 ? null : (flag ? new SelectorBoundary[this.boundaryCount] : this.boundaries);
+      if (this.boundaryCount != 0 && flag) {
+         System.arraycopy(this.boundaries, 0, problemselector1.boundaries, 0, this.boundaryCount);
       }
 
       return problemselector1;
    }
 
-   public ProblemSelector m395(ProblemSelector problemselector1) {
-      return this.m401().m397(problemselector1.m394(false).m401()).m401();
+   public ProblemSelector union(ProblemSelector problemselector1) {
+      return this.complement().intersect(problemselector1.copy(false).complement()).complement();
    }
 
-   public ProblemSelector m396(ProblemSelector problemselector1) {
-      return this.m397(problemselector1.m394(false).m401());
+   public ProblemSelector subtract(ProblemSelector problemselector1) {
+      return this.intersect(problemselector1.copy(false).complement());
    }
 
-   public ProblemSelector m397(ProblemSelector problemselector1) {
-      if (problemselector1.f242) {
-         this.f246 = this.f242 ? m409(this.f246 + problemselector1.f246, "", true) : m409(this.f246, problemselector1.f246, true);
+   public ProblemSelector intersect(ProblemSelector problemselector1) {
+      if (problemselector1.complemented) {
+         this.flagChars = this.complemented
+            ? combineChars(this.flagChars + problemselector1.flagChars, "", true)
+            : combineChars(this.flagChars, problemselector1.flagChars, true);
       } else {
-         this.f246 = this.f242 ? m409(problemselector1.f246, this.f246, true) : m409(this.f246, problemselector1.f246, false);
+         this.flagChars = this.complemented
+            ? combineChars(problemselector1.flagChars, this.flagChars, true)
+            : combineChars(this.flagChars, problemselector1.flagChars, false);
       }
 
-      if (problemselector1.f243 == 0) {
-         return problemselector1.f242 ? this : this.m400(false);
+      if (problemselector1.boundaryCount == 0) {
+         return problemselector1.complemented ? this : this.reset(false);
       } else {
          ProblemSelector problemselector2 = new ProblemSelector();
-         ProblemSelector problemselector3 = this.m394(false);
+         ProblemSelector problemselector3 = this.copy(false);
 
          ProblemSelector problemselector4;
-         for (problemselector4 = problemselector1.m394(false); problemselector3.f244 < problemselector3.f243; problemselector3.m398()) {
-            C_0D c_0d = problemselector3.f245[problemselector3.f244];
-            C_0D c_0d1 = problemselector4.f245[problemselector4.f244];
-            int i = c_0d.m60(c_0d1);
-            if (i > 0 || i == 0 && !problemselector3.f242 && problemselector4.f242) {
+         for (problemselector4 = problemselector1.copy(false); problemselector3.cursor < problemselector3.boundaryCount; problemselector3.advanceCursor()) {
+            SelectorBoundary selectorboundary = problemselector3.boundaries[problemselector3.cursor];
+            SelectorBoundary selectorboundary1 = problemselector4.boundaries[problemselector4.cursor];
+            int i = selectorboundary.compareBoundary(selectorboundary1);
+            if (i > 0 || i == 0 && !problemselector3.complemented && problemselector4.complemented) {
                ProblemSelector problemselector5 = problemselector3;
                problemselector3 = problemselector4;
                problemselector4 = problemselector5;
-               c_0d = c_0d1;
+               selectorboundary = selectorboundary1;
             }
 
-            if (problemselector4.f242) {
-               problemselector2.m407(c_0d);
-            }
-         }
-
-         if (problemselector3.f242) {
-            for (int j = problemselector4.f244; j < problemselector4.f243; j++) {
-               problemselector2.m407(problemselector4.f245[j]);
+            if (problemselector4.complemented) {
+               problemselector2.toggleBoundary(selectorboundary);
             }
          }
 
-         this.f242 = this.f242 & problemselector1.f242;
-         this.f243 = problemselector2.f243;
-         if (this.f243 == 0) {
-            this.f245 = null;
+         if (problemselector3.complemented) {
+            for (int j = problemselector4.cursor; j < problemselector4.boundaryCount; j++) {
+               problemselector2.toggleBoundary(problemselector4.boundaries[j]);
+            }
+         }
+
+         this.complemented = this.complemented & problemselector1.complemented;
+         this.boundaryCount = problemselector2.boundaryCount;
+         if (this.boundaryCount == 0) {
+            this.boundaries = null;
          } else {
-            this.f245 = new C_0D[this.f243];
-            System.arraycopy(problemselector2.f245, 0, this.f245, 0, this.f243);
+            this.boundaries = new SelectorBoundary[this.boundaryCount];
+            System.arraycopy(problemselector2.boundaries, 0, this.boundaries, 0, this.boundaryCount);
          }
 
          return this;
       }
    }
 
-   private void m398() {
-      this.f244++;
-      this.f242 = !this.f242;
+   private void advanceCursor() {
+      this.cursor++;
+      this.complemented = !this.complemented;
    }
 
-   public ProblemSelector m399() {
-      return this.m400(true);
+   public ProblemSelector clear() {
+      return this.reset(true);
    }
 
-   private ProblemSelector m400(boolean flag) {
-      this.f242 = false;
-      this.f243 = 0;
-      this.f244 = 0;
-      this.f245 = null;
+   private ProblemSelector reset(boolean flag) {
+      this.complemented = false;
+      this.boundaryCount = 0;
+      this.cursor = 0;
+      this.boundaries = null;
       if (flag) {
-         this.f246 = "";
+         this.flagChars = "";
       }
 
       return this;
    }
 
-   public ProblemSelector m401() {
-      this.f242 = !this.f242;
+   public ProblemSelector complement() {
+      this.complemented = !this.complemented;
       return this;
    }
 
@@ -160,14 +164,14 @@ public class ProblemSelector {
          return false;
       } else {
          ProblemSelector problemselector1 = (ProblemSelector)object;
-         if (this.f242 == problemselector1.f242 && this.f243 == problemselector1.f243) {
-            if (this.f246.length() != problemselector1.f246.length()) {
+         if (this.complemented == problemselector1.complemented && this.boundaryCount == problemselector1.boundaryCount) {
+            if (this.flagChars.length() != problemselector1.flagChars.length()) {
                return false;
-            } else if (m409(this.f246, problemselector1.f246, true).length() != 0) {
+            } else if (combineChars(this.flagChars, problemselector1.flagChars, true).length() != 0) {
                return false;
             } else {
-               for (int i = 0; i < this.f243; i++) {
-                  if (!this.f245[i].equals(problemselector1.f245[i])) {
+               for (int i = 0; i < this.boundaryCount; i++) {
+                  if (!this.boundaries[i].equals(problemselector1.boundaries[i])) {
                      return false;
                   }
                }
@@ -182,74 +186,74 @@ public class ProblemSelector {
 
    @Override
    public int hashCode() {
-      int i = this.f242 ? 1 : 0;
+      int i = this.complemented ? 1 : 0;
 
-      for (int j = 0; j < this.f243; j++) {
-         C_0D c_0d = this.f245[j];
-         i = i * 40503 + (c_0d.f26 ? 1 : 0) + c_0d.f25.hashCode();
+      for (int j = 0; j < this.boundaryCount; j++) {
+         SelectorBoundary selectorboundary = this.boundaries[j];
+         i = i * 40503 + (selectorboundary.before ? 1 : 0) + selectorboundary.name.hashCode();
       }
 
       return i;
    }
 
-   public boolean m402() {
-      return this.f243 == 0 && !this.f242 && this.f246.length() == 0;
+   public boolean isEmpty() {
+      return this.boundaryCount == 0 && !this.complemented && this.flagChars.length() == 0;
    }
 
-   public ProblemSelector m403(String s) {
+   public ProblemSelector addPrefix(String s) {
       if (s != null && !s.equals("")) {
-         for (int i = 0; i < this.f243; i++) {
-            this.f245[i].f25 = s + this.f245[i].f25;
+         for (int i = 0; i < this.boundaryCount; i++) {
+            this.boundaries[i].name = s + this.boundaries[i].name;
          }
       }
 
       return this;
    }
 
-   public boolean m404(String s) {
-      return s == null ? false : !m391(s).m397(this).m402();
+   public boolean contains(String s) {
+      return s == null ? false : !single(s).intersect(this).isEmpty();
    }
 
-   public boolean m405(char c0) {
-      return this.f246.indexOf(c0) == -1 ? this.f242 : !this.f242;
+   public boolean hasFlag(char c0) {
+      return this.flagChars.indexOf(c0) == -1 ? this.complemented : !this.complemented;
    }
 
    @Override
    public String toString() {
       String s = "";
 
-      for (int i = 0; i < this.f243; i++) {
-         s = s + (i == 0 ? "" : ",") + this.f245[i];
+      for (int i = 0; i < this.boundaryCount; i++) {
+         s = s + (i == 0 ? "" : ",") + this.boundaries[i];
       }
 
-      return (this.f242 ? "~" : "") + this.f246 + "{" + s + "}";
+      return (this.complemented ? "~" : "") + this.flagChars + "{" + s + "}";
    }
 
-   ProblemSelector m406(String s, boolean flag) {
-      return this.m407(new C_0D(s, flag));
+   ProblemSelector toggleBoundary(String s, boolean flag) {
+      return this.toggleBoundary(new SelectorBoundary(s, flag));
    }
 
-   ProblemSelector m407(C_0D c_0d) {
-      if (c_0d != null) {
-         for (int i = this.f243; i >= 0; i--) {
+   ProblemSelector toggleBoundary(SelectorBoundary selectorboundary) {
+      if (selectorboundary != null) {
+         for (int i = this.boundaryCount; i >= 0; i--) {
             int j;
-            if (i == 0 || (j = this.f245[i - 1].m60(c_0d)) < 0) {
-               this.m408(this.f243 + 1);
-               if (i < this.f243) {
-                  System.arraycopy(this.f245, i, this.f245, i + 1, this.f243 - i);
+            if (i == 0 || (j = this.boundaries[i - 1].compareBoundary(selectorboundary)) < 0) {
+               this.ensureCapacity(this.boundaryCount + 1);
+               if (i < this.boundaryCount) {
+                  System.arraycopy(this.boundaries, i, this.boundaries, i + 1, this.boundaryCount - i);
                }
 
-               this.f245[i] = c_0d;
-               this.f243++;
+               this.boundaries[i] = selectorboundary;
+               this.boundaryCount++;
                break;
             }
 
             if (j == 0) {
-               if (i < this.f243) {
-                  System.arraycopy(this.f245, i, this.f245, i - 1, this.f243 - i);
+               if (i < this.boundaryCount) {
+                  System.arraycopy(this.boundaries, i, this.boundaries, i - 1, this.boundaryCount - i);
                }
 
-               this.f243--;
+               this.boundaryCount--;
                break;
             }
          }
@@ -258,8 +262,8 @@ public class ProblemSelector {
       return this;
    }
 
-   void m408(int i) {
-      int j = this.f245 == null ? 0 : this.f245.length;
+   void ensureCapacity(int i) {
+      int j = this.boundaries == null ? 0 : this.boundaries.length;
       if (i > j) {
          if (j == 0) {
             j = 1;
@@ -269,16 +273,16 @@ public class ProblemSelector {
             j *= 2;
          }
 
-         C_0D[] ac_0d = new C_0D[j];
-         if (this.f245 != null) {
-            System.arraycopy(this.f245, 0, ac_0d, 0, this.f243);
+         SelectorBoundary[] aselectorboundary = new SelectorBoundary[j];
+         if (this.boundaries != null) {
+            System.arraycopy(this.boundaries, 0, aselectorboundary, 0, this.boundaryCount);
          }
 
-         this.f245 = ac_0d;
+         this.boundaries = aselectorboundary;
       }
    }
 
-   static String m409(String s, String s1, boolean flag) {
+   static String combineChars(String s, String s1, boolean flag) {
       String s2 = "";
       if (flag || s1.length() != 0) {
          int i = s.length();

@@ -20,17 +20,17 @@ import javax.swing.SwingUtilities;
 
 class LPParsing extends LogicModule implements LogicConstants {
    SizedPanel scrollPanel;
-   C_y_D problem;
+   ParsingProblemPanel problem;
    int fontSize;
    Font font;
    static final String workFileName = "parwork.txt";
    static final String logFileName = "pardata.txt";
    static final String digestVersKey = "parDigestVers";
-   static Class messageClass = C_ND.class;
-   static C_ZC exercises = null;
-   static C_ZC problems = null;
+   static Class messageClass = ParsingMessage.class;
+   static ParsingProblemSet exercises = null;
+   static ParsingProblemSet problems = null;
    static Vector instances = new Vector();
-   static C_c_C printQueue = new C_c_C("Parsing");
+   static PrintQueue printQueue = new PrintQueue("Parsing");
    static ProblemSelector autoCheck = null;
    static ProblemSelector addToDB = null;
    static ProblemSelector updateDB = null;
@@ -62,13 +62,13 @@ class LPParsing extends LogicModule implements LogicConstants {
    static int moduleIndex = 2;
 
    static boolean getExercises() {
-      if (!C_ND.loadMessages()) {
-         LogicProgram.m971("not001", "the parsing messages file");
+      if (!ParsingMessage.loadMessages()) {
+         LogicProgram.showFileError("not001", "the parsing messages file");
          return false;
       } else {
          resetOptions();
          readOptions(LogicProgram.openDataFile("options", false));
-         readOptions(LogicProgram.m1065("options", false));
+         readOptions(LogicProgram.openLocalFile("options", false));
          logNeeds();
          if ((exercises = readExercises()) == null) {
             return false;
@@ -80,34 +80,35 @@ class LPParsing extends LogicModule implements LogicConstants {
       }
    }
 
-   static C_ZC readExercises() {
-      return readExercises(LogicProgram.f584, false, false);
+   static ParsingProblemSet readExercises() {
+      return readExercises(LogicProgram.noCoreProblems, false, false);
    }
 
-   static C_ZC readExercises(boolean flag, boolean flag1, boolean flag2) {
-      C_ZC c_zc = new C_ZC();
+   static ParsingProblemSet readExercises(boolean flag, boolean flag1, boolean flag2) {
+      ParsingProblemSet parsingproblemset = new ParsingProblemSet();
       if (!flag) {
          ScrambledReader scrambledreader = LogicProgram.openDataFile("parwork.txt", false);
          if (scrambledreader == null) {
-            LogicProgram.m971("not001", "the core Parsing exercise file");
+            LogicProgram.showFileError("not001", "the core Parsing exercise file");
             return null;
          }
 
-         if (!readProblems(scrambledreader, c_zc, true)) {
-            LogicProgram.m971("not002", "the core Parsing exercise file");
+         if (!readProblems(scrambledreader, parsingproblemset, true)) {
+            LogicProgram.showFileError("not002", "the core Parsing exercise file");
             return null;
          }
       }
 
       if (!flag1) {
-         ScrambledReader scrambledreader1 = LogicProgram.m1065("parwork.txt", flag2);
-         if (scrambledreader1 != null && (flag ? !readProblems(scrambledreader1, c_zc, true) : !mergeProblems(scrambledreader1, c_zc, true))) {
-            LogicProgram.m971("not002", "the local Parsing exercise file");
+         ScrambledReader scrambledreader1 = LogicProgram.openLocalFile("parwork.txt", flag2);
+         if (scrambledreader1 != null
+            && (flag ? !readProblems(scrambledreader1, parsingproblemset, true) : !mergeProblems(scrambledreader1, parsingproblemset, true))) {
+            LogicProgram.showFileError("not002", "the local Parsing exercise file");
             return null;
          }
       }
 
-      return c_zc;
+      return parsingproblemset;
    }
 
    LPParsing(boolean flag) {
@@ -118,8 +119,8 @@ class LPParsing extends LogicModule implements LogicConstants {
       this.add(this.scroller = new JScrollPane(), "Center");
       this.scroller.getVerticalScrollBar().setUnitIncrement(22);
       this.scroller.setViewportView(this.scrollPanel = new SizedPanel());
-      this.scrollPanel.add(this.problem = new C_y_D(this), "Center");
-      this.add(C_RB.m1201(this), "South");
+      this.scrollPanel.add(this.problem = new ParsingProblemPanel(this), "Center");
+      this.add(ParsingToolbar.create(this), "South");
       this.newProblem();
    }
 
@@ -134,23 +135,23 @@ class LPParsing extends LogicModule implements LogicConstants {
       }
 
       if (exercises != null || getExercises()) {
-         LPParsing.C__A lpparsing$c__a = new LPParsing.C__A(busyindicator, rectangle, s);
-         startups.add(lpparsing$c__a);
+         LPParsing.ParsingStartupTask lpparsing$parsingstartuptask = new LPParsing.ParsingStartupTask(busyindicator, rectangle, s);
+         startups.add(lpparsing$parsingstartuptask);
          if (startups.size() <= 1) {
             if (problems == null) {
                if (!getProblems()) {
-                  lpparsing$c__a.m1310();
-                  startups.remove(lpparsing$c__a);
+                  lpparsing$parsingstartuptask.stopBusyIndicator();
+                  startups.remove(lpparsing$parsingstartuptask);
                   return;
                }
 
-               if (problems.m1773()) {
+               if (problems.mergeExercises()) {
                   saveProblems();
                }
 
-               problems.m1099(lpparsing$c__a);
+               problems.restateProblems(lpparsing$parsingstartuptask);
             } else {
-               lpparsing$c__a.m959();
+               lpparsing$parsingstartuptask.continueStartup();
             }
          }
       }
@@ -161,19 +162,19 @@ class LPParsing extends LogicModule implements LogicConstants {
       int i = startups.size();
 
       for (int j = 0; j < i; j++) {
-         ((LogicModule.C__A)startups.get(i - 1 - j)).f782.m2162(false);
-         ((LogicModule.C__A)startups.get(i - 1 - j)).f782 = null;
+         ((LogicModule.ModuleStartupTask)startups.get(i - 1 - j)).busyIndicator.setBusy(false);
+         ((LogicModule.ModuleStartupTask)startups.get(i - 1 - j)).busyIndicator = null;
       }
 
       while (!startups.isEmpty()) {
-         LogicModule.C__A logicmodule$c__a = (LogicModule.C__A)startups.remove(0);
-         SwingUtilities.invokeLater(logicmodule$c__a);
+         LogicModule.ModuleStartupTask logicmodule$modulestartuptask = (LogicModule.ModuleStartupTask)startups.remove(0);
+         SwingUtilities.invokeLater(logicmodule$modulestartuptask);
       }
    }
 
    Rectangle fixModuleRect(Rectangle rectangle) {
-      C_RB c_rb = C_RB.m1201(this);
-      Dimension dimension = c_rb.getPreferredSize();
+      ParsingToolbar parsingtoolbar = ParsingToolbar.create(this);
+      Dimension dimension = parsingtoolbar.getPreferredSize();
       if (rectangle.width < dimension.width) {
          rectangle.width = dimension.width;
       }
@@ -181,35 +182,35 @@ class LPParsing extends LogicModule implements LogicConstants {
       return rectangle;
    }
 
-   static void allocateParModule(LogicModule.C__A logicmodule$c__a) {
+   static void allocateParModule(LogicModule.ModuleStartupTask logicmodule$modulestartuptask) {
       LPParsing lpparsing = new LPParsing(false);
       instances.addElement(lpparsing);
-      if (logicmodule$c__a.f784 == null || newProblem == null) {
+      if (logicmodule$modulestartuptask.problemName == null || newProblem == null) {
          lpparsing.loadProblem((String)null);
          if (newProblem == null) {
             newProblem = lpparsing.saveProblem();
          }
       }
 
-      if (logicmodule$c__a.f784 != null) {
-         lpparsing.loadProblem(logicmodule$c__a.f784);
-         logicmodule$c__a.f784 = null;
+      if (logicmodule$modulestartuptask.problemName != null) {
+         lpparsing.loadProblem(logicmodule$modulestartuptask.problemName);
+         logicmodule$modulestartuptask.problemName = null;
       }
 
       lpparsing.setupFrame(LPInfo.programName + ": Parsing");
-      lpparsing.frame.setBounds(lpparsing.fixModuleRect(logicmodule$c__a.f783));
+      lpparsing.frame.setBounds(lpparsing.fixModuleRect(logicmodule$modulestartuptask.bounds));
       lpparsing.frame.setVisible(true);
       lpparsing.requestFocus();
    }
 
    static void insertDBProbs(ProblemSelector problemselector) {
-      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
+      if (problemselector != null && !problemselector.isEmpty() && UserSetup.hasAccess("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.getRecordAt(j));
             String s = taggedrecord.getName();
-            if (problemselector.m404(s)) {
+            if (problemselector.contains(s)) {
                if (DiagnosticsLog.out != null) {
                   DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
                   DiagnosticsLog.out.println("adding " + s);
@@ -222,30 +223,30 @@ class LPParsing extends LogicModule implements LogicConstants {
                }
 
                String s3 = Scrambler.md5Base64(s1.trim());
-               String s4 = LogicProgram.m995(s1, maggie, html);
+               String s4 = LogicProgram.translateSymbols(s1, maggie, html);
                String s5 = taggedrecord.valueAt(taggedrecord.indexOfTag('C'));
                if (s5 == null) {
                   s5 = s;
                }
 
                String s6 = "insert into logic_problem (COMMENT,DTCREATION,PROBLEM_NAME,TPROBLEM,TPROBLEM_MD5,TWEB_FORM_PROBLEM,VERSION,SYNTAX,COMMON_NAME)";
-               s6 = s6 + " values (" + ServerConnection.m815(s2) + ",GETDATE()," + ServerConnection.m815(s) + "," + ServerConnection.m815(s1) + ",";
-               s6 = s6 + ServerConnection.m815(s3) + "," + ServerConnection.m815(s4) + "," + nameVersion(s) + "," + FormulaParser.getSyntax() + ",";
-               s6 = s6 + ServerConnection.m815(s5) + ")";
-               ServerConnection.m814(s6);
+               s6 = s6 + " values (" + ServerConnection.sqlQuote(s2) + ",GETDATE()," + ServerConnection.sqlQuote(s) + "," + ServerConnection.sqlQuote(s1) + ",";
+               s6 = s6 + ServerConnection.sqlQuote(s3) + "," + ServerConnection.sqlQuote(s4) + "," + nameVersion(s) + "," + FormulaParser.getSyntax() + ",";
+               s6 = s6 + ServerConnection.sqlQuote(s5) + ")";
+               ServerConnection.stubReturnsNull(s6);
             }
          }
       }
    }
 
    static void updateDBProbs(ProblemSelector problemselector) {
-      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
+      if (problemselector != null && !problemselector.isEmpty() && UserSetup.hasAccess("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.getRecordAt(j));
             String s = taggedrecord.getName();
-            if (problemselector.m404(s)) {
+            if (problemselector.contains(s)) {
                if (DiagnosticsLog.out != null) {
                   DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
                   DiagnosticsLog.out.println("updating " + s);
@@ -258,17 +259,17 @@ class LPParsing extends LogicModule implements LogicConstants {
                }
 
                String s3 = Scrambler.md5Base64(s1.trim());
-               String s4 = LogicProgram.m995(s1, maggie, html);
+               String s4 = LogicProgram.translateSymbols(s1, maggie, html);
                String s5 = taggedrecord.valueAt(taggedrecord.indexOfTag('C'));
                if (s5 == null) {
                   s5 = s;
                }
 
-               String s6 = "update logic_problem set tproblem = " + ServerConnection.m815(s1) + ", tproblem_md5 = " + ServerConnection.m815(s3);
-               s6 = s6 + ", tweb_form_problem = " + ServerConnection.m815(s4) + ", comment = " + ServerConnection.m815(s2);
-               s6 = s6 + ", version = " + nameVersion(s) + ", common_name = " + ServerConnection.m815(s5);
-               s6 = s6 + " where problem_name = " + ServerConnection.m815(s) + " and syntax = " + FormulaParser.getSyntax();
-               ServerConnection.m814(s6);
+               String s6 = "update logic_problem set tproblem = " + ServerConnection.sqlQuote(s1) + ", tproblem_md5 = " + ServerConnection.sqlQuote(s3);
+               s6 = s6 + ", tweb_form_problem = " + ServerConnection.sqlQuote(s4) + ", comment = " + ServerConnection.sqlQuote(s2);
+               s6 = s6 + ", version = " + nameVersion(s) + ", common_name = " + ServerConnection.sqlQuote(s5);
+               s6 = s6 + " where problem_name = " + ServerConnection.sqlQuote(s) + " and syntax = " + FormulaParser.getSyntax();
+               ServerConnection.stubReturnsNull(s6);
             }
          }
       }
@@ -288,14 +289,14 @@ class LPParsing extends LogicModule implements LogicConstants {
 
    @Override
    public boolean shutdown(boolean flag) {
-      if (!flag && !C_KA.m756(this, null)) {
+      if (!flag && !ParsingDialogs.confirmSaveChanges(this, null)) {
          return false;
       } else {
          this.reset();
          synchronized (moduleClasses[2]) {
             instances.removeElement(this);
             if (instances.isEmpty()) {
-               C_l_B.m1924(printQueue);
+               PrintTask.waitForQueue(printQueue);
                problems = null;
                exercises = null;
                newProblem = null;
@@ -335,7 +336,7 @@ class LPParsing extends LogicModule implements LogicConstants {
 
    @Override
    public boolean save() {
-      return C_KA.m756(this, null);
+      return ParsingDialogs.confirmSaveChanges(this, null);
    }
 
    static void resetOptions() {
@@ -360,14 +361,14 @@ class LPParsing extends LogicModule implements LogicConstants {
    static boolean checkQuit(Hashtable hashtable, Hashtable hashtable1) {
       resetOptions();
       readOptions(LogicProgram.openDataFile("options", false));
-      readOptions(LogicProgram.m1065("options", false));
+      readOptions(LogicProgram.openLocalFile("options", false));
       logNeeds();
-      if (needPrint != null && !needPrint.m402() || needSubmit != null && !needSubmit.m402()) {
-         C_a_A c_a_a = new C_a_A(readWork());
-         c_a_a.m1634(readExercises());
-         MainMenu.m2215(hashtable, "pardata.txt", "R", needPrint, c_a_a);
-         c_a_a.m1635();
-         MainMenu.m2215(hashtable1, "pardata.txt", "S", needSubmit, c_a_a);
+      if (needPrint != null && !needPrint.isEmpty() || needSubmit != null && !needSubmit.isEmpty()) {
+         ProblemRecordEnumeration problemrecordenumeration = new ProblemRecordEnumeration(readWork());
+         problemrecordenumeration.retainExisting(readExercises());
+         MainMenu.mergeSubmitStatus(hashtable, "pardata.txt", "R", needPrint, problemrecordenumeration);
+         problemrecordenumeration.reset();
+         MainMenu.mergeSubmitStatus(hashtable1, "pardata.txt", "S", needSubmit, problemrecordenumeration);
       }
 
       resetOptions();
@@ -375,17 +376,17 @@ class LPParsing extends LogicModule implements LogicConstants {
    }
 
    static Vector getChangedProblems() {
-      C_a_A c_a_a = new C_a_A(readWork());
-      Hashtable hashtable = LogicProgram.m1084("pardata.txt", "S", needSubmit, c_a_a);
+      ProblemRecordEnumeration problemrecordenumeration = new ProblemRecordEnumeration(readWork());
+      Hashtable hashtable = LogicProgram.checkSubmitLog("pardata.txt", "S", needSubmit, problemrecordenumeration);
       if (hashtable == null) {
          return null;
       } else {
          Vector vector = (Vector)hashtable.get("handled");
          Vector vector1 = new Vector();
-         c_a_a.m1635();
+         problemrecordenumeration.reset();
 
-         while (c_a_a.hasMoreElements()) {
-            String s = (String)c_a_a.nextElement();
+         while (problemrecordenumeration.hasMoreElements()) {
+            String s = (String)problemrecordenumeration.nextElement();
             if ((vector == null || !vector.contains(s)) && hasWork(new TaggedRecord(s))) {
                vector1.add(s);
             }
@@ -435,95 +436,95 @@ class LPParsing extends LogicModule implements LogicConstants {
       if (problems != null) {
          return true;
       } else {
-         C_ZC c_zc = readWork();
-         if (c_zc == null) {
+         ParsingProblemSet parsingproblemset = readWork();
+         if (parsingproblemset == null) {
             return false;
          } else {
-            if (c_zc.f1079 && !c_zc.m1777(LogicProgram.user).equals(c_zc.f1076)) {
+            if (parsingproblemset.readFromPlainFile && !parsingproblemset.computeDigest(LogicProgram.user).equals(parsingproblemset.storedDigest)) {
                System.out.println("Could not digest file: parwork.txt");
-               if (!UserSetup.m2101("indigestion", "instructor")) {
-                  LogicProgram.m971("not003", "parwork.txt");
+               if (!UserSetup.hasAccess("indigestion", "instructor")) {
+                  LogicProgram.showFileError("not003", "parwork.txt");
                   return false;
                }
             }
 
-            problems = c_zc;
-            C_l_D.f1254 = ProblemEntry.m1816("parwork.txt", problems);
-            ProblemEntry.m1815(exercises, C_l_D.f1254);
+            problems = parsingproblemset;
+            ParsingProblemEntry.newProblemNames = ProblemEntry.findExtraProblems("parwork.txt", problems);
+            ProblemEntry.markExtraProblems(exercises, ParsingProblemEntry.newProblemNames);
             return true;
          }
       }
    }
 
-   static C_ZC readWork() {
-      if (!LogicProgram.m976()) {
+   static ParsingProblemSet readWork() {
+      if (!LogicProgram.checkSameUser()) {
          return null;
       } else {
-         C_ZC c_zc = new C_ZC();
+         ParsingProblemSet parsingproblemset = new ParsingProblemSet();
          ScrambledReader scrambledreader = LogicProgram.openDataFile("parwork.txt", true);
-         if (!LogicProgram.f584 || scrambledreader instanceof PlainRecordReader) {
+         if (!LogicProgram.noCoreProblems || scrambledreader instanceof PlainRecordReader) {
             if (scrambledreader == null) {
-               LogicProgram.m971("not001", "parwork.txt");
+               LogicProgram.showFileError("not001", "parwork.txt");
                return null;
             }
 
             if (scrambledreader instanceof PlainRecordReader) {
-               c_zc.f1079 = true;
+               parsingproblemset.readFromPlainFile = true;
             }
 
-            if (!readProblems(scrambledreader, c_zc, false)) {
-               LogicProgram.m971("not002", "parwork.txt");
+            if (!readProblems(scrambledreader, parsingproblemset, false)) {
+               LogicProgram.showFileError("not002", "parwork.txt");
                return null;
             }
          }
 
          if (!(scrambledreader instanceof PlainRecordReader)) {
-            scrambledreader = LogicProgram.m1065("parwork.txt", false);
-            if (scrambledreader != null && !mergeProblems(scrambledreader, c_zc, false)) {
-               LogicProgram.m971("not002", "parwork.txt");
+            scrambledreader = LogicProgram.openLocalFile("parwork.txt", false);
+            if (scrambledreader != null && !mergeProblems(scrambledreader, parsingproblemset, false)) {
+               LogicProgram.showFileError("not002", "parwork.txt");
                return null;
             }
          }
 
-         return c_zc;
+         return parsingproblemset;
       }
    }
 
    static String getExerciseTitle(String s) {
       String s1;
-      return exercises != null && (s1 = exercises.m1780(s)) != null ? TaggedRecord.m1493(s1) : null;
+      return exercises != null && (s1 = exercises.getRecord(s)) != null ? TaggedRecord.nameOf(s1) : null;
    }
 
    static boolean isExercise(String s) {
-      return exercises != null && s != null && exercises.m1780(s) != null;
+      return exercises != null && s != null && exercises.getRecord(s) != null;
    }
 
    static boolean isExample(String s) {
-      return exercises != null && s != null && TaggedRecord.m1502(exercises.m1780(s));
+      return exercises != null && s != null && TaggedRecord.isExample(exercises.getRecord(s));
    }
 
    void loadExerciseInfo(TaggedRecord taggedrecord) {
-      taggedrecord = new TaggedRecord(exercises == null ? null : exercises.m1780(taggedrecord.getName()));
-      this.probOptions = taggedrecord.m1506('%');
+      taggedrecord = new TaggedRecord(exercises == null ? null : exercises.getRecord(taggedrecord.getName()));
+      this.probOptions = taggedrecord.getKeyValues('%');
       this.dontChange = this.probOptions != null && this.probOptions.containsKey("eg");
-      this.titlePanel.m1827(taggedrecord.valueAt(taggedrecord.indexOfTag('!')));
+      this.titlePanel.setNote(taggedrecord.valueAt(taggedrecord.indexOfTag('!')));
       String s = taggedrecord.getName();
-      this.checkNow = LogicProgram.m1060(autoCheck, s);
-      this.checkDisabled = LogicProgram.m1060(this.forPrint ? noPrintCheck : noCheck, s);
-      this.noDescent = LogicProgram.m1060(mainOnly, s);
+      this.checkNow = LogicProgram.selectorMatches(autoCheck, s);
+      this.checkDisabled = LogicProgram.selectorMatches(this.forPrint ? noPrintCheck : noCheck, s);
+      this.noDescent = LogicProgram.selectorMatches(mainOnly, s);
       this.checkNow = this.checkNow & !this.checkDisabled;
    }
 
-   static boolean readProblems(Reader reader, C_ZC c_zc, boolean flag) {
-      return readProblems(reader, c_zc, flag, false);
+   static boolean readProblems(Reader reader, ParsingProblemSet parsingproblemset, boolean flag) {
+      return readProblems(reader, parsingproblemset, flag, false);
    }
 
-   static boolean mergeProblems(Reader reader, C_ZC c_zc, boolean flag) {
-      return readProblems(reader, c_zc, flag, true);
+   static boolean mergeProblems(Reader reader, ParsingProblemSet parsingproblemset, boolean flag) {
+      return readProblems(reader, parsingproblemset, flag, true);
    }
 
-   static boolean readProblems(Reader reader, C_ZC c_zc, boolean flag, boolean flag1) {
-      return LogicModule.readProblems(reader, c_zc, flag, flag1);
+   static boolean readProblems(Reader reader, ParsingProblemSet parsingproblemset, boolean flag, boolean flag1) {
+      return LogicModule.readProblems(reader, parsingproblemset, flag, flag1);
    }
 
    static void readOptions(Reader reader) {
@@ -534,7 +535,7 @@ class LPParsing extends LogicModule implements LogicConstants {
          while (taggedrecord.readNext()) {
             String s1 = taggedrecord.getName();
             if (s1 != null && s1.trim().equalsIgnoreCase("parsing")) {
-               int[] aint = taggedrecord.m1481("+?");
+               int[] aint = taggedrecord.indexesOfAnyTag("+?");
                int i = aint.length;
 
                for (int j = 0; j < i; j++) {
@@ -557,73 +558,73 @@ class LPParsing extends LogicModule implements LogicConstants {
                               autoCheck = new ProblemSelector();
                            }
 
-                           autoCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           autoCheck.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("addToDB")) {
                            if (addToDB == null) {
                               addToDB = new ProblemSelector();
                            }
 
-                           addToDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           addToDB.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("updateDB")) {
                            if (updateDB == null) {
                               updateDB = new ProblemSelector();
                            }
 
-                           updateDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           updateDB.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrint")) {
                            if (noPrint == null) {
                               noPrint = new ProblemSelector();
                            }
 
-                           noPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noCheck")) {
                            if (noCheck == null) {
                               noCheck = new ProblemSelector();
                            }
 
-                           noCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noCheck.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrintCheck")) {
                            if (noPrintCheck == null) {
                               noPrintCheck = new ProblemSelector();
                            }
 
-                           noPrintCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrintCheck.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("monoProbs")) {
                            if (monoProbs == null) {
                               monoProbs = new ProblemSelector();
                            }
 
-                           monoProbs.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           monoProbs.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("logPrint")) {
                            if (logPrint == null) {
                               logPrint = new ProblemSelector();
                            }
 
-                           logPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           logPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("logSubmit")) {
                            if (logSubmit == null) {
                               logSubmit = new ProblemSelector();
                            }
 
-                           logSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           logSubmit.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("needPrint")) {
                            if (needPrint == null) {
                               needPrint = new ProblemSelector();
                            }
 
-                           needPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           needPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("needSubmit")) {
                            if (needSubmit == null) {
                               needSubmit = new ProblemSelector();
                            }
 
-                           needSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           needSubmit.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("mainOnly")) {
                            if (mainOnly == null) {
                               mainOnly = new ProblemSelector();
                            }
 
-                           mainOnly.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           mainOnly.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("prefix")) {
                            s = s2.substring(k + 1);
                         } else if (s3.equalsIgnoreCase("termprefix")) {
@@ -645,29 +646,29 @@ class LPParsing extends LogicModule implements LogicConstants {
    }
 
    static void logNeeds() {
-      if (needPrint != null && !needPrint.m402()) {
+      if (needPrint != null && !needPrint.isEmpty()) {
          if (logPrint == null) {
             logPrint = new ProblemSelector();
          }
 
-         logPrint.m395(needPrint);
+         logPrint.union(needPrint);
       }
 
-      if (needSubmit != null && !needSubmit.m402()) {
+      if (needSubmit != null && !needSubmit.isEmpty()) {
          if (logSubmit == null) {
             logSubmit = new ProblemSelector();
          }
 
-         logSubmit.m395(needSubmit);
+         logSubmit.union(needSubmit);
       }
    }
 
    void loadProblem(String s) {
       TaggedRecord taggedrecord = new TaggedRecord(s);
       this.loadExerciseInfo(taggedrecord);
-      this.problem.m2193(taggedrecord);
-      this.errorCount = taggedrecord.m1498();
-      this.workTime = taggedrecord.m1499();
+      this.problem.loadRecord(taggedrecord);
+      this.errorCount = taggedrecord.getErrorCount();
+      this.workTime = taggedrecord.getTimestamp();
       this.updateWorkTime();
       this.problemIndex = -1;
    }
@@ -683,15 +684,15 @@ class LPParsing extends LogicModule implements LogicConstants {
    }
 
    void loadUserProblem(String s) {
-      this.loadProblem(TaggedRecord.m1509(TaggedRecord.m1508(s, '=')));
+      this.loadProblem(TaggedRecord.toLine(TaggedRecord.formatField(s, '=')));
    }
 
    void removeWork() {
-      this.problem.m2189();
+      this.problem.resetWork();
    }
 
    static String removeWork(TaggedRecord taggedrecord) {
-      return taggedrecord.m1484("$=%u!");
+      return taggedrecord.formatFields("$=%u!");
    }
 
    void newProblem() {
@@ -699,10 +700,10 @@ class LPParsing extends LogicModule implements LogicConstants {
    }
 
    void check() {
-      ErrorRef errorref = this.problem.m2192();
+      ErrorRef errorref = this.problem.checkProblem();
       if (!this.checkDisabled) {
-         Hashtable hashtable = errorref.f428;
-         this.titlePanel.m1825(hashtable == null ? "" : (String)hashtable.get("summary"));
+         Hashtable hashtable = errorref.params;
+         this.titlePanel.setStatus(hashtable == null ? "" : (String)hashtable.get("summary"));
       }
    }
 
@@ -712,29 +713,29 @@ class LPParsing extends LogicModule implements LogicConstants {
          int i = problems.size();
 
          for (int j = 0; j < i; j++) {
-            if (isExercise(TaggedRecord.m1493(problems.m1778(j)))) {
-               expressionpath.m1749(j);
+            if (isExercise(TaggedRecord.nameOf(problems.getRecordAt(j)))) {
+               expressionpath.push(j);
             }
          }
 
-         return expressionpath.m1752();
+         return expressionpath.toArray();
       } else {
          return null;
       }
    }
 
    void submitExam() {
-      if (UserSetup.m2105("Parsing")) {
+      if (UserSetup.confirmSubmitAll("Parsing")) {
          int[] aint = getExerciseIndices();
          BusyIndicator busyindicator = new BusyIndicator(this);
          Submission submission = ServerConnection.prepareSubmission(busyindicator);
          if (submission != null) {
-            if (C_KA.m756(this, null)) {
+            if (ParsingDialogs.confirmSaveChanges(this, null)) {
                submit(submission, aint, busyindicator);
-               ServerConnection.m838(submission, busyindicator);
-               AccountManager.m1873(submission);
+               ServerConnection.finishSubmission(submission, busyindicator);
+               AccountManager.showSubmissionResults(submission);
             } else {
-               ServerConnection.m838(submission, busyindicator);
+               ServerConnection.finishSubmission(submission, busyindicator);
             }
          }
       }
@@ -744,13 +745,13 @@ class LPParsing extends LogicModule implements LogicConstants {
       BusyIndicator busyindicator = new BusyIndicator(this);
       Submission submission = ServerConnection.prepareSubmission(busyindicator);
       if (submission != null) {
-         int[] aint = C_KA.m750(this);
+         int[] aint = ParsingDialogs.chooseProblemsToSubmit(this);
          if (aint == null) {
-            ServerConnection.m838(submission, busyindicator);
+            ServerConnection.finishSubmission(submission, busyindicator);
          } else {
             submit(submission, aint, busyindicator);
-            ServerConnection.m838(submission, busyindicator);
-            AccountManager.m1873(submission);
+            ServerConnection.finishSubmission(submission, busyindicator);
+            AccountManager.showSubmissionResults(submission);
          }
       }
    }
@@ -762,90 +763,90 @@ class LPParsing extends LogicModule implements LogicConstants {
          int i = aint.length;
 
          for (int j = 0; j < i; j++) {
-            submission.m1();
-            String s = problems.m1778(aint[j]);
+            submission.reset();
+            String s = problems.getRecordAt(aint[j]);
             TaggedRecord taggedrecord = new TaggedRecord(s);
             String s1 = getProblemStatement(taggedrecord);
             submission.problemMd5 = Scrambler.md5Base64(s1 == null ? "" : s1.trim());
             int k = getProblemState(s);
-            submission.evaluation = C_l_D.f1128[k];
+            submission.evaluation = ParsingProblemEntry.STATE_CODES[k];
             submission.work = s;
             submission.problemName = taggedrecord.getName();
             submission.module = moduleAbbrs[moduleIndex];
-            submission.helpCount = taggedrecord.m1498();
-            submission.duration = taggedrecord.m1499();
-            boolean flag = LogicProgram.m1060(logSubmit, getExerciseTitle(submission.problemName));
+            submission.helpCount = taggedrecord.getErrorCount();
+            submission.duration = taggedrecord.getTimestamp();
+            boolean flag = LogicProgram.selectorMatches(logSubmit, getExerciseTitle(submission.problemName));
             if (ServerConnection.submit(submission, busyindicator)) {
                vector.addElement(trimTitle(submission.problemName));
                if (flag) {
-                  LogicProgram.m1083("pardata.txt", "S", s, submission.m3());
+                  LogicProgram.appendSubmitLog("pardata.txt", "S", s, submission.getLogRecord());
                }
             } else {
                vector1.addElement(trimTitle(submission.problemName));
                if (flag) {
-                  LogicProgram.m1082("pardata.txt", "F", s);
+                  LogicProgram.appendSubmitLog("pardata.txt", "F", s);
                }
             }
          }
 
-         submission.m1();
-         vector.copyInto(submission.f15 = new String[vector.size()]);
-         vector1.copyInto(submission.f16 = new String[vector1.size()]);
+         submission.reset();
+         vector.copyInto(submission.succeededNames = new String[vector.size()]);
+         vector1.copyInto(submission.failedNames = new String[vector1.size()]);
       }
    }
 
    void uploadProblems() {
       BusyIndicator busyindicator = new BusyIndicator(this);
-      C_LD c_ld = ServerConnection.m840(busyindicator);
-      if (c_ld != null) {
-         c_ld.f520 = null;
-         int[] aint = C_KA.m751(this);
+      ProblemUpload problemupload = ServerConnection.prepareUpload(busyindicator);
+      if (problemupload != null) {
+         problemupload.resultText = null;
+         int[] aint = ParsingDialogs.chooseProblemsToUpload(this);
          if (aint == null) {
-            ServerConnection.m843(c_ld, busyindicator);
+            ServerConnection.finishUpload(problemupload, busyindicator);
          } else {
-            upload(c_ld, aint, busyindicator);
-            ServerConnection.m843(c_ld, busyindicator);
-            AccountManager.m1875(c_ld);
+            upload(problemupload, aint, busyindicator);
+            ServerConnection.finishUpload(problemupload, busyindicator);
+            AccountManager.showUploadResults(problemupload);
          }
       }
    }
 
-   static void upload(C_LD c_ld, int[] aint, BusyIndicator busyindicator) {
+   static void upload(ProblemUpload problemupload, int[] aint, BusyIndicator busyindicator) {
       synchronized (problems) {
          Vector vector = new Vector();
          Vector vector1 = new Vector();
          int i = aint.length;
 
          for (int j = 0; j < i; j++) {
-            c_ld.m944();
-            String s = problems.m1778(aint[j]);
-            ProblemEntry problementry = problems.m1779(aint[j]);
+            problemupload.reset();
+            String s = problems.getRecordAt(aint[j]);
+            ProblemEntry problementry = problems.getEntryAt(aint[j]);
             TaggedRecord taggedrecord = new TaggedRecord(s);
             String s1 = getProblemStatement(taggedrecord);
-            c_ld.f510 = taggedrecord.getName();
-            c_ld.f511 = s1;
-            c_ld.f512 = LogicProgram.m995(s1, maggie, html);
-            c_ld.f514 = null;
-            c_ld.f513 = moduleAbbrs[moduleIndex];
-            c_ld.f515 = null;
+            problemupload.problemName = taggedrecord.getName();
+            problemupload.text = s1;
+            problemupload.webText = LogicProgram.translateSymbols(s1, maggie, html);
+            problemupload.aux = null;
+            problemupload.type = moduleAbbrs[moduleIndex];
+            problemupload.answers = null;
             if (problementry != null
                && problementry.state == 2
-               && !isExercise(c_ld.f510)
-               && taggedrecord.m1497() == null
-               && ServerConnection.m841(c_ld, busyindicator)) {
-               vector.addElement(trimTitle(c_ld.f510));
+               && !isExercise(problemupload.problemName)
+               && taggedrecord.getOriginalName() == null
+               && ServerConnection.uploadProblem(problemupload, busyindicator)) {
+               vector.addElement(trimTitle(problemupload.problemName));
             } else {
-               vector1.addElement(trimTitle(c_ld.f510));
+               vector1.addElement(trimTitle(problemupload.problemName));
             }
          }
 
-         vector.copyInto(c_ld.f518 = new String[vector.size()]);
-         vector1.copyInto(c_ld.f519 = new String[vector1.size()]);
+         vector.copyInto(problemupload.succeededNames = new String[vector.size()]);
+         vector1.copyInto(problemupload.failedNames = new String[vector1.size()]);
       }
    }
 
    String saveProblem() {
-      String s = this.problem.m2194();
+      String s = this.problem.getWorkRecord();
       if (this.errorCount != 0) {
          s = s + this.errorCount + "`e";
       }
@@ -854,18 +855,18 @@ class LPParsing extends LogicModule implements LogicConstants {
          s = s + this.workTime + "`t";
       }
 
-      return TaggedRecord.m1509(s);
+      return TaggedRecord.toLine(s);
    }
 
    static boolean saveProblems() {
-      if (!LogicProgram.m976()) {
+      if (!LogicProgram.checkSameUser()) {
          return false;
       } else {
          try {
             writeProblems(problems, new FileWriter(new File(LogicProgram.workDir, "parwork.txt")));
             return true;
          } catch (IOException ioexception) {
-            LogicProgram.m971("not004", "parwork.txt");
+            LogicProgram.showFileError("not004", "parwork.txt");
             return false;
          }
       }
@@ -875,7 +876,7 @@ class LPParsing extends LogicModule implements LogicConstants {
       if (s == null) {
          return true;
       } else {
-         String s1 = this.problem.f1458;
+         String s1 = this.problem.problemName;
          int i = this.problemIndex;
          this.problemIndex = -1;
          if (!this.saveProblems(s, true)) {
@@ -899,27 +900,27 @@ class LPParsing extends LogicModule implements LogicConstants {
          String s1 = null;
          synchronized (problems) {
             if (this.problemIndex == -1) {
-               String s2 = C_KA.m757(flag ? this.problem.f1458 : null);
+               String s2 = ParsingDialogs.askProblemName(flag ? this.problem.problemName : null);
                if (s2 == null) {
                   return false;
                }
 
                this.setProblemTitle(s2);
-               C_l_D c_l_d = new C_l_D(TaggedRecord.m1495(s, s2), false);
-               this.problemIndex = problems.m1771(c_l_d, false);
+               ParsingProblemEntry parsingproblementry = new ParsingProblemEntry(TaggedRecord.withName(s, s2), false);
+               this.problemIndex = problems.registerEntry(parsingproblementry, false);
                this.problemIndex = this.problemIndex == -1 ? problems.size() : this.problemIndex + 1;
-               problems.insertElementAt(c_l_d, this.problemIndex);
+               problems.insertElementAt(parsingproblementry, this.problemIndex);
             } else {
-               s1 = problems.m1778(this.problemIndex);
-               problems.m1776(s, this.problemIndex);
+               s1 = problems.getRecordAt(this.problemIndex);
+               problems.replaceProblem(s, this.problemIndex);
             }
 
             if (!saveProblems()) {
                if (s1 == null) {
-                  problems.m1101(this.problemIndex);
+                  problems.removeProblem(this.problemIndex);
                   this.problemIndex = -1;
                } else {
-                  problems.m1776(s1, this.problemIndex);
+                  problems.replaceProblem(s1, this.problemIndex);
                }
 
                return false;
@@ -932,11 +933,11 @@ class LPParsing extends LogicModule implements LogicConstants {
 
    void setProblemTitle(String s) {
       if (s != null && !(s = s.trim()).equals("")) {
-         this.problem.f1458 = s;
-         this.titlePanel.m1821(trimTitle(s));
+         this.problem.problemName = s;
+         this.titlePanel.setTitleLabel(trimTitle(s));
       } else {
-         this.problem.f1458 = null;
-         this.titlePanel.m1821(null);
+         this.problem.problemName = null;
+         this.titlePanel.setTitleLabel(null);
       }
    }
 
@@ -944,14 +945,14 @@ class LPParsing extends LogicModule implements LogicConstants {
       if (s == null) {
          return null;
       } else {
-         return isExercise(s) ? LogicProgram.m1000(s) : s.trim();
+         return isExercise(s) ? LogicProgram.stripNamePrefix(s) : s.trim();
       }
    }
 
    String getChangedProblem() {
       String s = this.saveProblem();
-      String s1 = this.problemIndex == -1 ? newProblem : problems.m1778(this.problemIndex);
-      return TaggedRecord.m1500(s).equals(TaggedRecord.m1500(s1)) ? null : s;
+      String s1 = this.problemIndex == -1 ? newProblem : problems.getRecordAt(this.problemIndex);
+      return TaggedRecord.stripTimestamp(s).equals(TaggedRecord.stripTimestamp(s1)) ? null : s;
    }
 
    static String getProblemStatement(String s) {
@@ -959,7 +960,7 @@ class LPParsing extends LogicModule implements LogicConstants {
    }
 
    static String getProblemStatement(TaggedRecord taggedrecord) {
-      return taggedrecord.valueAt(taggedrecord.m1478("="));
+      return taggedrecord.valueAt(taggedrecord.indexOfAnyTag("="));
    }
 
    static int getProblemState(String s) {
@@ -987,11 +988,11 @@ class LPParsing extends LogicModule implements LogicConstants {
          }
 
          String s3 = taggedrecord.valueAt(taggedrecord.indexOfTag('*'));
-         C_DD c_dd = new C_DD(s);
+         FormulaParseNode formulaparsenode = new FormulaParseNode(s);
          if (s3 != null) {
-            return s1.equals(c_dd.m464()) && s3.charAt(0) == 84 ? 2 : 1;
+            return s1.equals(formulaparsenode.getNotationCode()) && s3.charAt(0) == 84 ? 2 : 1;
          } else {
-            return s1.equals(c_dd.m464()) && s2.equals(c_dd.m465()) ? 2 : 1;
+            return s1.equals(formulaparsenode.getNotationCode()) && s2.equals(formulaparsenode.getStructureString()) ? 2 : 1;
          }
       }
    }
@@ -1010,7 +1011,7 @@ class LPParsing extends LogicModule implements LogicConstants {
    }
 
    static String getWork(TaggedRecord taggedrecord) {
-      return taggedrecord.m1484("[]*");
+      return taggedrecord.formatFields("[]*");
    }
 
    static Vector getStatements(int[] aint, Dimension dimension) {
@@ -1018,17 +1019,17 @@ class LPParsing extends LogicModule implements LogicConstants {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         ProblemEntry problementry = problems.m1779(aint[j]);
+         ProblemEntry problementry = problems.getEntryAt(aint[j]);
          TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
          String s = taggedrecord.getName();
          String s1 = getProblemStatement(taggedrecord);
          JPanel jpanel = new JPanel();
-         jpanel.setLayout(new C_u_(null, 1, new int[]{dimension.width}));
-         C_NC c_nc;
-         jpanel.add(c_nc = new C_NC(LogicProgram.m1004("\\l" + s + ": " + s1)));
-         c_nc.setLineWrap(true);
-         c_nc.setWrapStyleWord(true);
-         c_nc.setBackground(LogicProgram.f605[1]);
+         jpanel.setLayout(new FixedColumnLayout(null, 1, new int[]{dimension.width}));
+         LogicTextArea logictextarea;
+         jpanel.add(logictextarea = new LogicTextArea(LogicProgram.expandEscapes("\\l" + s + ": " + s1)));
+         logictextarea.setLineWrap(true);
+         logictextarea.setWrapStyleWord(true);
+         logictextarea.setBackground(LogicProgram.printColors[1]);
          vector.add(jpanel);
       }
 
@@ -1040,33 +1041,33 @@ class LPParsing extends LogicModule implements LogicConstants {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         ProblemEntry problementry = problems.m1779(aint[j]);
+         ProblemEntry problementry = problems.getEntryAt(aint[j]);
          int k = problementry.state;
          TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
          String s = taggedrecord.getName();
          if (!printIncorrect || k == 1) {
             String s1 = getProblemStatement(taggedrecord);
             JPanel jpanel = new JPanel();
-            jpanel.setLayout(new C_u_(null, 2, new int[]{20, dimension.width - 20}));
-            jpanel.add(new C_f_E(C_l_D.f1128[k]));
-            C_NC c_nc;
-            jpanel.add(c_nc = new C_NC(LogicProgram.m1004("\\l" + s + ": " + s1)));
-            c_nc.setLineWrap(true);
-            c_nc.setWrapStyleWord(true);
-            c_nc.setBackground(LogicProgram.f605[1]);
+            jpanel.setLayout(new FixedColumnLayout(null, 2, new int[]{20, dimension.width - 20}));
+            jpanel.add(new WrappedTextPanel(ParsingProblemEntry.STATE_CODES[k]));
+            LogicTextArea logictextarea;
+            jpanel.add(logictextarea = new LogicTextArea(LogicProgram.expandEscapes("\\l" + s + ": " + s1)));
+            logictextarea.setLineWrap(true);
+            logictextarea.setWrapStyleWord(true);
+            logictextarea.setBackground(LogicProgram.printColors[1]);
             vector.add(jpanel);
          }
 
-         if (LogicProgram.m1060(logPrint, getExerciseTitle(s))) {
-            LogicProgram.m1082("pardata.txt", "R", problementry.name);
+         if (LogicProgram.selectorMatches(logPrint, getExerciseTitle(s))) {
+            LogicProgram.appendSubmitLog("pardata.txt", "R", problementry.name);
          }
       }
 
       return vector;
    }
 
-   static class C__A extends LogicModule.C__A {
-      C__A(BusyIndicator busyindicator, Rectangle rectangle, String s) {
+   static class ParsingStartupTask extends LogicModule.ModuleStartupTask {
+      ParsingStartupTask(BusyIndicator busyindicator, Rectangle rectangle, String s) {
          super(busyindicator, rectangle, s);
       }
 
@@ -1076,7 +1077,7 @@ class LPParsing extends LogicModule implements LogicConstants {
       }
 
       @Override
-      public void m959() {
+      public void continueStartup() {
          LPParsing.continueStartup();
       }
    }

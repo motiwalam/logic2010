@@ -3,92 +3,92 @@ package edu.ucla.phil.logic;
 import java.util.Hashtable;
 import java.util.Vector;
 
-class DerivationLineChecker implements C_k_A, DerivationConstants {
-   DerivationLine f935;
-   Vector f936;
-   Vector f937;
-   int f938;
-   String f939;
-   String f940;
-   Expression f941;
-   Expression f942;
-   int f943;
-   boolean f944;
-   boolean f945;
-   boolean f946;
-   boolean f947;
-   ErrorRef f948;
-   final boolean f949 = true;
-   final boolean f950 = false;
-   boolean f951;
-   boolean f952;
-   Vector f953;
-   Vector f954;
-   Vector f955;
-   Vector f956;
-   SchematicRule[] f957;
-   SchematicRule[] f958;
-   SchematicRule[] f959;
-   int f960;
-   int f961;
-   Vector f962;
+class DerivationLineChecker implements MessageParamSource, DerivationConstants {
+   DerivationLine line;
+   Vector citedNodes;
+   Vector stack;
+   int argumentCount;
+   String ruleName;
+   String remaining;
+   Expression lineFormula;
+   Expression result;
+   int stepIndex;
+   boolean matchLine;
+   boolean finalStep;
+   boolean interactive;
+   boolean reusedCache;
+   ErrorRef cachedError;
+   final boolean CONST_TRUE = true;
+   final boolean CONST_FALSE = false;
+   boolean hasPremiseMatch;
+   boolean hasFullMatch;
+   Vector premiseMatches;
+   Vector fullMatches;
+   Vector consumedFormulas;
+   Vector presetAnswers;
+   SchematicRule[] allForms;
+   SchematicRule[] enabledForms;
+   SchematicRule[] automaticForms;
+   int minPremises;
+   int maxPremises;
+   Vector clashes;
 
    DerivationLineChecker(DerivationLine derivationline, boolean flag) {
-      this.f935 = derivationline;
-      this.f946 = flag;
-      this.m1589();
+      this.line = derivationline;
+      this.interactive = flag;
+      this.reset();
    }
 
-   void m1589() {
-      this.f936 = new Vector();
-      this.f937 = new Vector();
-      this.f938 = 0;
-      this.f939 = null;
-      this.f940 = this.f935.m9(true);
-      this.f941 = this.f935.m44();
-      this.f942 = null;
-      this.f943 = -1;
-      this.f944 = false;
-      this.f945 = false;
-      this.f947 = false;
-      this.f948 = null;
-      this.f953 = null;
-      this.f951 = false;
-      this.f954 = null;
-      this.f952 = false;
-      this.f955 = null;
-      this.f956 = null;
-      this.f957 = null;
-      this.f958 = null;
-      this.f959 = null;
-      this.f962 = null;
-      this.m1590();
+   void reset() {
+      this.citedNodes = new Vector();
+      this.stack = new Vector();
+      this.argumentCount = 0;
+      this.ruleName = null;
+      this.remaining = this.line.getAnnotationText(true);
+      this.lineFormula = this.line.getFormula();
+      this.result = null;
+      this.stepIndex = -1;
+      this.matchLine = false;
+      this.finalStep = false;
+      this.reusedCache = false;
+      this.cachedError = null;
+      this.premiseMatches = null;
+      this.hasPremiseMatch = false;
+      this.fullMatches = null;
+      this.hasFullMatch = false;
+      this.consumedFormulas = null;
+      this.presetAnswers = null;
+      this.allForms = null;
+      this.enabledForms = null;
+      this.automaticForms = null;
+      this.clashes = null;
+      this.computePremiseRange();
    }
 
-   void m1590() {
-      this.f960 = -1;
-      this.f961 = -1;
-      if (this.f959 != null) {
-         int i = this.f959.length;
+   void computePremiseRange() {
+      this.minPremises = -1;
+      this.maxPremises = -1;
+      if (this.automaticForms != null) {
+         int i = this.automaticForms.length;
 
          for (int j = 0; j < i; j++) {
-            int k = this.f959[j].premises.length;
-            if (k <= this.f938 && (!this.f944 && !this.f945 || k == this.f938)) {
-               if (k > this.f961) {
-                  this.f961 = k;
+            int k = this.automaticForms[j].premises.length;
+            if (k <= this.argumentCount && (!this.matchLine && !this.finalStep || k == this.argumentCount)) {
+               if (k > this.maxPremises) {
+                  this.maxPremises = k;
                }
 
-               if (this.f960 == -1 || k < this.f960) {
-                  this.f960 = k;
+               if (this.minPremises == -1 || k < this.minPremises) {
+                  this.minPremises = k;
                }
             }
          }
       }
    }
 
-   boolean m1591() {
-      this.f939 = null;
-      if (this.f940 == null) {
+   boolean readNextStep() {
+      this.ruleName = null;
+      if (this.remaining == null) {
          return true;
       } else {
          boolean flag = false;
@@ -97,24 +97,24 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
          boolean flag2 = true;
          boolean flag3 = false;
          boolean flag4 = false;
-         if (this.f942 != null) {
-            this.f936.addElement(null);
-            this.f937.addElement(this.f942);
+         if (this.result != null) {
+            this.citedNodes.addElement(null);
+            this.stack.addElement(this.result);
          }
 
-         DerivationBox derivationbox = this.f935.f317.f915.problem;
+         DerivationBox derivationbox = this.line.box.module.problem;
 
          while (flag2 && flag1) {
             int k = 0;
 
             int l;
-            for (l = this.f940.length(); k < l; k++) {
-               c0 = this.f940.charAt(k);
+            for (l = this.remaining.length(); k < l; k++) {
+               c0 = this.remaining.charAt(k);
                if (Character.isDigit(c0)) {
                   break;
                }
 
-               if (m1596(c0)) {
+               if (isNameChar(c0)) {
                   flag1 = false;
                   break;
                }
@@ -122,17 +122,17 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
 
             if (k >= l) {
                if (flag3) {
-                  this.m1621("dererr001");
+                  this.reportError("dererr001");
                   return false;
                }
 
                if (flag4) {
-                  this.m1621("dererr018");
+                  this.reportError("dererr018");
                   return false;
                }
 
-               if (this.f937.size() != 0) {
-                  this.m1621("dererr002");
+               if (this.stack.size() != 0) {
+                  this.reportError("dererr002");
                   return false;
                }
 
@@ -141,8 +141,8 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
 
             int i;
             for (i = k++; k < l; k++) {
-               c0 = this.f940.charAt(k);
-               if (m1596(c0)) {
+               c0 = this.remaining.charAt(k);
+               if (isNameChar(c0)) {
                   if (flag1) {
                      flag2 = false;
                   }
@@ -154,65 +154,65 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
             int j = k++;
             if (flag2 && flag1) {
                if (flag3) {
-                  this.m1621("dererr001");
+                  this.reportError("dererr001");
                   return false;
                }
 
                if (flag4) {
-                  this.m1621("dererr018");
+                  this.reportError("dererr018");
                   return false;
                }
 
                DerivationNode derivationnode;
                try {
-                  derivationnode = derivationbox.m32(Integer.parseInt(this.f940.substring(i, j)));
+                  derivationnode = derivationbox.findLine(Integer.parseInt(this.remaining.substring(i, j)));
                } catch (NumberFormatException numberformatexception) {
                   derivationnode = null;
                }
 
                if (derivationnode == null) {
-                  this.m1622("dererr003", Message.params("remote line number", this.f940.substring(i, j)));
+                  this.reportError("dererr003", Message.params("remote line number", this.remaining.substring(i, j)));
                   return false;
                }
 
-               if (!this.f935.m565(derivationnode)) {
+               if (!this.line.canUse(derivationnode)) {
                   return false;
                }
 
-               Expression expression = derivationnode.m44();
+               Expression expression = derivationnode.getFormula();
                if (expression == null) {
-                  String s = derivationnode.m7(true).trim().equals("") ? "dererr004" : "dererr005";
-                  this.m1622(s, Message.params("remote line number", this.f940.substring(i, j)));
+                  String s = derivationnode.getFormulaText(true).trim().equals("") ? "dererr004" : "dererr005";
+                  this.reportError(s, Message.params("remote line number", this.remaining.substring(i, j)));
                   return false;
                }
 
-               this.f936.addElement(derivationnode);
-               this.f937.addElement(expression);
-               this.f940 = this.f940.substring(j);
+               this.citedNodes.addElement(derivationnode);
+               this.stack.addElement(expression);
+               this.remaining = this.remaining.substring(j);
             } else {
-               this.f939 = this.f940.substring(i, j);
-               this.f940 = this.f940.substring(j);
+               this.ruleName = this.remaining.substring(i, j);
+               this.remaining = this.remaining.substring(j);
                if (flag2) {
-                  this.f939 = this.m1597(this.f939);
+                  this.ruleName = this.normalizeRuleName(this.ruleName);
                   if (flag3) {
-                     this.f939 = "ASS " + this.f939;
+                     this.ruleName = "ASS " + this.ruleName;
                   } else if (flag4) {
-                     this.f939 = "SHOW " + this.f939;
+                     this.ruleName = "SHOW " + this.ruleName;
                   } else {
-                     if (this.f939.equals("ASS")) {
+                     if (this.ruleName.equals("ASS")) {
                         flag3 = true;
                         flag1 = true;
                         continue;
                      }
 
-                     if (this.f939.equals("SHOW")) {
+                     if (this.ruleName.equals("SHOW")) {
                         flag4 = true;
                         flag1 = true;
                         continue;
                      }
                   }
                } else {
-                  this.m1621("dererr006");
+                  this.reportError("dererr006");
                }
 
                return flag2;
@@ -223,13 +223,13 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       }
    }
 
-   boolean m1592() {
-      int i = this.f940.length();
+   boolean skipToNextStep() {
+      int i = this.remaining.length();
 
       for (int j = 0; j < i; j++) {
-         char c0 = this.f940.charAt(j);
-         if (Character.isDigit(c0) || m1596(c0)) {
-            this.f940 = this.f940.substring(j);
+         char c0 = this.remaining.charAt(j);
+         if (Character.isDigit(c0) || isNameChar(c0)) {
+            this.remaining = this.remaining.substring(j);
             return true;
          }
       }
@@ -237,27 +237,27 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       return false;
    }
 
-   Object m1593() {
-      Integer integer = this.m1594();
+   Object readSourceFormula() {
+      Integer integer = this.readLineNumber();
       if (integer != null) {
-         DerivationNode derivationnode = this.f935.f317.f915.problem.m32(integer);
+         DerivationNode derivationnode = this.line.box.module.problem.findLine(integer);
          if (derivationnode == null) {
             return new ErrorRef("dererr003", Message.params("remote line number", integer.toString()));
-         } else if (!this.f935.m565(derivationnode)) {
+         } else if (!this.line.canUse(derivationnode)) {
             return new ErrorRef(null);
          } else {
-            Expression expression = derivationnode.m44();
+            Expression expression = derivationnode.getFormula();
             if (expression == null) {
-               String s = derivationnode.m7(true).trim().equals("") ? "dererr004" : "dererr005";
+               String s = derivationnode.getFormulaText(true).trim().equals("") ? "dererr004" : "dererr005";
                return new ErrorRef(s, Message.params("remote line number", integer.toString()));
             } else {
                return expression;
             }
          }
       } else {
-         int i = this.m1595();
+         int i = this.readPremiseNumber();
          if (i != -1) {
-            Expression[] aexpression = this.f935.f317.f915.premises;
+            Expression[] aexpression = this.line.box.module.premises;
             if (aexpression == null || aexpression.length == 0) {
                return new ErrorRef("dererr029");
             } else if (i > aexpression.length) {
@@ -265,7 +265,8 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
             } else {
                if (i == 0) {
                   if (aexpression.length > 1) {
-                     i = C_KB.m778(this.f935, aexpression, C_n_.m1960(C_n_.getText("derdlg002"), null, this)) + 1;
+                     i = DerivationDialogs.chooseFormula(this.line, aexpression, DerivationMessage.format(DerivationMessage.getText("derdlg002"), null, this))
+                        + 1;
                      if (i == 0) {
                         return new ErrorRef(null);
                      }
@@ -282,19 +283,19 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       }
    }
 
-   Integer m1594() {
+   Integer readLineNumber() {
       int k = 0;
-      int l = this.f940.length();
+      int l = this.remaining.length();
       boolean flag = false;
 
       char c0;
       for (c0 = 0; k < l; k++) {
-         c0 = this.f940.charAt(k);
+         c0 = this.remaining.charAt(k);
          if (Character.isDigit(c0)) {
             break;
          }
 
-         if (m1596(c0)) {
+         if (isNameChar(c0)) {
             return null;
          }
       }
@@ -304,19 +305,19 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       } else {
          int i;
          for (i = k++; k < l; k++) {
-            c0 = this.f940.charAt(k);
+            c0 = this.remaining.charAt(k);
             if (!Character.isDigit(c0)) {
                break;
             }
          }
 
-         if (m1596(c0)) {
+         if (isNameChar(c0)) {
             return null;
          } else {
             int j = k++;
-            Integer integer = LogicProgram.parseInteger(this.f940.substring(i, j));
+            Integer integer = LogicProgram.parseInteger(this.remaining.substring(i, j));
             if (integer != null) {
-               this.f940 = this.f940.substring(j);
+               this.remaining = this.remaining.substring(j);
             }
 
             return integer;
@@ -324,17 +325,17 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       }
    }
 
-   int m1595() {
+   int readPremiseNumber() {
       int k = 0;
-      int l = this.f940.length();
+      int l = this.remaining.length();
 
       for (char c0 = '\u0000'; k < l; k++) {
-         c0 = this.f940.charAt(k);
+         c0 = this.remaining.charAt(k);
          if (Character.isDigit(c0)) {
             return -1;
          }
 
-         if (m1596(c0)) {
+         if (isNameChar(c0)) {
             break;
          }
       }
@@ -344,69 +345,69 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       } else {
          int i;
          for (i = k++; k < l; k++) {
-            char c1 = this.f940.charAt(k);
-            if (!Character.isDigit(c1) && !m1596(c1)) {
+            char c1 = this.remaining.charAt(k);
+            if (!Character.isDigit(c1) && !isNameChar(c1)) {
                break;
             }
          }
 
          int j = k++;
-         int i1 = m1633(this.f940.substring(i, j).toUpperCase());
+         int i1 = parsePremiseNumber(this.remaining.substring(i, j).toUpperCase());
          if (i1 != -1) {
-            this.f940 = this.f940.substring(j);
+            this.remaining = this.remaining.substring(j);
          }
 
          return i1;
       }
    }
 
-   static boolean m1596(char c0) {
+   static boolean isNameChar(char c0) {
       return !Character.isLetter(c0) && c0 < 256 ? "~!@#$%^&*(){}_+-=<>|/".indexOf(c0) != -1 : true;
    }
 
-   String m1597(String s) {
+   String normalizeRuleName(String s) {
       if (s == null) {
          return null;
       } else {
          int i = s.indexOf("/");
          if (i != -1) {
-            if (this.f956 == null) {
-               this.f956 = new Vector();
+            if (this.presetAnswers == null) {
+               this.presetAnswers = new Vector();
             }
 
             String s1 = s.substring(i + 1);
             s = s.substring(0, i);
 
             while ((i = s1.indexOf("/")) != -1) {
-               this.f956.addElement(s1.substring(0, i));
+               this.presetAnswers.addElement(s1.substring(0, i));
                s1 = s1.substring(i + 1);
             }
 
-            this.f956.addElement(s1);
+            this.presetAnswers.addElement(s1);
          }
 
          return s.toUpperCase();
       }
    }
 
-   private void m1598(Justification justification) {
-      this.f935.f336.setElementAt(justification, this.f943);
+   private void cacheJustification(Justification justification) {
+      this.line.justifications.setElementAt(justification, this.stepIndex);
    }
 
-   private boolean m1599() {
-      this.f935.f336 = null;
-      this.f935.f317.f922 = false;
+   private boolean fail() {
+      this.line.justifications = null;
+      this.line.box.strategyConsistent = false;
       return false;
    }
 
-   static boolean m1600(Expression expression) {
+   static boolean containsWildcard(Expression expression) {
       if (expression.symbol.startsWith("?")) {
          return true;
       } else {
          int i = expression.getChildCount();
 
          for (int j = 0; j < i; j++) {
-            if (m1600(expression.getChild(j))) {
+            if (containsWildcard(expression.getChild(j))) {
                return true;
             }
          }
@@ -415,7 +416,7 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       }
    }
 
-   static boolean m1601(Expression expression, Expression expression1) {
+   static boolean matchesPattern(Expression expression, Expression expression1) {
       if (!expression1.symbol.startsWith("?")) {
          if (!expression.symbol.equals(expression1.symbol)) {
             return false;
@@ -425,7 +426,7 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
                return false;
             } else {
                for (int j = 0; j < i; j++) {
-                  if (!m1601(expression.getChild(j), expression1.getChild(j))) {
+                  if (!matchesPattern(expression.getChild(j), expression1.getChild(j))) {
                      return false;
                   }
                }
@@ -435,31 +436,31 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
          }
       } else if (!(expression instanceof Formula)) {
          return false;
-      } else if (expression.m1259() != null) {
+      } else if (expression.findMislinkedVariables() != null) {
          return false;
       } else if (expression1.symbol.equals("?PNX")) {
-         return m1602(expression);
+         return isPrenex(expression);
       } else if (expression1.symbol.equals("?NOV")) {
-         return m1603(expression);
+         return hasOnlyOuterQuantifiers(expression);
       } else if (expression1.symbol.equals("?DNF")) {
-         return m1605(expression, true);
+         return isNormalForm(expression, true);
       } else {
-         return expression1.symbol.equals("?CNF") ? m1605(expression, false) : expression1.symbol.equals("?");
+         return expression1.symbol.equals("?CNF") ? isNormalForm(expression, false) : expression1.symbol.equals("?");
       }
    }
 
-   static boolean m1602(Expression expression) {
-      return expression instanceof QuantifiedFormula ? m1602(expression.getChild(1)) : m1604(expression);
+   static boolean isPrenex(Expression expression) {
+      return expression instanceof QuantifiedFormula ? isPrenex(expression.getChild(1)) : isQuantifierFree(expression);
    }
 
-   static boolean m1603(Expression expression) {
+   static boolean hasOnlyOuterQuantifiers(Expression expression) {
       if (expression instanceof QuantifiedFormula) {
-         return m1604(expression.getChild(1));
+         return isQuantifierFree(expression.getChild(1));
       } else {
          int i = expression.getChildCount();
 
          for (int j = 0; j < i; j++) {
-            if (!m1603(expression.getChild(j))) {
+            if (!hasOnlyOuterQuantifiers(expression.getChild(j))) {
                return false;
             }
          }
@@ -468,14 +469,14 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       }
    }
 
-   static boolean m1604(Expression expression) {
+   static boolean isQuantifierFree(Expression expression) {
       if (expression instanceof QuantifiedFormula) {
          return false;
       } else {
          int i = expression.getChildCount();
 
          for (int j = 0; j < i; j++) {
-            if (!m1604(expression.getChild(j))) {
+            if (!isQuantifierFree(expression.getChild(j))) {
                return false;
             }
          }
@@ -484,9 +485,9 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       }
    }
 
-   static boolean m1605(Expression expression, boolean flag) {
+   static boolean isNormalForm(Expression expression, boolean flag) {
       if (expression instanceof QuantifiedFormula) {
-         return m1605(expression.getChild(1), flag);
+         return isNormalForm(expression.getChild(1), flag);
       } else {
          String s = expression.symbol;
          if (!s.equals("->") && !s.equals("<->")) {
@@ -507,7 +508,7 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
                   return false;
                }
 
-               if (!m1605(expression1, flag)) {
+               if (!isNormalForm(expression1, flag)) {
                   return false;
                }
             }
@@ -519,522 +520,530 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       }
    }
 
-   boolean m1606(boolean flag) {
-      return this.m1607(flag, false);
+   boolean checkStep(boolean flag) {
+      return this.checkStep(flag, false);
    }
 
-   boolean m1607(boolean flag, boolean flag1) {
-      this.f938 = this.m1626();
-      this.f944 = flag;
-      this.f945 = flag1;
-      this.f953 = null;
-      this.f951 = false;
-      this.f954 = null;
-      this.f952 = false;
-      this.f957 = null;
-      this.f958 = null;
-      this.f959 = null;
-      this.m1590();
-      this.f943++;
-      if (this.f935.f336 == null) {
-         this.f935.f336 = new Vector();
+   boolean checkStep(boolean flag, boolean flag1) {
+      this.argumentCount = this.getStackSize();
+      this.matchLine = flag;
+      this.finalStep = flag1;
+      this.premiseMatches = null;
+      this.hasPremiseMatch = false;
+      this.fullMatches = null;
+      this.hasFullMatch = false;
+      this.allForms = null;
+      this.enabledForms = null;
+      this.automaticForms = null;
+      this.computePremiseRange();
+      this.stepIndex++;
+      if (this.line.justifications == null) {
+         this.line.justifications = new Vector();
       }
 
-      int j = this.f943 + 1 - this.f935.f336.size();
+      int j = this.stepIndex + 1 - this.line.justifications.size();
       if (j > 0 || (flag || flag1) && j < 0) {
-         this.f935.f336.setSize(this.f943 + 1);
+         this.line.justifications.setSize(this.stepIndex + 1);
       }
 
       ErrorRef errorref;
-      if ((errorref = this.f935.f317.f915.checkDerivationRule(this.f939, this.f946)) != null) {
-         this.m1621(errorref.m716());
-         return this.m1599();
+      if ((errorref = this.line.box.module.checkDerivationRule(this.ruleName, this.interactive)) != null) {
+         this.reportError(errorref.getId());
+         return this.fail();
       } else {
-         if (!this.f939.equals("CD") && !this.f939.equals("ID") && !this.f939.equals("DD") && !this.f939.equals("UD") && !this.f939.equals("BD")) {
-            if ((flag || flag1) && this.f935.f317.f918 == this.f935) {
-               this.m1621("dererr009");
-               return this.m1599();
+         if (!this.ruleName.equals("CD")
+            && !this.ruleName.equals("ID")
+            && !this.ruleName.equals("DD")
+            && !this.ruleName.equals("UD")
+            && !this.ruleName.equals("BD")) {
+            if ((flag || flag1) && this.line.box.cancelLine == this.line) {
+               this.reportError("dererr009");
+               return this.fail();
             }
          } else {
             if (!flag && !flag1) {
-               this.m1621("dererr007");
-               return this.m1599();
+               this.reportError("dererr007");
+               return this.fail();
             }
 
-            boolean flag2 = this.f935.m576();
-            this.f935.f334 = flag2 && this.f935.f317.f918 != this.f935;
+            boolean flag2 = this.line.isLastInBox();
+            this.line.readyToCancel = flag2 && this.line.box.cancelLine != this.line;
             if (!flag2) {
-               this.m1621("dererr008");
-               return this.m1599();
+               this.reportError("dererr008");
+               return this.fail();
             }
          }
 
-         this.f935.f317.f922 = this.f935.f317.f922
-            & (this.f939.equals("IE") || this.f939.equals("CIE") || this.f939.equals("BD") || this.f939.startsWith("ASS "));
-         Justification justification = (Justification)this.f935.f336.elementAt(this.f943);
+         this.line.box.strategyConsistent &= (this.ruleName.equals("IE") || this.ruleName.equals("CIE") || this.ruleName.equals("BD") || this.ruleName.startsWith("ASS "));
+         Justification justification = (Justification)this.line.justifications.elementAt(this.stepIndex);
          if (justification != null) {
-            if (justification.m600(this)) {
-               this.f947 = true;
+            if (justification.reapply(this)) {
+               this.reusedCache = true;
                return true;
             }
 
-            if (this.f948 != null) {
-               this.m1622(this.f948.f427, this.f948.f428);
-               return this.m1599();
+            if (this.cachedError != null) {
+               this.reportError(this.cachedError.id, this.cachedError.params);
+               return this.fail();
             }
 
-            this.m1598(null);
+            this.cacheJustification(null);
          }
 
-         if (this.f939.equals("CD")) {
-            if (this.f938 != 1) {
-               this.m1622("dererr010", Message.params("n", "1"));
-               return this.m1599();
+         if (this.ruleName.equals("CD")) {
+            if (this.argumentCount != 1) {
+               this.reportError("dererr010", Message.params("n", "1"));
+               return this.fail();
             } else {
-               Expression expression6 = this.f935.f317.m44();
-               Expression expression17 = this.m1628(-1);
+               Expression expression6 = this.line.box.getFormula();
+               Expression expression17 = this.getStackFormula(-1);
                if (expression6 == null) {
-                  this.m1621(this.f935.f317.m7(true).trim().equals("") ? "dererr011" : "dererr012");
-                  return this.m1599();
+                  this.reportError(this.line.box.getFormulaText(true).trim().equals("") ? "dererr011" : "dererr012");
+                  return this.fail();
                } else if (!expression6.getSymbol().equals("->")) {
-                  this.m1621("dererr013");
-                  return this.m1599();
-               } else if (!m1601(expression17, expression6.getChild(1))) {
-                  this.m1621("dererr014");
-                  return this.m1599();
+                  this.reportError("dererr013");
+                  return this.fail();
+               } else if (!matchesPattern(expression17, expression6.getChild(1))) {
+                  this.reportError("dererr014");
+                  return this.fail();
                } else {
                   DerivationNode derivationnode4;
-                  if ((derivationnode4 = this.m1615(-1)) != null) {
-                     this.m1622("dererr015", Message.params("remote line number", derivationnode4.m30() + ""));
-                     return this.m1599();
+                  if ((derivationnode4 = this.getCitedNodeOutsideBox(-1)) != null) {
+                     this.reportError("dererr015", Message.params("remote line number", derivationnode4.getLineNumber() + ""));
+                     return this.fail();
                   } else {
-                     if (this.f935.f317.f918 == this.f935 && this.f935.f317.f915.serialMode) {
-                        int i2 = this.f935.f317.f920;
-                        if (this.f935.f317.f915.mixedModeDisabled && i2 != 2) {
-                           this.m1621("dererr101");
-                           return this.m1599();
+                     if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode) {
+                        int i2 = this.line.box.assumptionType;
+                        if (this.line.box.module.mixedModeDisabled && i2 != 2) {
+                           this.reportError("dererr101");
+                           return this.fail();
                         }
 
                         if (i2 != 0 && i2 != 1 && i2 != 2) {
-                           this.m1621("dererr101");
-                           return this.m1599();
+                           this.reportError("dererr101");
+                           return this.fail();
                         }
 
-                        if ((errorref = this.f935.f317.f915.checkDerivationRule("CD/" + ASS_STR[i2], this.f946)) != null) {
-                           this.m1621(errorref.f427);
-                           return this.m1599();
+                        if ((errorref = this.line.box.module.checkDerivationRule("CD/" + ASS_STR[i2], this.interactive)) != null) {
+                           this.reportError(errorref.id);
+                           return this.fail();
                         }
 
-                        this.f935.f317.f917.m549(i2 == 2 ? "derinf001" : "derinf002", 4);
+                        this.line.box.showLine.showMessage(i2 == 2 ? "derinf001" : "derinf002", 4);
                      }
 
-                     this.m1631(1);
+                     this.popStack(1);
                      return true;
                   }
                }
             }
-         } else if (this.f939.equals("ID")) {
-            if (this.f938 != 2) {
-               this.m1622("dererr010", Message.params("n", "2"));
-               return this.m1599();
+         } else if (this.ruleName.equals("ID")) {
+            if (this.argumentCount != 2) {
+               this.reportError("dererr010", Message.params("n", "2"));
+               return this.fail();
             } else {
-               Expression expression5 = this.m1628(-2);
-               Expression expression16 = this.m1628(-1);
-               if (!expression5.m1255(expression16) && !expression16.m1255(expression5)) {
-                  this.m1621("dererr017");
-                  return this.m1599();
+               Expression expression5 = this.getStackFormula(-2);
+               Expression expression16 = this.getStackFormula(-1);
+               if (!expression5.isNegationOf(expression16) && !expression16.isNegationOf(expression5)) {
+                  this.reportError("dererr017");
+                  return this.fail();
                } else {
                   DerivationNode derivationnode3;
-                  if ((derivationnode3 = this.m1615(-2)) == null && (derivationnode3 = this.m1615(-1)) == null) {
-                     if (this.f935.f317.f918 == this.f935 && this.f935.f317.f915.serialMode) {
-                        int l1 = this.f935.f317.f920;
-                        if (this.f935.f317.f915.mixedModeDisabled && l1 != 1) {
-                           this.m1621("dererr101");
-                           return this.m1599();
+                  if ((derivationnode3 = this.getCitedNodeOutsideBox(-2)) == null && (derivationnode3 = this.getCitedNodeOutsideBox(-1)) == null) {
+                     if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode) {
+                        int l1 = this.line.box.assumptionType;
+                        if (this.line.box.module.mixedModeDisabled && l1 != 1) {
+                           this.reportError("dererr101");
+                           return this.fail();
                         }
 
                         if (l1 != 0 && l1 != 1 && l1 != 2) {
-                           this.m1621("dererr101");
-                           return this.m1599();
+                           this.reportError("dererr101");
+                           return this.fail();
                         }
 
-                        if ((errorref = this.f935.f317.f915.checkDerivationRule("ID/" + ASS_STR[l1], this.f946)) != null) {
-                           this.m1621(errorref.f427);
-                           return this.m1599();
+                        if ((errorref = this.line.box.module.checkDerivationRule("ID/" + ASS_STR[l1], this.interactive)) != null) {
+                           this.reportError(errorref.id);
+                           return this.fail();
                         }
 
-                        this.f935.f317.f917.m11(l1 == 1 ? "derinf001" : "derinf002");
+                        this.line.box.showLine.showMessage(l1 == 1 ? "derinf001" : "derinf002");
                      }
 
-                     this.m1631(2);
+                     this.popStack(2);
                      return true;
                   } else {
-                     this.m1622("dererr015", Message.params("remote line number", derivationnode3.m30() + ""));
-                     return this.m1599();
+                     this.reportError("dererr015", Message.params("remote line number", derivationnode3.getLineNumber() + ""));
+                     return this.fail();
                   }
                }
             }
-         } else if (this.f939.equals("DD")) {
-            if (this.f938 != 1) {
-               this.m1622("dererr010", Message.params("n", "1"));
-               return this.m1599();
+         } else if (this.ruleName.equals("DD")) {
+            if (this.argumentCount != 1) {
+               this.reportError("dererr010", Message.params("n", "1"));
+               return this.fail();
             } else {
-               Expression expression4 = this.f935.f317.m44();
-               Expression expression15 = this.m1628(-1);
+               Expression expression4 = this.line.box.getFormula();
+               Expression expression15 = this.getStackFormula(-1);
                if (expression4 == null) {
-                  this.m1621(this.f935.f317.m7(true).trim().equals("") ? "dererr011" : "dererr012");
-                  return this.m1599();
-               } else if (!m1601(expression15, expression4)) {
-                  this.m1621("dererr019");
-                  return this.m1599();
+                  this.reportError(this.line.box.getFormulaText(true).trim().equals("") ? "dererr011" : "dererr012");
+                  return this.fail();
+               } else if (!matchesPattern(expression15, expression4)) {
+                  this.reportError("dererr019");
+                  return this.fail();
                } else {
                   DerivationNode derivationnode2;
-                  if ((derivationnode2 = this.m1615(-1)) != null) {
-                     this.m1622("dererr015", Message.params("remote line number", derivationnode2.m30() + ""));
-                     return this.m1599();
+                  if ((derivationnode2 = this.getCitedNodeOutsideBox(-1)) != null) {
+                     this.reportError("dererr015", Message.params("remote line number", derivationnode2.getLineNumber() + ""));
+                     return this.fail();
                   } else {
-                     if (this.f935.f317.f918 == this.f935 && this.f935.f317.f915.serialMode) {
-                        int k1 = this.f935.f317.f920;
-                        if (this.f935.f317.f915.mixedModeDisabled && k1 != 0) {
-                           this.m1621("dererr101");
-                           return this.m1599();
+                     if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode) {
+                        int k1 = this.line.box.assumptionType;
+                        if (this.line.box.module.mixedModeDisabled && k1 != 0) {
+                           this.reportError("dererr101");
+                           return this.fail();
                         }
 
                         if (k1 != 0 && k1 != 1 && k1 != 2) {
-                           this.m1621("dererr101");
-                           return this.m1599();
+                           this.reportError("dererr101");
+                           return this.fail();
                         }
 
-                        if ((errorref = this.f935.f317.f915.checkDerivationRule("DD/" + ASS_STR[k1], this.f946)) != null) {
-                           this.m1621(errorref.f427);
-                           return this.m1599();
+                        if ((errorref = this.line.box.module.checkDerivationRule("DD/" + ASS_STR[k1], this.interactive)) != null) {
+                           this.reportError(errorref.id);
+                           return this.fail();
                         }
 
-                        this.f935.f317.f917.m11(k1 == 0 ? "derinf001" : "derinf002");
+                        this.line.box.showLine.showMessage(k1 == 0 ? "derinf001" : "derinf002");
                      }
 
-                     this.m1631(1);
+                     this.popStack(1);
                      return true;
                   }
                }
             }
-         } else if (this.f939.equals("UD")) {
-            if (this.f938 != 1) {
-               this.m1622("dererr010", Message.params("n", "1"));
-               return this.m1599();
+         } else if (this.ruleName.equals("UD")) {
+            if (this.argumentCount != 1) {
+               this.reportError("dererr010", Message.params("n", "1"));
+               return this.fail();
             } else {
-               Expression expression3 = this.f935.f317.m44();
-               Expression expression14 = this.m1628(-1);
+               Expression expression3 = this.line.box.getFormula();
+               Expression expression14 = this.getStackFormula(-1);
                if (expression3 == null) {
-                  this.m1621(this.f935.f317.m7(true).trim().equals("") ? "dererr011" : "dererr012");
-                  return this.m1599();
+                  this.reportError(this.line.box.getFormulaText(true).trim().equals("") ? "dererr011" : "dererr012");
+                  return this.fail();
                } else if (!expression3.getSymbol().equals("@")) {
-                  this.m1621("dererr021");
-                  return this.m1599();
-               } else if (!m1601(expression14, expression3.getChild(1))) {
-                  this.m1621("dererr022");
-                  return this.m1599();
+                  this.reportError("dererr021");
+                  return this.fail();
+               } else if (!matchesPattern(expression14, expression3.getChild(1))) {
+                  this.reportError("dererr022");
+                  return this.fail();
                } else {
                   DerivationNode derivationnode1;
-                  if ((derivationnode1 = this.m1615(-1)) != null) {
-                     this.m1622("dererr015", Message.params("remote line number", derivationnode1.m30() + ""));
-                     return this.m1599();
+                  if ((derivationnode1 = this.getCitedNodeOutsideBox(-1)) != null) {
+                     this.reportError("dererr015", Message.params("remote line number", derivationnode1.getLineNumber() + ""));
+                     return this.fail();
                   } else {
                      String s = ((SimpleTerm)expression3.getChild(0)).symbol;
-                     if (this.m1614(s)) {
-                        this.m1622("dererr023", Message.params("variable name", "\\l" + s + "\\l"));
-                        return this.m1599();
+                     if (this.isVariableUsedInOuterBoxes(s)) {
+                        this.reportError("dererr023", Message.params("variable name", "\\l" + s + "\\l"));
+                        return this.fail();
                      } else {
-                        this.m1631(1);
+                        this.popStack(1);
                         return true;
                      }
                   }
                }
             }
-         } else if (this.f939.equals("BD")) {
-            if (this.f938 != 1) {
-               this.m1622("dererr010", Message.params("n", "1"));
-               return this.m1599();
+         } else if (this.ruleName.equals("BD")) {
+            if (this.argumentCount != 1) {
+               this.reportError("dererr010", Message.params("n", "1"));
+               return this.fail();
             } else {
-               Expression expression2 = this.f935.f317.m44();
+               Expression expression2 = this.line.box.getFormula();
                if (expression2 == null) {
-                  this.m1621(this.f935.f317.m7(true).trim().equals("") ? "dererr011" : "dererr012");
-                  return this.m1599();
+                  this.reportError(this.line.box.getFormulaText(true).trim().equals("") ? "dererr011" : "dererr012");
+                  return this.fail();
                } else if (!expression2.getSymbol().equals("<->")) {
-                  this.m1621("dererr081");
-                  return this.m1599();
+                  this.reportError("dererr081");
+                  return this.fail();
                } else {
-                  Expression expression13 = this.m1628(-1);
-                  int j1 = this.f935.f317.f923;
+                  Expression expression13 = this.getStackFormula(-1);
+                  int j1 = this.line.box.assumedSide;
                   if (j1 == -1) {
-                     if (!m1601(expression13, expression2.getChild(0)) && !m1601(expression13, expression2.getChild(1))) {
-                        this.m1621("dererr102");
-                        return this.m1599();
+                     if (!matchesPattern(expression13, expression2.getChild(0)) && !matchesPattern(expression13, expression2.getChild(1))) {
+                        this.reportError("dererr102");
+                        return this.fail();
                      }
                   } else {
-                     Expression expression22 = j1 == 2 ? this.f935.f317.m1560(1).m44() : expression2.getChild(j1);
-                     if ((!m1601(expression13, expression2.getChild(0)) || !m1601(expression22, expression2.getChild(1)))
-                        && (!m1601(expression22, expression2.getChild(0)) || !m1601(expression13, expression2.getChild(1)))) {
-                        this.m1621("dererr090");
-                        return this.m1599();
+                     Expression expression22 = j1 == 2 ? this.line.box.getNode(1).getFormula() : expression2.getChild(j1);
+                     if ((!matchesPattern(expression13, expression2.getChild(0)) || !matchesPattern(expression22, expression2.getChild(1)))
+                        && (!matchesPattern(expression22, expression2.getChild(0)) || !matchesPattern(expression13, expression2.getChild(1)))) {
+                        this.reportError("dererr090");
+                        return this.fail();
                      }
                   }
 
-                  if (this.f935.f317.f915.serialMode && !this.f935.f317.f922) {
-                     this.m1621("dererr091");
-                     return this.m1599();
+                  if (this.line.box.module.serialMode && !this.line.box.strategyConsistent) {
+                     this.reportError("dererr091");
+                     return this.fail();
                   } else {
                      DerivationNode derivationnode;
-                     if ((derivationnode = this.m1615(-1)) != null) {
-                        this.m1622("dererr015", Message.params("remote line number", derivationnode.m30() + ""));
-                        return this.m1599();
+                     if ((derivationnode = this.getCitedNodeOutsideBox(-1)) != null) {
+                        this.reportError("dererr015", Message.params("remote line number", derivationnode.getLineNumber() + ""));
+                        return this.fail();
                      } else {
-                        if (this.f935.f317.f918 == this.f935 && this.f935.f317.f915.serialMode) {
-                           int i3 = this.f935.f317.f920;
+                        if (this.line.box.cancelLine == this.line && this.line.box.module.serialMode) {
+                           int i3 = this.line.box.assumptionType;
                            if (i3 != 3) {
-                              this.m1621("dererr101");
-                              return this.m1599();
+                              this.reportError("dererr101");
+                              return this.fail();
                            }
 
-                           if ((errorref = this.f935.f317.f915.checkDerivationRule("BD/" + ASS_STR[i3], this.f946)) != null) {
-                              this.m1621(errorref.f427);
-                              return this.m1599();
+                           if ((errorref = this.line.box.module.checkDerivationRule("BD/" + ASS_STR[i3], this.interactive)) != null) {
+                              this.reportError(errorref.id);
+                              return this.fail();
                            }
 
-                           this.f935.f317.f917.m549(i3 == 3 ? "derinf001" : "derinf002", 4);
+                           this.line.box.showLine.showMessage(i3 == 3 ? "derinf001" : "derinf002", 4);
                         }
 
-                        this.m1631(1);
+                        this.popStack(1);
                         return true;
                      }
                   }
                }
             }
-         } else if (this.f939.equals("ASS CD")) {
-            if (this.f938 != 0) {
-               this.m1622("dererr024", Message.params("n", this.f938 + ""));
-               return this.m1599();
-            } else if (this.f935.m16() != 1) {
-               this.m1621("dererr025");
-               return this.m1599();
-            } else if (this.f942 != null) {
-               this.m1621("dererr026");
-               return this.m1599();
+         } else if (this.ruleName.equals("ASS CD")) {
+            if (this.argumentCount != 0) {
+               this.reportError("dererr024", Message.params("n", this.argumentCount + ""));
+               return this.fail();
+            } else if (this.line.getIndexInBox() != 1) {
+               this.reportError("dererr025");
+               return this.fail();
+            } else if (this.result != null) {
+               this.reportError("dererr026");
+               return this.fail();
             } else {
-               Expression expression1 = this.f935.f317.m44();
+               Expression expression1 = this.line.box.getFormula();
                if (expression1 == null) {
-                  this.m1621(this.f935.f317.m7(true).trim().equals("") ? "dererr011" : "dererr012");
-                  return this.m1599();
+                  this.reportError(this.line.box.getFormulaText(true).trim().equals("") ? "dererr011" : "dererr012");
+                  return this.fail();
                } else if (!expression1.getSymbol().equals("->")) {
-                  this.m1621("dererr013");
-                  return this.m1599();
+                  this.reportError("dererr013");
+                  return this.fail();
                } else {
-                  this.f935.f317.f920 = 2;
-                  this.f942 = expression1.getChild(0);
-                  if (flag && !this.m1608()) {
-                     return this.m1599();
+                  this.line.box.assumptionType = 2;
+                  this.result = expression1.getChild(0);
+                  if (flag && !this.checkResultMatchesLine()) {
+                     return this.fail();
                   } else {
-                     this.m1631(0);
+                     this.popStack(0);
                      return true;
                   }
                }
             }
-         } else if (this.f939.equals("ASS ID")) {
-            if (this.f938 != 0) {
-               this.m1622("dererr024", Message.params("n", this.f938 + ""));
-               return this.m1599();
-            } else if (this.f935.m16() != 1) {
-               this.m1621("dererr025");
-               return this.m1599();
-            } else if (this.f942 != null) {
-               this.m1621("dererr026");
-               return this.m1599();
+         } else if (this.ruleName.equals("ASS ID")) {
+            if (this.argumentCount != 0) {
+               this.reportError("dererr024", Message.params("n", this.argumentCount + ""));
+               return this.fail();
+            } else if (this.line.getIndexInBox() != 1) {
+               this.reportError("dererr025");
+               return this.fail();
+            } else if (this.result != null) {
+               this.reportError("dererr026");
+               return this.fail();
             } else {
-               Expression expression = this.f935.f317.m44();
+               Expression expression = this.line.box.getFormula();
                if (expression == null) {
-                  this.m1621(this.f935.f317.m7(true).trim().equals("") ? "dererr011" : "dererr012");
-                  return this.m1599();
+                  this.reportError(this.line.box.getFormulaText(true).trim().equals("") ? "dererr011" : "dererr012");
+                  return this.fail();
                } else {
-                  if (flag && this.f941 != null) {
-                     if (!expression.m1255(this.f941) && !this.f941.m1255(expression)) {
-                        this.m1621("dererr027");
-                        return this.m1599();
+                  if (flag && this.lineFormula != null) {
+                     if (!expression.isNegationOf(this.lineFormula) && !this.lineFormula.isNegationOf(expression)) {
+                        this.reportError("dererr027");
+                        return this.fail();
                      }
 
-                     this.f942 = this.f941;
+                     this.result = this.lineFormula;
                   } else if (expression.getSymbol().equals("~")) {
                      Expression[] aexpression2 = new Expression[]{expression.getChild(0), expression.negate()};
-                     int i1 = C_KB.m778(this.f935, aexpression2, C_n_.m1960(C_n_.getText("derdlg001"), null, this));
+                     int i1 = DerivationDialogs.chooseFormula(
+                        this.line, aexpression2, DerivationMessage.format(DerivationMessage.getText("derdlg001"), null, this)
+                     );
                      if (i1 == -1) {
-                        if (this.f935.f317.f915.serialMode) {
-                           this.f935.f317.f915.complete = false;
-                           this.m1621("dererr064");
+                        if (this.line.box.module.serialMode) {
+                           this.line.box.module.complete = false;
+                           this.reportError("dererr064");
                         } else {
-                           this.m1621("dererr028");
-                           this.f935.f317.f915.abort(true);
+                           this.reportError("dererr028");
+                           this.line.box.module.abort(true);
                         }
 
-                        return this.m1599();
+                        return this.fail();
                      }
 
-                     this.f942 = aexpression2[i1];
-                     this.m1598(new C_p_E(i1 == 1));
+                     this.result = aexpression2[i1];
+                     this.cacheJustification(new IndirectAssumptionJustification(i1 == 1));
                   } else {
-                     this.f942 = expression.negate();
+                     this.result = expression.negate();
                   }
 
-                  this.f935.f317.f920 = 1;
-                  if (flag && !this.m1608()) {
-                     return this.m1599();
+                  this.line.box.assumptionType = 1;
+                  if (flag && !this.checkResultMatchesLine()) {
+                     return this.fail();
                   } else {
-                     this.m1631(0);
+                     this.popStack(0);
                      return true;
                   }
                }
             }
          } else {
-            j = LogicProgram.m1051(BD_ASS, this.f939);
+            j = LogicProgram.indexOf(BD_ASS, this.ruleName);
             if (j != -1) {
-               if (this.f938 != 0) {
-                  this.m1622("dererr024", Message.params("n", this.f938 + ""));
-                  return this.m1599();
-               } else if (this.f935.m16() != 1) {
-                  this.m1621("dererr025");
-                  return this.m1599();
-               } else if (this.f942 != null) {
-                  this.m1621("dererr026");
-                  return this.m1599();
+               if (this.argumentCount != 0) {
+                  this.reportError("dererr024", Message.params("n", this.argumentCount + ""));
+                  return this.fail();
+               } else if (this.line.getIndexInBox() != 1) {
+                  this.reportError("dererr025");
+                  return this.fail();
+               } else if (this.result != null) {
+                  this.reportError("dererr026");
+                  return this.fail();
                } else {
-                  Expression expression12 = this.f935.f317.m44();
+                  Expression expression12 = this.line.box.getFormula();
                   if (expression12 == null) {
-                     this.m1621(this.f935.f317.m7(true).trim().equals("") ? "dererr011" : "dererr012");
-                     return this.m1599();
+                     this.reportError(this.line.box.getFormulaText(true).trim().equals("") ? "dererr011" : "dererr012");
+                     return this.fail();
                   } else if (!expression12.getSymbol().equals("<->")) {
-                     this.m1621("dererr081");
-                     return this.m1599();
+                     this.reportError("dererr081");
+                     return this.fail();
                   } else {
-                     if (flag && this.f941 != null) {
-                        if ((j == 1 || !expression12.getChild(0).m1235(this.f941)) && (j == 0 || !expression12.getChild(1).m1235(this.f941))) {
+                     if (flag && this.lineFormula != null) {
+                        if ((j == 1 || !expression12.getChild(0).isIdentical(this.lineFormula))
+                           && (j == 0 || !expression12.getChild(1).isIdentical(this.lineFormula))) {
                            String[] astring = new String[]{"the left", "the right", "either"};
-                           this.m1622("dererr092", Message.params("side", astring[j]));
-                           return this.m1599();
+                           this.reportError("dererr092", Message.params("side", astring[j]));
+                           return this.fail();
                         }
 
-                        this.f942 = this.f941;
-                        this.f935.f317.f923 = j;
+                        this.result = this.lineFormula;
+                        this.line.box.assumedSide = j;
                      } else if (j < 2) {
-                        if (m1600(this.f942 = expression12.getChild(j))) {
-                           this.m1621("dererr093");
-                           return this.m1599();
+                        if (containsWildcard(this.result = expression12.getChild(j))) {
+                           this.reportError("dererr093");
+                           return this.fail();
                         }
 
-                        this.f935.f317.f923 = j;
+                        this.line.box.assumedSide = j;
                      } else {
                         Expression[] aexpression5 = new Expression[]{expression12.getChild(0), expression12.getChild(1)};
                         int l2;
-                        if (aexpression5[0].m1235(aexpression5[1])) {
+                        if (aexpression5[0].isIdentical(aexpression5[1])) {
                            l2 = 0;
-                        } else if (m1600(aexpression5[1]) && !m1600(aexpression5[0])) {
+                        } else if (containsWildcard(aexpression5[1]) && !containsWildcard(aexpression5[0])) {
                            l2 = 0;
-                        } else if (m1600(aexpression5[0]) && !m1600(aexpression5[1])) {
+                        } else if (containsWildcard(aexpression5[0]) && !containsWildcard(aexpression5[1])) {
                            l2 = 1;
                         } else {
-                           if (m1600(aexpression5[0]) && m1600(aexpression5[1])) {
-                              this.m1621("dererr093");
-                              return this.m1599();
+                           if (containsWildcard(aexpression5[0]) && containsWildcard(aexpression5[1])) {
+                              this.reportError("dererr093");
+                              return this.fail();
                            }
 
-                           l2 = C_KB.m778(this.f935, aexpression5, C_n_.m1960(C_n_.getText("derdlg001"), null, this));
+                           l2 = DerivationDialogs.chooseFormula(
+                              this.line, aexpression5, DerivationMessage.format(DerivationMessage.getText("derdlg001"), null, this)
+                           );
                         }
 
                         if (l2 == -1) {
-                           if (this.f935.f317.f915.serialMode) {
-                              this.f935.f317.f915.complete = false;
-                              this.m1621("dererr064");
+                           if (this.line.box.module.serialMode) {
+                              this.line.box.module.complete = false;
+                              this.reportError("dererr064");
                            } else {
-                              this.m1621("dererr028");
-                              this.f935.f317.f915.abort(true);
+                              this.reportError("dererr028");
+                              this.line.box.module.abort(true);
                            }
 
-                           return this.m1599();
+                           return this.fail();
                         }
 
-                        this.f942 = aexpression5[l2];
-                        this.m1598(new C_c_E(l2 == 1));
-                        this.f935.f317.f923 = l2;
+                        this.result = aexpression5[l2];
+                        this.cacheJustification(new BiconditionalAssumptionJustification(l2 == 1));
+                        this.line.box.assumedSide = l2;
                      }
 
-                     this.f935.f317.f920 = 3;
-                     if (flag && !this.m1608()) {
-                        return this.m1599();
+                     this.line.box.assumptionType = 3;
+                     if (flag && !this.checkResultMatchesLine()) {
+                        return this.fail();
                      } else {
-                        this.m1631(0);
+                        this.popStack(0);
                         return true;
                      }
                   }
                }
-            } else if (this.f939.startsWith("SHOW CONC") && "SHOW CONCLUSION".startsWith(this.f939)) {
-               if (!this.m1610(true)) {
-                  return this.m1599();
-               } else if (this.f935.f317.f915.conclusion == null) {
-                  this.m1621("dererr053");
-                  return this.m1599();
+            } else if (this.ruleName.startsWith("SHOW CONC") && "SHOW CONCLUSION".startsWith(this.ruleName)) {
+               if (!this.checkShowVariant(true)) {
+                  return this.fail();
+               } else if (this.line.box.module.conclusion == null) {
+                  this.reportError("dererr053");
+                  return this.fail();
                } else {
-                  this.f942 = this.f935.f317.f915.conclusion.copy();
-                  return this.m1611();
+                  this.result = this.line.box.module.conclusion.copy();
+                  return this.finishShowVariant();
                }
-            } else if (this.f939.startsWith("SHOW CONS") && "SHOW CONSEQUENT".startsWith(this.f939)) {
-               if (!this.m1610(false)) {
-                  return this.m1599();
+            } else if (this.ruleName.startsWith("SHOW CONS") && "SHOW CONSEQUENT".startsWith(this.ruleName)) {
+               if (!this.checkShowVariant(false)) {
+                  return this.fail();
                } else {
-                  Expression expression11 = this.f935.f317.m44();
+                  Expression expression11 = this.line.box.getFormula();
                   if (expression11 != null && expression11.symbol.equals("->")) {
-                     this.f942 = expression11.getChild(1).copy();
-                     return this.m1611();
+                     this.result = expression11.getChild(1).copy();
+                     return this.finishShowVariant();
                   } else {
-                     this.m1622("dererr077", Message.params("an", "a", "expected form", "conditional"));
-                     return this.m1599();
+                     this.reportError("dererr077", Message.params("an", "a", "expected form", "conditional"));
+                     return this.fail();
                   }
                }
-            } else if (this.f939.startsWith("SHOW CORR") && "SHOW CORRCOND".startsWith(this.f939)) {
-               if (!this.m1610(false)) {
-                  return this.m1599();
+            } else if (this.ruleName.startsWith("SHOW CORR") && "SHOW CORRCOND".startsWith(this.ruleName)) {
+               if (!this.checkShowVariant(false)) {
+                  return this.fail();
                } else {
-                  Expression expression10 = this.f935.f317.m44();
+                  Expression expression10 = this.line.box.getFormula();
                   if (expression10 != null && expression10.symbol.equals("|")) {
-                     this.f942 = new ConnectiveFormula("->");
-                     this.f942.addChild(expression10.getChild(0).negate());
-                     this.f942.addChild(expression10.getChild(1).copy());
-                     return this.m1611();
+                     this.result = new ConnectiveFormula("->");
+                     this.result.addChild(expression10.getChild(0).negate());
+                     this.result.addChild(expression10.getChild(1).copy());
+                     return this.finishShowVariant();
                   } else {
-                     this.m1622("dererr077", Message.params("an", "a", "expected form", "disjunction"));
-                     return this.m1599();
+                     this.reportError("dererr077", Message.params("an", "a", "expected form", "disjunction"));
+                     return this.fail();
                   }
                }
-            } else if (this.f939.startsWith("SHOW CONJ") && "SHOW CONJUNCT".startsWith(this.f939)) {
-               if (!this.m1610(false)) {
-                  return this.m1599();
+            } else if (this.ruleName.startsWith("SHOW CONJ") && "SHOW CONJUNCT".startsWith(this.ruleName)) {
+               if (!this.checkShowVariant(false)) {
+                  return this.fail();
                } else {
-                  Expression expression9 = this.f935.f317.m44();
+                  Expression expression9 = this.line.box.getFormula();
                   if (expression9 != null && expression9.symbol.equals("&")) {
                      Expression[] aexpression4 = new Expression[]{expression9.getChild(0).copy(), expression9.getChild(1).copy()};
-                     int k2 = C_KB.m778(this.f935, aexpression4, "Please choose a conjunct:");
+                     int k2 = DerivationDialogs.chooseFormula(this.line, aexpression4, "Please choose a conjunct:");
                      if (k2 == -1) {
-                        return this.m1599();
+                        return this.fail();
                      } else {
-                        this.f942 = aexpression4[k2];
-                        return this.m1611();
+                        this.result = aexpression4[k2];
+                        return this.finishShowVariant();
                      }
                   } else {
-                     this.m1622("dererr077", Message.params("an", "a", "expected form", "conjunction"));
-                     return this.m1599();
+                     this.reportError("dererr077", Message.params("an", "a", "expected form", "conjunction"));
+                     return this.fail();
                   }
                }
-            } else if (this.f939.startsWith("SHOW COND") && "SHOW CONDITIONAL".startsWith(this.f939)) {
-               if (!this.m1610(false)) {
-                  return this.m1599();
+            } else if (this.ruleName.startsWith("SHOW COND") && "SHOW CONDITIONAL".startsWith(this.ruleName)) {
+               if (!this.checkShowVariant(false)) {
+                  return this.fail();
                } else {
-                  Expression expression8 = this.f935.f317.m44();
+                  Expression expression8 = this.line.box.getFormula();
                   if (expression8 != null && expression8.symbol.equals("<->")) {
                      Expression[] aexpression3 = new Expression[]{new ConnectiveFormula("->"), null};
                      aexpression3[0].addChild(expression8.getChild(0).copy());
@@ -1042,291 +1051,294 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
                      aexpression3[1] = new ConnectiveFormula("->");
                      aexpression3[1].addChild(expression8.getChild(1).copy());
                      aexpression3[1].addChild(expression8.getChild(0).copy());
-                     int j2 = C_KB.m778(this.f935, aexpression3, "Please choose a conditional:");
+                     int j2 = DerivationDialogs.chooseFormula(this.line, aexpression3, "Please choose a conditional:");
                      if (j2 == -1) {
-                        return this.m1599();
+                        return this.fail();
                      } else {
-                        this.f942 = aexpression3[j2];
-                        return this.m1611();
+                        this.result = aexpression3[j2];
+                        return this.finishShowVariant();
                      }
                   } else {
-                     this.m1622("dererr077", Message.params("an", "a", "expected form", "biconditional"));
-                     return this.m1599();
+                     this.reportError("dererr077", Message.params("an", "a", "expected form", "biconditional"));
+                     return this.fail();
                   }
                }
-            } else if (this.f939.startsWith("SHOW INST") && "SHOW INSTANCE".startsWith(this.f939)) {
-               if (!this.m1610(false)) {
-                  return this.m1599();
+            } else if (this.ruleName.startsWith("SHOW INST") && "SHOW INSTANCE".startsWith(this.ruleName)) {
+               if (!this.checkShowVariant(false)) {
+                  return this.fail();
                } else {
-                  Expression expression7 = this.f935.f317.m44();
+                  Expression expression7 = this.line.box.getFormula();
                   if (expression7 != null && expression7.symbol.equals("@")) {
-                     this.f942 = expression7.getChild(1).copy();
-                     return this.m1611();
+                     this.result = expression7.getChild(1).copy();
+                     return this.finishShowVariant();
                   } else {
-                     this.m1622("dererr077", Message.params("an", "a", "expected form", "universal generalization"));
-                     return this.m1599();
+                     this.reportError("dererr077", Message.params("an", "a", "expected form", "universal generalization"));
+                     return this.fail();
                   }
                }
-            } else if (this.f939.startsWith("SHOW UNNEG") && "SHOW UNNEGATION".startsWith(this.f939)) {
-               Object object3 = this.m1593();
-               this.f944 = !this.m1592();
-               if (!this.m1610(false)) {
-                  return this.m1599();
+            } else if (this.ruleName.startsWith("SHOW UNNEG") && "SHOW UNNEGATION".startsWith(this.ruleName)) {
+               Object object3 = this.readSourceFormula();
+               this.matchLine = !this.skipToNextStep();
+               if (!this.checkShowVariant(false)) {
+                  return this.fail();
                } else if (object3 == null) {
-                  this.m1622("dererr079", Message.params("an", "a", "expected form", "negation"));
-                  return this.m1599();
+                  this.reportError("dererr079", Message.params("an", "a", "expected form", "negation"));
+                  return this.fail();
                } else if (object3 instanceof ErrorRef) {
                   errorref = (ErrorRef)object3;
-                  if (errorref.f427 != null) {
-                     this.m1622(errorref.f427, errorref.f428);
+                  if (errorref.id != null) {
+                     this.reportError(errorref.id, errorref.params);
                   }
 
-                  return this.m1599();
+                  return this.fail();
                } else {
                   Expression expression21 = (Expression)object3;
                   if (!expression21.symbol.equals("~")) {
                      String s4 = "\\l" + expression21 + "\\l";
-                     this.m1622("dererr080", Message.params("remote line", s4, "an", "a", "expected form", "negation"));
-                     return this.m1599();
+                     this.reportError("dererr080", Message.params("remote line", s4, "an", "a", "expected form", "negation"));
+                     return this.fail();
                   } else {
-                     this.f942 = expression21.getChild(0).copy();
-                     return this.m1611();
+                     this.result = expression21.getChild(0).copy();
+                     return this.finishShowVariant();
                   }
                }
-            } else if (this.f939.startsWith("SHOW ANT") && "SHOW ANTECEDENT".startsWith(this.f939)) {
-               Object object2 = this.m1593();
-               this.f944 = !this.m1592();
-               if (!this.m1610(false)) {
-                  return this.m1599();
+            } else if (this.ruleName.startsWith("SHOW ANT") && "SHOW ANTECEDENT".startsWith(this.ruleName)) {
+               Object object2 = this.readSourceFormula();
+               this.matchLine = !this.skipToNextStep();
+               if (!this.checkShowVariant(false)) {
+                  return this.fail();
                } else if (object2 == null) {
-                  this.m1622("dererr079", Message.params("an", "a", "expected form", "(bi)conditional"));
-                  return this.m1599();
+                  this.reportError("dererr079", Message.params("an", "a", "expected form", "(bi)conditional"));
+                  return this.fail();
                } else if (object2 instanceof ErrorRef) {
                   errorref = (ErrorRef)object2;
-                  if (errorref.f427 != null) {
-                     this.m1622(errorref.f427, errorref.f428);
+                  if (errorref.id != null) {
+                     this.reportError(errorref.id, errorref.params);
                   }
 
-                  return this.m1599();
+                  return this.fail();
                } else {
                   Expression expression20 = (Expression)object2;
                   if (expression20.symbol.equals("->")) {
-                     this.f942 = expression20.getChild(0).copy();
+                     this.result = expression20.getChild(0).copy();
                   } else {
                      if (!expression20.symbol.equals("<->")) {
                         String s3 = "\\l" + expression20 + "\\l";
-                        this.m1622("dererr080", Message.params("remote line", s3, "an", "a", "expected form", "(bi)conditional"));
-                        return this.m1599();
+                        this.reportError("dererr080", Message.params("remote line", s3, "an", "a", "expected form", "(bi)conditional"));
+                        return this.fail();
                      }
 
-                     if ((this.f942 = C_KB.m781(this, expression20, false)) == null) {
-                        return this.m1599();
+                     if ((this.result = DerivationDialogs.chooseSideToShow(this, expression20, false)) == null) {
+                        return this.fail();
                      }
                   }
 
-                  return this.m1611();
+                  return this.finishShowVariant();
                }
-            } else if (this.f939.startsWith("SHOW NEGCONS") && "SHOW NEGCONSEQUENT".startsWith(this.f939)) {
-               Object object1 = this.m1593();
-               this.f944 = !this.m1592();
-               if (!this.m1610(false)) {
-                  return this.m1599();
+            } else if (this.ruleName.startsWith("SHOW NEGCONS") && "SHOW NEGCONSEQUENT".startsWith(this.ruleName)) {
+               Object object1 = this.readSourceFormula();
+               this.matchLine = !this.skipToNextStep();
+               if (!this.checkShowVariant(false)) {
+                  return this.fail();
                } else if (object1 == null) {
-                  this.m1622("dererr079", Message.params("an", "a", "expected form", "(bi)conditional"));
-                  return this.m1599();
+                  this.reportError("dererr079", Message.params("an", "a", "expected form", "(bi)conditional"));
+                  return this.fail();
                } else if (object1 instanceof ErrorRef) {
                   errorref = (ErrorRef)object1;
-                  if (errorref.f427 != null) {
-                     this.m1622(errorref.f427, errorref.f428);
+                  if (errorref.id != null) {
+                     this.reportError(errorref.id, errorref.params);
                   }
 
-                  return this.m1599();
+                  return this.fail();
                } else {
                   Expression expression19 = (Expression)object1;
                   if (expression19.symbol.equals("->")) {
-                     this.f942 = expression19.getChild(1).copy().negate();
+                     this.result = expression19.getChild(1).copy().negate();
                   } else {
                      if (!expression19.symbol.equals("<->")) {
                         String s2 = "\\l" + expression19 + "\\l";
-                        this.m1622("dererr080", Message.params("remote line", s2, "an", "a", "expected form", "(bi)conditional"));
-                        return this.m1599();
+                        this.reportError("dererr080", Message.params("remote line", s2, "an", "a", "expected form", "(bi)conditional"));
+                        return this.fail();
                      }
 
-                     if ((this.f942 = C_KB.m781(this, expression19, true)) == null) {
-                        return this.m1599();
+                     if ((this.result = DerivationDialogs.chooseSideToShow(this, expression19, true)) == null) {
+                        return this.fail();
                      }
                   }
 
-                  return this.m1611();
+                  return this.finishShowVariant();
                }
-            } else if (this.f939.startsWith("SHOW NEGDISJ") && "SHOW NEGDISJUNCT".startsWith(this.f939)) {
-               Object object = this.m1593();
-               this.f944 = !this.m1592();
-               if (!this.m1610(false)) {
-                  return this.m1599();
+            } else if (this.ruleName.startsWith("SHOW NEGDISJ") && "SHOW NEGDISJUNCT".startsWith(this.ruleName)) {
+               Object object = this.readSourceFormula();
+               this.matchLine = !this.skipToNextStep();
+               if (!this.checkShowVariant(false)) {
+                  return this.fail();
                } else if (object == null) {
-                  this.m1622("dererr079", Message.params("an", "a", "expected form", "disjunction"));
-                  return this.m1599();
+                  this.reportError("dererr079", Message.params("an", "a", "expected form", "disjunction"));
+                  return this.fail();
                } else if (object instanceof ErrorRef) {
                   errorref = (ErrorRef)object;
-                  if (errorref.f427 != null) {
-                     this.m1622(errorref.f427, errorref.f428);
+                  if (errorref.id != null) {
+                     this.reportError(errorref.id, errorref.params);
                   }
 
-                  return this.m1599();
+                  return this.fail();
                } else {
                   Expression expression18 = (Expression)object;
                   if (!expression18.symbol.equals("|")) {
                      String s1 = "\\l" + expression18 + "\\l";
-                     this.m1622("dererr080", Message.params("remote line", s1, "an", "a", "expected form", "disjunction"));
-                     return this.m1599();
+                     this.reportError("dererr080", Message.params("remote line", s1, "an", "a", "expected form", "disjunction"));
+                     return this.fail();
                   } else {
                      Expression[] aexpression = new Expression[]{expression18.getChild(0).copy().negate(), expression18.getChild(1).copy().negate()};
-                     int k = C_KB.m778(this.f935, aexpression, "Please choose the negation of a disjunct:");
+                     int k = DerivationDialogs.chooseFormula(this.line, aexpression, "Please choose the negation of a disjunct:");
                      if (k == -1) {
-                        return this.m1599();
+                        return this.fail();
                      } else {
-                        this.f942 = aexpression[k];
-                        return this.m1611();
+                        this.result = aexpression[k];
+                        return this.finishShowVariant();
                      }
                   }
                }
             } else {
                int i;
-               if ((i = m1633(this.f939)) != -1) {
-                  Expression[] aexpression1 = this.f935.f317.f915.premises;
+               if ((i = parsePremiseNumber(this.ruleName)) != -1) {
+                  Expression[] aexpression1 = this.line.box.module.premises;
                   int l = aexpression1 == null ? 0 : aexpression1.length;
-                  if (l == 0 || !this.f935.f317.f915.problem.f917.f333) {
-                     this.m1621("dererr029");
-                     return this.m1599();
+                  if (l == 0 || !this.line.box.module.problem.showLine.syntaxOk) {
+                     this.reportError("dererr029");
+                     return this.fail();
                   } else if (i > l) {
-                     this.m1622("dererr030", Message.params("premise index", i + ""));
-                     return this.m1599();
-                  } else if ((flag || flag1) && this.f938 != 0) {
-                     this.m1622("dererr024", Message.params("n", this.f938 + ""));
-                     return this.m1599();
-                  } else if (flag && this.f941 != null) {
+                     this.reportError("dererr030", Message.params("premise index", i + ""));
+                     return this.fail();
+                  } else if ((flag || flag1) && this.argumentCount != 0) {
+                     this.reportError("dererr024", Message.params("n", this.argumentCount + ""));
+                     return this.fail();
+                  } else if (flag && this.lineFormula != null) {
                      if (i == 0) {
-                        if (!this.f935.f317.f915.isPremise(this.f941)) {
-                           this.m1621("dererr031");
-                           return this.m1599();
+                        if (!this.line.box.module.isPremise(this.lineFormula)) {
+                           this.reportError("dererr031");
+                           return this.fail();
                         }
-                     } else if (!this.f941.m1235(aexpression1[i - 1])) {
-                        this.m1622("dererr032", Message.params("premise index", i + "", "indexed premise", "\\l" + aexpression1[i - 1] + "\\l"));
-                        return this.m1599();
+                     } else if (!this.lineFormula.isIdentical(aexpression1[i - 1])) {
+                        this.reportError("dererr032", Message.params("premise index", i + "", "indexed premise", "\\l" + aexpression1[i - 1] + "\\l"));
+                        return this.fail();
                      }
 
-                     this.m1631(0);
+                     this.popStack(0);
                      return true;
                   } else {
                      if (i == 0) {
                         if (l > 1) {
-                           i = C_KB.m778(this.f935, aexpression1, C_n_.m1960(C_n_.getText("derdlg002"), null, this)) + 1;
+                           i = DerivationDialogs.chooseFormula(
+                                 this.line, aexpression1, DerivationMessage.format(DerivationMessage.getText("derdlg002"), null, this)
+                              )
+                              + 1;
                            if (i == 0) {
-                              if (this.f935.f317.f915.serialMode) {
-                                 this.f935.f317.f915.complete = false;
-                                 this.m1621("dererr064");
+                              if (this.line.box.module.serialMode) {
+                                 this.line.box.module.complete = false;
+                                 this.reportError("dererr064");
                               } else {
-                                 this.m1621("dererr028");
-                                 this.f935.f317.f915.abort(true);
+                                 this.reportError("dererr028");
+                                 this.line.box.module.abort(true);
                               }
 
-                              return this.m1599();
+                              return this.fail();
                            }
 
-                           this.m1598(new C_l_(i - 1));
+                           this.cacheJustification(new PremiseJustification(i - 1));
                         } else {
                            i = 1;
                         }
                      }
 
-                     this.f942 = aexpression1[i - 1];
-                     if (flag && !this.m1608()) {
-                        return this.m1599();
+                     this.result = aexpression1[i - 1];
+                     if (flag && !this.checkResultMatchesLine()) {
+                        return this.fail();
                      } else {
-                        this.m1631(0);
+                        this.popStack(0);
                         return true;
                      }
                   }
-               } else if (this.f939.equals("IE")) {
-                  if (!flag && !flag1 ? this.f938 >= 1 : this.f938 == 1) {
-                     C_GA c_ga1 = new C_GA();
-                     if (!C_KB.m791(this, c_ga1)) {
-                        return this.m1599();
-                     } else if (!C_KB.m792(this, c_ga1)) {
-                        return this.m1599();
-                     } else if (!c_ga1.m600(this)) {
+               } else if (this.ruleName.equals("IE")) {
+                  if (!flag && !flag1 ? this.argumentCount >= 1 : this.argumentCount == 1) {
+                     InterchangeJustification interchangejustification1 = new InterchangeJustification();
+                     if (!DerivationDialogs.interchangeFormulaQuery(this, interchangejustification1)) {
+                        return this.fail();
+                     } else if (!DerivationDialogs.interchangeRuleQuery(this, interchangejustification1)) {
+                        return this.fail();
+                     } else if (!interchangejustification1.reapply(this)) {
                         if (LogicProgram.debug) {
                            System.out.println("unexpected IE error during applyRule");
                         }
 
                         Hashtable hashtable1 = new Hashtable();
-                        Message.putParam(hashtable1, "inner rule", c_ga1.m624(this).f820);
-                        Message.putParam(hashtable1, "inner exp", "\\l" + this.m1628(-1).m1220(c_ga1.f343) + "\\l");
-                        this.m1622("dererr085", hashtable1);
-                        return this.m1599();
+                        Message.putParam(hashtable1, "inner rule", interchangejustification1.getEquivalenceRule(this).name);
+                        Message.putParam(hashtable1, "inner exp", "\\l" + this.getStackFormula(-1).getSubexpression(interchangejustification1.path) + "\\l");
+                        this.reportError("dererr085", hashtable1);
+                        return this.fail();
                      } else {
-                        this.m1598(c_ga1);
+                        this.cacheJustification(interchangejustification1);
                         return true;
                      }
                   } else {
-                     this.m1622("dererr084", Message.params("n", "1"));
-                     return this.m1599();
+                     this.reportError("dererr084", Message.params("n", "1"));
+                     return this.fail();
                   }
-               } else if (!this.f939.equals("CIE")) {
-                  SchemeInstantiation schemeinstantiation = this.m1616();
-                  if (schemeinstantiation == null || !this.m1612(schemeinstantiation)) {
-                     return this.m1599();
+               } else if (!this.ruleName.equals("CIE")) {
+                  SchemeInstantiation schemeinstantiation = this.matchNamedRule();
+                  if (schemeinstantiation == null || !this.checkInstantiationRestrictions(schemeinstantiation)) {
+                     return this.fail();
                   } else {
-                     return flag && !this.m1608() ? this.m1599() : true;
+                     return flag && !this.checkResultMatchesLine() ? this.fail() : true;
                   }
-               } else if (!flag && !flag1 ? this.f938 >= 1 : this.f938 == 1) {
-                  C_GA c_ga = new C_GA();
-                  if (!C_KB.m791(this, c_ga)) {
-                     return this.m1599();
-                  } else if (!C_KB.m795(this, c_ga)) {
-                     return this.m1599();
-                  } else if (!c_ga.m600(this)) {
+               } else if (!flag && !flag1 ? this.argumentCount >= 1 : this.argumentCount == 1) {
+                  InterchangeJustification interchangejustification = new InterchangeJustification();
+                  if (!DerivationDialogs.interchangeFormulaQuery(this, interchangejustification)) {
+                     return this.fail();
+                  } else if (!DerivationDialogs.cieRuleQuery(this, interchangejustification)) {
+                     return this.fail();
+                  } else if (!interchangejustification.reapply(this)) {
                      if (LogicProgram.debug) {
                         System.out.println("unexpected CIE error during applyRule");
                      }
 
                      Hashtable hashtable = new Hashtable();
-                     Message.putParam(hashtable, "inner rule", c_ga.m624(this).f820);
-                     Message.putParam(hashtable, "inner exp", "\\l" + this.m1628(-1).m1220(c_ga.f343) + "\\l");
-                     this.m1622("dererr095", hashtable);
-                     return this.m1599();
+                     Message.putParam(hashtable, "inner rule", interchangejustification.getEquivalenceRule(this).name);
+                     Message.putParam(hashtable, "inner exp", "\\l" + this.getStackFormula(-1).getSubexpression(interchangejustification.path) + "\\l");
+                     this.reportError("dererr095", hashtable);
+                     return this.fail();
                   } else {
-                     this.m1598(c_ga);
+                     this.cacheJustification(interchangejustification);
                      return true;
                   }
                } else {
-                  this.m1622("dererr084", Message.params("n", "1"));
-                  return this.m1599();
+                  this.reportError("dererr084", Message.params("n", "1"));
+                  return this.fail();
                }
             }
          }
       }
    }
 
-   boolean m1608() {
-      return this.m1609(false);
+   boolean checkResultMatchesLine() {
+      return this.checkResultMatchesLine(false);
    }
 
-   boolean m1609(boolean flag) {
-      String s = this.f935.m7(false);
+   boolean checkResultMatchesLine(boolean flag) {
+      String s = this.line.getFormulaText(false);
       if (s == null) {
          return true;
       } else {
-         if (s.equals("") && this.f935.f317.f915.commandMode && this.f946) {
-            this.f935.m557(1);
-            this.f935.m6(this.f942.toString());
-            this.f935.m594();
-         } else if (this.f941 == null || !this.f941.m1235(this.f942)) {
+         if (s.equals("") && this.line.box.module.commandMode && this.interactive) {
+            this.line.clearMessage(1);
+            this.line.setFormulaText(this.result.toString());
+            this.line.parseFormula();
+         } else if (this.lineFormula == null || !this.lineFormula.isIdentical(this.result)) {
             if (!flag) {
-               boolean flag1 = this.f935.f317.f915.commandMode;
-               this.m1621(this.f947 ? "dererr064" : (this.f952 ? (flag1 ? "dererr033" : "dererr103") : "dererr100"));
-               this.m1623("sum", this.f942);
+               boolean flag1 = this.line.box.module.commandMode;
+               this.reportError(this.reusedCache ? "dererr064" : (this.hasFullMatch ? (flag1 ? "dererr033" : "dererr103") : "dererr100"));
+               this.putMessageObject("sum", this.result);
             }
 
             return false;
@@ -1336,54 +1348,54 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       }
    }
 
-   boolean m1610(boolean flag) {
-      if (this.f942 != null) {
-         this.m1621("dererr020");
+   boolean checkShowVariant(boolean flag) {
+      if (this.result != null) {
+         this.reportError("dererr020");
          return false;
-      } else if (this.f938 != 0) {
-         this.m1622("dererr024", Message.params("n", this.f938 + ""));
+      } else if (this.argumentCount != 0) {
+         this.reportError("dererr024", Message.params("n", this.argumentCount + ""));
          return false;
-      } else if (!this.f944 && !this.f945) {
-         this.m1621("dererr020");
+      } else if (!this.matchLine && !this.finalStep) {
+         this.reportError("dererr020");
          return false;
-      } else if (!this.f946) {
-         this.m1621("dererr074");
+      } else if (!this.interactive) {
+         this.reportError("dererr074");
          return false;
-      } else if (this.f935.f317.f916 == null != flag) {
-         this.m1621(flag ? "dererr075" : "dererr076");
+      } else if (this.line.box.parentBox == null != flag) {
+         this.reportError(flag ? "dererr075" : "dererr076");
          return false;
       } else {
          return true;
       }
    }
 
-   boolean m1611() {
-      String s = this.f935.m9(true);
-      this.f935.m571();
-      if (this.f935.f340 != null) {
-         this.f935.f340.setText("\"" + s + "\"");
+   boolean finishShowVariant() {
+      String s = this.line.getAnnotationText(true);
+      this.line.makeShowLine();
+      if (this.line.commandLog != null) {
+         this.line.commandLog.setText("\"" + s + "\"");
       }
 
-      if (this.f946 && !this.m1609(true)) {
-         return this.m1599();
+      if (this.interactive && !this.checkResultMatchesLine(true)) {
+         return this.fail();
       } else {
-         this.m1631(0);
+         this.popStack(0);
          return true;
       }
    }
 
-   boolean m1612(SchemeInstantiation schemeinstantiation) {
-      return this.m1613(schemeinstantiation, false);
+   boolean checkInstantiationRestrictions(SchemeInstantiation schemeinstantiation) {
+      return this.checkInstantiationRestrictions(schemeinstantiation, false);
    }
 
-   boolean m1613(SchemeInstantiation schemeinstantiation, boolean flag) {
-      if (this.f939.equals("EI")) {
-         SchematicRule schematicrule = (SchematicRule)LogicProgram.m1026("EI");
-         Expression expression = schematicrule.m950().getChild(0).instantiate(schemeinstantiation);
-         Vector vector = this.f935.f317.f915.varNames;
+   boolean checkInstantiationRestrictions(SchemeInstantiation schemeinstantiation, boolean flag) {
+      if (this.ruleName.equals("EI")) {
+         SchematicRule schematicrule = (SchematicRule)LogicProgram.getRule("EI");
+         Expression expression = schematicrule.getConclusion().getChild(0).instantiate(schemeinstantiation);
+         Vector vector = this.line.box.module.varNames;
          if (!(expression instanceof SimpleTerm)) {
             if (!flag) {
-               this.m1621("dererr100");
+               this.reportError("dererr100");
             }
 
             return false;
@@ -1391,10 +1403,10 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
 
          if (vector != null && vector.contains(expression.symbol)) {
             if (!flag) {
-               this.m1622("dererr034", Message.params("variable name", "\\l" + expression + "\\l"));
+               this.reportError("dererr034", Message.params("variable name", "\\l" + expression + "\\l"));
             }
 
-            this.f948 = new ErrorRef("dererr034", Message.params("variable name", "\\l" + expression + "\\l"));
+            this.cachedError = new ErrorRef("dererr034", Message.params("variable name", "\\l" + expression + "\\l"));
             return false;
          }
       }
@@ -1402,61 +1414,61 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       return true;
    }
 
-   boolean m1614(String s) {
-      DerivationBox derivationbox = this.f935.f317;
-      if (derivationbox.f917 == this.f935) {
-         derivationbox = derivationbox.f916;
+   boolean isVariableUsedInOuterBoxes(String s) {
+      DerivationBox derivationbox = this.line.box;
+      if (derivationbox.showLine == this.line) {
+         derivationbox = derivationbox.parentBox;
       }
 
       if (derivationbox != null) {
-         derivationbox = derivationbox.f916;
+         derivationbox = derivationbox.parentBox;
       }
 
       while (derivationbox != null) {
-         if (derivationbox.f921 != null && derivationbox.f921.contains(s)) {
+         if (derivationbox.boxVariables != null && derivationbox.boxVariables.contains(s)) {
             return true;
          }
 
-         derivationbox = derivationbox.f916;
+         derivationbox = derivationbox.parentBox;
       }
 
       return false;
    }
 
-   DerivationNode m1615(int i) {
-      DerivationNode derivationnode = this.m1627(i);
+   DerivationNode getCitedNodeOutsideBox(int i) {
+      DerivationNode derivationnode = this.getCitedNode(i);
       if (derivationnode == null) {
          return null;
       } else {
-         return derivationnode.m17() == this.f935.f317 ? null : derivationnode;
+         return derivationnode.getEnclosingBox() == this.line.box ? null : derivationnode;
       }
    }
 
-   SchemeInstantiation m1616() {
-      Integer integer = Theorem.m1366(this.f939);
+   SchemeInstantiation matchNamedRule() {
+      Integer integer = Theorem.parseTheoremNumber(this.ruleName);
       if (integer == null) {
-         Rule rule = LPDerivation.getRule(this.f939);
+         Rule rule = LPDerivation.getRule(this.ruleName);
          if (rule == null) {
-            this.m1621("dererr035");
+            this.reportError("dererr035");
             return null;
          } else {
-            return this.m1617(rule);
+            return this.matchRule(rule);
          }
       } else {
-         Theorem theorem = LogicProgram.m1025(integer);
+         Theorem theorem = LogicProgram.getTheorem(integer);
          if (theorem == null) {
-            this.m1622("dererr036", Message.params("theorem number", integer + ""));
+            this.reportError("dererr036", Message.params("theorem number", integer + ""));
             return null;
-         } else if ((this.f944 || this.f945) && this.f938 != 0) {
-            this.m1622("dererr024", Message.params("n", this.f938 + ""));
+         } else if ((this.matchLine || this.finalStep) && this.argumentCount != 0) {
+            this.reportError("dererr024", Message.params("n", this.argumentCount + ""));
             return null;
          } else {
-            return this.m1617(theorem);
+            return this.matchRule(theorem);
          }
       }
    }
 
-   SchemeInstantiation m1617(Rule rule) {
+   SchemeInstantiation matchRule(Rule rule) {
       if (rule == null) {
          return null;
       } else {
@@ -1465,43 +1477,43 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
          boolean flag2 = false;
          boolean flag3 = false;
          Vector vector = new Vector();
-         this.f953 = new Vector();
-         this.f951 = false;
-         this.f954 = new Vector();
-         this.f952 = false;
-         LPDerivation lpderivation = this.f935.f317.f915;
-         this.f957 = rule.m1374();
-         this.f958 = rule.m1373(lpderivation, "disabled");
-         this.f959 = this.f946 ? rule.m1373(lpderivation, "manualOrDisabled") : this.f958;
-         this.m1590();
+         this.premiseMatches = new Vector();
+         this.hasPremiseMatch = false;
+         this.fullMatches = new Vector();
+         this.hasFullMatch = false;
+         LPDerivation lpderivation = this.line.box.module;
+         this.allForms = rule.getAllForms();
+         this.enabledForms = rule.getForms(lpderivation, "disabled");
+         this.automaticForms = this.interactive ? rule.getForms(lpderivation, "manualOrDisabled") : this.enabledForms;
+         this.computePremiseRange();
 
-         for (int i = 0; i < this.f957.length; i++) {
-            SchematicRule schematicrule = this.f957[i];
+         for (int i = 0; i < this.allForms.length; i++) {
+            SchematicRule schematicrule = this.allForms[i];
             int j = schematicrule.premises.length;
-            if (!this.f944 && !this.f945 ? j <= this.f938 : j == this.f938) {
+            if (!this.matchLine && !this.finalStep ? j <= this.argumentCount : j == this.argumentCount) {
                flag = true;
                SchemeInstantiation schemeinstantiation = new SchemeInstantiation();
                SchemeInstantiation schemeinstantiation1 = new SchemeInstantiation();
                boolean flag4 = false;
                boolean flag5 = false;
                boolean[] aboolean = new boolean[j];
-               schematicrule.conclusion.m1266(null, schemeinstantiation1);
-               if (this.f944 && this.f941 != null) {
-                  flag4 = schematicrule.conclusion.m1266(this.f941, schemeinstantiation);
+               schematicrule.conclusion.match(null, schemeinstantiation1);
+               if (this.matchLine && this.lineFormula != null) {
+                  flag4 = schematicrule.conclusion.match(this.lineFormula, schemeinstantiation);
                } else {
-                  flag4 = schemeinstantiation.m1877(schemeinstantiation1);
+                  flag4 = schemeinstantiation.mergeFrom(schemeinstantiation1);
                }
 
-               C_XE c_xe = new C_XE(j);
+               PermutationIterator permutationiterator = new PermutationIterator(j);
 
                while (true) {
-                  int[] aint = c_xe.m1512();
+                  int[] aint = permutationiterator.current();
                   SchemeInstantiation[] aschemeinstantiation = new SchemeInstantiation[j];
                   int k = 0;
 
                   for (int l = 0; l < j; l++) {
                      aschemeinstantiation[l] = new SchemeInstantiation();
-                     if (schematicrule.premises[aint[l]].m1266(this.m1628(l - j), aschemeinstantiation[l])) {
+                     if (schematicrule.premises[aint[l]].match(this.getStackFormula(l - j), aschemeinstantiation[l])) {
                         k++;
                         aboolean[aint[l]] = true;
                      }
@@ -1513,15 +1525,15 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
                      SchemeInstantiation schemeinstantiation2 = new SchemeInstantiation();
 
                      for (int i1 = 0; i1 < j; i1++) {
-                        if (!schemeinstantiation2.m1877(aschemeinstantiation[i1])) {
+                        if (!schemeinstantiation2.mergeFrom(aschemeinstantiation[i1])) {
                            break label330;
                         }
                      }
 
-                     C__B c__b2 = new C__B();
-                     if (schemeinstantiation2.m1890()) {
+                     BoundVariableMap boundvariablemap2 = new BoundVariableMap();
+                     if (schemeinstantiation2.hasNoDeferredMatches()) {
                         for (int j1 = 0; j1 < j; j1++) {
-                           if (!c__b2.m1576(schematicrule.premises[aint[j1]], this.m1628(j1 - j), schemeinstantiation2)) {
+                           if (!boundvariablemap2.matches(schematicrule.premises[aint[j1]], this.getStackFormula(j1 - j), schemeinstantiation2)) {
                               break label330;
                            }
                         }
@@ -1529,114 +1541,116 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
                         flag8 = true;
                      }
 
-                     C_HF c_hf2 = new C_HF(schematicrule, aint, schemeinstantiation2, c__b2);
-                     this.f953.addElement(c_hf2);
-                     this.f951 = true;
-                     if (schemeinstantiation2.m1877(schemeinstantiation1) && schemeinstantiation2.m1890() && c__b2.m1578(schematicrule.conclusion)) {
-                        this.f954.addElement(c_hf2);
-                        this.f952 = true;
+                     RuleApplication ruleapplication2 = new RuleApplication(schematicrule, aint, schemeinstantiation2, boundvariablemap2);
+                     this.premiseMatches.addElement(ruleapplication2);
+                     this.hasPremiseMatch = true;
+                     if (schemeinstantiation2.mergeFrom(schemeinstantiation1)
+                        && schemeinstantiation2.hasNoDeferredMatches()
+                        && boundvariablemap2.coversBinders(schematicrule.conclusion)) {
+                        this.fullMatches.addElement(ruleapplication2);
+                        this.hasFullMatch = true;
                      }
 
                      if (!flag4) {
                         if (!flag8) {
-                           c_hf2.f395 = 1;
+                           ruleapplication2.failureKind = 1;
                         }
-                     } else if (!schemeinstantiation2.m1877(schemeinstantiation)) {
+                     } else if (!schemeinstantiation2.mergeFrom(schemeinstantiation)) {
                         if (!flag8) {
-                           c_hf2.f395 = 2;
+                           ruleapplication2.failureKind = 2;
                         }
                      } else {
                         label394: {
-                           if (schemeinstantiation2.m1890()) {
+                           if (schemeinstantiation2.hasNoDeferredMatches()) {
                               if (flag8) {
                                  for (int k1 = 0; k1 < j; k1++) {
-                                    if (!c__b2.m1576(schematicrule.premises[aint[k1]], this.m1628(k1 - j), schemeinstantiation2)) {
+                                    if (!boundvariablemap2.matches(schematicrule.premises[aint[k1]], this.getStackFormula(k1 - j), schemeinstantiation2)) {
                                        break label394;
                                     }
                                  }
                               }
 
-                              C_MB c_mb2 = new C_MB();
-                              Expression expression = schematicrule.conclusion.m1239(schemeinstantiation2, c_mb2);
-                              int[][] aint1 = c_mb2.m1095(schematicrule.conclusion, expression);
-                              if (!c__b2.m1573(schematicrule.conclusion, this.f944 ? this.f941 : null, aint1)) {
-                                 c_hf2.f395 = 3;
+                              BinderMap bindermap2 = new BinderMap();
+                              Expression expression = schematicrule.conclusion.instantiate(schemeinstantiation2, bindermap2);
+                              int[][] aint1 = bindermap2.getBinderCorrespondence(schematicrule.conclusion, expression);
+                              if (!boundvariablemap2.matchBinders(schematicrule.conclusion, this.matchLine ? this.lineFormula : null, aint1)) {
+                                 ruleapplication2.failureKind = 3;
                                  break label394;
                               }
 
-                              if (!c__b2.m1575(schematicrule.conclusion, expression, aint1, null)) {
-                                 c_hf2.f395 = 4;
-                                 c_hf2.f396 = expression.m1259();
+                              if (!boundvariablemap2.renameBinders(schematicrule.conclusion, expression, aint1, null)) {
+                                 ruleapplication2.failureKind = 4;
+                                 ruleapplication2.failureDetail = expression.findMislinkedVariables();
                                  break label394;
                               }
 
-                              if (this.f944 && this.f941 != null && !expression.m1235(this.f941)) {
-                                 c_hf2.f395 = 5;
+                              if (this.matchLine && this.lineFormula != null && !expression.isIdentical(this.lineFormula)) {
+                                 ruleapplication2.failureKind = 5;
                                  break label394;
                               }
                            }
 
-                           if (schematicrule.m956(this.f958) == -1) {
+                           if (schematicrule.indexByName(this.enabledForms) == -1) {
                               flag1 = true;
-                           } else if (this.f946 && schematicrule.m956(this.f959) == -1) {
+                           } else if (this.interactive && schematicrule.indexByName(this.automaticForms) == -1) {
                               flag2 = true;
-                           } else if (!schematicrule.m952(this.f935.f317.f915)) {
+                           } else if (!schematicrule.isProven(this.line.box.module)) {
                               flag3 = true;
                            } else {
-                              vector.addElement(c_hf2);
+                              vector.addElement(ruleapplication2);
                            }
                         }
                      }
                   }
 
-                  if (!c_xe.m1513()) {
+                  if (!permutationiterator.next()) {
                      break;
                   }
                }
             }
          }
 
-         if (!this.m1619(vector)) {
+         if (!this.pruneDegenerateMatches(vector)) {
             return null;
          } else if (!flag) {
-            if (!this.f944 && !this.f945 && this.f938 != 0) {
-               this.m1622("dererr038", Message.params("n", this.f938 + ""));
+            if (!this.matchLine && !this.finalStep && this.argumentCount != 0) {
+               this.reportError("dererr038", Message.params("n", this.argumentCount + ""));
             } else {
-               this.m1622("dererr039", Message.params("n", this.f938 + ""));
+               this.reportError("dererr039", Message.params("n", this.argumentCount + ""));
             }
 
             return null;
          } else if (vector.isEmpty()) {
             if (flag3) {
-               this.f935.f317.f915.proofMissing = true;
+               this.line.box.module.proofMissing = true;
             }
 
             if (flag1) {
-               this.m1621("dererr041");
+               this.reportError("dererr041");
             } else if (flag2) {
-               this.m1621("dererr040");
+               this.reportError("dererr040");
             } else if (flag3) {
-               this.m1621("dererr016");
-            } else if (this.f947) {
-               this.m1621("dererr064");
-            } else if (this.f952 && this.f954.size() == 1) {
-               if (this.f944 && this.f941 != null) {
-                  Expression expression1 = ((C_HF)this.f954.elementAt(0)).m695();
-                  if (this.f935.f317.f915.commandMode) {
-                     this.m1622("dererr033", Message.params("rule form conclusion", "\\l" + expression1 + "\\l"));
-                     this.m1623("sum", expression1);
+               this.reportError("dererr016");
+            } else if (this.reusedCache) {
+               this.reportError("dererr064");
+            } else if (this.hasFullMatch && this.fullMatches.size() == 1) {
+               if (this.matchLine && this.lineFormula != null) {
+                  Expression expression1 = ((RuleApplication)this.fullMatches.elementAt(0)).getConclusion();
+                  if (this.line.box.module.commandMode) {
+                     this.reportError("dererr033", Message.params("rule form conclusion", "\\l" + expression1 + "\\l"));
+                     this.putMessageObject("sum", expression1);
                   } else {
-                     this.m1621("dererr103");
+                     this.reportError("dererr103");
                   }
                } else {
-                  C_HF c_hf = (C_HF)this.f954.elementAt(0);
-                  if (c_hf.f395 == 4) {
-                     Expression[] aexpression = (Expression[])((Vector)c_hf.f396).elementAt(0);
-                     this.m1622(
+                  RuleApplication ruleapplication = (RuleApplication)this.fullMatches.elementAt(0);
+                  if (ruleapplication.failureKind == 4) {
+                     Expression[] aexpression = (Expression[])((Vector)ruleapplication.failureDetail).elementAt(0);
+                     this.reportError(
                         "dererr074",
                         Message.params(
                            "rule form conclusion",
-                           "\\l" + c_hf.m695() + "\\l",
+                           "\\l" + ruleapplication.getConclusion() + "\\l",
                            "misbinder",
                            "\\l" + aexpression[0].symbol + "\\l",
                            "misbound",
@@ -1644,94 +1658,94 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
                         )
                      );
                   } else {
-                     this.m1621("dererr100");
+                     this.reportError("dererr100");
                   }
                }
-            } else if (this.f951) {
-               this.m1621("dererr100");
-            } else if (this.f960 == this.f961) {
-               this.m1621("dererr042");
+            } else if (this.hasPremiseMatch) {
+               this.reportError("dererr100");
+            } else if (this.minPremises == this.maxPremises) {
+               this.reportError("dererr042");
             } else {
-               this.m1621("dererr063");
+               this.reportError("dererr063");
             }
 
             return null;
          } else {
-            int l1 = C_KB.m780(this, vector);
+            int l1 = DerivationDialogs.chooseRuleInstance(this, vector);
             if (l1 == -1) {
-               if (this.f935.f317.f915.serialMode) {
-                  this.f935.f317.f915.complete = false;
-                  this.m1621("dererr064");
+               if (this.line.box.module.serialMode) {
+                  this.line.box.module.complete = false;
+                  this.reportError("dererr064");
                } else {
-                  this.m1621("dererr028");
-                  this.f935.f317.f915.abort(true);
+                  this.reportError("dererr028");
+                  this.line.box.module.abort(true);
                }
 
                return null;
             } else {
-               C_HF c_hf1 = (C_HF)vector.elementAt(l1);
-               this.f953 = new Vector();
-               this.f953.addElement(c_hf1);
-               this.f954 = new Vector();
-               this.f954.addElement(c_hf1);
-               SchematicRule schematicrule1 = c_hf1.m688();
+               RuleApplication ruleapplication1 = (RuleApplication)vector.elementAt(l1);
+               this.premiseMatches = new Vector();
+               this.premiseMatches.addElement(ruleapplication1);
+               this.fullMatches = new Vector();
+               this.fullMatches.addElement(ruleapplication1);
+               SchematicRule schematicrule1 = ruleapplication1.getForm();
                int i2 = schematicrule1.premises.length;
-               SchemeInstantiation schemeinstantiation3 = c_hf1.m690();
-               if (schemeinstantiation3.m1890()) {
-                  C_MB c_mb = new C_MB();
-                  this.f942 = schematicrule1.conclusion.m1239(schemeinstantiation3, c_mb);
-                  C__B c__b = c_hf1.m691();
-                  boolean flag6 = vector.size() > 1 || !c__b.m1578(schematicrule1.conclusion);
-                  if (!c__b.m1574(schematicrule1.conclusion, this.f942, c_mb, this)) {
+               SchemeInstantiation schemeinstantiation3 = ruleapplication1.getInstantiation();
+               if (schemeinstantiation3.hasNoDeferredMatches()) {
+                  BinderMap bindermap = new BinderMap();
+                  this.result = schematicrule1.conclusion.instantiate(schemeinstantiation3, bindermap);
+                  BoundVariableMap boundvariablemap = ruleapplication1.getBoundVariables();
+                  boolean flag6 = vector.size() > 1 || !boundvariablemap.coversBinders(schematicrule1.conclusion);
+                  if (!boundvariablemap.renameBinders(schematicrule1.conclusion, this.result, bindermap, this)) {
                      return null;
                   } else {
                      if (flag6) {
-                        this.m1598(c_hf1);
+                        this.cacheJustification(ruleapplication1);
                      }
 
-                     this.m1631(i2);
+                     this.popStack(i2);
                      return schemeinstantiation3;
                   }
-               } else if (this.f935.f317.f915.frame == null) {
+               } else if (this.line.box.module.frame == null) {
                   return null;
                } else {
-                  if (this.f939.equals("EG")) {
-                     if (!C_KB.m783(this, c_hf1)) {
+                  if (this.ruleName.equals("EG")) {
+                     if (!DerivationDialogs.generalizationTermQuery(this, ruleapplication1)) {
                         return null;
                      }
-                  } else if (this.f939.equals("EI")) {
-                     if (!C_KB.m784(this, c_hf1)) {
+                  } else if (this.ruleName.equals("EI")) {
+                     if (!DerivationDialogs.existentialVarQuery(this, ruleapplication1)) {
                         return null;
                      }
-                  } else if (this.f939.equals("UI")) {
-                     if (!C_KB.m785(this, c_hf1)) {
+                  } else if (this.ruleName.equals("UI")) {
+                     if (!DerivationDialogs.universalTermQuery(this, ruleapplication1)) {
                         return null;
                      }
-                  } else if (!c_hf1.f391.f820.equalsIgnoreCase("LL1") && !c_hf1.f391.f820.equalsIgnoreCase("LL2")) {
-                     if (!c_hf1.f391.f820.equalsIgnoreCase("LL3") && !c_hf1.f391.f820.equalsIgnoreCase("LL4")) {
-                        if (this.f945 && this.f941 != null && this.f939.equals("EL")) {
-                           if (!C_KB.m790(this, c_hf1)) {
+                  } else if (!ruleapplication1.form.name.equalsIgnoreCase("LL1") && !ruleapplication1.form.name.equalsIgnoreCase("LL2")) {
+                     if (!ruleapplication1.form.name.equalsIgnoreCase("LL3") && !ruleapplication1.form.name.equalsIgnoreCase("LL4")) {
+                        if (this.finalStep && this.lineFormula != null && this.ruleName.equals("EL")) {
+                           if (!DerivationDialogs.eulerTermQuery(this, ruleapplication1)) {
                               return null;
                            }
-                        } else if (!C_KB.m782(this, c_hf1)) {
+                        } else if (!DerivationDialogs.instanceSchemeQuery(this, ruleapplication1)) {
                            return null;
                         }
-                     } else if (!C_KB.m789(this, c_hf1)) {
+                     } else if (!DerivationDialogs.leibniz34TermQuery(this, ruleapplication1)) {
                         return null;
                      }
-                  } else if (!C_KB.m788(this, c_hf1)) {
+                  } else if (!DerivationDialogs.leibniz12TermQuery(this, ruleapplication1)) {
                      return null;
                   }
 
-                  C_MB c_mb1 = new C_MB();
-                  Expression expression2 = schematicrule1.conclusion.m1239(schemeinstantiation3, c_mb1);
-                  int[][] aint2 = c_mb1.m1095(schematicrule1.conclusion, expression2);
-                  int[] aint3 = c_hf1.m689();
-                  C__B c__b1 = c_hf1.m691();
+                  BinderMap bindermap1 = new BinderMap();
+                  Expression expression2 = schematicrule1.conclusion.instantiate(schemeinstantiation3, bindermap1);
+                  int[][] aint2 = bindermap1.getBinderCorrespondence(schematicrule1.conclusion, expression2);
+                  int[] aint3 = ruleapplication1.getPremiseOrder();
+                  BoundVariableMap boundvariablemap1 = ruleapplication1.getBoundVariables();
                   boolean flag7 = true;
 
                   for (int j2 = 0; j2 < i2; j2++) {
-                     if (!c__b1.m1576(schematicrule1.premises[aint3[j2]], this.m1628(j2 - i2), schemeinstantiation3)) {
+                     if (!boundvariablemap1.matches(schematicrule1.premises[aint3[j2]], this.getStackFormula(j2 - i2), schemeinstantiation3)) {
                         flag7 = false;
                         break;
                      }
@@ -1739,29 +1753,29 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
 
                   if (flag7) {
                      flag7 = false;
-                     if ((!this.f944 || this.f941 == null || c__b1.m1573(schematicrule1.conclusion, this.f941, aint2))
-                        && c__b1.m1575(schematicrule1.conclusion, expression2, aint2, null)
-                        && (!this.f944 || this.f941 == null || expression2.m1235(this.f941))) {
+                     if ((!this.matchLine || this.lineFormula == null || boundvariablemap1.matchBinders(schematicrule1.conclusion, this.lineFormula, aint2))
+                        && boundvariablemap1.renameBinders(schematicrule1.conclusion, expression2, aint2, null)
+                        && (!this.matchLine || this.lineFormula == null || expression2.isIdentical(this.lineFormula))) {
                         flag7 = true;
                      }
                   }
 
                   if (!flag7) {
                      SimpleTerm simpleterm = null;
-                     if (c__b1.f925 != null) {
-                        simpleterm = (SimpleTerm)((Expression[])c__b1.f925.elementAt(0))[1];
+                     if (boundvariablemap1.clashes != null) {
+                        simpleterm = (SimpleTerm)((Expression[])boundvariablemap1.clashes.elementAt(0))[1];
                      }
 
-                     this.m1622("dererr043", Message.params("inst term", "\\l" + simpleterm + "\\l"));
+                     this.reportError("dererr043", Message.params("inst term", "\\l" + simpleterm + "\\l"));
                      return null;
-                  } else if (this.f939.equals("EG") && !C_KB.m786(this, c_hf1, c__b1)) {
+                  } else if (this.ruleName.equals("EG") && !DerivationDialogs.dummyVarQuery(this, ruleapplication1, boundvariablemap1)) {
                      return null;
-                  } else if (!c__b1.m1575(schematicrule1.conclusion, expression2, aint2, this)) {
+                  } else if (!boundvariablemap1.renameBinders(schematicrule1.conclusion, expression2, aint2, this)) {
                      return null;
                   } else {
-                     this.f942 = expression2;
-                     this.m1598(new C_HF(schematicrule1, aint3, schemeinstantiation3, c__b1));
-                     this.m1631(i2);
+                     this.result = expression2;
+                     this.cacheJustification(new RuleApplication(schematicrule1, aint3, schemeinstantiation3, boundvariablemap1));
+                     this.popStack(i2);
                      return schemeinstantiation3;
                   }
                }
@@ -1770,30 +1784,30 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       }
    }
 
-   boolean m1618(C_HF c_hf, SchemeInstantiation schemeinstantiation) {
-      SchematicRule schematicrule = c_hf.m688();
+   boolean verifyApplication(RuleApplication ruleapplication, SchemeInstantiation schemeinstantiation) {
+      SchematicRule schematicrule = ruleapplication.getForm();
       int i = schematicrule.premises.length;
       Expression[] aexpression = new Expression[i];
       int[][][] aint = new int[i][][];
 
       for (int j = 0; j < i; j++) {
-         C_MB c_mb = new C_MB();
-         aexpression[j] = schematicrule.premises[j].m1239(schemeinstantiation, c_mb);
-         aint[j] = c_mb.m1095(schematicrule.premises[j], aexpression[j]);
+         BinderMap bindermap = new BinderMap();
+         aexpression[j] = schematicrule.premises[j].instantiate(schemeinstantiation, bindermap);
+         aint[j] = bindermap.getBinderCorrespondence(schematicrule.premises[j], aexpression[j]);
       }
 
-      C_MB c_mb1 = new C_MB();
-      Expression expression = schematicrule.conclusion.m1239(schemeinstantiation, c_mb1);
-      int[][] aint1 = c_mb1.m1095(schematicrule.conclusion, expression);
-      int[] aint2 = c_hf.m689();
-      C__B c__b = c_hf.m691();
+      BinderMap bindermap1 = new BinderMap();
+      Expression expression = schematicrule.conclusion.instantiate(schemeinstantiation, bindermap1);
+      int[][] aint1 = bindermap1.getBinderCorrespondence(schematicrule.conclusion, expression);
+      int[] aint2 = ruleapplication.getPremiseOrder();
+      BoundVariableMap boundvariablemap = ruleapplication.getBoundVariables();
       boolean flag = true;
 
       for (int k = 0; k < i; k++) {
          flag = false;
-         if (!c__b.m1573(schematicrule.premises[aint2[k]], this.m1628(k - i), aint[aint2[k]])
-            || !c__b.m1575(schematicrule.premises[aint2[k]], aexpression[aint2[k]], aint[aint2[k]], null)
-            || !aexpression[aint2[k]].m1235(this.m1628(k - i))) {
+         if (!boundvariablemap.matchBinders(schematicrule.premises[aint2[k]], this.getStackFormula(k - i), aint[aint2[k]])
+            || !boundvariablemap.renameBinders(schematicrule.premises[aint2[k]], aexpression[aint2[k]], aint[aint2[k]], null)
+            || !aexpression[aint2[k]].isIdentical(this.getStackFormula(k - i))) {
             break;
          }
 
@@ -1802,36 +1816,36 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
 
       if (flag) {
          flag = false;
-         if ((!this.f944 || this.f941 == null || c__b.m1573(schematicrule.conclusion, this.f941, aint1))
-            && c__b.m1575(schematicrule.conclusion, expression, aint1, null)
-            && (!this.f944 || this.f941 == null || expression.m1235(this.f941))) {
+         if ((!this.matchLine || this.lineFormula == null || boundvariablemap.matchBinders(schematicrule.conclusion, this.lineFormula, aint1))
+            && boundvariablemap.renameBinders(schematicrule.conclusion, expression, aint1, null)
+            && (!this.matchLine || this.lineFormula == null || expression.isIdentical(this.lineFormula))) {
             flag = true;
          }
       }
 
-      this.f962 = c__b.f925;
+      this.clashes = boundvariablemap.clashes;
       return flag;
    }
 
-   boolean m1619(Vector vector) {
+   boolean pruneDegenerateMatches(Vector vector) {
       int i = vector.size();
 
       for (int j = 0; j < i; j++) {
-         C_HF c_hf = (C_HF)vector.elementAt(j);
-         if (!c_hf.f391.f820.equalsIgnoreCase("LL1") && !c_hf.f391.f820.equalsIgnoreCase("LL2")) {
-            if (!c_hf.f391.f820.equalsIgnoreCase("LL3") && !c_hf.f391.f820.equalsIgnoreCase("LL4")) {
-               if (c_hf.f391.f820.equalsIgnoreCase("AV3")) {
-                  Vector vector5 = c_hf.f393.f1189;
+         RuleApplication ruleapplication = (RuleApplication)vector.elementAt(j);
+         if (!ruleapplication.form.name.equalsIgnoreCase("LL1") && !ruleapplication.form.name.equalsIgnoreCase("LL2")) {
+            if (!ruleapplication.form.name.equalsIgnoreCase("LL3") && !ruleapplication.form.name.equalsIgnoreCase("LL4")) {
+               if (ruleapplication.form.name.equalsIgnoreCase("AV3")) {
+                  Vector vector5 = ruleapplication.instantiation.pendingLetters;
                   if (!vector5.isEmpty()) {
-                     SchematicLetter schematicletter2 = (SchematicLetter)c_hf.f393.f1189.elementAt(0);
-                     Vector vector7 = schematicletter2.m1176(false);
+                     SchematicLetter schematicletter2 = (SchematicLetter)ruleapplication.instantiation.pendingLetters.elementAt(0);
+                     Vector vector7 = schematicletter2.getDeferredMatches(false);
                      if (vector7 != null) {
                         int i1 = vector7.size();
 
                         for (int j1 = 0; j1 < i1; j1++) {
-                           C_m_B c_m_b3 = (C_m_B)vector7.elementAt(j1);
-                           if (c_m_b3.f1277 != null && c_m_b3.f1277.m1227("%").size() == 0) {
-                              this.m1620(vector, c_hf);
+                           DeferredMatch deferredmatch3 = (DeferredMatch)vector7.elementAt(j1);
+                           if (deferredmatch3.instance != null && deferredmatch3.instance.findSymbolOccurrences("%").size() == 0) {
+                              this.removeMatch(vector, ruleapplication);
                               i--;
                               j--;
                               break;
@@ -1841,36 +1855,36 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
                   }
                }
             } else {
-               Vector vector4 = c_hf.f393.f1189;
+               Vector vector4 = ruleapplication.instantiation.pendingLetters;
                if (!vector4.isEmpty()) {
-                  SchematicLetter schematicletter1 = (SchematicLetter)c_hf.f393.f1189.elementAt(0);
-                  Vector vector6 = schematicletter1.m1176(false);
+                  SchematicLetter schematicletter1 = (SchematicLetter)ruleapplication.instantiation.pendingLetters.elementAt(0);
+                  Vector vector6 = schematicletter1.getDeferredMatches(false);
                   if (vector6 != null) {
                      if (vector6.size() == 1) {
-                        this.m1620(vector, c_hf);
+                        this.removeMatch(vector, ruleapplication);
                         i--;
                         j--;
                      } else {
-                        C_m_B c_m_b1 = (C_m_B)vector6.elementAt(0);
-                        C_m_B c_m_b2 = (C_m_B)vector6.elementAt(1);
-                        Vector vector8 = c_m_b1.f1277.m1233(c_m_b2.f1277);
+                        DeferredMatch deferredmatch1 = (DeferredMatch)vector6.elementAt(0);
+                        DeferredMatch deferredmatch2 = (DeferredMatch)vector6.elementAt(1);
+                        Vector vector8 = deferredmatch1.instance.findDifferences(deferredmatch2.instance);
                         int k1 = vector8.size();
                         ExpressionPath expressionpath = k1 == 0 ? null : (ExpressionPath)vector8.elementAt(0);
                         int l1 = expressionpath == null ? 0 : expressionpath.depth;
                         if (l1 == 0) {
-                           this.m1620(vector, c_hf);
+                           this.removeMatch(vector, ruleapplication);
                            i--;
                            j--;
                         } else {
-                           Expression expression6 = c_m_b1.f1277.m1220(expressionpath);
-                           Expression expression3 = c_m_b2.f1277.m1220(expressionpath);
+                           Expression expression6 = deferredmatch1.instance.getSubexpression(expressionpath);
+                           Expression expression3 = deferredmatch2.instance.getSubexpression(expressionpath);
                            boolean flag = true;
 
                            for (int l = 1; l < k1; l++) {
                               expressionpath = (ExpressionPath)vector8.elementAt(l);
-                              if (!expression6.m1235(c_m_b1.f1277.m1220(expressionpath))) {
+                              if (!expression6.isIdentical(deferredmatch1.instance.getSubexpression(expressionpath))) {
                                  flag = false;
-                              } else if (!expression3.m1235(c_m_b2.f1277.m1220(expressionpath))) {
+                              } else if (!expression3.isIdentical(deferredmatch2.instance.getSubexpression(expressionpath))) {
                                  flag = false;
                               }
 
@@ -1884,21 +1898,21 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
                            }
 
                            if (!flag) {
-                              this.m1620(vector, c_hf);
+                              this.removeMatch(vector, ruleapplication);
                               i--;
                               j--;
                            } else if (l1 == 1) {
-                              SimpleTerm simpleterm1 = new SimpleTerm(SchematicLetter.m1853(0));
-                              Expression expression4 = c_m_b1.f1277.copy();
-                              Expression expression5 = c_m_b1.f1276.copy();
+                              SimpleTerm simpleterm1 = new SimpleTerm(SchematicLetter.placeholder(0));
+                              Expression expression4 = deferredmatch1.instance.copy();
+                              Expression expression5 = deferredmatch1.pattern.copy();
                               expression5.children.setElementAt(simpleterm1, 0);
 
                               for (int i2 = 0; i2 < k1; i2++) {
-                                 expression4 = C_GA.m617(expression4, simpleterm1, (ExpressionPath)vector8.elementAt(i2));
+                                 expression4 = InterchangeJustification.replaceAt(expression4, simpleterm1, (ExpressionPath)vector8.elementAt(i2));
                               }
 
-                              if (expression4.m1259() != null || !c_hf.f393.m1881(expression5, expression4)) {
-                                 this.m1620(vector, c_hf);
+                              if (expression4.findMislinkedVariables() != null || !ruleapplication.instantiation.addReplacement(expression5, expression4)) {
+                                 this.removeMatch(vector, ruleapplication);
                                  i--;
                                  j--;
                               }
@@ -1909,26 +1923,26 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
                }
             }
          } else {
-            Vector vector1 = c_hf.f393.f1189;
+            Vector vector1 = ruleapplication.instantiation.pendingLetters;
             if (!vector1.isEmpty()) {
-               SchematicLetter schematicletter = (SchematicLetter)c_hf.f393.f1189.elementAt(0);
-               Vector vector2 = schematicletter.m1176(false);
+               SchematicLetter schematicletter = (SchematicLetter)ruleapplication.instantiation.pendingLetters.elementAt(0);
+               Vector vector2 = schematicletter.getDeferredMatches(false);
                if (vector2 != null) {
-                  C_m_B c_m_b = (C_m_B)vector2.elementAt(0);
-                  Expression expression = c_m_b.f1276.getChild(0);
-                  Vector vector3 = c_m_b.f1277.m1223(expression.instantiate(c_hf.f393));
+                  DeferredMatch deferredmatch = (DeferredMatch)vector2.elementAt(0);
+                  Expression expression = deferredmatch.pattern.getChild(0);
+                  Vector vector3 = deferredmatch.instance.findOccurrences(expression.instantiate(ruleapplication.instantiation));
                   int k = vector3.size();
                   if (k == 0) {
-                     this.m1620(vector, c_hf);
+                     this.removeMatch(vector, ruleapplication);
                      i--;
                      j--;
                   } else if (k == 1) {
-                     SimpleTerm simpleterm = new SimpleTerm(SchematicLetter.m1853(0));
-                     Expression expression1 = C_GA.m617(c_m_b.f1277, simpleterm, (ExpressionPath)vector3.elementAt(0));
-                     Expression expression2 = c_m_b.f1276.copy();
+                     SimpleTerm simpleterm = new SimpleTerm(SchematicLetter.placeholder(0));
+                     Expression expression1 = InterchangeJustification.replaceAt(deferredmatch.instance, simpleterm, (ExpressionPath)vector3.elementAt(0));
+                     Expression expression2 = deferredmatch.pattern.copy();
                      expression2.children.setElementAt(simpleterm, 0);
-                     if (expression1.m1259() != null || !c_hf.f393.m1881(expression2, expression1)) {
-                        this.m1620(vector, c_hf);
+                     if (expression1.findMislinkedVariables() != null || !ruleapplication.instantiation.addReplacement(expression2, expression1)) {
+                        this.removeMatch(vector, ruleapplication);
                         i--;
                         j--;
                      }
@@ -1941,32 +1955,32 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       return true;
    }
 
-   private void m1620(Vector vector, C_HF c_hf) {
-      vector.removeElement(c_hf);
-      this.f954.removeElement(c_hf);
-      if (this.f954.isEmpty()) {
-         this.f952 = false;
+   private void removeMatch(Vector vector, RuleApplication ruleapplication) {
+      vector.removeElement(ruleapplication);
+      this.fullMatches.removeElement(ruleapplication);
+      if (this.fullMatches.isEmpty()) {
+         this.hasFullMatch = false;
       }
 
-      this.f953.removeElement(c_hf);
-      if (this.f953.isEmpty()) {
-         this.f951 = false;
+      this.premiseMatches.removeElement(ruleapplication);
+      if (this.premiseMatches.isEmpty()) {
+         this.hasPremiseMatch = false;
       }
    }
 
    @Override
-   public String m547(String s) {
+   public String getParamValue(String s) {
       if (s.equals("rule name")) {
-         return this.f939;
+         return this.ruleName;
       } else if (s.equals("stack")) {
-         Object object = "\\l";
+         String object = "\\l";
 
-         for (int j1 = 0; j1 < this.f938; j1++) {
+         for (int j1 = 0; j1 < this.argumentCount; j1++) {
             if (j1 != 0) {
                object = object + "\\n";
             }
 
-            object = object + this.m1628(-j1);
+            object = object + this.getStackFormula(-j1);
          }
 
          return object + "\\l";
@@ -1979,67 +1993,67 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
                i = 0;
             }
 
-            if (i > 0 && i <= this.f938) {
-               return "\\l" + this.m1628(-i) + "\\l";
+            if (i > 0 && i <= this.argumentCount) {
+               return "\\l" + this.getStackFormula(-i) + "\\l";
             }
          }
 
          if (s.equals("assumption")) {
-            int l = this.f935.f317.f923;
+            int l = this.line.box.assumedSide;
             if (l == -1) {
                return null;
             } else {
-               return l == 2 ? "\\l" + this.f935.f317.m1560(1).m7(true) + "\\l" : "\\l" + this.f935.f317.m44().getChild(l) + "\\l";
+               return l == 2 ? "\\l" + this.line.box.getNode(1).getFormulaText(true) + "\\l" : "\\l" + this.line.box.getFormula().getChild(l) + "\\l";
             }
-         } else if (s.equals("rule forms") && this.f959 != null) {
+         } else if (s.equals("rule forms") && this.automaticForms != null) {
             String s4 = "\\l";
-            int i1 = this.f959.length;
+            int i1 = this.automaticForms.length;
             boolean flag3 = true;
 
             for (int i2 = 0; i2 < i1; i2++) {
-               SchematicRule schematicrule1 = this.f959[i2];
-               if (schematicrule1.premises.length >= this.f960 && schematicrule1.premises.length <= this.f961) {
+               SchematicRule schematicrule1 = this.automaticForms[i2];
+               if (schematicrule1.premises.length >= this.minPremises && schematicrule1.premises.length <= this.maxPremises) {
                   if (!flag3) {
                      s4 = s4 + "\\n";
                   }
 
-                  s4 = s4 + this.f959[i2].m958(" . ", " .: ");
+                  s4 = s4 + this.automaticForms[i2].format(" . ", " .: ");
                   flag3 = false;
                }
             }
 
             return s4 + "\\l";
-         } else if (s.equals("rule forms premises") && this.f959 != null) {
-            int k = this.f961;
-            Object object1 = "\\l";
+         } else if (s.equals("rule forms premises") && this.automaticForms != null) {
+            int k = this.maxPremises;
+            String object1 = "\\l";
 
             for (int l1 = 0; l1 < k; l1++) {
                if (l1 != 0) {
                   object1 = object1 + "\\n";
                }
 
-               object1 = object1 + this.m1628(-l1);
+               object1 = object1 + this.getStackFormula(-l1);
             }
 
             return object1 + "\\l";
          } else {
             if (s.equals("rule form")) {
-               Vector vector = this.f952 ? this.f954 : (this.f951 ? this.f953 : null);
+               Vector vector = this.hasFullMatch ? this.fullMatches : (this.hasPremiseMatch ? this.premiseMatches : null);
                if (vector != null && vector.size() > 0) {
-                  SchematicRule schematicrule = ((C_HF)vector.elementAt(0)).m688();
-                  return "\\l" + schematicrule.m958(" . ", " .: ") + "\\l";
+                  SchematicRule schematicrule = ((RuleApplication)vector.elementAt(0)).getForm();
+                  return "\\l" + schematicrule.format(" . ", " .: ") + "\\l";
                }
             }
 
             if (s.equals("rule form premises")) {
-               Vector vector1 = this.f952 ? this.f954 : (this.f951 ? this.f953 : null);
+               Vector vector1 = this.hasFullMatch ? this.fullMatches : (this.hasPremiseMatch ? this.premiseMatches : null);
                if (vector1 != null && vector1.size() > 0) {
-                  C_HF c_hf = (C_HF)vector1.elementAt(0);
-                  int k1 = c_hf.m692();
+                  RuleApplication ruleapplication = (RuleApplication)vector1.elementAt(0);
+                  int k1 = ruleapplication.getPremiseCount();
                   String s3 = "\\l";
 
                   for (int j = 0; j < k1; j++) {
-                     s3 = s3 + (j == 0 ? "" : "\\n") + this.m1628(j - k1);
+                     s3 = s3 + (j == 0 ? "" : "\\n") + this.getStackFormula(j - k1);
                   }
 
                   return s3 + "\\l";
@@ -2047,10 +2061,10 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
             }
 
             if (s.equals("rule form conclusion")) {
-               return "\\l" + this.f942 + "\\l";
+               return "\\l" + this.result + "\\l";
             } else {
                if (s.length() >= 4 && s.substring(0, 4).equals("rfsp")) {
-                  boolean flag = this.f961 == 1;
+                  boolean flag = this.maxPremises == 1;
                   String s1 = s.substring(4).trim();
                   if (s1.equals("s")) {
                      return flag ? "" : "s";
@@ -2067,9 +2081,9 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
 
                if (s.length() >= 3 && s.substring(0, 3).equals("rfp")) {
                   boolean flag1 = false;
-                  Vector vector2 = this.f952 ? this.f954 : (this.f951 ? this.f953 : null);
+                  Vector vector2 = this.hasFullMatch ? this.fullMatches : (this.hasPremiseMatch ? this.premiseMatches : null);
                   if (vector2 != null && vector2.size() > 0) {
-                     flag1 = ((C_HF)vector2.elementAt(0)).m692() == 1;
+                     flag1 = ((RuleApplication)vector2.elementAt(0)).getPremiseCount() == 1;
                   }
 
                   String s2 = s.substring(3).trim();
@@ -2091,7 +2105,7 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
                }
 
                if (s.length() >= 2 && s.substring(0, 2).equals("rf")) {
-                  boolean flag2 = this.f959 != null && this.f959.length == 1;
+                  boolean flag2 = this.automaticForms != null && this.automaticForms.length == 1;
                   String s5 = s.substring(2).trim();
                   if (s5.equals("s")) {
                      return flag2 ? "" : "s";
@@ -2104,81 +2118,81 @@ class DerivationLineChecker implements C_k_A, DerivationConstants {
       }
    }
 
-   void m1621(String s) {
-      this.f935.m550(s, this);
+   void reportError(String s) {
+      this.line.showMessage(s, this);
    }
 
-   void m1622(String s, Hashtable hashtable) {
-      this.f935.m553(s, this, hashtable);
+   void reportError(String s, Hashtable hashtable) {
+      this.line.showMessage(s, this, hashtable);
    }
 
-   void m1623(String s, Object object) {
-      this.f935.m556(s, object);
+   void putMessageObject(String s, Object object) {
+      this.line.setMessageButtonParam(s, object);
    }
 
-   void m1624() {
-      this.f935.m13();
+   void clearMessage() {
+      this.line.clearMessage();
    }
 
-   void m1625(int i) {
-      this.f935.m557(i);
+   void clearMessage(int i) {
+      this.line.clearMessage(i);
    }
 
-   int m1626() {
-      return this.f937.size();
+   int getStackSize() {
+      return this.stack.size();
    }
 
-   DerivationNode m1627(int i) {
-      int j = this.f936.size();
+   DerivationNode getCitedNode(int i) {
+      int j = this.citedNodes.size();
       if (i < 0) {
          i += j;
       }
 
-      return i >= 0 && i < j ? (DerivationNode)this.f936.elementAt(i) : null;
+      return i >= 0 && i < j ? (DerivationNode)this.citedNodes.elementAt(i) : null;
    }
 
-   Expression m1628(int i) {
-      int j = this.f937.size();
+   Expression getStackFormula(int i) {
+      int j = this.stack.size();
       if (i < 0) {
          i += j;
       }
 
-      return i >= 0 && i < j ? (Expression)this.f937.elementAt(i) : null;
+      return i >= 0 && i < j ? (Expression)this.stack.elementAt(i) : null;
    }
 
-   C_L m1629(int i) {
-      Expression expression = this.m1628(i);
-      return expression == null ? null : expression.m1254();
+   BoundVariableNames getBoundVariableNames(int i) {
+      Expression expression = this.getStackFormula(i);
+      return expression == null ? null : expression.getBoundVariableNames();
    }
 
-   C_L m1630() {
-      return this.f941 == null ? null : this.f941.m1254();
+   BoundVariableNames getLineBoundVariableNames() {
+      return this.lineFormula == null ? null : this.lineFormula.getBoundVariableNames();
    }
 
-   void m1631(int i) {
-      int j = this.f937.size();
+   void popStack(int i) {
+      int j = this.stack.size();
       int k = j - i;
       if (k < 0) {
          k = 0;
       }
 
-      if (this.f945) {
-         this.f955 = new Vector();
+      if (this.finalStep) {
+         this.consumedFormulas = new Vector();
 
          for (int l = 0; l < j - k; l++) {
-            this.f955.addElement(this.f937.elementAt(k + l));
+            this.consumedFormulas.addElement(this.stack.elementAt(k + l));
          }
       }
 
-      this.f936.setSize(k);
-      this.f937.setSize(k);
+      this.citedNodes.setSize(k);
+      this.stack.setSize(k);
    }
 
-   String m1632() {
-      return this.f939;
+   String getRuleName() {
+      return this.ruleName;
    }
 
-   static int m1633(String s) {
+   static int parsePremiseNumber(String s) {
       if (s.equals("PR")) {
          return 0;
       } else if (s.length() < 2 || !s.substring(0, 2).equals("PR")) {

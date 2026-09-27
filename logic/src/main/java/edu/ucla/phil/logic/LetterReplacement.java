@@ -1,34 +1,34 @@
 package edu.ucla.phil.logic;
 
 class LetterReplacement {
-   Expression f367;
-   Expression f368;
-   ErrorRef f369;
+   Expression pattern;
+   Expression replacement;
+   ErrorRef error;
 
    LetterReplacement(Expression expression, Expression expression1) {
-      if ((this.f369 = SchemeInstantiation.m1884(expression, expression1)) == null) {
-         this.f367 = expression;
-         this.f368 = expression1.copy();
-         this.f368.m1264(expression);
+      if ((this.error = SchemeInstantiation.validateReplacement(expression, expression1)) == null) {
+         this.pattern = expression;
+         this.replacement = expression1.copy();
+         this.replacement.linkArgumentPlaceholders(expression);
       }
    }
 
    LetterReplacement(ErrorRef errorref) {
-      this.f369 = errorref;
+      this.error = errorref;
    }
 
-   boolean m656(LetterReplacement letterreplacement1) {
-      if (this.f369 != null || letterreplacement1.f369 != null) {
+   boolean sameReplacementAs(LetterReplacement letterreplacement1) {
+      if (this.error != null || letterreplacement1.error != null) {
          return false;
       } else {
-         return this.f367.symbol.equals(letterreplacement1.f367.symbol) && this.f367.childCount == letterreplacement1.f367.childCount
-            ? this.f368.m1236(letterreplacement1.f368, null)
+         return this.pattern.symbol.equals(letterreplacement1.pattern.symbol) && this.pattern.childCount == letterreplacement1.pattern.childCount
+            ? this.replacement.isAlphaEquivalent(letterreplacement1.replacement, null)
             : false;
       }
    }
 
    @Override
    public String toString() {
-      return this.f367 + ":" + this.f368;
+      return this.pattern + ":" + this.replacement;
    }
 }

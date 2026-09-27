@@ -20,21 +20,21 @@ import javax.swing.SwingUtilities;
 
 class LPTruthAnalysis extends LogicModule {
    SizedPanel scrollPanel;
-   C_k_E problem;
+   TruthProblemPanel problem;
    int fontSize;
    Font font;
    Font errorFont;
    static final String workFileName = "truwork.txt";
    static final String logFileName = "trudata.txt";
    static final String digestVersKey = "truDigestVers";
-   static Class messageClass = C_FE.class;
+   static Class messageClass = TruthMessage.class;
    static final int correct = 0;
    static final int incorrect = 1;
    static final int incomplete = 2;
-   static C_O exercises = null;
-   static C_O problems = null;
+   static TruthProblemSet exercises = null;
+   static TruthProblemSet problems = null;
    static Vector instances = new Vector();
-   static C_c_C printQueue = new C_c_C("Truth Tables");
+   static PrintQueue printQueue = new PrintQueue("Truth Tables");
    static ProblemSelector noCheck = null;
    static ProblemSelector noTreeErr = null;
    static ProblemSelector noTableErr = null;
@@ -83,13 +83,13 @@ class LPTruthAnalysis extends LogicModule {
    static int moduleIndex = 5;
 
    static boolean getExercises() {
-      if (!C_FE.loadMessages()) {
-         LogicProgram.m971("not001", "the truth analysis messages file");
+      if (!TruthMessage.loadMessages()) {
+         LogicProgram.showFileError("not001", "the truth analysis messages file");
          return false;
       } else {
          resetOptions();
          readOptions(LogicProgram.openDataFile("options", false));
-         readOptions(LogicProgram.m1065("options", false));
+         readOptions(LogicProgram.openLocalFile("options", false));
          logNeeds();
          if ((exercises = readExercises()) == null) {
             return false;
@@ -101,34 +101,35 @@ class LPTruthAnalysis extends LogicModule {
       }
    }
 
-   static C_O readExercises() {
-      return readExercises(LogicProgram.f584, false, false);
+   static TruthProblemSet readExercises() {
+      return readExercises(LogicProgram.noCoreProblems, false, false);
    }
 
-   static C_O readExercises(boolean flag, boolean flag1, boolean flag2) {
-      C_O c_o = new C_O();
+   static TruthProblemSet readExercises(boolean flag, boolean flag1, boolean flag2) {
+      TruthProblemSet truthproblemset = new TruthProblemSet();
       if (!flag) {
          ScrambledReader scrambledreader = LogicProgram.openDataFile("truwork.txt", false);
          if (scrambledreader == null) {
-            LogicProgram.m971("not001", "the core Truth Table exercise file");
+            LogicProgram.showFileError("not001", "the core Truth Table exercise file");
             return null;
          }
 
-         if (!readProblems(scrambledreader, c_o, true)) {
-            LogicProgram.m971("not002", "the core Truth Table exercise file");
+         if (!readProblems(scrambledreader, truthproblemset, true)) {
+            LogicProgram.showFileError("not002", "the core Truth Table exercise file");
             return null;
          }
       }
 
       if (!flag1) {
-         ScrambledReader scrambledreader1 = LogicProgram.m1065("truwork.txt", flag2);
-         if (scrambledreader1 != null && (flag ? !readProblems(scrambledreader1, c_o, true) : !mergeProblems(scrambledreader1, c_o, true))) {
-            LogicProgram.m971("not002", "the local Truth Table exercise file");
+         ScrambledReader scrambledreader1 = LogicProgram.openLocalFile("truwork.txt", flag2);
+         if (scrambledreader1 != null
+            && (flag ? !readProblems(scrambledreader1, truthproblemset, true) : !mergeProblems(scrambledreader1, truthproblemset, true))) {
+            LogicProgram.showFileError("not002", "the local Truth Table exercise file");
             return null;
          }
       }
 
-      return c_o;
+      return truthproblemset;
    }
 
    LPTruthAnalysis(boolean flag) {
@@ -143,8 +144,8 @@ class LPTruthAnalysis extends LogicModule {
       this.scroller = new JScrollPane();
       this.add(this.scroller, "Center");
       this.scroller.getVerticalScrollBar().setUnitIncrement(22);
-      this.scroller.setViewportView(this.problem = new C_k_E(this));
-      this.add(C_u_E.m2120(this), "South");
+      this.scroller.setViewportView(this.problem = new TruthProblemPanel(this));
+      this.add(TruthToolbar.create(this), "South");
       this.newProblem();
    }
 
@@ -159,23 +160,23 @@ class LPTruthAnalysis extends LogicModule {
       }
 
       if (exercises != null || getExercises()) {
-         LPTruthAnalysis.C__A lptruthanalysis$c__a = new LPTruthAnalysis.C__A(busyindicator, rectangle, s);
-         startups.add(lptruthanalysis$c__a);
+         LPTruthAnalysis.TruthStartupTask lptruthanalysis$truthstartuptask = new LPTruthAnalysis.TruthStartupTask(busyindicator, rectangle, s);
+         startups.add(lptruthanalysis$truthstartuptask);
          if (startups.size() <= 1) {
             if (problems == null) {
                if (!getProblems()) {
-                  lptruthanalysis$c__a.m1310();
-                  startups.remove(lptruthanalysis$c__a);
+                  lptruthanalysis$truthstartuptask.stopBusyIndicator();
+                  startups.remove(lptruthanalysis$truthstartuptask);
                   return;
                }
 
-               if (problems.m1773()) {
+               if (problems.mergeExercises()) {
                   saveProblems();
                }
 
-               problems.m1099(lptruthanalysis$c__a);
+               problems.restateProblems(lptruthanalysis$truthstartuptask);
             } else {
-               lptruthanalysis$c__a.m959();
+               lptruthanalysis$truthstartuptask.continueStartup();
             }
          }
       }
@@ -186,18 +187,18 @@ class LPTruthAnalysis extends LogicModule {
       int i = startups.size();
 
       for (int j = 0; j < i; j++) {
-         ((LogicModule.C__A)startups.get(i - 1 - j)).m1310();
+         ((LogicModule.ModuleStartupTask)startups.get(i - 1 - j)).stopBusyIndicator();
       }
 
       while (!startups.isEmpty()) {
-         LogicModule.C__A logicmodule$c__a = (LogicModule.C__A)startups.remove(0);
-         SwingUtilities.invokeLater(logicmodule$c__a);
+         LogicModule.ModuleStartupTask logicmodule$modulestartuptask = (LogicModule.ModuleStartupTask)startups.remove(0);
+         SwingUtilities.invokeLater(logicmodule$modulestartuptask);
       }
    }
 
    Rectangle fixModuleRect(Rectangle rectangle) {
-      C_u_E c_u_e = C_u_E.m2120(this);
-      Dimension dimension = c_u_e.getPreferredSize();
+      TruthToolbar truthtoolbar = TruthToolbar.create(this);
+      Dimension dimension = truthtoolbar.getPreferredSize();
       if (rectangle.width < dimension.width) {
          rectangle.width = dimension.width;
       }
@@ -205,36 +206,36 @@ class LPTruthAnalysis extends LogicModule {
       return rectangle;
    }
 
-   static void allocateTruModule(LogicModule.C__A logicmodule$c__a) {
+   static void allocateTruModule(LogicModule.ModuleStartupTask logicmodule$modulestartuptask) {
       LPTruthAnalysis lptruthanalysis = new LPTruthAnalysis(false);
       instances.addElement(lptruthanalysis);
-      if (logicmodule$c__a.f784 == null || newProblem == null) {
+      if (logicmodule$modulestartuptask.problemName == null || newProblem == null) {
          lptruthanalysis.loadProblem((String)null);
          if (newProblem == null) {
             newProblem = lptruthanalysis.saveProblem();
          }
       }
 
-      if (logicmodule$c__a.f784 != null) {
-         lptruthanalysis.loadProblem(logicmodule$c__a.f784);
-         logicmodule$c__a.f784 = null;
+      if (logicmodule$modulestartuptask.problemName != null) {
+         lptruthanalysis.loadProblem(logicmodule$modulestartuptask.problemName);
+         logicmodule$modulestartuptask.problemName = null;
       }
 
       lptruthanalysis.setupFrame(LPInfo.programName + ": Truth Tables");
-      lptruthanalysis.frame.setBounds(lptruthanalysis.fixModuleRect(logicmodule$c__a.f783));
+      lptruthanalysis.frame.setBounds(lptruthanalysis.fixModuleRect(logicmodule$modulestartuptask.bounds));
       lptruthanalysis.frame.setVisible(true);
       lptruthanalysis.requestFocus();
       lptruthanalysis.noBeep = false;
    }
 
    static void insertDBProbs(ProblemSelector problemselector) {
-      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
+      if (problemselector != null && !problemselector.isEmpty() && UserSetup.hasAccess("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.getRecordAt(j));
             String s = taggedrecord.getName();
-            if (problemselector.m404(s)) {
+            if (problemselector.contains(s)) {
                if (DiagnosticsLog.out != null) {
                   DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
                   DiagnosticsLog.out.println("adding " + s);
@@ -247,30 +248,30 @@ class LPTruthAnalysis extends LogicModule {
                }
 
                String s3 = Scrambler.md5Base64(s1.trim());
-               String s4 = LogicProgram.m995(s1, maggie, html);
+               String s4 = LogicProgram.translateSymbols(s1, maggie, html);
                String s5 = taggedrecord.valueAt(taggedrecord.indexOfTag('C'));
                if (s5 == null) {
                   s5 = s;
                }
 
                String s6 = "insert into logic_problem (COMMENT,DTCREATION,PROBLEM_NAME,TPROBLEM,TPROBLEM_MD5,TWEB_FORM_PROBLEM,VERSION,SYNTAX,COMMON_NAME)";
-               s6 = s6 + " values (" + ServerConnection.m815(s2) + ",GETDATE()," + ServerConnection.m815(s) + "," + ServerConnection.m815(s1) + ",";
-               s6 = s6 + ServerConnection.m815(s3) + "," + ServerConnection.m815(s4) + "," + nameVersion(s) + "," + FormulaParser.getSyntax() + ",";
-               s6 = s6 + ServerConnection.m815(s5) + ")";
-               ServerConnection.m814(s6);
+               s6 = s6 + " values (" + ServerConnection.sqlQuote(s2) + ",GETDATE()," + ServerConnection.sqlQuote(s) + "," + ServerConnection.sqlQuote(s1) + ",";
+               s6 = s6 + ServerConnection.sqlQuote(s3) + "," + ServerConnection.sqlQuote(s4) + "," + nameVersion(s) + "," + FormulaParser.getSyntax() + ",";
+               s6 = s6 + ServerConnection.sqlQuote(s5) + ")";
+               ServerConnection.stubReturnsNull(s6);
             }
          }
       }
    }
 
    static void updateDBProbs(ProblemSelector problemselector) {
-      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
+      if (problemselector != null && !problemselector.isEmpty() && UserSetup.hasAccess("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.getRecordAt(j));
             String s = taggedrecord.getName();
-            if (problemselector.m404(s)) {
+            if (problemselector.contains(s)) {
                if (DiagnosticsLog.out != null) {
                   DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
                   DiagnosticsLog.out.println("updating " + s);
@@ -283,17 +284,17 @@ class LPTruthAnalysis extends LogicModule {
                }
 
                String s3 = Scrambler.md5Base64(s1.trim());
-               String s4 = LogicProgram.m995(s1, maggie, html);
+               String s4 = LogicProgram.translateSymbols(s1, maggie, html);
                String s5 = taggedrecord.valueAt(taggedrecord.indexOfTag('C'));
                if (s5 == null) {
                   s5 = s;
                }
 
-               String s6 = "update logic_problem set tproblem = " + ServerConnection.m815(s1) + ", tproblem_md5 = " + ServerConnection.m815(s3);
-               s6 = s6 + ", tweb_form_problem = " + ServerConnection.m815(s4) + ", comment = " + ServerConnection.m815(s2);
-               s6 = s6 + ", version = " + nameVersion(s) + ", common_name = " + ServerConnection.m815(s5);
-               s6 = s6 + " where problem_name = " + ServerConnection.m815(s) + " and syntax = " + FormulaParser.getSyntax();
-               ServerConnection.m814(s6);
+               String s6 = "update logic_problem set tproblem = " + ServerConnection.sqlQuote(s1) + ", tproblem_md5 = " + ServerConnection.sqlQuote(s3);
+               s6 = s6 + ", tweb_form_problem = " + ServerConnection.sqlQuote(s4) + ", comment = " + ServerConnection.sqlQuote(s2);
+               s6 = s6 + ", version = " + nameVersion(s) + ", common_name = " + ServerConnection.sqlQuote(s5);
+               s6 = s6 + " where problem_name = " + ServerConnection.sqlQuote(s) + " and syntax = " + FormulaParser.getSyntax();
+               ServerConnection.stubReturnsNull(s6);
             }
          }
       }
@@ -315,72 +316,72 @@ class LPTruthAnalysis extends LogicModule {
       if (problems != null) {
          return true;
       } else {
-         C_O c_o = readWork();
-         if (c_o == null) {
+         TruthProblemSet truthproblemset = readWork();
+         if (truthproblemset == null) {
             return false;
          } else {
-            if (c_o.f1079 && !c_o.m1777(LogicProgram.user).equals(c_o.f1076)) {
+            if (truthproblemset.readFromPlainFile && !truthproblemset.computeDigest(LogicProgram.user).equals(truthproblemset.storedDigest)) {
                System.out.println("Could not digest file: truwork.txt");
-               if (!UserSetup.m2101("indigestion", "instructor")) {
-                  LogicProgram.m971("not003", "truwork.txt");
+               if (!UserSetup.hasAccess("indigestion", "instructor")) {
+                  LogicProgram.showFileError("not003", "truwork.txt");
                   return false;
                }
             }
 
-            problems = c_o;
-            C_f_C.f1111 = ProblemEntry.m1816("truwork.txt", problems);
-            ProblemEntry.m1815(exercises, C_f_C.f1111);
+            problems = truthproblemset;
+            TruthProblemEntry.workProblemNames = ProblemEntry.findExtraProblems("truwork.txt", problems);
+            ProblemEntry.markExtraProblems(exercises, TruthProblemEntry.workProblemNames);
             return true;
          }
       }
    }
 
-   static C_O readWork() {
-      if (!LogicProgram.m976()) {
+   static TruthProblemSet readWork() {
+      if (!LogicProgram.checkSameUser()) {
          return null;
       } else {
-         C_O c_o = new C_O();
+         TruthProblemSet truthproblemset = new TruthProblemSet();
          ScrambledReader scrambledreader = LogicProgram.openDataFile("truwork.txt", true);
-         if (!LogicProgram.f584 || scrambledreader instanceof PlainRecordReader) {
+         if (!LogicProgram.noCoreProblems || scrambledreader instanceof PlainRecordReader) {
             if (scrambledreader == null) {
-               LogicProgram.m971("not001", "truwork.txt");
+               LogicProgram.showFileError("not001", "truwork.txt");
                return null;
             }
 
             if (scrambledreader instanceof PlainRecordReader) {
-               c_o.f1079 = true;
+               truthproblemset.readFromPlainFile = true;
             }
 
-            if (!readProblems(scrambledreader, c_o, false)) {
-               LogicProgram.m971("not002", "truwork.txt");
+            if (!readProblems(scrambledreader, truthproblemset, false)) {
+               LogicProgram.showFileError("not002", "truwork.txt");
                return null;
             }
          }
 
          if (!(scrambledreader instanceof PlainRecordReader)) {
-            scrambledreader = LogicProgram.m1065("truwork.txt", false);
-            if (scrambledreader != null && !mergeProblems(scrambledreader, c_o, false)) {
-               LogicProgram.m971("not002", "truwork.txt");
+            scrambledreader = LogicProgram.openLocalFile("truwork.txt", false);
+            if (scrambledreader != null && !mergeProblems(scrambledreader, truthproblemset, false)) {
+               LogicProgram.showFileError("not002", "truwork.txt");
                return null;
             }
          }
 
-         return c_o;
+         return truthproblemset;
       }
    }
 
    boolean hasWork() {
-      if (this.completeSetup && this.problem.f1203 != null && this.problem.f1203.m1954()) {
+      if (this.completeSetup && this.problem.setupPanel != null && this.problem.setupPanel.hasSetupWork()) {
          return true;
-      } else if (this.problem.f1215 != -1) {
+      } else if (this.problem.answer != -1) {
          return true;
-      } else if (this.problem.f1201.f892 != -1) {
+      } else if (this.problem.table.counterexampleRow != -1) {
          return true;
       } else {
-         int i = this.problem.f1201.f894;
+         int i = this.problem.table.rowCount;
 
          for (int j = 0; j < i; j++) {
-            if (this.problem.f1201.m1525(j)) {
+            if (this.problem.table.rowHasWork(j)) {
                return true;
             }
          }
@@ -394,29 +395,29 @@ class LPTruthAnalysis extends LogicModule {
    }
 
    static boolean hasWork(TaggedRecord taggedrecord) {
-      return taggedrecord.m1478("@*#&") != -1;
+      return taggedrecord.indexOfAnyTag("@*#&") != -1;
    }
 
    static String getWork(TaggedRecord taggedrecord) {
-      return taggedrecord.m1484("@*#&");
+      return taggedrecord.formatFields("@*#&");
    }
 
    static String removeWork(TaggedRecord taggedrecord) {
-      return taggedrecord.m1484("$=%u!");
+      return taggedrecord.formatFields("$=%u!");
    }
 
    ErrorRef checkFull() {
-      C_XF c_xf = this.problem.f1201;
-      C_GD[][] ac_gd = c_xf.f890;
-      int i = c_xf.f892;
+      TruthTableGrid truthtablegrid = this.problem.table;
+      TruthTableCell[][] atruthtablecell = truthtablegrid.cells;
+      int i = truthtablegrid.counterexampleRow;
       if (this.completeSetup) {
-         if (this.problem.f1203 == null) {
+         if (this.problem.setupPanel == null) {
             return new ErrorRef("truerr013", Message.params("summary", "Incomplete"));
          }
 
-         if (!this.problem.f1219) {
-            ErrorRef errorref = this.problem.f1203.m1956();
-            if (errorref.f427 != null) {
+         if (!this.problem.setupDone) {
+            ErrorRef errorref = this.problem.setupPanel.checkAssignments();
+            if (errorref.id != null) {
                return errorref;
             }
 
@@ -424,19 +425,19 @@ class LPTruthAnalysis extends LogicModule {
          }
       }
 
-      for (int j = 0; j < c_xf.f894; j++) {
-         if (checkRowError(ac_gd[j])) {
+      for (int j = 0; j < truthtablegrid.rowCount; j++) {
+         if (checkRowError(atruthtablecell[j])) {
             return new ErrorRef("truerr001", Message.params("summary", "Incorrect"));
          }
       }
 
       if (!this.assumeTautology) {
-         if (this.problem.f1215 == 0) {
+         if (this.problem.answer == 0) {
             if (i != -1) {
                return new ErrorRef("truerr004", Message.params("summary", "Incorrect"));
             }
          } else {
-            if (this.problem.f1215 != 1) {
+            if (this.problem.answer != 1) {
                return new ErrorRef("truerr003", Message.params("summary", "Incomplete"));
             }
 
@@ -446,9 +447,9 @@ class LPTruthAnalysis extends LogicModule {
          }
       }
 
-      if (this.assumeTautology || this.completeAllRows || this.problem.f1215 == 0) {
-         for (int k = 0; k < c_xf.f894; k++) {
-            if (!checkRowComplete(ac_gd[k]) && (this.completeAllWffs || !checkRowValid(ac_gd[k]))) {
+      if (this.assumeTautology || this.completeAllRows || this.problem.answer == 0) {
+         for (int k = 0; k < truthtablegrid.rowCount; k++) {
+            if (!checkRowComplete(atruthtablecell[k]) && (this.completeAllWffs || !checkRowValid(atruthtablecell[k]))) {
                return new ErrorRef("truerr002", Message.params("summary", "Incomplete"));
             }
          }
@@ -456,46 +457,46 @@ class LPTruthAnalysis extends LogicModule {
 
       if (this.assumeTautology) {
          return new ErrorRef(null, Message.params("summary", "Correct"));
-      } else if (this.problem.f1215 == 0) {
-         for (int l = 0; l < c_xf.f894; l++) {
-            if (!checkRowValid(ac_gd[l])) {
+      } else if (this.problem.answer == 0) {
+         for (int l = 0; l < truthtablegrid.rowCount; l++) {
+            if (!checkRowValid(atruthtablecell[l])) {
                return new ErrorRef("truerr005", Message.params("summary", "Incorrect"));
             }
          }
 
          return new ErrorRef(null, Message.params("summary", "Correct"));
-      } else if (!this.completeAllWffs && checkRowValid(ac_gd[i])) {
+      } else if (!this.completeAllWffs && checkRowValid(atruthtablecell[i])) {
          return new ErrorRef("truerr008", Message.params("summary", "Incorrect"));
-      } else if (!this.completeAllRows && !checkRowComplete(ac_gd[i])) {
+      } else if (!this.completeAllRows && !checkRowComplete(atruthtablecell[i])) {
          return new ErrorRef("truerr007", Message.params("summary", "Incomplete"));
       } else {
-         return this.completeAllWffs && checkRowValid(ac_gd[i])
+         return this.completeAllWffs && checkRowValid(atruthtablecell[i])
             ? new ErrorRef("truerr008", Message.params("summary", "Incorrect"))
             : new ErrorRef(null, Message.params("summary", "Correct"));
       }
    }
 
    boolean check() {
-      return this.checkFull().f427 == null;
+      return this.checkFull().id == null;
    }
 
    void checkProblem() {
       ErrorRef errorref = this.checkFull();
-      if (errorref.f428 != null) {
-         String s = (String)errorref.f428.get("summary");
-         this.titlePanel.m1825(s == null ? "" : s);
+      if (errorref.params != null) {
+         String s = (String)errorref.params.get("summary");
+         this.titlePanel.setStatus(s == null ? "" : s);
       }
 
-      if (errorref.f427 != null && !this.checkMessagesDisabled) {
-         MessageDialog.showMessage(C_FE.get(errorref.f427), errorref.f428, null, null);
+      if (errorref.id != null && !this.checkMessagesDisabled) {
+         MessageDialog.showMessage(TruthMessage.get(errorref.id), errorref.params, null, null);
       }
    }
 
-   static boolean checkRowError(C_GD[] ac_gd) {
-      int i = ac_gd.length;
+   static boolean checkRowError(TruthTableCell[] atruthtablecell) {
+      int i = atruthtablecell.length;
 
       for (int j = 0; j < i; j++) {
-         if (ac_gd[j].f362) {
+         if (atruthtablecell[j].isWrong) {
             return true;
          }
       }
@@ -503,11 +504,11 @@ class LPTruthAnalysis extends LogicModule {
       return false;
    }
 
-   static boolean checkRowComplete(C_GD[] ac_gd) {
-      int i = ac_gd.length;
+   static boolean checkRowComplete(TruthTableCell[] atruthtablecell) {
+      int i = atruthtablecell.length;
 
       for (int j = 0; j < i; j++) {
-         if (ac_gd[j].getText().equals("?")) {
+         if (atruthtablecell[j].getText().equals("?")) {
             return false;
          }
       }
@@ -515,13 +516,13 @@ class LPTruthAnalysis extends LogicModule {
       return true;
    }
 
-   static boolean checkRowValid(C_GD[] ac_gd) {
-      int i = ac_gd.length;
-      if (ac_gd[i - 1].getText().equals("T")) {
+   static boolean checkRowValid(TruthTableCell[] atruthtablecell) {
+      int i = atruthtablecell.length;
+      if (atruthtablecell[i - 1].getText().equals("T")) {
          return true;
       } else {
          for (int j = 0; j < i - 1; j++) {
-            if (ac_gd[j].getText().equals("F")) {
+            if (atruthtablecell[j].getText().equals("F")) {
                return true;
             }
          }
@@ -532,47 +533,47 @@ class LPTruthAnalysis extends LogicModule {
 
    static String getExerciseTitle(String s) {
       String s1;
-      return exercises != null && (s1 = exercises.m1780(s)) != null ? TaggedRecord.m1493(s1) : null;
+      return exercises != null && (s1 = exercises.getRecord(s)) != null ? TaggedRecord.nameOf(s1) : null;
    }
 
    static boolean isExercise(String s) {
-      return exercises != null && s != null && exercises.m1780(s) != null;
+      return exercises != null && s != null && exercises.getRecord(s) != null;
    }
 
    static boolean isExample(String s) {
-      return exercises != null && s != null && TaggedRecord.m1502(exercises.m1780(s));
+      return exercises != null && s != null && TaggedRecord.isExample(exercises.getRecord(s));
    }
 
    void loadExerciseInfo(TaggedRecord taggedrecord) {
-      taggedrecord = new TaggedRecord(exercises == null ? null : exercises.m1780(taggedrecord.getName()));
-      this.probOptions = taggedrecord.m1506('%');
+      taggedrecord = new TaggedRecord(exercises == null ? null : exercises.getRecord(taggedrecord.getName()));
+      this.probOptions = taggedrecord.getKeyValues('%');
       this.dontChange = this.probOptions != null && this.probOptions.containsKey("eg");
       this.assumeTautology = this.probOptions != null && this.probOptions.containsKey("taut");
-      this.titlePanel.m1827(taggedrecord.valueAt(taggedrecord.indexOfTag('!')));
+      this.titlePanel.setNote(taggedrecord.valueAt(taggedrecord.indexOfTag('!')));
       String s = taggedrecord.getName();
-      this.completeAllNodes = LogicProgram.m1060(doAllNodes, s);
-      this.completeAllRows = LogicProgram.m1060(doAllRows, s);
-      this.completeAllWffs = LogicProgram.m1060(doAllWffs, s);
-      this.completeSetup = LogicProgram.m1060(doSetUp, s);
-      this.checkDisabled = LogicProgram.m1060(this.forPrint ? noPrintCheck : noCheck, s);
-      this.treeErrorsDisabled = LogicProgram.m1060(this.forPrint ? noPrintTreeErr : noTreeErr, s);
-      this.tableErrorsDisabled = LogicProgram.m1060(this.forPrint ? noPrintTableErr : noTableErr, s);
-      this.setupErrorsDisabled = LogicProgram.m1060(this.forPrint ? noPrintSetupErr : noSetupErr, s);
-      this.checkMessagesDisabled = LogicProgram.m1060(noCheckMess, s);
+      this.completeAllNodes = LogicProgram.selectorMatches(doAllNodes, s);
+      this.completeAllRows = LogicProgram.selectorMatches(doAllRows, s);
+      this.completeAllWffs = LogicProgram.selectorMatches(doAllWffs, s);
+      this.completeSetup = LogicProgram.selectorMatches(doSetUp, s);
+      this.checkDisabled = LogicProgram.selectorMatches(this.forPrint ? noPrintCheck : noCheck, s);
+      this.treeErrorsDisabled = LogicProgram.selectorMatches(this.forPrint ? noPrintTreeErr : noTreeErr, s);
+      this.tableErrorsDisabled = LogicProgram.selectorMatches(this.forPrint ? noPrintTableErr : noTableErr, s);
+      this.setupErrorsDisabled = LogicProgram.selectorMatches(this.forPrint ? noPrintSetupErr : noSetupErr, s);
+      this.checkMessagesDisabled = LogicProgram.selectorMatches(noCheckMess, s);
       this.tableErrorsDisabled = this.tableErrorsDisabled | this.checkDisabled;
       this.treeErrorsDisabled = this.treeErrorsDisabled | this.tableErrorsDisabled;
    }
 
-   static boolean readProblems(Reader reader, C_O c_o, boolean flag) {
-      return readProblems(reader, c_o, flag, false);
+   static boolean readProblems(Reader reader, TruthProblemSet truthproblemset, boolean flag) {
+      return readProblems(reader, truthproblemset, flag, false);
    }
 
-   static boolean mergeProblems(Reader reader, C_O c_o, boolean flag) {
-      return readProblems(reader, c_o, flag, true);
+   static boolean mergeProblems(Reader reader, TruthProblemSet truthproblemset, boolean flag) {
+      return readProblems(reader, truthproblemset, flag, true);
    }
 
-   static boolean readProblems(Reader reader, C_O c_o, boolean flag, boolean flag1) {
-      return LogicModule.readProblems(reader, c_o, flag, flag1);
+   static boolean readProblems(Reader reader, TruthProblemSet truthproblemset, boolean flag, boolean flag1) {
+      return LogicModule.readProblems(reader, truthproblemset, flag, flag1);
    }
 
    static int[] getExerciseIndices() {
@@ -581,29 +582,29 @@ class LPTruthAnalysis extends LogicModule {
          int i = problems.size();
 
          for (int j = 0; j < i; j++) {
-            if (isExercise(TaggedRecord.m1493(problems.m1778(j)))) {
-               expressionpath.m1749(j);
+            if (isExercise(TaggedRecord.nameOf(problems.getRecordAt(j)))) {
+               expressionpath.push(j);
             }
          }
 
-         return expressionpath.m1752();
+         return expressionpath.toArray();
       } else {
          return null;
       }
    }
 
    void submitExam() {
-      if (UserSetup.m2105("Truth Tables")) {
+      if (UserSetup.confirmSubmitAll("Truth Tables")) {
          int[] aint = getExerciseIndices();
          BusyIndicator busyindicator = new BusyIndicator(this);
          Submission submission = ServerConnection.prepareSubmission(busyindicator);
          if (submission != null) {
-            if (C_w_A.m2148(this, null)) {
+            if (TruthDialogs.confirmSaveChanges(this, null)) {
                submit(submission, aint, busyindicator);
-               ServerConnection.m838(submission, busyindicator);
-               AccountManager.m1873(submission);
+               ServerConnection.finishSubmission(submission, busyindicator);
+               AccountManager.showSubmissionResults(submission);
             } else {
-               ServerConnection.m838(submission, busyindicator);
+               ServerConnection.finishSubmission(submission, busyindicator);
             }
          }
       }
@@ -613,13 +614,13 @@ class LPTruthAnalysis extends LogicModule {
       BusyIndicator busyindicator = new BusyIndicator(this);
       Submission submission = ServerConnection.prepareSubmission(busyindicator);
       if (submission != null) {
-         int[] aint = C_w_A.m2142(this);
+         int[] aint = TruthDialogs.chooseSubmitProblems(this);
          if (aint == null) {
-            ServerConnection.m838(submission, busyindicator);
+            ServerConnection.finishSubmission(submission, busyindicator);
          } else {
             submit(submission, aint, busyindicator);
-            ServerConnection.m838(submission, busyindicator);
-            AccountManager.m1873(submission);
+            ServerConnection.finishSubmission(submission, busyindicator);
+            AccountManager.showSubmissionResults(submission);
          }
       }
    }
@@ -631,90 +632,90 @@ class LPTruthAnalysis extends LogicModule {
          int i = aint.length;
 
          for (int j = 0; j < i; j++) {
-            submission.m1();
-            String s = problems.m1778(aint[j]);
+            submission.reset();
+            String s = problems.getRecordAt(aint[j]);
             TaggedRecord taggedrecord = new TaggedRecord(s);
             String s1 = getProblemStatement(taggedrecord);
             submission.problemMd5 = Scrambler.md5Base64(s1 == null ? "" : s1.trim());
             int k = getProblemState(s);
-            submission.evaluation = C_f_C.f1128[k];
+            submission.evaluation = TruthProblemEntry.STATE_CODES[k];
             submission.work = s;
             submission.problemName = taggedrecord.getName();
             submission.module = moduleAbbrs[moduleIndex];
-            submission.helpCount = taggedrecord.m1498();
-            submission.duration = taggedrecord.m1499();
-            boolean flag = LogicProgram.m1060(logSubmit, getExerciseTitle(submission.problemName));
+            submission.helpCount = taggedrecord.getErrorCount();
+            submission.duration = taggedrecord.getTimestamp();
+            boolean flag = LogicProgram.selectorMatches(logSubmit, getExerciseTitle(submission.problemName));
             if (ServerConnection.submit(submission, busyindicator)) {
                vector.addElement(trimTitle(submission.problemName));
                if (flag) {
-                  LogicProgram.m1083("trudata.txt", "S", s, submission.m3());
+                  LogicProgram.appendSubmitLog("trudata.txt", "S", s, submission.getLogRecord());
                }
             } else {
                vector1.addElement(trimTitle(submission.problemName));
                if (flag) {
-                  LogicProgram.m1082("trudata.txt", "F", s);
+                  LogicProgram.appendSubmitLog("trudata.txt", "F", s);
                }
             }
          }
 
-         submission.m1();
-         vector.copyInto(submission.f15 = new String[vector.size()]);
-         vector1.copyInto(submission.f16 = new String[vector1.size()]);
+         submission.reset();
+         vector.copyInto(submission.succeededNames = new String[vector.size()]);
+         vector1.copyInto(submission.failedNames = new String[vector1.size()]);
       }
    }
 
    void uploadProblems() {
       BusyIndicator busyindicator = new BusyIndicator(this);
-      C_LD c_ld = ServerConnection.m840(busyindicator);
-      if (c_ld != null) {
-         c_ld.f520 = null;
-         int[] aint = C_w_A.m2143(this);
+      ProblemUpload problemupload = ServerConnection.prepareUpload(busyindicator);
+      if (problemupload != null) {
+         problemupload.resultText = null;
+         int[] aint = TruthDialogs.chooseUploadProblems(this);
          if (aint == null) {
-            ServerConnection.m843(c_ld, busyindicator);
+            ServerConnection.finishUpload(problemupload, busyindicator);
          } else {
-            upload(c_ld, aint, busyindicator);
-            ServerConnection.m843(c_ld, busyindicator);
-            AccountManager.m1875(c_ld);
+            upload(problemupload, aint, busyindicator);
+            ServerConnection.finishUpload(problemupload, busyindicator);
+            AccountManager.showUploadResults(problemupload);
          }
       }
    }
 
-   static void upload(C_LD c_ld, int[] aint, BusyIndicator busyindicator) {
+   static void upload(ProblemUpload problemupload, int[] aint, BusyIndicator busyindicator) {
       synchronized (problems) {
          Vector vector = new Vector();
          Vector vector1 = new Vector();
          int i = aint.length;
 
          for (int j = 0; j < i; j++) {
-            c_ld.m944();
-            String s = problems.m1778(aint[j]);
-            ProblemEntry problementry = problems.m1779(aint[j]);
+            problemupload.reset();
+            String s = problems.getRecordAt(aint[j]);
+            ProblemEntry problementry = problems.getEntryAt(aint[j]);
             TaggedRecord taggedrecord = new TaggedRecord(s);
             String s1 = getProblemStatement(taggedrecord);
-            c_ld.f510 = taggedrecord.getName();
-            c_ld.f511 = s1;
-            c_ld.f512 = LogicProgram.m995(s1, maggie, html);
-            c_ld.f514 = assumeTautology(taggedrecord) ? "taut" : null;
-            c_ld.f513 = moduleAbbrs[moduleIndex];
-            c_ld.f515 = null;
+            problemupload.problemName = taggedrecord.getName();
+            problemupload.text = s1;
+            problemupload.webText = LogicProgram.translateSymbols(s1, maggie, html);
+            problemupload.aux = assumeTautology(taggedrecord) ? "taut" : null;
+            problemupload.type = moduleAbbrs[moduleIndex];
+            problemupload.answers = null;
             if (problementry != null
                && problementry.state == 2
-               && !isExercise(c_ld.f510)
-               && taggedrecord.m1497() == null
-               && ServerConnection.m841(c_ld, busyindicator)) {
-               vector.addElement(trimTitle(c_ld.f510));
+               && !isExercise(problemupload.problemName)
+               && taggedrecord.getOriginalName() == null
+               && ServerConnection.uploadProblem(problemupload, busyindicator)) {
+               vector.addElement(trimTitle(problemupload.problemName));
             } else {
-               vector1.addElement(trimTitle(c_ld.f510));
+               vector1.addElement(trimTitle(problemupload.problemName));
             }
          }
 
-         vector.copyInto(c_ld.f518 = new String[vector.size()]);
-         vector1.copyInto(c_ld.f519 = new String[vector1.size()]);
+         vector.copyInto(problemupload.succeededNames = new String[vector.size()]);
+         vector1.copyInto(problemupload.failedNames = new String[vector1.size()]);
       }
    }
 
    static boolean assumeTautology(TaggedRecord taggedrecord) {
-      int[] aint = taggedrecord.m1477('%');
+      int[] aint = taggedrecord.indexesOfTag('%');
       if (aint != null) {
          int i = aint.length;
 
@@ -730,7 +731,7 @@ class LPTruthAnalysis extends LogicModule {
    }
 
    String saveProblem() {
-      String s = this.problem.m1912();
+      String s = this.problem.getWorkRecord();
       if (this.errorCount != 0) {
          s = s + this.errorCount + "`e";
       }
@@ -739,18 +740,18 @@ class LPTruthAnalysis extends LogicModule {
          s = s + this.workTime + "`t";
       }
 
-      return TaggedRecord.m1509(s);
+      return TaggedRecord.toLine(s);
    }
 
    static boolean saveProblems() {
-      if (!LogicProgram.m976()) {
+      if (!LogicProgram.checkSameUser()) {
          return false;
       } else {
          try {
             writeProblems(problems, new FileWriter(new File(LogicProgram.workDir, "truwork.txt")));
             return true;
          } catch (IOException ioexception) {
-            LogicProgram.m971("not004", "truwork.txt");
+            LogicProgram.showFileError("not004", "truwork.txt");
             return false;
          }
       }
@@ -760,7 +761,7 @@ class LPTruthAnalysis extends LogicModule {
       if (s == null) {
          return true;
       } else {
-         String s1 = this.problem.f1211;
+         String s1 = this.problem.problemName;
          int i = this.problemIndex;
          this.problemIndex = -1;
          if (!this.saveProblems(s, true)) {
@@ -784,27 +785,27 @@ class LPTruthAnalysis extends LogicModule {
          String s1 = null;
          synchronized (problems) {
             if (this.problemIndex == -1) {
-               String s2 = C_w_A.m2137(this, flag ? this.problem.f1211 : null);
+               String s2 = TruthDialogs.askProblemName(this, flag ? this.problem.problemName : null);
                if (s2 == null) {
                   return false;
                }
 
                this.setProblemTitle(s2);
-               C_f_C c_f_c = new C_f_C(TaggedRecord.m1495(s, s2), false);
-               this.problemIndex = problems.m1771(c_f_c, false);
+               TruthProblemEntry truthproblementry = new TruthProblemEntry(TaggedRecord.withName(s, s2), false);
+               this.problemIndex = problems.registerEntry(truthproblementry, false);
                this.problemIndex = this.problemIndex == -1 ? problems.size() : this.problemIndex + 1;
-               problems.insertElementAt(c_f_c, this.problemIndex);
+               problems.insertElementAt(truthproblementry, this.problemIndex);
             } else {
-               s1 = problems.m1778(this.problemIndex);
-               problems.m1776(s, this.problemIndex);
+               s1 = problems.getRecordAt(this.problemIndex);
+               problems.replaceProblem(s, this.problemIndex);
             }
 
             if (!saveProblems()) {
                if (s1 == null) {
-                  problems.m1101(this.problemIndex);
+                  problems.removeProblem(this.problemIndex);
                   this.problemIndex = -1;
                } else {
-                  problems.m1776(s1, this.problemIndex);
+                  problems.replaceProblem(s1, this.problemIndex);
                }
 
                return false;
@@ -816,21 +817,21 @@ class LPTruthAnalysis extends LogicModule {
    }
 
    void setProblemTitle(String s) {
-      this.problem.m1913(s);
+      this.problem.setProblemName(s);
    }
 
    static String trimTitle(String s) {
       if (s == null) {
          return null;
       } else {
-         return isExercise(s) ? LogicProgram.m1000(s) : s.trim();
+         return isExercise(s) ? LogicProgram.stripNamePrefix(s) : s.trim();
       }
    }
 
    String getChangedProblem() {
       String s = this.saveProblem();
-      String s1 = this.problemIndex == -1 ? newProblem : problems.m1778(this.problemIndex);
-      return TaggedRecord.m1500(s).equals(TaggedRecord.m1500(s1)) ? null : s;
+      String s1 = this.problemIndex == -1 ? newProblem : problems.getRecordAt(this.problemIndex);
+      return TaggedRecord.stripTimestamp(s).equals(TaggedRecord.stripTimestamp(s1)) ? null : s;
    }
 
    static String getProblemStatement(String s) {
@@ -838,19 +839,19 @@ class LPTruthAnalysis extends LogicModule {
    }
 
    static String getProblemStatement(TaggedRecord taggedrecord) {
-      return taggedrecord.valueAt(taggedrecord.m1478("="));
+      return taggedrecord.valueAt(taggedrecord.indexOfAnyTag("="));
    }
 
    @Override
    public boolean shutdown(boolean flag) {
-      if (!flag && !C_w_A.m2148(this, null)) {
+      if (!flag && !TruthDialogs.confirmSaveChanges(this, null)) {
          return false;
       } else {
          this.reset();
          synchronized (moduleClasses[5]) {
             instances.removeElement(this);
             if (instances.isEmpty()) {
-               C_l_B.m1924(printQueue);
+               PrintTask.waitForQueue(printQueue);
                problems = null;
                exercises = null;
                newProblem = null;
@@ -886,7 +887,7 @@ class LPTruthAnalysis extends LogicModule {
 
    @Override
    public boolean save() {
-      return C_w_A.m2148(this, null);
+      return TruthDialogs.confirmSaveChanges(this, null);
    }
 
    static void resetOptions() {
@@ -920,14 +921,14 @@ class LPTruthAnalysis extends LogicModule {
    static boolean checkQuit(Hashtable hashtable, Hashtable hashtable1) {
       resetOptions();
       readOptions(LogicProgram.openDataFile("options", false));
-      readOptions(LogicProgram.m1065("options", false));
+      readOptions(LogicProgram.openLocalFile("options", false));
       logNeeds();
-      if (needPrint != null && !needPrint.m402() || needSubmit != null && !needSubmit.m402()) {
-         C_a_A c_a_a = new C_a_A(readWork());
-         c_a_a.m1634(readExercises());
-         MainMenu.m2215(hashtable, "trudata.txt", "P", needPrint, c_a_a);
-         c_a_a.m1635();
-         MainMenu.m2215(hashtable1, "trudata.txt", "S", needSubmit, c_a_a);
+      if (needPrint != null && !needPrint.isEmpty() || needSubmit != null && !needSubmit.isEmpty()) {
+         ProblemRecordEnumeration problemrecordenumeration = new ProblemRecordEnumeration(readWork());
+         problemrecordenumeration.retainExisting(readExercises());
+         MainMenu.mergeSubmitStatus(hashtable, "trudata.txt", "P", needPrint, problemrecordenumeration);
+         problemrecordenumeration.reset();
+         MainMenu.mergeSubmitStatus(hashtable1, "trudata.txt", "S", needSubmit, problemrecordenumeration);
       }
 
       resetOptions();
@@ -935,17 +936,17 @@ class LPTruthAnalysis extends LogicModule {
    }
 
    static Vector getChangedProblems() {
-      C_a_A c_a_a = new C_a_A(readWork());
-      Hashtable hashtable = LogicProgram.m1084("trudata.txt", "S", needSubmit, c_a_a);
+      ProblemRecordEnumeration problemrecordenumeration = new ProblemRecordEnumeration(readWork());
+      Hashtable hashtable = LogicProgram.checkSubmitLog("trudata.txt", "S", needSubmit, problemrecordenumeration);
       if (hashtable == null) {
          return null;
       } else {
          Vector vector = (Vector)hashtable.get("handled");
          Vector vector1 = new Vector();
-         c_a_a.m1635();
+         problemrecordenumeration.reset();
 
-         while (c_a_a.hasMoreElements()) {
-            String s = (String)c_a_a.nextElement();
+         while (problemrecordenumeration.hasMoreElements()) {
+            String s = (String)problemrecordenumeration.nextElement();
             if ((vector == null || !vector.contains(s)) && hasWork(new TaggedRecord(s))) {
                vector1.add(s);
             }
@@ -1003,7 +1004,7 @@ class LPTruthAnalysis extends LogicModule {
          return 0;
       } else {
          this.noBeep = true;
-         this.problem.m1910(taggedrecord);
+         this.problem.loadProblem(taggedrecord);
          return this.check() ? 2 : 1;
       }
    }
@@ -1016,7 +1017,7 @@ class LPTruthAnalysis extends LogicModule {
          while (taggedrecord.readNext()) {
             String s1 = taggedrecord.getName();
             if (s1 != null && s1.trim().equalsIgnoreCase("truth")) {
-               int[] aint = taggedrecord.m1481("+?");
+               int[] aint = taggedrecord.indexesOfAnyTag("+?");
                int i = aint.length;
 
                for (int j = 0; j < i; j++) {
@@ -1039,127 +1040,127 @@ class LPTruthAnalysis extends LogicModule {
                               addToDB = new ProblemSelector();
                            }
 
-                           addToDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           addToDB.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("updateDB")) {
                            if (updateDB == null) {
                               updateDB = new ProblemSelector();
                            }
 
-                           updateDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           updateDB.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noCheck")) {
                            if (noCheck == null) {
                               noCheck = new ProblemSelector();
                            }
 
-                           noCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noCheck.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noTreeErr")) {
                            if (noTreeErr == null) {
                               noTreeErr = new ProblemSelector();
                            }
 
-                           noTreeErr.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noTreeErr.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noTableErr")) {
                            if (noTableErr == null) {
                               noTableErr = new ProblemSelector();
                            }
 
-                           noTableErr.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noTableErr.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noSetupErr")) {
                            if (noSetupErr == null) {
                               noSetupErr = new ProblemSelector();
                            }
 
-                           noSetupErr.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noSetupErr.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrintCheck")) {
                            if (noPrintCheck == null) {
                               noPrintCheck = new ProblemSelector();
                            }
 
-                           noPrintCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrintCheck.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrintTreeErr")) {
                            if (noPrintTreeErr == null) {
                               noPrintTreeErr = new ProblemSelector();
                            }
 
-                           noPrintTreeErr.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrintTreeErr.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrintTableErr")) {
                            if (noPrintTableErr == null) {
                               noPrintTableErr = new ProblemSelector();
                            }
 
-                           noPrintTableErr.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrintTableErr.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrintSetupErr")) {
                            if (noPrintSetupErr == null) {
                               noPrintSetupErr = new ProblemSelector();
                            }
 
-                           noPrintSetupErr.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrintSetupErr.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noCheckMess")) {
                            if (noCheckMess == null) {
                               noCheckMess = new ProblemSelector();
                            }
 
-                           noCheckMess.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noCheckMess.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrint")) {
                            if (noPrint == null) {
                               noPrint = new ProblemSelector();
                            }
 
-                           noPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("monoProbs")) {
                            if (monoProbs == null) {
                               monoProbs = new ProblemSelector();
                            }
 
-                           monoProbs.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           monoProbs.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("doAllRows")) {
                            if (doAllRows == null) {
                               doAllRows = new ProblemSelector();
                            }
 
-                           doAllRows.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           doAllRows.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("doAllWffs")) {
                            if (doAllWffs == null) {
                               doAllWffs = new ProblemSelector();
                            }
 
-                           doAllWffs.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           doAllWffs.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("doSetUp")) {
                            if (doSetUp == null) {
                               doSetUp = new ProblemSelector();
                            }
 
-                           doSetUp.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           doSetUp.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("logPrint")) {
                            if (logPrint == null) {
                               logPrint = new ProblemSelector();
                            }
 
-                           logPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           logPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("logSubmit")) {
                            if (logSubmit == null) {
                               logSubmit = new ProblemSelector();
                            }
 
-                           logSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           logSubmit.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("needPrint")) {
                            if (needPrint == null) {
                               needPrint = new ProblemSelector();
                            }
 
-                           needPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           needPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("needSubmit")) {
                            if (needSubmit == null) {
                               needSubmit = new ProblemSelector();
                            }
 
-                           needSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           needSubmit.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("doAllNodes")) {
                            if (doAllNodes == null) {
                               doAllNodes = new ProblemSelector();
                            }
 
-                           doAllNodes.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           doAllNodes.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("prefix")) {
                            s = s2.substring(k + 1);
                         } else if (s3.equalsIgnoreCase("termprefix")) {
@@ -1181,29 +1182,29 @@ class LPTruthAnalysis extends LogicModule {
    }
 
    static void logNeeds() {
-      if (needPrint != null && !needPrint.m402()) {
+      if (needPrint != null && !needPrint.isEmpty()) {
          if (logPrint == null) {
             logPrint = new ProblemSelector();
          }
 
-         logPrint.m395(needPrint);
+         logPrint.union(needPrint);
       }
 
-      if (needSubmit != null && !needSubmit.m402()) {
+      if (needSubmit != null && !needSubmit.isEmpty()) {
          if (logSubmit == null) {
             logSubmit = new ProblemSelector();
          }
 
-         logSubmit.m395(needSubmit);
+         logSubmit.union(needSubmit);
       }
    }
 
    void loadProblem(String s) {
       TaggedRecord taggedrecord = new TaggedRecord(s);
       this.loadExerciseInfo(taggedrecord);
-      this.problem.m1910(taggedrecord);
-      this.errorCount = taggedrecord.m1498();
-      this.workTime = taggedrecord.m1499();
+      this.problem.loadProblem(taggedrecord);
+      this.errorCount = taggedrecord.getErrorCount();
+      this.workTime = taggedrecord.getTimestamp();
       this.loadTime = 0L;
       this.updateWorkTime();
       this.problemIndex = -1;
@@ -1222,14 +1223,14 @@ class LPTruthAnalysis extends LogicModule {
 
    void loadUserProblem(String s, boolean flag) {
       ArgumentParser argumentparser = new ArgumentParser(s);
-      String s1 = argumentparser.m1384();
+      String s1 = argumentparser.getUnparsedText();
       if (s1 != null) {
-         Hashtable hashtable = Message.params("expression", LogicProgram.m995(s1, maggie, kaplan));
-         MessageDialog.showMessage(C_FE.get("truerr009"), hashtable, null, null);
-      } else if (argumentparser.m1385() != 0) {
-         MessageDialog.showMessage(C_FE.get("truerr010"), null, null, null);
+         Hashtable hashtable = Message.params("expression", LogicProgram.translateSymbols(s1, maggie, kaplan));
+         MessageDialog.showMessage(TruthMessage.get("truerr009"), hashtable, null, null);
+      } else if (argumentparser.getErrorCode() != 0) {
+         MessageDialog.showMessage(TruthMessage.get("truerr010"), null, null, null);
       } else {
-         String s2 = TaggedRecord.m1509(TaggedRecord.m1508(ArgumentParser.m1383(s), '='));
+         String s2 = TaggedRecord.toLine(TaggedRecord.formatField(ArgumentParser.normalizeDots(s), '='));
          if (flag) {
             s2 = s2 + "taut`%";
          }
@@ -1247,17 +1248,17 @@ class LPTruthAnalysis extends LogicModule {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         ProblemEntry problementry = problems.m1779(aint[j]);
+         ProblemEntry problementry = problems.getEntryAt(aint[j]);
          TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
          String s = taggedrecord.getName();
          String s1 = getProblemStatement(taggedrecord);
          JPanel jpanel = new JPanel();
-         jpanel.setLayout(new C_u_(null, 1, new int[]{dimension.width}));
-         C_NC c_nc;
-         jpanel.add(c_nc = new C_NC(LogicProgram.m1004("\\l" + s + ": " + s1)));
-         c_nc.setLineWrap(true);
-         c_nc.setWrapStyleWord(true);
-         c_nc.setBackground(LogicProgram.f605[1]);
+         jpanel.setLayout(new FixedColumnLayout(null, 1, new int[]{dimension.width}));
+         LogicTextArea logictextarea;
+         jpanel.add(logictextarea = new LogicTextArea(LogicProgram.expandEscapes("\\l" + s + ": " + s1)));
+         logictextarea.setLineWrap(true);
+         logictextarea.setWrapStyleWord(true);
+         logictextarea.setBackground(LogicProgram.printColors[1]);
          vector.add(jpanel);
       }
 
@@ -1277,56 +1278,60 @@ class LPTruthAnalysis extends LogicModule {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         ProblemEntry problementry = problems.m1779(aint[j]);
+         ProblemEntry problementry = problems.getEntryAt(aint[j]);
          int k = problementry.state;
          TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
          String s = taggedrecord.getName();
          if (printIncorrect && k != 1) {
-            if (LogicProgram.m1060(logPrint, getExerciseTitle(s))) {
-               LogicProgram.m1082("trudata.txt", flag ? "R" : "P", problementry.name);
+            if (LogicProgram.selectorMatches(logPrint, getExerciseTitle(s))) {
+               LogicProgram.appendSubmitLog("trudata.txt", flag ? "R" : "P", problementry.name);
             }
          } else {
             String s1 = getProblemStatement(taggedrecord);
-            s1 = LogicProgram.m995(s1, maggie, kaplan);
+            s1 = LogicProgram.translateSymbols(s1, maggie, kaplan);
             LPTruthAnalysis lptruthanalysis = new LPTruthAnalysis(true);
             lptruthanalysis.loadProblem(problementry.name);
             Vector vector1 = new Vector(5);
             JPanel jpanel = new JPanel();
-            jpanel.setLayout(new C_u_(null, 2, new int[]{20, dimension.width - 20}));
-            jpanel.setBackground(LogicProgram.f605[1]);
-            jpanel.add(new C_f_E(lptruthanalysis.checkDisabled ? " " : C_f_C.f1128[k]));
-            C_NC c_nc;
-            jpanel.add(c_nc = new C_NC(LogicProgram.m1004(trimTitle(s) + ": " + s1)));
-            c_nc.setLineWrap(true);
-            c_nc.setWrapStyleWord(true);
-            c_nc.setBackground(LogicProgram.f605[1]);
+            jpanel.setLayout(new FixedColumnLayout(null, 2, new int[]{20, dimension.width - 20}));
+            jpanel.setBackground(LogicProgram.printColors[1]);
+            jpanel.add(new WrappedTextPanel(lptruthanalysis.checkDisabled ? " " : TruthProblemEntry.STATE_CODES[k]));
+            LogicTextArea logictextarea;
+            jpanel.add(logictextarea = new LogicTextArea(LogicProgram.expandEscapes(trimTitle(s) + ": " + s1)));
+            logictextarea.setLineWrap(true);
+            logictextarea.setWrapStyleWord(true);
+            logictextarea.setBackground(LogicProgram.printColors[1]);
             vector1.add(jpanel);
             if (!flag) {
-               C_k_E c_k_e = lptruthanalysis.problem;
-               C_XF c_xf = c_k_e.f1201;
-               vector1.add(c_k_e.f1209);
-               vector1.add(c_xf);
-               if (c_xf.f892 == -1) {
-                  C_ZE c_ze;
-                  vector1.add(c_ze = new C_ZE("No Row Checked"));
-                  c_ze.setBackground(LogicProgram.f605[1]);
+               TruthProblemPanel truthproblempanel = lptruthanalysis.problem;
+               TruthTableGrid truthtablegrid = truthproblempanel.table;
+               vector1.add(truthproblempanel.questionPanel);
+               vector1.add(truthtablegrid);
+               if (truthtablegrid.counterexampleRow == -1) {
+                  LogicLabel logiclabel;
+                  vector1.add(logiclabel = new LogicLabel("No Row Checked"));
+                  logiclabel.setBackground(LogicProgram.printColors[1]);
                } else {
-                  C_ZE c_ze1;
-                  vector1.add(c_ze1 = new C_ZE("Row Checked: " + C_XF.m1523(c_xf.f892, c_k_e.f1217)));
-                  c_ze1.setBackground(LogicProgram.f605[1]);
+                  LogicLabel logiclabel1;
+                  vector1.add(
+                     logiclabel1 = new LogicLabel(
+                        "Row Checked: " + TruthTableGrid.rowAssignmentString(truthtablegrid.counterexampleRow, truthproblempanel.letterCount)
+                     )
+                  );
+                  logiclabel1.setBackground(LogicProgram.printColors[1]);
                }
 
-               C_GD[][] ac_gd = c_xf.f890;
-               int l = ac_gd.length;
+               TruthTableCell[][] atruthtablecell = truthtablegrid.cells;
+               int l = atruthtablecell.length;
 
                for (int i1 = 0; i1 < l; i1++) {
                   JPanel jpanel1 = new JPanel();
-                  jpanel1.setBackground(LogicProgram.f605[1]);
-                  C_GD[] ac_gd1 = ac_gd[i1];
-                  int j1 = ac_gd1.length;
+                  jpanel1.setBackground(LogicProgram.printColors[1]);
+                  TruthTableCell[] atruthtablecell1 = atruthtablecell[i1];
+                  int j1 = atruthtablecell1.length;
 
                   for (int k1 = 0; k1 < j1; k1++) {
-                     jpanel1.add(ac_gd1[k1].f361);
+                     jpanel1.add(atruthtablecell1[k1].mirrorTree);
                   }
 
                   vector1.add(jpanel1);
@@ -1340,8 +1345,8 @@ class LPTruthAnalysis extends LogicModule {
       return vector;
    }
 
-   static class C__A extends LogicModule.C__A {
-      C__A(BusyIndicator busyindicator, Rectangle rectangle, String s) {
+   static class TruthStartupTask extends LogicModule.ModuleStartupTask {
+      TruthStartupTask(BusyIndicator busyindicator, Rectangle rectangle, String s) {
          super(busyindicator, rectangle, s);
       }
 
@@ -1351,7 +1356,7 @@ class LPTruthAnalysis extends LogicModule {
       }
 
       @Override
-      public void m959() {
+      public void continueStartup() {
          LPTruthAnalysis.continueStartup();
       }
    }

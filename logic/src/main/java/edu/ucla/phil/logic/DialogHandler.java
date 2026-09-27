@@ -5,48 +5,48 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 class DialogHandler {
-   Hashtable f270;
-   int f271;
-   String[] f272;
-   String[] f273;
+   Hashtable properties;
+   int defaultIndex;
+   String[] labels;
+   String[] actions;
 
    DialogHandler(String s) {
       if (s == null) {
          s = "OK";
       }
 
-      this.f270 = null;
-      this.f271 = -1;
+      this.properties = null;
+      this.defaultIndex = -1;
       Vector vector = new Vector();
       Vector vector1 = new Vector();
       DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\;");
       DelimitedTokenizer delimitedtokenizer1 = new DelimitedTokenizer("\\:.");
       DelimitedTokenizer delimitedtokenizer2 = new DelimitedTokenizer("\\.");
-      delimitedtokenizer.m1132(s);
-      delimitedtokenizer1.m1132(delimitedtokenizer.m1136(true));
-      String s1 = delimitedtokenizer.m1133();
+      delimitedtokenizer.setInput(s);
+      delimitedtokenizer1.setInput(delimitedtokenizer.nextToken(true));
+      String s1 = delimitedtokenizer.getRemaining();
       if (s1 != null) {
          Integer integer = LogicProgram.parseInteger(s1.trim());
          if (integer != null) {
-            this.f271 = integer;
+            this.defaultIndex = integer;
          }
       }
 
       while (true) {
-         String s3 = delimitedtokenizer1.m1135();
+         String s3 = delimitedtokenizer1.nextToken();
          String s2 = null;
          if (s3 == null) {
-            this.f272 = new String[vector.size()];
-            this.f273 = new String[vector.size()];
-            vector.copyInto(this.f272);
-            vector1.copyInto(this.f273);
+            this.labels = new String[vector.size()];
+            this.actions = new String[vector.size()];
+            vector.copyInto(this.labels);
+            vector1.copyInto(this.actions);
             return;
          }
 
-         if (delimitedtokenizer1.m1134() == ':') {
-            delimitedtokenizer2.m1132(delimitedtokenizer1.m1133());
-            s2 = delimitedtokenizer2.m1135().trim();
-            delimitedtokenizer1.m1132(delimitedtokenizer2.m1133());
+         if (delimitedtokenizer1.getDelimiter() == ':') {
+            delimitedtokenizer2.setInput(delimitedtokenizer1.getRemaining());
+            s2 = delimitedtokenizer2.nextToken().trim();
+            delimitedtokenizer1.setInput(delimitedtokenizer2.getRemaining());
          }
 
          vector.addElement(s3.trim());
@@ -54,46 +54,46 @@ class DialogHandler {
       }
    }
 
-   String[] m445() {
-      return this.f272;
+   String[] getLabels() {
+      return this.labels;
    }
 
-   int m446() {
-      return this.f271;
+   int getDefaultIndex() {
+      return this.defaultIndex;
    }
 
-   void m447(String s, Object object) {
+   void setProperty(String s, Object object) {
       if (object != null) {
-         if (this.f270 == null) {
-            this.f270 = new Hashtable();
+         if (this.properties == null) {
+            this.properties = new Hashtable();
          }
 
-         this.f270.put(s, object);
+         this.properties.put(s, object);
       }
    }
 
-   void m448(Hashtable hashtable) {
+   void setProperties(Hashtable hashtable) {
       Enumeration enumeration = hashtable.keys();
 
       while (enumeration.hasMoreElements()) {
          String s = (String)enumeration.nextElement();
          Object object = hashtable.get(s);
-         this.m447(s, object);
+         this.setProperty(s, object);
       }
    }
 
-   Object m449(String s) {
-      return this.f270 == null ? null : this.f270.get(s);
+   Object getProperty(String s) {
+      return this.properties == null ? null : this.properties.get(s);
    }
 
-   String m450(MessageDialog messagedialog) {
-      String s = messagedialog.f791[messagedialog.f790].getText();
-      int i = LogicProgram.m1051(this.f272, s);
-      return i == -1 ? null : this.f273[i];
+   String getSelectedAction(MessageDialog messagedialog) {
+      String s = messagedialog.buttons[messagedialog.selectedButton].getText();
+      int i = LogicProgram.indexOf(this.labels, s);
+      return i == -1 ? null : this.actions[i];
    }
 
-   boolean m451(MessageDialog messagedialog) {
-      String s = this.m450(messagedialog);
+   boolean handleChoice(MessageDialog messagedialog) {
+      String s = this.getSelectedAction(messagedialog);
       return s == null ? true : true;
    }
 }

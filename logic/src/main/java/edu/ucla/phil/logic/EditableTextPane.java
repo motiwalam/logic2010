@@ -15,26 +15,26 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
-class EditableTextPane extends StyledTextPane implements KeyListener, C_LC {
-   int f1329;
-   int f1330;
-   boolean f1331;
-   boolean f1332;
-   UndoManager f1333;
+class EditableTextPane extends StyledTextPane implements KeyListener, ModuleComponentMarker {
+   int minWidth;
+   int maxWidth;
+   boolean multiLine;
+   boolean minimumIsPreferred;
+   UndoManager undoManager;
 
    EditableTextPane(String s, int i, int j, boolean flag) {
       super(s);
       this.setText(s);
-      this.f1329 = i < 0 ? 0 : i;
-      this.f1330 = j < 0 ? 2147483647 : j;
-      this.f1331 = flag;
-      this.f1332 = false;
+      this.minWidth = i < 0 ? 0 : i;
+      this.maxWidth = j < 0 ? 2147483647 : j;
+      this.multiLine = flag;
+      this.minimumIsPreferred = false;
       this.setFocusable(true);
       this.addKeyListener(this);
-      this.m1787(true);
-      this.m1789(true);
+      this.setWrapLines(true);
+      this.setWrapWords(true);
       this.setMargin(new Insets(0, 1, 0, 1));
-      this.getDocument().addUndoableEditListener(this.f1333 = new UndoManager());
+      this.getDocument().addUndoableEditListener(this.undoManager = new UndoManager());
    }
 
    EditableTextPane(StyledDocument styleddocument, int i, int j, boolean flag) {
@@ -86,24 +86,24 @@ class EditableTextPane extends StyledTextPane implements KeyListener, C_LC {
       }
    }
 
-   public boolean m2019() {
-      return this.f1332;
+   public boolean isMinimumPreferred() {
+      return this.minimumIsPreferred;
    }
 
-   public void m2020(boolean flag) {
-      this.f1332 = flag;
+   public void setMinimumPreferred(boolean flag) {
+      this.minimumIsPreferred = flag;
    }
 
    @Override
    public Dimension getMinimumSize() {
-      return this.f1332 ? this.getPreferredSize() : super.getMinimumSize();
+      return this.minimumIsPreferred ? this.getPreferredSize() : super.getMinimumSize();
    }
 
    @Override
    public Dimension getMaximumSize() {
       Dimension dimension = super.getMaximumSize();
-      if (dimension.width > this.f1330) {
-         dimension.width = this.f1330;
+      if (dimension.width > this.maxWidth) {
+         dimension.width = this.maxWidth;
       }
 
       return dimension;
@@ -112,35 +112,35 @@ class EditableTextPane extends StyledTextPane implements KeyListener, C_LC {
    @Override
    public Dimension getPreferredSize() {
       Dimension dimension = super.getPreferredSize();
-      if (dimension.width < this.f1329) {
-         dimension.width = this.f1329;
-      } else if (dimension.width > this.f1330) {
-         dimension.width = this.f1330;
+      if (dimension.width < this.minWidth) {
+         dimension.width = this.minWidth;
+      } else if (dimension.width > this.maxWidth) {
+         dimension.width = this.maxWidth;
       }
 
       return dimension;
    }
 
-   public Dimension m2021(Dimension dimension) {
+   public Dimension getPreferredSizeAtLeast(Dimension dimension) {
       Dimension dimension1 = super.getPreferredSize();
       if (dimension1.width < dimension.width) {
          dimension1.width = dimension.width;
       }
 
-      if (dimension1.width > this.f1330) {
-         dimension1.width = this.f1330;
+      if (dimension1.width > this.maxWidth) {
+         dimension1.width = this.maxWidth;
       }
 
       return dimension1;
    }
 
-   void m2022(int i) {
-      this.f1329 = i;
+   void setMinWidth(int i) {
+      this.minWidth = i;
    }
 
-   void m2023(int i) {
-      this.f1329 = i;
-      this.f1330 = i;
+   void setFixedWidth(int i) {
+      this.minWidth = i;
+      this.maxWidth = i;
    }
 
    @Override
@@ -164,10 +164,10 @@ class EditableTextPane extends StyledTextPane implements KeyListener, C_LC {
             this.selectAll();
             keyevent.consume();
          } else if (c0 == '\t') {
-            LogicProgram.m1086(this, keyevent);
+            LogicProgram.forwardKeyEvent(this, keyevent);
             keyevent.consume();
-         } else if (!this.f1331 && c0 == '\n') {
-            LogicProgram.m1086(this, keyevent);
+         } else if (!this.multiLine && c0 == '\n') {
+            LogicProgram.forwardKeyEvent(this, keyevent);
             keyevent.consume();
          }
       }
@@ -177,12 +177,12 @@ class EditableTextPane extends StyledTextPane implements KeyListener, C_LC {
    public void keyReleased(KeyEvent keyevent) {
    }
 
-   static void m2024(String s) {
+   static void copyToClipboard(String s) {
       Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
       clipboard.setContents(new StringSelection(s), null);
    }
 
-   static String m2025() {
+   static String getClipboardText() {
       Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
       Transferable transferable = clipboard.getContents(null);
 
@@ -193,18 +193,18 @@ class EditableTextPane extends StyledTextPane implements KeyListener, C_LC {
       }
    }
 
-   public boolean m1844() {
+   public boolean undo() {
       try {
-         this.f1333.undo();
+         this.undoManager.undo();
          return true;
       } catch (CannotUndoException cannotundoexception) {
          return false;
       }
    }
 
-   public boolean m2026() {
+   public boolean redo() {
       try {
-         this.f1333.redo();
+         this.undoManager.redo();
          return true;
       } catch (CannotRedoException cannotredoexception) {
          return false;

@@ -8,137 +8,137 @@ import java.awt.Rectangle;
 import java.util.Hashtable;
 import java.util.Vector;
 
-class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants {
-   LPDerivation f915;
-   DerivationBox f916;
-   DerivationLine f917;
-   DerivationLine f918;
-   Rectangle f919;
-   int f920;
-   Vector f921;
-   boolean f922;
-   int f923;
-   private static final boolean f924 = false;
+class DerivationBox extends CollapsibleNode implements DerivationNode, DerivationConstants {
+   LPDerivation module;
+   DerivationBox parentBox;
+   DerivationLine showLine;
+   DerivationLine cancelLine;
+   Rectangle bracketBounds;
+   int assumptionType;
+   Vector boxVariables;
+   boolean strategyConsistent;
+   int assumedSide;
+   private static final boolean DEBUG = false;
 
    DerivationBox(DerivationBox derivationbox1) {
-      this.f916 = derivationbox1;
-      this.f915 = derivationbox1.f915;
-      this.m2125(this.f917 = new DerivationLine(this, true));
-      this.f918 = null;
-      this.f920 = 0;
-      this.f923 = -1;
-      this.m1559();
-      this.f919 = null;
-      this.setLayout(new C_DF(this.f915.indent, 0));
-      this.m2123(true);
+      this.parentBox = derivationbox1;
+      this.module = derivationbox1.module;
+      this.setHeader(this.showLine = new DerivationLine(this, true));
+      this.cancelLine = null;
+      this.assumptionType = 0;
+      this.assumedSide = -1;
+      this.resetVariables();
+      this.bracketBounds = null;
+      this.setLayout(new DerivationBoxLayout(this.module.indent, 0));
+      this.setExpanded(true);
    }
 
    DerivationBox(LPDerivation lpderivation) {
-      this.f916 = null;
-      this.f915 = lpderivation;
-      this.m2125(this.f917 = new DerivationLine(this, true));
-      this.f918 = null;
-      this.f920 = 0;
-      this.f923 = -1;
-      this.m1559();
-      this.f919 = null;
-      this.setLayout(new C_DF(lpderivation.indent, 0));
-      this.m2123(true);
+      this.parentBox = null;
+      this.module = lpderivation;
+      this.setHeader(this.showLine = new DerivationLine(this, true));
+      this.cancelLine = null;
+      this.assumptionType = 0;
+      this.assumedSide = -1;
+      this.resetVariables();
+      this.bracketBounds = null;
+      this.setLayout(new DerivationBoxLayout(lpderivation.indent, 0));
+      this.setExpanded(true);
    }
 
    DerivationBox(DerivationLine derivationline) {
-      this.f916 = derivationline.f317;
-      this.f915 = this.f916.f915;
-      this.m2125(this.f917 = derivationline);
-      this.f918 = null;
-      this.f920 = 0;
-      this.f923 = -1;
-      this.m1559();
-      this.f919 = null;
-      this.setLayout(new C_DF(this.f915.indent, 0));
-      this.m2123(true);
+      this.parentBox = derivationline.box;
+      this.module = this.parentBox.module;
+      this.setHeader(this.showLine = derivationline);
+      this.cancelLine = null;
+      this.assumptionType = 0;
+      this.assumedSide = -1;
+      this.resetVariables();
+      this.bracketBounds = null;
+      this.setLayout(new DerivationBoxLayout(this.module.indent, 0));
+      this.setExpanded(true);
    }
 
    @Override
-   public void m1548(Component object) {
+   public void setToggle(Component object) {
       if (object != null) {
-         object = new C_g_B(this);
+         object = new BoxToggleButton(this);
       }
 
-      super.m1548((Component)object);
+      super.setToggle((Component)object);
    }
 
    @Override
-   public DerivationBox m17() {
-      return this.f916;
+   public DerivationBox getEnclosingBox() {
+      return this.parentBox;
    }
 
    @Override
    public void paintBorder(Graphics graphics) {
       super.paintBorder(graphics);
-      this.m1549(graphics);
+      this.drawBracket(graphics);
    }
 
-   void m1549(Graphics graphics) {
-      Rectangle rectangle = LogicProgram.m1035(this, this.f915.problem);
-      this.m1552(graphics, rectangle);
+   void drawBracket(Graphics graphics) {
+      Rectangle rectangle = LogicProgram.boundsRelativeTo(this, this.module.problem);
+      this.drawBracket(graphics, rectangle);
    }
 
    @Override
    public void setFont(Font font) {
       super.setFont(font);
-      int i = this.m1555();
+      int i = this.getContentCount();
 
       for (int j = 0; j < i; j++) {
-         this.m1560(j).setFont(font);
+         this.getNode(j).setFont(font);
       }
 
-      this.setLayout(new C_DF(this.f915.indent, 0));
+      this.setLayout(new DerivationBoxLayout(this.module.indent, 0));
    }
 
    @Override
-   public void m35(Color[] acolor) {
-      int i = this.m1555();
+   public void applyColors(Color[] acolor) {
+      int i = this.getContentCount();
 
       for (int j = 0; j < i; j++) {
-         this.m1560(j).m35(acolor);
+         this.getNode(j).applyColors(acolor);
       }
    }
 
    @Override
-   public void m34() {
-      int i = this.m1555();
+   public void layoutColumns() {
+      int i = this.getContentCount();
 
       for (int j = 0; j < i; j++) {
-         this.m1560(j).m34();
+         this.getNode(j).layoutColumns();
       }
    }
 
-   void m1550() {
-      this.m2123(true);
-      int i = this.m1555();
+   void expandAll() {
+      this.setExpanded(true);
+      int i = this.getContentCount();
 
       for (int j = 0; j < i; j++) {
-         DerivationNode derivationnode = this.m1560(j);
+         DerivationNode derivationnode = this.getNode(j);
          if (derivationnode instanceof DerivationBox) {
-            ((DerivationBox)derivationnode).m1550();
+            ((DerivationBox)derivationnode).expandAll();
          }
       }
    }
 
-   void m1551(boolean flag) {
-      this.f917.f322.setForeground(flag ? this.f915.colors[1] : this.f915.colors[0]);
-      this.f917.f322.setBackground(flag ? this.f915.colors[0] : this.f915.colors[2]);
+   void highlightShowLabel(boolean flag) {
+      this.showLine.showLabel.setForeground(flag ? this.module.colors[1] : this.module.colors[0]);
+      this.showLine.showLabel.setBackground(flag ? this.module.colors[0] : this.module.colors[2]);
    }
 
-   void m1552(Graphics graphics, Rectangle rectangle) {
-      if (this.f919 != null) {
+   void drawBracket(Graphics graphics, Rectangle rectangle) {
+      if (this.bracketBounds != null) {
          byte b0 = 2;
          byte b1 = 1;
-         int i = this.f919.x - rectangle.x - b1;
-         int j = this.f919.y - rectangle.y - b1;
-         int k = this.f919.width + 1 * b1;
-         int l = this.f919.height + 2 * b1;
+         int i = this.bracketBounds.x - rectangle.x - b1;
+         int j = this.bracketBounds.y - rectangle.y - b1;
+         int k = this.bracketBounds.width + 1 * b1;
+         int l = this.bracketBounds.height + 2 * b1;
 
          for (int i1 = 0; i1 < b0; i1++) {
             graphics.drawLine(i, j, i + k - 1, j);
@@ -153,12 +153,12 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
    }
 
    @Override
-   int m1553(int i) {
+   int toComponentIndex(int i) {
       int j = 0;
       int k = this.getComponentCount();
 
       while (true) {
-         while (j >= k || !(this.getComponent(j) instanceof C_ZD)) {
+         while (j >= k || !(this.getComponent(j) instanceof ExpandToggleButton)) {
             if (j >= k) {
                return k;
             }
@@ -176,7 +176,7 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
    }
 
    @Override
-   int m1554(int i) {
+   int toContentIndex(int i) {
       int j = 0;
       int k = this.getComponentCount();
       if (k > i) {
@@ -184,7 +184,7 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
       }
 
       for (int l = 0; l < k; l++) {
-         if (!(this.getComponent(l) instanceof C_ZD)) {
+         if (!(this.getComponent(l) instanceof ExpandToggleButton)) {
             j++;
          }
       }
@@ -193,12 +193,12 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
    }
 
    @Override
-   int m1555() {
+   int getContentCount() {
       int i = this.getComponentCount();
       int j = i;
 
       while (--j >= 0) {
-         if (this.getComponent(j) instanceof C_ZD) {
+         if (this.getComponent(j) instanceof ExpandToggleButton) {
             i--;
          }
       }
@@ -207,40 +207,40 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
    }
 
    @Override
-   public int m30() {
-      return this.f917.m30();
+   public int getLineNumber() {
+      return this.showLine.getLineNumber();
    }
 
    @Override
-   public DerivationNode m32(int i) {
+   public DerivationNode findLine(int i) {
       if (i <= 0) {
          return null;
       } else {
          int j = 1;
-         int l = this.m1555() - 1;
+         int l = this.getContentCount() - 1;
          if (l < j) {
             if (LogicProgram.debug) {
-               System.out.println(LPDerivation.trimTitle(this.f915.problemTitle) + ": bad line number (" + i + ")");
+               System.out.println(LPDerivation.trimTitle(this.module.problemTitle) + ": bad line number (" + i + ")");
             }
 
             return null;
          } else {
             DerivationNode derivationnode;
             int i1;
-            if ((i1 = (derivationnode = this.m1560(j)).m30()) == i) {
+            if ((i1 = (derivationnode = this.getNode(j)).getLineNumber()) == i) {
                return derivationnode;
             } else if (i < i1) {
                return null;
             } else {
                DerivationNode derivationnode1 = derivationnode;
-               if ((i1 = (derivationnode = this.m1560(l)).m30()) == i) {
+               if ((i1 = (derivationnode = this.getNode(l)).getLineNumber()) == i) {
                   return derivationnode;
                } else if (i > i1) {
-                  return derivationnode.m32(i);
+                  return derivationnode.findLine(i);
                } else {
                   while (l - j > 1) {
                      int k;
-                     if ((i1 = (derivationnode = this.m1560(k = (j + l) / 2)).m30()) == i) {
+                     if ((i1 = (derivationnode = this.getNode(k = (j + l) / 2)).getLineNumber()) == i) {
                         return derivationnode;
                      }
 
@@ -252,66 +252,66 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
                      }
                   }
 
-                  return derivationnode1.m32(i);
+                  return derivationnode1.findLine(i);
                }
             }
          }
       }
    }
 
-   DerivationLine m1556(int i) {
+   DerivationLine insertLine(int i) {
       DerivationLine derivationline = new DerivationLine(this, false);
       this.add(derivationline, i);
-      derivationline.m34();
-      this.f915.setWidths(false);
-      this.f915.problem.m1558();
+      derivationline.layoutColumns();
+      this.module.setWidths(false);
+      this.module.problem.renumberAll();
       return derivationline;
    }
 
-   DerivationBox m1557(int i) {
+   DerivationBox insertBox(int i) {
       DerivationBox derivationbox1 = new DerivationBox(this);
       this.add(derivationbox1, i);
-      derivationbox1.m34();
-      this.f915.setWidths(false);
-      this.f915.problem.m1558();
+      derivationbox1.layoutColumns();
+      this.module.setWidths(false);
+      this.module.problem.renumberAll();
       return derivationbox1;
    }
 
-   public void m1558() {
-      this.m33(0);
-      this.m45();
+   public void renumberAll() {
+      this.renumberLines(0);
+      this.refreshReferenceNumbers();
    }
 
    @Override
-   public void m45() {
-      int i = this.m1555();
+   public void refreshReferenceNumbers() {
+      int i = this.getContentCount();
 
       for (int j = 0; j < i; j++) {
-         this.m1560(j).m45();
+         this.getNode(j).refreshReferenceNumbers();
       }
    }
 
    @Override
-   public int m33(int i) {
-      int j = this.m1555();
+   public int renumberLines(int i) {
+      int j = this.getContentCount();
 
       for (int k = 0; k < j; k++) {
-         i = this.m1560(k).m33(i);
+         i = this.getNode(k).renumberLines(i);
       }
 
       return i;
    }
 
    @Override
-   public int m36(boolean flag) {
-      if (flag && !this.m2124()) {
+   public int getMaxBoxDepth(boolean flag) {
+      if (flag && !this.isExpanded()) {
          return 0;
       } else {
-         int i = this.m1555();
+         int i = this.getContentCount();
          int j = 0;
 
          for (int k = 1; k < i; k++) {
-            int l = this.m1560(k).m36(flag) + 1;
+            int l = this.getNode(k).getMaxBoxDepth(flag) + 1;
             if (l > j) {
                j = l;
             }
@@ -321,31 +321,31 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
       }
    }
 
-   void m1559() {
-      this.f921 = null;
-      int i = this.m1555();
+   void resetVariables() {
+      this.boxVariables = null;
+      int i = this.getContentCount();
 
       for (int j = 1; j < i; j++) {
-         DerivationNode derivationnode = this.m1560(j);
+         DerivationNode derivationnode = this.getNode(j);
          if (derivationnode instanceof DerivationBox) {
-            ((DerivationBox)derivationnode).m1559();
+            ((DerivationBox)derivationnode).resetVariables();
          }
       }
    }
 
    @Override
-   public int m37() {
-      return this.f916 == null ? 0 : this.f916.m37() + 1;
+   public int getBoxDepth() {
+      return this.parentBox == null ? 0 : this.parentBox.getBoxDepth() + 1;
    }
 
    @Override
-   public int m38(boolean flag) {
+   public int countLines(boolean flag) {
       int i = 1;
-      if (!flag || this.m2124()) {
-         int j = this.m1555();
+      if (!flag || this.isExpanded()) {
+         int j = this.getContentCount();
 
          for (int k = 1; k < j; k++) {
-            i += this.m1560(k).m38(flag);
+            i += this.getNode(k).countLines(flag);
          }
       }
 
@@ -353,87 +353,87 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
    }
 
    @Override
-   public DerivationLine m18() {
-      return this.f917.m18();
+   public DerivationLine insertLineAfter() {
+      return this.showLine.insertLineAfter();
    }
 
    @Override
-   public void m19(boolean flag) {
+   public void deleteNode(boolean flag) {
       if (flag) {
-         int i = this.m1555();
+         int i = this.getContentCount();
 
          while (--i > 0) {
-            this.m1560(i).m19(true);
+            this.getNode(i).deleteNode(true);
          }
       }
 
-      this.f917.m19(false);
-      this.f915.problem.m1558();
+      this.showLine.deleteNode(false);
+      this.module.problem.renumberAll();
    }
 
-   DerivationNode m1560(int i) {
-      return (DerivationNode)this.getComponent(this.m1553(i));
-   }
-
-   @Override
-   public void m6(String s) {
-      this.f917.m6(s);
+   DerivationNode getNode(int i) {
+      return (DerivationNode)this.getComponent(this.toComponentIndex(i));
    }
 
    @Override
-   public String m7(boolean flag) {
-      return this.f917.m7(flag);
+   public void setFormulaText(String s) {
+      this.showLine.setFormulaText(s);
    }
 
    @Override
-   public void m8(String s) {
-      this.f917.m8(s);
+   public String getFormulaText(boolean flag) {
+      return this.showLine.getFormulaText(flag);
    }
 
    @Override
-   public String m9(boolean flag) {
-      return this.f917.m9(flag);
+   public void setAnnotationText(String s) {
+      this.showLine.setAnnotationText(s);
    }
 
    @Override
-   public void m10(String s, boolean flag) {
-      this.f917.m10(s, flag);
+   public String getAnnotationText(boolean flag) {
+      return this.showLine.getAnnotationText(flag);
    }
 
    @Override
-   public void m11(String s) {
-      this.f917.m11(s);
-   }
-
-   void m1561(String s, int i) {
-      this.f917.m549(s, i);
+   public void setMessageText(String s, boolean flag) {
+      this.showLine.setMessageText(s, flag);
    }
 
    @Override
-   public void m12(String s, Hashtable hashtable) {
-      this.f917.m12(s, hashtable);
+   public void showMessage(String s) {
+      this.showLine.showMessage(s);
+   }
+
+   void showMessage(String s, int i) {
+      this.showLine.showMessage(s, i);
    }
 
    @Override
-   public void m13() {
-      this.f917.m13();
-   }
-
-   void m1562(int i) {
-      this.f917.m13();
+   public void showMessage(String s, Hashtable hashtable) {
+      this.showLine.showMessage(s, hashtable);
    }
 
    @Override
-   public C_l_E m14() {
-      return this.f917.f323;
+   public void clearMessage() {
+      this.showLine.clearMessage();
+   }
+
+   void clearMessage(int i) {
+      this.showLine.clearMessage();
    }
 
    @Override
-   public C_l_E m15() {
+   public DerivationLineEditor getFormulaEditor() {
+      return this.showLine.formulaEditor;
+   }
+
+   @Override
+   public DerivationLineEditor getAnnotationEditor() {
       return null;
    }
 
-   int m1563(Component component) {
+   int indexOfChild(Component component) {
       int i = this.getComponentCount();
       Component[] acomponent = this.getComponents();
 
@@ -447,20 +447,20 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
    }
 
    @Override
-   public int m16() {
-      return this.f916 == null ? -1 : this.f916.m1554(this.f916.m1563(this));
+   public int getIndexInBox() {
+      return this.parentBox == null ? -1 : this.parentBox.toContentIndex(this.parentBox.indexOfChild(this));
    }
 
-   void m1564() {
-      C_l_E c_l_e = this.f915.focus;
-      if (c_l_e != null && !c_l_e.f1258.m28()) {
-         this.m22(false);
+   void ensureFocusVisible() {
+      DerivationLineEditor derivationlineeditor = this.module.focus;
+      if (derivationlineeditor != null && !derivationlineeditor.line.areEnclosingBoxesExpanded()) {
+         this.focusEditor(false);
       }
    }
 
    @Override
-   public void m22(boolean flag) {
-      this.f917.m22(false);
+   public void focusEditor(boolean flag) {
+      this.showLine.focusEditor(false);
    }
 
    @Override
@@ -468,83 +468,83 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
    }
 
    @Override
-   public DerivationNode m23(boolean flag) {
-      return this.f917.m23(flag);
+   public DerivationNode getNextNode(boolean flag) {
+      return this.showLine.getNextNode(flag);
    }
 
    @Override
-   public DerivationNode m24(boolean flag) {
-      return this.f917.m24(flag);
+   public DerivationNode getPreviousNode(boolean flag) {
+      return this.showLine.getPreviousNode(flag);
    }
 
    @Override
-   public DerivationNode m25() {
+   public DerivationNode getHeadNode() {
       return this;
    }
 
    @Override
-   public boolean m26() {
+   public boolean isShowLine() {
       return true;
    }
 
    @Override
-   public boolean m27() {
+   public boolean isCancelLine() {
       return false;
    }
 
    @Override
-   public boolean m28() {
-      return this.f917.m28();
+   public boolean areEnclosingBoxesExpanded() {
+      return this.showLine.areEnclosingBoxesExpanded();
    }
 
    @Override
-   public void m29() {
-      this.f917.m29();
+   public void expandEnclosingBoxes() {
+      this.showLine.expandEnclosingBoxes();
    }
 
    @Override
-   public Rectangle m31() {
-      return this.f917.m31();
+   public Rectangle getBoundsInProblemPanel() {
+      return this.showLine.getBoundsInProblemPanel();
    }
 
    @Override
-   public void m20() {
-      int i = this.m16();
+   public void moveIntoPreviousBox() {
+      int i = this.getIndexInBox();
       if (i > 0) {
-         DerivationNode derivationnode = this.f916.m1560(i - 1);
+         DerivationNode derivationnode = this.parentBox.getNode(i - 1);
          if (derivationnode instanceof DerivationBox) {
-            C_l_E c_l_e = this.f915.focus;
-            if (c_l_e != null && c_l_e.f1258 == this.f917) {
-               this.f916.m1551(false);
+            DerivationLineEditor derivationlineeditor = this.module.focus;
+            if (derivationlineeditor != null && derivationlineeditor.line == this.showLine) {
+               this.parentBox.highlightShowLabel(false);
             }
 
-            this.f916.remove(this);
+            this.parentBox.remove(this);
             ((DerivationBox)derivationnode).add(this, -1);
-            this.f916 = (DerivationBox)derivationnode;
-            if (c_l_e != null && c_l_e.f1258 == this.f917) {
-               this.f916.m1551(true);
+            this.parentBox = (DerivationBox)derivationnode;
+            if (derivationlineeditor != null && derivationlineeditor.line == this.showLine) {
+               this.parentBox.highlightShowLabel(true);
             }
          }
       }
    }
 
    @Override
-   public void m21() {
-      if (this.f916 != null) {
-         int i = this.m16();
-         if (i == this.f916.m1555() - 1) {
-            DerivationBox derivationbox1 = this.f916.f916;
+   public void moveOutOfBox() {
+      if (this.parentBox != null) {
+         int i = this.getIndexInBox();
+         if (i == this.parentBox.getContentCount() - 1) {
+            DerivationBox derivationbox1 = this.parentBox.parentBox;
             if (derivationbox1 != null) {
-               C_l_E c_l_e = this.f915.focus;
-               if (c_l_e != null && c_l_e.f1258 == this.f917) {
-                  this.f916.m1551(false);
+               DerivationLineEditor derivationlineeditor = this.module.focus;
+               if (derivationlineeditor != null && derivationlineeditor.line == this.showLine) {
+                  this.parentBox.highlightShowLabel(false);
                }
 
-               this.f916.remove(this);
-               derivationbox1.add(this, derivationbox1.m1553(this.f916.m16() + 1));
-               this.f916 = derivationbox1;
-               if (c_l_e != null && c_l_e.f1258 == this.f917) {
-                  this.f916.m1551(true);
+               this.parentBox.remove(this);
+               derivationbox1.add(this, derivationbox1.toComponentIndex(this.parentBox.getIndexInBox() + 1));
+               this.parentBox = derivationbox1;
+               if (derivationlineeditor != null && derivationlineeditor.line == this.showLine) {
+                  this.parentBox.highlightShowLabel(true);
                }
             }
          }
@@ -552,52 +552,52 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
    }
 
    @Override
-   public void m39(C_AA c_aa) {
-      this.f917.m39(c_aa);
+   public void addReferrer(LineReference linereference) {
+      this.showLine.addReferrer(linereference);
    }
 
    @Override
-   public void m40(C_AA c_aa) {
-      this.f917.m40(c_aa);
+   public void removeReferrer(LineReference linereference) {
+      this.showLine.removeReferrer(linereference);
    }
 
    @Override
-   public void m41() {
-      this.f917.m41();
+   public void detachReferrers() {
+      this.showLine.detachReferrers();
    }
 
    @Override
-   public void m42() {
-      this.f917.m42();
+   public void retargetReferrers() {
+      this.showLine.retargetReferrers();
    }
 
    @Override
-   public boolean m43() {
+   public boolean checkSyntax() {
       boolean flag = true;
-      int i = this.m1555();
+      int i = this.getContentCount();
 
       for (int j = 0; j < i; j++) {
-         flag = this.m1560(j).m43() && flag;
+         flag = this.getNode(j).checkSyntax() && flag;
       }
 
       return flag;
    }
 
    @Override
-   public Expression m44() {
-      return this.f917.m44();
+   public Expression getFormula() {
+      return this.showLine.getFormula();
    }
 
    @Override
-   public String m47() {
+   public String encodeWork() {
       String s = "";
-      int i = this.m1555();
+      int i = this.getContentCount();
 
       for (int j = 0; j < i; j++) {
-         s = s + this.m1560(j).m47();
+         s = s + this.getNode(j).encodeWork();
       }
 
-      if (this.f918 == null) {
+      if (this.cancelLine == null) {
          s = s + "`=";
       }
 
@@ -605,111 +605,111 @@ class DerivationBox extends C_v_A implements DerivationNode, DerivationConstants
    }
 
    @Override
-   public String m48() {
+   public String encodeMessages() {
       String s = "";
-      int i = this.m1555();
+      int i = this.getContentCount();
 
       for (int j = 0; j < i; j++) {
-         s = s + this.m1560(j).m48();
+         s = s + this.getNode(j).encodeMessages();
       }
 
       return s;
    }
 
    @Override
-   public boolean m46() {
-      int i = this.f915.setPhase(4);
-      if (this.f916 != null) {
-         this.f916.f922 = false;
+   public boolean verify() {
+      int i = this.module.setPhase(4);
+      if (this.parentBox != null) {
+         this.parentBox.strategyConsistent = false;
       }
 
-      this.f922 = true;
+      this.strategyConsistent = true;
 
       try {
-         int j = this.m1555();
-         this.m13();
+         int j = this.getContentCount();
+         this.clearMessage();
          boolean flag;
-         if (this.f916 != null) {
-            this.f920 = 0;
-            this.f923 = -1;
-            flag = this.f917.m46();
-            if (this.f918 == null) {
-               this.m11("dererr055");
-               this.f915.complete = false;
+         if (this.parentBox != null) {
+            this.assumptionType = 0;
+            this.assumedSide = -1;
+            flag = this.showLine.verify();
+            if (this.cancelLine == null) {
+               this.showMessage("dererr055");
+               this.module.complete = false;
                flag = false;
             }
          } else {
-            flag = this.f915.conclusion != null;
+            flag = this.module.conclusion != null;
             if (!flag) {
-               if (this.f915.premises.length == 0) {
-                  this.m11("dererr052");
+               if (this.module.premises.length == 0) {
+                  this.showMessage("dererr052");
                } else {
-                  this.m11("dererr053");
+                  this.showMessage("dererr053");
                }
             } else {
                boolean flag1 = false;
                int k = 1;
 
-               while (k < j && !(flag1 = this.f915.isConclusion(this.m1560(k).m44()))) {
+               while (k < j && !(flag1 = this.module.isConclusion(this.getNode(k).getFormula()))) {
                   k++;
                }
 
                if (!flag1) {
-                  this.m11("dererr054");
+                  this.showMessage("dererr054");
                   flag = false;
                }
             }
          }
 
-         this.m1565();
+         this.addShowVariablesToModule();
 
          for (int l = 1; l < j; l++) {
-            flag &= this.m1560(l).m46();
-            if (this.f915.aborted()) {
+            flag &= this.getNode(l).verify();
+            if (this.module.aborted()) {
                return false;
             }
          }
 
-         this.m1566();
+         this.exportVariablesToParent();
          return flag;
       } finally {
-         this.f915.setPhase(i);
+         this.module.setPhase(i);
       }
    }
 
-   void m1565() {
-      if (this.f916 != null) {
-         if (this.f915.varNames == null) {
-            this.f915.varNames = new Vector();
+   void addShowVariablesToModule() {
+      if (this.parentBox != null) {
+         if (this.module.varNames == null) {
+            this.module.varNames = new Vector();
          }
 
-         Expression expression = this.f917.m44();
+         Expression expression = this.showLine.getFormula();
          if (expression != null) {
-            expression.m1253(this.f915.varNames, null);
+            expression.collectTermSymbols(this.module.varNames, null);
          }
       }
    }
 
-   void m1566() {
-      if (this.f916 != null) {
-         if (this.f916.f921 == null) {
-            this.f916.f921 = new Vector();
+   void exportVariablesToParent() {
+      if (this.parentBox != null) {
+         if (this.parentBox.boxVariables == null) {
+            this.parentBox.boxVariables = new Vector();
          }
 
-         Expression expression = this.f917.m44();
+         Expression expression = this.showLine.getFormula();
          if (expression != null) {
-            expression.m1253(null, this.f916.f921);
+            expression.collectTermSymbols(null, this.parentBox.boxVariables);
          }
       }
    }
 
-   boolean m1567() {
-      Expression expression = this.f917.m44();
+   boolean isUniversalVariableFree() {
+      Expression expression = this.showLine.getFormula();
       if (expression != null && expression.getSymbol().equals("@")) {
          String s = ((SimpleTerm)expression.getChild(0)).getSymbol();
 
-         for (DerivationBox derivationbox1 = this.f916; derivationbox1 != null; derivationbox1 = derivationbox1.f916) {
-            if (derivationbox1.f921 != null && derivationbox1.f921.contains(s)) {
+         for (DerivationBox derivationbox1 = this.parentBox; derivationbox1 != null; derivationbox1 = derivationbox1.parentBox) {
+            if (derivationbox1.boxVariables != null && derivationbox1.boxVariables.contains(s)) {
                return false;
             }
          }

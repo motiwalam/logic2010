@@ -16,17 +16,17 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 class UserInfo extends Hashtable {
-   static final int f659 = 2;
+   static final int FILE_FORMAT_VERSION = 2;
    static final String[] FIELD_KEYS = new String[]{"firstName", "midName", "lastName", "studentID", "email", "institution", "term", "className"};
-   Vector f661;
+   Vector keyOrder;
    boolean dirty;
    boolean demo;
-   Integer f664 = null;
-   Integer f665 = null;
-   String[] f666 = null;
+   Integer userUid = null;
+   Integer courseUid = null;
+   String[] relations = null;
 
    UserInfo() {
-      this.f661 = new Vector();
+      this.keyOrder = new Vector();
       int i = FIELD_KEYS.length;
 
       for (int j = 0; j < i; j++) {
@@ -87,8 +87,8 @@ class UserInfo extends Hashtable {
          userinfo = new UserInfo();
       }
 
-      while (!userinfo.m683()) {
-         if (!userinfo.m1170()) {
+      while (!userinfo.isComplete()) {
+         if (!userinfo.editInfo()) {
             return null;
          }
       }
@@ -96,15 +96,15 @@ class UserInfo extends Hashtable {
       return userinfo.dirty && !userinfo.save() ? null : userinfo;
    }
 
-   String m1146() {
-      return this.m1148(null, "1");
+   String computeDigest() {
+      return this.computeDigest(null, "1");
    }
 
-   String m1147(Enumeration enumeration) {
-      return this.m1148(enumeration, "1");
+   String computeDigest(Enumeration enumeration) {
+      return this.computeDigest(enumeration, "1");
    }
 
-   synchronized String m1148(Enumeration enumeration, String s) {
+   synchronized String computeDigest(Enumeration enumeration, String s) {
       MessageDigest messagedigest;
       try {
          messagedigest = MessageDigest.getInstance("MD5");
@@ -139,8 +139,8 @@ class UserInfo extends Hashtable {
 
    @Override
    public Object put(Object object, Object object1) {
-      if (!this.f661.contains(object)) {
-         this.f661.addElement(object);
+      if (!this.keyOrder.contains(object)) {
+         this.keyOrder.addElement(object);
       }
 
       this.dirty = true;
@@ -149,7 +149,7 @@ class UserInfo extends Hashtable {
 
    @Override
    public Object remove(Object object) {
-      this.f661.removeElement(object);
+      this.keyOrder.removeElement(object);
       this.dirty = true;
       return super.remove(object);
    }
@@ -167,13 +167,13 @@ class UserInfo extends Hashtable {
    }
 
    String getStudentId() {
-      return this.m1154(false);
+      return this.getStudentId(false);
    }
 
-   String m1154(boolean flag) {
+   String getStudentId(boolean flag) {
       String s = this.getField("studentID", "");
       if (flag) {
-         s = Institution.m1293(this.getInstitution()).m1295(s);
+         s = Institution.forName(this.getInstitution()).normalizeStudentId(s);
       }
 
       return s;
@@ -199,15 +199,15 @@ class UserInfo extends Hashtable {
       return this.getField("className", "");
    }
 
-   boolean m1160() {
-      return "work".equalsIgnoreCase(this.m1161());
+   boolean usesWorkBackupKey() {
+      return "work".equalsIgnoreCase(this.getBackupKey());
    }
 
-   String m1161() {
+   String getBackupKey() {
       return this.getField("backupKey", "work");
    }
 
-   void m1162(String s) {
+   void setBackupKey(String s) {
       if (s == null) {
          this.put("backupKey", "work");
       } else {
@@ -217,23 +217,23 @@ class UserInfo extends Hashtable {
       this.save();
    }
 
-   CourseInfo m1163() {
-      CourseInfo[] acourseinfo = CourseInfo.m1120(this.getInstitution(), this.getTerm(), this.getClassName());
+   CourseInfo getCourse() {
+      CourseInfo[] acourseinfo = CourseInfo.findCourses(this.getInstitution(), this.getTerm(), this.getClassName());
       return acourseinfo != null && acourseinfo.length != 0 ? acourseinfo[0] : null;
    }
 
-   Integer m1164() {
-      CourseInfo courseinfo = this.m1163();
-      return courseinfo == null ? null : courseinfo.f623;
+   Integer getCourseUid() {
+      CourseInfo courseinfo = this.getCourse();
+      return courseinfo == null ? null : courseinfo.courseUid;
    }
 
-   Hashtable m1165() {
-      Institution institution = Institution.m1293(this.getInstitution());
+   Hashtable getMessageParams() {
+      Institution institution = Institution.forName(this.getInstitution());
       Hashtable hashtable = Message.params(
          "site",
          this.getInstitution(),
          "term",
-         institution.m1299(this.getTerm()),
+         institution.displayTerm(this.getTerm()),
          "course",
          this.getClassName(),
          "name",
@@ -241,14 +241,14 @@ class UserInfo extends Hashtable {
          "sid",
          this.getStudentId()
       );
-      CourseInfo courseinfo = this.m1163();
-      String s = courseinfo == null ? null : courseinfo.f624;
+      CourseInfo courseinfo = this.getCourse();
+      String s = courseinfo == null ? null : courseinfo.comment;
       return Message.putParam(hashtable, "comment", s == null ? "" : s);
    }
 
-   boolean m683() {
+   boolean isComplete() {
       if (this.demo) {
-         if (!this.m1154(true).equals("demo")) {
+         if (!this.getStudentId(true).equals("demo")) {
             this.put("studentID", "demo");
          }
 
@@ -265,7 +265,7 @@ class UserInfo extends Hashtable {
          }
 
          return true;
-      } else if (this.m1154(true).equals("")) {
+      } else if (this.getStudentId(true).equals("")) {
          return false;
       } else {
          return this.getLastName().equals("") ? false : !this.getFirstName().equals("") || !this.getMiddleName().equals("");
@@ -375,7 +375,7 @@ class UserInfo extends Hashtable {
       if (userinfo == null) {
          MessageDialog.showMessage("Bad User Info", "Could not read the user information file.", null, null);
       } else {
-         userinfo.demo = LogicProgram.m970(userinfo.getInstitution());
+         userinfo.demo = LogicProgram.isDemoName(userinfo.getInstitution());
       }
 
       return userinfo;
@@ -402,10 +402,10 @@ class UserInfo extends Hashtable {
          String s = "2";
          bufferedwriter.write(s, 0, s.length());
          bufferedwriter.newLine();
-         int i = this.f661.size();
+         int i = this.keyOrder.size();
 
          for (int j = 0; j < i; j++) {
-            String s1 = (String)this.f661.elementAt(j);
+            String s1 = (String)this.keyOrder.elementAt(j);
             s = s1 + ":" + this.getField(s1, "");
             bufferedwriter.write(s, 0, s.length());
             bufferedwriter.newLine();
@@ -424,81 +424,81 @@ class UserInfo extends Hashtable {
       return s.trim();
    }
 
-   boolean m1170() {
-      return this.m682(Message.getText("not054"));
+   boolean editInfo() {
+      return this.editInfo(Message.getText("not054"));
    }
 
-   boolean m682(String s) {
+   boolean editInfo(String s) {
       if (s == null) {
-         return this.m1170();
+         return this.editInfo();
       } else {
          String[] astring = new String[]{"Save", "Cancel"};
          String[] astring1 = new String[]{"Institution: ", "Term: ", "Course: "};
          String[] astring2 = new String[]{"Student ID: ", "First Name: ", "Middle Name: ", "Last Name: ", "E-Mail Address: "};
          short short1 = 350;
-         boolean flag = !this.m1154(true).equals("");
-         boolean flag1 = this.m683();
-         Institution institution = Institution.m1293(this.getInstitution());
-         C_ZE c_ze = new C_ZE(this.getInstitution());
-         C_ZE c_ze1 = new C_ZE(institution.m1299(this.getTerm()));
-         C_ZE c_ze2 = new C_ZE(this.getClassName());
-         C_a_B c_a_b = new C_a_B(this.getFirstName(), 250);
-         C_a_B c_a_b1 = new C_a_B(this.getMiddleName(), 250);
-         C_a_B c_a_b2 = new C_a_B(this.getLastName(), 250);
-         C_a_B c_a_b3 = new C_a_B(this.getStudentId(), 250);
-         C_a_B c_a_b4 = new C_a_B(this.getEmail(), 250);
-         C_ZE[] ac_ze = new C_ZE[]{c_ze, c_ze1, c_ze2};
-         C_a_B[] ac_a_b = new C_a_B[]{c_a_b3, c_a_b, c_a_b1, c_a_b2, c_a_b4};
+         boolean flag = !this.getStudentId(true).equals("");
+         boolean flag1 = this.isComplete();
+         Institution institution = Institution.forName(this.getInstitution());
+         LogicLabel logiclabel = new LogicLabel(this.getInstitution());
+         LogicLabel logiclabel1 = new LogicLabel(institution.displayTerm(this.getTerm()));
+         LogicLabel logiclabel2 = new LogicLabel(this.getClassName());
+         SizedTextField sizedtextfield = new SizedTextField(this.getFirstName(), 250);
+         SizedTextField sizedtextfield1 = new SizedTextField(this.getMiddleName(), 250);
+         SizedTextField sizedtextfield2 = new SizedTextField(this.getLastName(), 250);
+         SizedTextField sizedtextfield3 = new SizedTextField(this.getStudentId(), 250);
+         SizedTextField sizedtextfield4 = new SizedTextField(this.getEmail(), 250);
+         LogicLabel[] alogiclabel = new LogicLabel[]{logiclabel, logiclabel1, logiclabel2};
+         SizedTextField[] asizedtextfield = new SizedTextField[]{sizedtextfield3, sizedtextfield, sizedtextfield1, sizedtextfield2, sizedtextfield4};
          SizedPanel sizedpanel = new SizedPanel();
          GridBagLayout gridbaglayout = new GridBagLayout();
          GridBagConstraints gridbagconstraints = new GridBagConstraints();
          sizedpanel.setLayout(gridbaglayout);
 
-         for (int i = 0; i < ac_ze.length; i++) {
-            C_d_D c_d_d = new C_d_D(ac_ze[i].getText());
-            C_d_D c_d_d1 = new C_d_D(astring1[i]);
+         for (int i = 0; i < alogiclabel.length; i++) {
+            FontLabel fontlabel = new FontLabel(alogiclabel[i].getText());
+            FontLabel fontlabel1 = new FontLabel(astring1[i]);
             gridbagconstraints.gridwidth = -1;
             gridbagconstraints.fill = 0;
             gridbagconstraints.weightx = 0.0;
-            sizedpanel.add(c_d_d1, gridbagconstraints);
+            sizedpanel.add(fontlabel1, gridbagconstraints);
             gridbagconstraints.gridwidth = 0;
             gridbagconstraints.fill = 2;
             gridbagconstraints.weightx = 1.0;
-            sizedpanel.add(c_d_d, gridbagconstraints);
+            sizedpanel.add(fontlabel, gridbagconstraints);
          }
 
-         for (int j = 0; j < ac_a_b.length; j++) {
-            C_d_D c_d_d2 = new C_d_D(astring2[j]);
+         for (int j = 0; j < asizedtextfield.length; j++) {
+            FontLabel fontlabel2 = new FontLabel(astring2[j]);
             gridbagconstraints.gridwidth = -1;
             gridbagconstraints.fill = 0;
             gridbagconstraints.weightx = 0.0;
-            sizedpanel.add(c_d_d2, gridbagconstraints);
+            sizedpanel.add(fontlabel2, gridbagconstraints);
             gridbagconstraints.gridwidth = 0;
             gridbagconstraints.fill = 2;
             gridbagconstraints.weightx = 2.0;
-            sizedpanel.add(ac_a_b[j], gridbagconstraints);
+            sizedpanel.add(asizedtextfield[j], gridbagconstraints);
          }
 
          if (flag) {
-            c_a_b3.setEditable(false);
+            sizedtextfield3.setEditable(false);
          }
 
          if (flag1) {
-            c_a_b.setEditable(false);
-            c_a_b1.setEditable(false);
-            c_a_b2.setEditable(false);
+            sizedtextfield.setEditable(false);
+            sizedtextfield1.setEditable(false);
+            sizedtextfield2.setEditable(false);
             if (this.demo) {
-               c_a_b4.setEditable(false);
+               sizedtextfield4.setEditable(false);
             }
          }
 
          MessageDialog messagedialog = new MessageDialog(null, s, sizedpanel, astring);
-         messagedialog.m1314(0);
-         messagedialog.m1322(null);
-         if (!this.demo && messagedialog.f790 == 0) {
+         messagedialog.setDefaultButtonIndex(0);
+         messagedialog.showAt(null);
+         if (!this.demo && messagedialog.selectedButton == 0) {
             if (!flag) {
                String s5 = (String)this.get("studentID");
-               String s8 = c_a_b3.getText();
+               String s8 = sizedtextfield3.getText();
                if (!s8.equals(s5)) {
                   this.put("studentID", s8);
                   this.dirty = true;
@@ -509,9 +509,9 @@ class UserInfo extends Hashtable {
                String s6 = (String)this.get("firstName");
                String s9 = (String)this.get("midName");
                String s1 = (String)this.get("lastName");
-               String s2 = c_a_b.getText();
-               String s3 = c_a_b1.getText();
-               String s4 = c_a_b2.getText();
+               String s2 = sizedtextfield.getText();
+               String s3 = sizedtextfield1.getText();
+               String s4 = sizedtextfield2.getText();
                if (!s2.equals(s6) || !s3.equals(s9) || !s4.equals(s1)) {
                   this.put("firstName", s2);
                   this.put("midName", s3);
@@ -521,7 +521,7 @@ class UserInfo extends Hashtable {
             }
 
             String s7 = (String)this.get("email");
-            String s10 = c_a_b4.getText();
+            String s10 = sizedtextfield4.getText();
             if (!s10.equals(s7)) {
                this.put("email", s10);
                this.dirty = true;
@@ -534,16 +534,16 @@ class UserInfo extends Hashtable {
       }
    }
 
-   boolean m1171(String s) {
-      if (this.f666 == null) {
-         this.f666 = ServerConnection.m882(this, (NetworkTask)null);
+   boolean hasRelation(String s) {
+      if (this.relations == null) {
+         this.relations = ServerConnection.getUserRelations(this, (NetworkTask)null);
       }
 
-      s = s.toLowerCase();
-      if (LogicProgram.m1051(this.f666, s) != -1) {
+      String s1 = s.toLowerCase();
+      if (LogicProgram.indexOf(this.relations, s1) != -1) {
          return true;
       } else {
-         return s.equals("instructor") && this.m1171("developer") ? true : s.equals("student") && this.m1171("instructor");
+         return s1.equals("instructor") && this.hasRelation("developer") ? true : s1.equals("student") && this.hasRelation("instructor");
       }
    }
 }

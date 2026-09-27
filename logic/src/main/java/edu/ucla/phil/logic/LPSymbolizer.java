@@ -24,20 +24,20 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-class LPSymbolizer extends LogicModule implements C_v_D {
+class LPSymbolizer extends LogicModule implements SymbolizationConstants {
    int fontSize;
    static final String workFileName = "symwork.txt";
    static final String logFileName = "symdata.txt";
    static final String keyFileName = "keywork.txt";
    static final String answerFileName = "symAnswers";
    static final String digestVersKey = "symDigestVers";
-   static C_h_C exercises = null;
+   static SymbolizationProblemSet exercises = null;
    static Hashtable answers = null;
    static Hashtable messages = null;
-   static C_h_C problems = null;
+   static SymbolizationProblemSet problems = null;
    static Hashtable userKey = null;
    static Vector instances = new Vector();
-   static C_c_C printQueue = new C_c_C("Symbolization");
+   static PrintQueue printQueue = new PrintQueue("Symbolization");
    static ProblemSelector noDirect = null;
    static ProblemSelector noErrMess = null;
    static ProblemSelector noHints = null;
@@ -81,24 +81,24 @@ class LPSymbolizer extends LogicModule implements C_v_D {
    Hashtable probOptions;
    JSplitPane splitPane;
    StyledTextPane symbolized;
-   C_y_B scheme;
-   C_d_C problem;
-   C_x_C lastFocus;
-   C_x_C focus;
+   SchemeEditor scheme;
+   SymbolizationNode problem;
+   SymbolizationTextPanel lastFocus;
+   SymbolizationTextPanel focus;
    static String[] kaplan = LogicProgram.symbols;
    static int moduleIndex = 4;
 
    static boolean getExercises() {
-      if (!C_h_E.loadMessages()) {
-         LogicProgram.m971("not001", "the symbolization messages file");
+      if (!SymbolizationMessages.loadMessages()) {
+         LogicProgram.showFileError("not001", "the symbolization messages file");
          return false;
       } else if (!getAnswers()) {
-         LogicProgram.m971("not002", "the symbolization answer file");
+         LogicProgram.showFileError("not002", "the symbolization answer file");
          return false;
       } else {
          resetOptions();
          readOptions(LogicProgram.openDataFile("options", false));
-         readOptions(LogicProgram.m1064("options"));
+         readOptions(LogicProgram.openLocalFile("options"));
          logNeeds();
          if ((exercises = readExercises()) == null) {
             return false;
@@ -110,46 +110,47 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       }
    }
 
-   static C_h_C readExercises() {
-      return readExercises(LogicProgram.f584, false, false);
+   static SymbolizationProblemSet readExercises() {
+      return readExercises(LogicProgram.noCoreProblems, false, false);
    }
 
-   static C_h_C readExercises(boolean flag, boolean flag1, boolean flag2) {
-      C_h_C c_h_c = new C_h_C(false);
+   static SymbolizationProblemSet readExercises(boolean flag, boolean flag1, boolean flag2) {
+      SymbolizationProblemSet symbolizationproblemset = new SymbolizationProblemSet(false);
       if (!flag) {
          ScrambledReader scrambledreader = LogicProgram.openDataFile("symwork.txt", false);
          if (scrambledreader == null) {
-            LogicProgram.m971("not001", "the Symbolization exercise file");
+            LogicProgram.showFileError("not001", "the Symbolization exercise file");
             return null;
          }
 
-         if (!readProblems(scrambledreader, c_h_c, true)) {
-            LogicProgram.m971("not002", "the Symbolization exercise file");
+         if (!readProblems(scrambledreader, symbolizationproblemset, true)) {
+            LogicProgram.showFileError("not002", "the Symbolization exercise file");
             return null;
          }
       }
 
       if (!flag1) {
-         ScrambledReader scrambledreader1 = LogicProgram.m1065("symwork.txt", flag2);
-         if (scrambledreader1 != null && (flag ? !readProblems(scrambledreader1, c_h_c, true) : !mergeProblems(scrambledreader1, c_h_c, true))) {
-            LogicProgram.m971("not002", "the local Symbolization exercise file");
+         ScrambledReader scrambledreader1 = LogicProgram.openLocalFile("symwork.txt", flag2);
+         if (scrambledreader1 != null
+            && (flag ? !readProblems(scrambledreader1, symbolizationproblemset, true) : !mergeProblems(scrambledreader1, symbolizationproblemset, true))) {
+            LogicProgram.showFileError("not002", "the local Symbolization exercise file");
             return null;
          }
       }
 
-      return c_h_c;
+      return symbolizationproblemset;
    }
 
    LPSymbolizer(boolean flag) {
       super(flag);
       this.fontSize = LogicProgram.fontSize;
-      this.scheme = new C_y_B();
-      C_c_F c_c_f = new C_c_F(this);
-      c_c_f.setViewportView(this.scheme);
-      c_c_f.getVerticalScrollBar().setUnitIncrement(22);
+      this.scheme = new SchemeEditor();
+      SymbolizationScrollPane symbolizationscrollpane = new SymbolizationScrollPane(this);
+      symbolizationscrollpane.setViewportView(this.scheme);
+      symbolizationscrollpane.getVerticalScrollBar().setUnitIncrement(22);
       JPanel jpanel = new JPanel();
       jpanel.setLayout(new BorderLayout());
-      jpanel.add(c_c_f, "Center");
+      jpanel.add(symbolizationscrollpane, "Center");
       this.scheme.setForeground(this.colors[0]);
       this.scheme.setBackground(this.colors[1]);
       this.symbolized = new StyledTextPane();
@@ -162,10 +163,10 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       StyleConstants.setFontSize(simpleattributeset, this.symbolized.getFont().getSize());
       StyleConstants.setBold(simpleattributeset, this.symbolized.getFont().isBold());
       this.symbolized.setParagraphAttributes(simpleattributeset, true);
-      this.symbolized.m1787(true);
-      this.symbolized.m1789(true);
+      this.symbolized.setWrapLines(true);
+      this.symbolized.setWrapWords(true);
       this.symbolized.setEditable(false);
-      this.problem = new C_d_C(this, 0);
+      this.problem = new SymbolizationNode(this, 0);
       this.errorCount = 0;
       this.hintCount = 0;
       this.workTime = 0L;
@@ -195,7 +196,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       jpanel3.add(this.splitPane = new JSplitPane(1, jpanel, jpanel1), "Center");
       this.add(this.titlePanel, "North");
       this.add(jpanel3, "Center");
-      this.add(C_b_B.m1663(this), "South");
+      this.add(SymbolizationToolbar.create(this), "South");
       this.focus = null;
       this.lastFocus = null;
       this.newProblem();
@@ -215,38 +216,38 @@ class LPSymbolizer extends LogicModule implements C_v_D {
          startups = new Vector();
       }
 
-      LPSymbolizer.C__A lpsymbolizer$c__a = new LPSymbolizer.C__A(busyindicator, rectangle, s);
-      startups.add(lpsymbolizer$c__a);
+      LPSymbolizer.SymbolizerStartup lpsymbolizer$symbolizerstartup = new LPSymbolizer.SymbolizerStartup(busyindicator, rectangle, s);
+      startups.add(lpsymbolizer$symbolizerstartup);
       if (startups.size() <= 1) {
          if (exercises == null) {
             if (!getExercises()) {
-               lpsymbolizer$c__a.m1310();
-               startups.remove(lpsymbolizer$c__a);
+               lpsymbolizer$symbolizerstartup.stopBusyIndicator();
+               startups.remove(lpsymbolizer$symbolizerstartup);
                return;
             }
 
-            exercises.m1099(lpsymbolizer$c__a);
+            exercises.restateProblems(lpsymbolizer$symbolizerstartup);
          } else {
-            lpsymbolizer$c__a.m959();
+            lpsymbolizer$symbolizerstartup.continueStartup();
          }
       }
    }
 
-   static void startupAfterExercises(LPSymbolizer.C__A lpsymbolizer$c__a) {
+   static void startupAfterExercises(LPSymbolizer.SymbolizerStartup lpsymbolizer$symbolizerstartup) {
       if (problems == null) {
          if (!getProblems()) {
-            lpsymbolizer$c__a.m1310();
-            startups.remove(lpsymbolizer$c__a);
+            lpsymbolizer$symbolizerstartup.stopBusyIndicator();
+            startups.remove(lpsymbolizer$symbolizerstartup);
             return;
          }
 
-         if (problems.m1773()) {
+         if (problems.mergeExercises()) {
             saveProblems();
          }
 
-         problems.m1099(lpsymbolizer$c__a);
+         problems.restateProblems(lpsymbolizer$symbolizerstartup);
       } else {
-         lpsymbolizer$c__a.m959();
+         lpsymbolizer$symbolizerstartup.continueStartup();
       }
    }
 
@@ -255,18 +256,18 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       int i = startups.size();
 
       for (int j = 0; j < i; j++) {
-         ((LogicModule.C__A)startups.get(i - 1 - j)).m1310();
+         ((LogicModule.ModuleStartupTask)startups.get(i - 1 - j)).stopBusyIndicator();
       }
 
       while (!startups.isEmpty()) {
-         LogicModule.C__A logicmodule$c__a = (LogicModule.C__A)startups.remove(0);
-         SwingUtilities.invokeLater(logicmodule$c__a);
+         LogicModule.ModuleStartupTask logicmodule$modulestartuptask = (LogicModule.ModuleStartupTask)startups.remove(0);
+         SwingUtilities.invokeLater(logicmodule$modulestartuptask);
       }
    }
 
    Rectangle fixModuleRect(Rectangle rectangle) {
-      C_b_B c_b_b = C_b_B.m1663(this);
-      Dimension dimension = c_b_b.getPreferredSize();
+      SymbolizationToolbar symbolizationtoolbar = SymbolizationToolbar.create(this);
+      Dimension dimension = symbolizationtoolbar.getPreferredSize();
       if (rectangle.width < dimension.width) {
          rectangle.width = dimension.width;
       }
@@ -274,36 +275,36 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       return rectangle;
    }
 
-   static void allocateSymModule(LogicModule.C__A logicmodule$c__a) {
+   static void allocateSymModule(LogicModule.ModuleStartupTask logicmodule$modulestartuptask) {
       LPSymbolizer lpsymbolizer = new LPSymbolizer(false);
       instances.addElement(lpsymbolizer);
-      if (logicmodule$c__a.f784 == null || newProblem == null) {
+      if (logicmodule$modulestartuptask.problemName == null || newProblem == null) {
          lpsymbolizer.loadProblem((String)null);
          if (newProblem == null) {
             newProblem = lpsymbolizer.saveProblem();
          }
       }
 
-      if (logicmodule$c__a.f784 != null) {
-         lpsymbolizer.loadProblem(logicmodule$c__a.f784);
-         logicmodule$c__a.f784 = null;
+      if (logicmodule$modulestartuptask.problemName != null) {
+         lpsymbolizer.loadProblem(logicmodule$modulestartuptask.problemName);
+         logicmodule$modulestartuptask.problemName = null;
       }
 
       lpsymbolizer.setupFrame(LPInfo.programName + ": Symbolization");
-      lpsymbolizer.frame.setBounds(lpsymbolizer.fixModuleRect(logicmodule$c__a.f783));
+      lpsymbolizer.frame.setBounds(lpsymbolizer.fixModuleRect(logicmodule$modulestartuptask.bounds));
       lpsymbolizer.frame.setVisible(true);
       lpsymbolizer.splitPane.setDividerLocation(lpsymbolizer.getVisibleRect().width / 4);
       lpsymbolizer.requestFocus();
    }
 
    static void insertDBProbs(ProblemSelector problemselector) {
-      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
+      if (problemselector != null && !problemselector.isEmpty() && UserSetup.hasAccess("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.getRecordAt(j));
             String s = taggedrecord.getName();
-            if (problemselector.m404(s)) {
+            if (problemselector.contains(s)) {
                if (DiagnosticsLog.out != null) {
                   DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
                   DiagnosticsLog.out.println("adding " + s);
@@ -322,23 +323,23 @@ class LPSymbolizer extends LogicModule implements C_v_D {
                }
 
                String s5 = "insert into logic_problem (COMMENT,DTCREATION,PROBLEM_NAME,TPROBLEM,TPROBLEM_MD5,TWEB_FORM_PROBLEM,VERSION,SYNTAX,COMMON_NAME)";
-               s5 = s5 + " values (" + ServerConnection.m815(s2) + ",GETDATE()," + ServerConnection.m815(s) + "," + ServerConnection.m815(s1) + ",";
-               s5 = s5 + ServerConnection.m815(s3) + "," + ServerConnection.m815(s1) + "," + nameVersion(s) + "," + FormulaParser.getSyntax() + ",";
-               s5 = s5 + ServerConnection.m815(s4) + ")";
-               ServerConnection.m814(s5);
+               s5 = s5 + " values (" + ServerConnection.sqlQuote(s2) + ",GETDATE()," + ServerConnection.sqlQuote(s) + "," + ServerConnection.sqlQuote(s1) + ",";
+               s5 = s5 + ServerConnection.sqlQuote(s3) + "," + ServerConnection.sqlQuote(s1) + "," + nameVersion(s) + "," + FormulaParser.getSyntax() + ",";
+               s5 = s5 + ServerConnection.sqlQuote(s4) + ")";
+               ServerConnection.stubReturnsNull(s5);
             }
          }
       }
    }
 
    static void updateDBProbs(ProblemSelector problemselector) {
-      if (problemselector != null && !problemselector.m402() && UserSetup.m2101("addToDB", "developer")) {
+      if (problemselector != null && !problemselector.isEmpty() && UserSetup.hasAccess("addToDB", "developer")) {
          int i = exercises.size();
 
          for (int j = 0; j < i; j++) {
-            TaggedRecord taggedrecord = new TaggedRecord(exercises.m1778(j));
+            TaggedRecord taggedrecord = new TaggedRecord(exercises.getRecordAt(j));
             String s = taggedrecord.getName();
-            if (problemselector.m404(s)) {
+            if (problemselector.contains(s)) {
                if (DiagnosticsLog.out != null) {
                   DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
                   DiagnosticsLog.out.println("updating " + s);
@@ -356,11 +357,11 @@ class LPSymbolizer extends LogicModule implements C_v_D {
                   s4 = s;
                }
 
-               String s5 = "update logic_problem set tproblem = " + ServerConnection.m815(s1) + ", tproblem_md5 = " + ServerConnection.m815(s3);
-               s5 = s5 + ", tweb_form_problem = " + ServerConnection.m815(s1) + ", comment = " + ServerConnection.m815(s2);
-               s5 = s5 + ", version = " + nameVersion(s) + ", common_name = " + ServerConnection.m815(s4);
-               s5 = s5 + " where problem_name = " + ServerConnection.m815(s) + " and syntax = " + FormulaParser.getSyntax();
-               ServerConnection.m814(s5);
+               String s5 = "update logic_problem set tproblem = " + ServerConnection.sqlQuote(s1) + ", tproblem_md5 = " + ServerConnection.sqlQuote(s3);
+               s5 = s5 + ", tweb_form_problem = " + ServerConnection.sqlQuote(s1) + ", comment = " + ServerConnection.sqlQuote(s2);
+               s5 = s5 + ", version = " + nameVersion(s) + ", common_name = " + ServerConnection.sqlQuote(s4);
+               s5 = s5 + " where problem_name = " + ServerConnection.sqlQuote(s) + " and syntax = " + FormulaParser.getSyntax();
+               ServerConnection.stubReturnsNull(s5);
             }
          }
       }
@@ -378,14 +379,14 @@ class LPSymbolizer extends LogicModule implements C_v_D {
 
    @Override
    public boolean shutdown(boolean flag) {
-      if (!flag && !C_WB.m1450(this, null)) {
+      if (!flag && !SymbolizationDialogs.confirmSaveChanges(this, null)) {
          return false;
       } else {
          this.reset();
          synchronized (moduleClasses[4]) {
             instances.removeElement(this);
             if (instances.isEmpty()) {
-               C_l_B.m1924(printQueue);
+               PrintTask.waitForQueue(printQueue);
                userKey = null;
                problems = null;
                answers = null;
@@ -428,7 +429,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
 
    @Override
    public boolean save() {
-      return C_WB.m1450(this, null);
+      return SymbolizationDialogs.confirmSaveChanges(this, null);
    }
 
    static void resetOptions() {
@@ -461,14 +462,14 @@ class LPSymbolizer extends LogicModule implements C_v_D {
    static boolean checkQuit(Hashtable hashtable, Hashtable hashtable1) {
       resetOptions();
       readOptions(LogicProgram.openDataFile("options", false));
-      readOptions(LogicProgram.m1064("options"));
+      readOptions(LogicProgram.openLocalFile("options"));
       logNeeds();
-      if (needPrint != null && !needPrint.m402() || needSubmit != null && !needSubmit.m402()) {
-         C_a_A c_a_a = new C_a_A(readWork());
-         c_a_a.m1634(readExercises());
-         MainMenu.m2215(hashtable, "symdata.txt", "P", needPrint, c_a_a);
-         c_a_a.m1635();
-         MainMenu.m2215(hashtable1, "symdata.txt", "S", needSubmit, c_a_a);
+      if (needPrint != null && !needPrint.isEmpty() || needSubmit != null && !needSubmit.isEmpty()) {
+         ProblemRecordEnumeration problemrecordenumeration = new ProblemRecordEnumeration(readWork());
+         problemrecordenumeration.retainExisting(readExercises());
+         MainMenu.mergeSubmitStatus(hashtable, "symdata.txt", "P", needPrint, problemrecordenumeration);
+         problemrecordenumeration.reset();
+         MainMenu.mergeSubmitStatus(hashtable1, "symdata.txt", "S", needSubmit, problemrecordenumeration);
       }
 
       resetOptions();
@@ -476,17 +477,17 @@ class LPSymbolizer extends LogicModule implements C_v_D {
    }
 
    static Vector getChangedProblems() {
-      C_a_A c_a_a = new C_a_A(readWork());
-      Hashtable hashtable = LogicProgram.m1084("symdata.txt", "S", needSubmit, c_a_a);
+      ProblemRecordEnumeration problemrecordenumeration = new ProblemRecordEnumeration(readWork());
+      Hashtable hashtable = LogicProgram.checkSubmitLog("symdata.txt", "S", needSubmit, problemrecordenumeration);
       if (hashtable == null) {
          return null;
       } else {
          Vector vector = (Vector)hashtable.get("handled");
          Vector vector1 = new Vector();
-         c_a_a.m1635();
+         problemrecordenumeration.reset();
 
-         while (c_a_a.hasMoreElements()) {
-            String s = (String)c_a_a.nextElement();
+         while (problemrecordenumeration.hasMoreElements()) {
+            String s = (String)problemrecordenumeration.nextElement();
             if ((vector == null || !vector.contains(s)) && hasWork(new TaggedRecord(s))) {
                vector1.add(s);
             }
@@ -519,27 +520,27 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       return 4;
    }
 
-   static C__C getProblemState(String s, C_h_C c_h_c, C__C c__c) {
-      if (c__c == null) {
-         c__c = new C__C(s, c_h_c, true);
+   static SymbolizationEntry getProblemState(String s, SymbolizationProblemSet symbolizationproblemset, SymbolizationEntry symbolizationentry) {
+      if (symbolizationentry == null) {
+         symbolizationentry = new SymbolizationEntry(s, symbolizationproblemset, true);
       }
 
       if (!hasWork(s)) {
-         c__c.m1582();
+         symbolizationentry.resetState();
       } else {
-         C_d_C.m1740(s, c_h_c, c__c);
+         SymbolizationNode.evaluateWork(s, symbolizationproblemset, symbolizationentry);
       }
 
-      return c__c;
+      return symbolizationentry;
    }
 
    void setProblemTitle(String s) {
       if (s != null && !(s = s.trim()).equals("")) {
-         this.problem.f1051 = s;
-         this.titlePanel.m1821(trimTitle(s));
+         this.problem.problemName = s;
+         this.titlePanel.setTitleLabel(trimTitle(s));
       } else {
-         this.problem.f1051 = null;
-         this.titlePanel.m1821(null);
+         this.problem.problemName = null;
+         this.titlePanel.setTitleLabel(null);
       }
    }
 
@@ -547,7 +548,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       if (s == null) {
          return null;
       } else {
-         return isExercise(s) ? LogicProgram.m1000(s) : s.trim();
+         return isExercise(s) ? LogicProgram.stripNamePrefix(s) : s.trim();
       }
    }
 
@@ -557,57 +558,58 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       } else if (!getUserKey()) {
          return false;
       } else {
-         C_h_C c_h_c = readWork();
-         if (c_h_c == null) {
+         SymbolizationProblemSet symbolizationproblemset = readWork();
+         if (symbolizationproblemset == null) {
             return false;
          } else {
-            if (c_h_c.f1079 && !c_h_c.m1777(LogicProgram.user).equals(c_h_c.f1076)) {
+            if (symbolizationproblemset.readFromPlainFile
+               && !symbolizationproblemset.computeDigest(LogicProgram.user).equals(symbolizationproblemset.storedDigest)) {
                System.out.println("Could not digest file: symwork.txt");
-               if (!UserSetup.m2101("indigestion", "instructor")) {
-                  LogicProgram.m971("not003", "symwork.txt");
+               if (!UserSetup.hasAccess("indigestion", "instructor")) {
+                  LogicProgram.showFileError("not003", "symwork.txt");
                   return false;
                }
             }
 
-            problems = c_h_c;
-            C__C.f928 = ProblemEntry.m1816("symwork.txt", problems);
-            ProblemEntry.m1815(exercises, C__C.f928);
+            problems = symbolizationproblemset;
+            SymbolizationEntry.knownNames = ProblemEntry.findExtraProblems("symwork.txt", problems);
+            ProblemEntry.markExtraProblems(exercises, SymbolizationEntry.knownNames);
             return true;
          }
       }
    }
 
-   static C_h_C readWork() {
-      if (!LogicProgram.m976()) {
+   static SymbolizationProblemSet readWork() {
+      if (!LogicProgram.checkSameUser()) {
          return null;
       } else {
-         C_h_C c_h_c = new C_h_C(true);
+         SymbolizationProblemSet symbolizationproblemset = new SymbolizationProblemSet(true);
          ScrambledReader scrambledreader = LogicProgram.openDataFile("symwork.txt", true);
-         if (!LogicProgram.f584 || scrambledreader instanceof PlainRecordReader) {
+         if (!LogicProgram.noCoreProblems || scrambledreader instanceof PlainRecordReader) {
             if (scrambledreader == null) {
-               LogicProgram.m971("not001", "symwork.txt");
+               LogicProgram.showFileError("not001", "symwork.txt");
                return null;
             }
 
             if (scrambledreader instanceof PlainRecordReader) {
-               c_h_c.f1079 = true;
+               symbolizationproblemset.readFromPlainFile = true;
             }
 
-            if (!readProblems(scrambledreader, c_h_c, false)) {
-               LogicProgram.m971("not002", "symwork.txt");
+            if (!readProblems(scrambledreader, symbolizationproblemset, false)) {
+               LogicProgram.showFileError("not002", "symwork.txt");
                return null;
             }
          }
 
          if (!(scrambledreader instanceof PlainRecordReader)) {
-            scrambledreader = LogicProgram.m1064("symwork.txt");
-            if (scrambledreader != null && !mergeProblems(scrambledreader, c_h_c, false)) {
-               LogicProgram.m971("not002", "symwork.txt");
+            scrambledreader = LogicProgram.openLocalFile("symwork.txt");
+            if (scrambledreader != null && !mergeProblems(scrambledreader, symbolizationproblemset, false)) {
+               LogicProgram.showFileError("not002", "symwork.txt");
                return null;
             }
          }
 
-         return c_h_c;
+         return symbolizationproblemset;
       }
    }
 
@@ -615,7 +617,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       userKey = new Hashtable();
       ScrambledReader scrambledreader = LogicProgram.openDataFile("keywork.txt", true);
       if (scrambledreader != null && scrambledreader instanceof PlainRecordReader && !readAnswers(scrambledreader, userKey)) {
-         LogicProgram.m971("not002", "keywork.txt");
+         LogicProgram.showFileError("not002", "keywork.txt");
          return false;
       } else {
          return true;
@@ -628,7 +630,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
             return true;
          } else {
             Enumeration enumeration = userKey.elements();
-            BufferedWriter bufferedwriter = new BufferedWriter(LogicProgram.m1068("keywork.txt", false, true));
+            BufferedWriter bufferedwriter = new BufferedWriter(LogicProgram.openWriter("keywork.txt", false, true));
 
             try {
                while (enumeration.hasMoreElements()) {
@@ -647,26 +649,26 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       }
    }
 
-   static boolean readProblems(Reader reader, C_h_C c_h_c, boolean flag) {
-      return readProblems(reader, c_h_c, flag, false);
+   static boolean readProblems(Reader reader, SymbolizationProblemSet symbolizationproblemset, boolean flag) {
+      return readProblems(reader, symbolizationproblemset, flag, false);
    }
 
-   static boolean mergeProblems(Reader reader, C_h_C c_h_c, boolean flag) {
-      return readProblems(reader, c_h_c, flag, true);
+   static boolean mergeProblems(Reader reader, SymbolizationProblemSet symbolizationproblemset, boolean flag) {
+      return readProblems(reader, symbolizationproblemset, flag, true);
    }
 
-   static boolean readProblems(Reader reader, C_h_C c_h_c, boolean flag, boolean flag1) {
-      if (flag && c_h_c.f1158 == null) {
-         c_h_c.f1158 = new Hashtable();
+   static boolean readProblems(Reader reader, SymbolizationProblemSet symbolizationproblemset, boolean flag, boolean flag1) {
+      if (flag && symbolizationproblemset.answerGroups == null) {
+         symbolizationproblemset.answerGroups = new Hashtable();
       }
 
-      return LogicModule.readProblems(reader, c_h_c, flag, flag1);
+      return LogicModule.readProblems(reader, symbolizationproblemset, flag, flag1);
    }
 
    String getChangedProblem() {
       String s = this.saveProblem();
-      String s1 = this.problemIndex == -1 ? newProblem : problems.m1778(this.problemIndex);
-      return TaggedRecord.m1500(s).equals(TaggedRecord.m1500(s1)) ? null : s;
+      String s1 = this.problemIndex == -1 ? newProblem : problems.getRecordAt(this.problemIndex);
+      return TaggedRecord.stripTimestamp(s).equals(TaggedRecord.stripTimestamp(s1)) ? null : s;
    }
 
    static String getProblemStatement(String s) {
@@ -683,9 +685,9 @@ class LPSymbolizer extends LogicModule implements C_v_D {
             return null;
          } else {
             DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\:");
-            delimitedtokenizer.m1132(s);
-            delimitedtokenizer.m1135();
-            return delimitedtokenizer.m1133();
+            delimitedtokenizer.setInput(s);
+            delimitedtokenizer.nextToken();
+            return delimitedtokenizer.getRemaining();
          }
       }
    }
@@ -700,14 +702,14 @@ class LPSymbolizer extends LogicModule implements C_v_D {
          return taggedrecord.indexOfTag('-') == -1 ? null : connSymbol[0];
       } else {
          DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\:");
-         delimitedtokenizer.m1132(s);
-         String s1 = delimitedtokenizer.m1135();
-         return delimitedtokenizer.m1133() == null ? null : s1;
+         delimitedtokenizer.setInput(s);
+         String s1 = delimitedtokenizer.nextToken();
+         return delimitedtokenizer.getRemaining() == null ? null : s1;
       }
    }
 
    static int getHintCount(TaggedRecord taggedrecord) {
-      Integer integer = taggedrecord.m1485(taggedrecord.indexOfTag('h'));
+      Integer integer = taggedrecord.intValueAt(taggedrecord.indexOfTag('h'));
       return integer == null ? 0 : integer;
    }
 
@@ -720,40 +722,40 @@ class LPSymbolizer extends LogicModule implements C_v_D {
    }
 
    static String getWork(TaggedRecord taggedrecord) {
-      return taggedrecord.indexOfTag('-') == -1 && connSymbol[0].equals(getProblemSymbol(taggedrecord)) ? "" : taggedrecord.m1484("+");
+      return taggedrecord.indexOfTag('-') == -1 && connSymbol[0].equals(getProblemSymbol(taggedrecord)) ? "" : taggedrecord.formatFields("+");
    }
 
    static String getExerciseTitle(String s) {
       String s1;
-      return exercises != null && (s1 = exercises.m1780(s)) != null ? TaggedRecord.m1493(s1) : null;
+      return exercises != null && (s1 = exercises.getRecord(s)) != null ? TaggedRecord.nameOf(s1) : null;
    }
 
    static boolean isExercise(String s) {
-      return exercises != null && s != null && exercises.m1780(s) != null;
+      return exercises != null && s != null && exercises.getRecord(s) != null;
    }
 
    static boolean isExample(String s) {
-      return exercises != null && s != null && TaggedRecord.m1502(exercises.m1780(s));
+      return exercises != null && s != null && TaggedRecord.isExample(exercises.getRecord(s));
    }
 
    void loadExerciseInfo(TaggedRecord taggedrecord) {
-      taggedrecord = new TaggedRecord(exercises == null ? null : exercises.m1780(taggedrecord.getName()));
+      taggedrecord = new TaggedRecord(exercises == null ? null : exercises.getRecord(taggedrecord.getName()));
       String s = taggedrecord.getName();
-      this.probOptions = taggedrecord.m1506('%');
+      this.probOptions = taggedrecord.getKeyValues('%');
       this.dontChange = this.probOptions != null && this.probOptions.containsKey("eg");
-      this.directEntryDisabled = LogicProgram.m1060(noDirect, s);
-      this.errorMessagesDisabled = LogicProgram.m1060(this.forPrint ? noPrintErr : noErrMess, s);
-      this.hintsDisabled = LogicProgram.m1060(noHints, s);
-      this.checkDisabled = LogicProgram.m1060(this.forPrint ? noPrintCheck : noCheck, s);
-      if (LogicProgram.m1060(chap1, s)) {
+      this.directEntryDisabled = LogicProgram.selectorMatches(noDirect, s);
+      this.errorMessagesDisabled = LogicProgram.selectorMatches(this.forPrint ? noPrintErr : noErrMess, s);
+      this.hintsDisabled = LogicProgram.selectorMatches(noHints, s);
+      this.checkDisabled = LogicProgram.selectorMatches(this.forPrint ? noPrintCheck : noCheck, s);
+      if (LogicProgram.selectorMatches(chap1, s)) {
          this.chapter = new Integer(1);
-      } else if (LogicProgram.m1060(chap2, s)) {
+      } else if (LogicProgram.selectorMatches(chap2, s)) {
          this.chapter = new Integer(2);
-      } else if (LogicProgram.m1060(chap3, s)) {
+      } else if (LogicProgram.selectorMatches(chap3, s)) {
          this.chapter = new Integer(3);
-      } else if (LogicProgram.m1060(chap4, s)) {
+      } else if (LogicProgram.selectorMatches(chap4, s)) {
          this.chapter = new Integer(4);
-      } else if (LogicProgram.m1060(chap5, s)) {
+      } else if (LogicProgram.selectorMatches(chap5, s)) {
          this.chapter = new Integer(5);
       } else {
          this.chapter = null;
@@ -761,50 +763,50 @@ class LPSymbolizer extends LogicModule implements C_v_D {
    }
 
    static boolean equivalentCounts(String s) {
-      return LogicProgram.m1060(equCounts, getExerciseTitle(s));
+      return LogicProgram.selectorMatches(equCounts, getExerciseTitle(s));
    }
 
    void checkProblem() {
-      this.problem.m1739();
-      if (this.problem.m1714() != 0) {
+      this.problem.clearErrors();
+      if (this.problem.countAnswers() != 0) {
          int i = -1;
-         if (this.problem.m1717()) {
-            this.titlePanel.m1825("Incomplete");
-         } else if ((i = this.problem.m1712()) != -1) {
-            int j = this.problem.m1720(i, problems);
+         if (this.problem.isIncomplete()) {
+            this.titlePanel.setStatus("Incomplete");
+         } else if ((i = this.problem.findMatchingAnswer()) != -1) {
+            int j = this.problem.findDuplicateSolution(i, problems);
             if (j != -1) {
-               this.titlePanel.m1825("Duplicate of\n" + C_d_C.m1718(j, this.problem.f1057));
+               this.titlePanel.setStatus("Duplicate of\n" + SymbolizationNode.getAnswerSetName(j, this.problem.answerGroup));
             } else {
-               this.titlePanel.m1825("Correct");
+               this.titlePanel.setStatus("Correct");
             }
-         } else if ((i = this.problem.m1713()) != -1) {
-            int k = this.problem.m1720(i, problems);
+         } else if ((i = this.problem.findEquivalentAnswer()) != -1) {
+            int k = this.problem.findDuplicateSolution(i, problems);
             if (k != -1) {
-               this.titlePanel.m1825("Duplicate of\n" + C_d_C.m1718(k, this.problem.f1057));
-            } else if (equivalentCounts(this.problem.f1051)) {
-               this.titlePanel.m1825("Correct Equivalent");
+               this.titlePanel.setStatus("Duplicate of\n" + SymbolizationNode.getAnswerSetName(k, this.problem.answerGroup));
+            } else if (equivalentCounts(this.problem.problemName)) {
+               this.titlePanel.setStatus("Correct Equivalent");
             } else {
-               this.titlePanel.m1825("Equivalent, but Incorrect");
+               this.titlePanel.setStatus("Equivalent, but Incorrect");
             }
          } else {
-            C_d_C c_d_c = this.problem.m1715();
-            C_r_C c_r_c = new C_r_C();
-            this.problem.m1722(c_d_c, c_r_c);
-            this.titlePanel.m1825(c_r_c.f1353 ? "Incorrect: Quantifier Unrestricted" : "Incorrect");
+            SymbolizationNode symbolizationnode = this.problem.findClosestAnswer();
+            ErrorMarker errormarker = new ErrorMarker();
+            this.problem.matchTree(symbolizationnode, errormarker);
+            this.titlePanel.setStatus(errormarker.quantifierUnrestricted ? "Incorrect: Quantifier Unrestricted" : "Incorrect");
          }
       }
    }
 
    static boolean getAnswers() {
       answers = new Hashtable();
-      if (!LogicProgram.f584) {
+      if (!LogicProgram.noCoreProblems) {
          ScrambledReader scrambledreader = LogicProgram.openDataFile("symAnswers", false);
          if (scrambledreader == null || !readAnswers(scrambledreader, answers)) {
             return false;
          }
       }
 
-      ScrambledReader scrambledreader1 = LogicProgram.m1064("symAnswers");
+      ScrambledReader scrambledreader1 = LogicProgram.openLocalFile("symAnswers");
       return scrambledreader1 == null || readAnswers(scrambledreader1, answers);
    }
 
@@ -823,7 +825,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
             String s;
             while ((s = scrambledreader.readLine()) != null) {
                if (!TaggedRecord.isBlankOrComment(s)) {
-                  String s1 = TaggedRecord.m1493(s);
+                  String s1 = TaggedRecord.nameOf(s);
                   if (s1 != null && !(s1 = s1.trim()).equals("")) {
                      hashtable.put(s1, s);
                   }
@@ -843,19 +845,19 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       TaggedRecord taggedrecord;
       boolean flag;
       if (s1 == null) {
-         String s2 = problems.m1780(s);
+         String s2 = problems.getRecord(s);
          if (s2 == null) {
             return null;
          }
 
          taggedrecord = new TaggedRecord(s2);
          flag = true;
-         String s3 = taggedrecord.m1497();
+         String s3 = taggedrecord.getOriginalName();
          if (s3 != null) {
             return getProblemAnswers(s3);
          }
       } else {
-         String s4 = exercises.m1780(s1);
+         String s4 = exercises.getRecord(s1);
          if (s4 == null) {
             return null;
          }
@@ -864,7 +866,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
          flag = false;
       }
 
-      Vector vector = C_d_C.m1707(taggedrecord, flag);
+      Vector vector = SymbolizationNode.lookupAnswers(taggedrecord, flag);
       if (vector == null) {
          return null;
       } else {
@@ -878,18 +880,18 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       String s1 = getExerciseTitle(s);
       TaggedRecord taggedrecord;
       if (s1 == null) {
-         String s2 = problems.m1780(s);
+         String s2 = problems.getRecord(s);
          if (s2 == null) {
             return null;
          }
 
          taggedrecord = new TaggedRecord(s2);
-         String s3 = taggedrecord.m1497();
+         String s3 = taggedrecord.getOriginalName();
          if (s3 != null) {
             return getProblemScheme(s3);
          }
       } else {
-         String s4 = exercises.m1780(s1);
+         String s4 = exercises.getRecord(s1);
          if (s4 == null) {
             return null;
          }
@@ -908,7 +910,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
          while (taggedrecord.readNext()) {
             String s1 = taggedrecord.getName();
             if (s1 != null && s1.trim().equalsIgnoreCase("symbolization")) {
-               int[] aint = taggedrecord.m1481("+?");
+               int[] aint = taggedrecord.indexesOfAnyTag("+?");
                int i = aint.length;
 
                for (int j = 0; j < i; j++) {
@@ -931,121 +933,121 @@ class LPSymbolizer extends LogicModule implements C_v_D {
                               noDirect = new ProblemSelector();
                            }
 
-                           noDirect.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noDirect.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noErrMess")) {
                            if (noErrMess == null) {
                               noErrMess = new ProblemSelector();
                            }
 
-                           noErrMess.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noErrMess.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noHints")) {
                            if (noHints == null) {
                               noHints = new ProblemSelector();
                            }
 
-                           noHints.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noHints.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noCheck")) {
                            if (noCheck == null) {
                               noCheck = new ProblemSelector();
                            }
 
-                           noCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noCheck.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrint")) {
                            if (noPrint == null) {
                               noPrint = new ProblemSelector();
                            }
 
-                           noPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrintCheck")) {
                            if (noPrintCheck == null) {
                               noPrintCheck = new ProblemSelector();
                            }
 
-                           noPrintCheck.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrintCheck.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("noPrintErr")) {
                            if (noPrintErr == null) {
                               noPrintErr = new ProblemSelector();
                            }
 
-                           noPrintErr.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           noPrintErr.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("monoProbs")) {
                            if (monoProbs == null) {
                               monoProbs = new ProblemSelector();
                            }
 
-                           monoProbs.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           monoProbs.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("equCounts")) {
                            if (equCounts == null) {
                               equCounts = new ProblemSelector();
                            }
 
-                           equCounts.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           equCounts.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("chap1")) {
                            if (chap1 == null) {
                               chap1 = new ProblemSelector();
                            }
 
-                           chap1.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           chap1.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("chap2")) {
                            if (chap2 == null) {
                               chap2 = new ProblemSelector();
                            }
 
-                           chap2.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           chap2.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("chap3")) {
                            if (chap3 == null) {
                               chap3 = new ProblemSelector();
                            }
 
-                           chap3.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           chap3.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("chap4")) {
                            if (chap4 == null) {
                               chap4 = new ProblemSelector();
                            }
 
-                           chap4.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           chap4.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("chap5")) {
                            if (chap5 == null) {
                               chap5 = new ProblemSelector();
                            }
 
-                           chap5.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           chap5.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("addToDB")) {
                            if (addToDB == null) {
                               addToDB = new ProblemSelector();
                            }
 
-                           addToDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           addToDB.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("updateDB")) {
                            if (updateDB == null) {
                               updateDB = new ProblemSelector();
                            }
 
-                           updateDB.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           updateDB.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("logPrint")) {
                            if (logPrint == null) {
                               logPrint = new ProblemSelector();
                            }
 
-                           logPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           logPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("logSubmit")) {
                            if (logSubmit == null) {
                               logSubmit = new ProblemSelector();
                            }
 
-                           logSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           logSubmit.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("needPrint")) {
                            if (needPrint == null) {
                               needPrint = new ProblemSelector();
                            }
 
-                           needPrint.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           needPrint.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("needSubmit")) {
                            if (needSubmit == null) {
                               needSubmit = new ProblemSelector();
                            }
 
-                           needSubmit.m395(new ProblemSelector(s2.substring(k + 1)).m403(s));
+                           needSubmit.union(new ProblemSelector(s2.substring(k + 1)).addPrefix(s));
                         } else if (s3.equalsIgnoreCase("prefix")) {
                            s = s2.substring(k + 1);
                         } else if (s3.equalsIgnoreCase("termprefix")) {
@@ -1067,20 +1069,20 @@ class LPSymbolizer extends LogicModule implements C_v_D {
    }
 
    static void logNeeds() {
-      if (needPrint != null && !needPrint.m402()) {
+      if (needPrint != null && !needPrint.isEmpty()) {
          if (logPrint == null) {
             logPrint = new ProblemSelector();
          }
 
-         logPrint.m395(needPrint);
+         logPrint.union(needPrint);
       }
 
-      if (needSubmit != null && !needSubmit.m402()) {
+      if (needSubmit != null && !needSubmit.isEmpty()) {
          if (logSubmit == null) {
             logSubmit = new ProblemSelector();
          }
 
-         logSubmit.m395(needSubmit);
+         logSubmit.union(needSubmit);
       }
    }
 
@@ -1092,23 +1094,23 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       this.lastDirect = "";
       this.problemIndex = -1;
       this.loadExerciseInfo(taggedrecord);
-      this.problem.m1703(taggedrecord);
-      this.titlePanel.m1823(this.problem.f1055 == null ? "" : this.problem.f1055);
-      this.errorCount = taggedrecord.m1498();
+      this.problem.loadRecord(taggedrecord);
+      this.titlePanel.setStatement(this.problem.statement == null ? "" : this.problem.statement);
+      this.errorCount = taggedrecord.getErrorCount();
       this.hintCount = getHintCount(taggedrecord);
-      this.workTime = taggedrecord.m1499();
+      this.workTime = taggedrecord.getTimestamp();
       this.loadTime = 0L;
-      if (this.problem.m1714() == 0) {
-         this.titlePanel.m1825("Answer Not Available");
+      if (this.problem.countAnswers() == 0) {
+         this.titlePanel.setStatus("Answer Not Available");
       } else {
-         this.titlePanel.m1825(null);
+         this.titlePanel.setStatus(null);
       }
 
-      this.setProblemTitle(this.problem.f1051);
-      this.scheme.m2182(this.problem.f1053);
-      this.titlePanel.m1827(taggedrecord.valueAt(taggedrecord.indexOfTag('!')));
+      this.setProblemTitle(this.problem.problemName);
+      this.scheme.setScheme(this.problem.scheme);
+      this.titlePanel.setNote(taggedrecord.valueAt(taggedrecord.indexOfTag('!')));
       this.updateWorkTime();
-      this.problem.f1045.f1438.requestFocus();
+      this.problem.textPanel.textPane.requestFocus();
    }
 
    long updateWorkTime() {
@@ -1122,20 +1124,20 @@ class LPSymbolizer extends LogicModule implements C_v_D {
    }
 
    void loadUserProblem(String s) {
-      this.loadProblem(TaggedRecord.m1509(TaggedRecord.m1508(s, '-')));
+      this.loadProblem(TaggedRecord.toLine(TaggedRecord.formatField(s, '-')));
    }
 
    void removeWork() {
-      this.problem.m1690(0, false);
-      this.problem.m1680(this.problem.f1055);
+      this.problem.setConnective(0, false);
+      this.problem.setEnglishText(this.problem.statement);
       this.updateSymbolization();
-      this.problem.f1045.f1438.requestFocus();
+      this.problem.textPanel.textPane.requestFocus();
    }
 
    static String removeWork(TaggedRecord taggedrecord) {
-      String s = TaggedRecord.m1508(taggedrecord.getName(), '$');
-      s = s + TaggedRecord.m1508(getProblemStatement(taggedrecord), '-');
-      return s + taggedrecord.m1484("=@%u!");
+      String s = TaggedRecord.formatField(taggedrecord.getName(), '$');
+      s = s + TaggedRecord.formatField(getProblemStatement(taggedrecord), '-');
+      return s + taggedrecord.formatFields("=@%u!");
    }
 
    static int[] getExerciseIndices() {
@@ -1144,29 +1146,29 @@ class LPSymbolizer extends LogicModule implements C_v_D {
          int i = problems.size();
 
          for (int j = 0; j < i; j++) {
-            if (isExercise(TaggedRecord.m1493(problems.m1778(j)))) {
-               expressionpath.m1749(j);
+            if (isExercise(TaggedRecord.nameOf(problems.getRecordAt(j)))) {
+               expressionpath.push(j);
             }
          }
 
-         return expressionpath.m1752();
+         return expressionpath.toArray();
       } else {
          return null;
       }
    }
 
    void submitExam() {
-      if (UserSetup.m2105("Symbolization")) {
+      if (UserSetup.confirmSubmitAll("Symbolization")) {
          int[] aint = getExerciseIndices();
          BusyIndicator busyindicator = new BusyIndicator(this);
          Submission submission = ServerConnection.prepareSubmission(busyindicator);
          if (submission != null) {
-            if (C_WB.m1450(this, null)) {
+            if (SymbolizationDialogs.confirmSaveChanges(this, null)) {
                submit(submission, aint, busyindicator);
-               ServerConnection.m838(submission, busyindicator);
-               AccountManager.m1873(submission);
+               ServerConnection.finishSubmission(submission, busyindicator);
+               AccountManager.showSubmissionResults(submission);
             } else {
-               ServerConnection.m838(submission, busyindicator);
+               ServerConnection.finishSubmission(submission, busyindicator);
             }
          }
       }
@@ -1176,13 +1178,13 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       BusyIndicator busyindicator = new BusyIndicator(this);
       Submission submission = ServerConnection.prepareSubmission(busyindicator);
       if (submission != null) {
-         int[] aint = C_WB.m1436(this);
+         int[] aint = SymbolizationDialogs.chooseProblemsToSubmit(this);
          if (aint == null) {
-            ServerConnection.m838(submission, busyindicator);
+            ServerConnection.finishSubmission(submission, busyindicator);
          } else {
             submit(submission, aint, busyindicator);
-            ServerConnection.m838(submission, busyindicator);
-            AccountManager.m1873(submission);
+            ServerConnection.finishSubmission(submission, busyindicator);
+            AccountManager.showSubmissionResults(submission);
          }
       }
    }
@@ -1194,82 +1196,85 @@ class LPSymbolizer extends LogicModule implements C_v_D {
          int i = aint.length;
 
          for (int j = 0; j < i; j++) {
-            submission.m1();
-            String s = problems.m1778(aint[j]);
+            submission.reset();
+            String s = problems.getRecordAt(aint[j]);
             TaggedRecord taggedrecord = new TaggedRecord(s);
             String s1 = getProblemStatement(taggedrecord);
             submission.problemMd5 = Scrambler.md5Base64(s1 == null ? "" : s1.trim());
             int k = getProblemState(s, problems, null).state;
-            submission.evaluation = C__C.f1128[k];
+            submission.evaluation = SymbolizationEntry.STATE_CODES[k];
             submission.work = s;
             submission.problemName = taggedrecord.getName();
             submission.module = moduleAbbrs[moduleIndex];
             Integer integer = LogicProgram.parseInteger(taggedrecord.valueAt(taggedrecord.indexOfTag('h')));
-            submission.helpCount = taggedrecord.m1498() + (integer == null ? 0 : integer);
-            submission.duration = taggedrecord.m1499();
-            boolean flag = LogicProgram.m1060(logSubmit, getExerciseTitle(submission.problemName));
+            submission.helpCount = taggedrecord.getErrorCount() + (integer == null ? 0 : integer);
+            submission.duration = taggedrecord.getTimestamp();
+            boolean flag = LogicProgram.selectorMatches(logSubmit, getExerciseTitle(submission.problemName));
             if (ServerConnection.submit(submission, busyindicator)) {
                vector.addElement(trimTitle(submission.problemName));
                if (flag) {
-                  LogicProgram.m1083("symdata.txt", "S", s, submission.m3());
+                  LogicProgram.appendSubmitLog("symdata.txt", "S", s, submission.getLogRecord());
                }
             } else {
                vector1.addElement(trimTitle(submission.problemName));
                if (flag) {
-                  LogicProgram.m1082("symdata.txt", "F", s);
+                  LogicProgram.appendSubmitLog("symdata.txt", "F", s);
                }
             }
          }
 
-         submission.m1();
-         vector.copyInto(submission.f15 = new String[vector.size()]);
-         vector1.copyInto(submission.f16 = new String[vector1.size()]);
+         submission.reset();
+         vector.copyInto(submission.succeededNames = new String[vector.size()]);
+         vector1.copyInto(submission.failedNames = new String[vector1.size()]);
       }
    }
 
    void uploadProblems() {
       BusyIndicator busyindicator = new BusyIndicator(this);
-      C_LD c_ld = ServerConnection.m840(busyindicator);
-      if (c_ld != null) {
-         c_ld.f520 = C_h_E.getText("symnot009");
-         int[] aint = C_WB.m1437(this);
+      ProblemUpload problemupload = ServerConnection.prepareUpload(busyindicator);
+      if (problemupload != null) {
+         problemupload.resultText = SymbolizationMessages.getText("symnot009");
+         int[] aint = SymbolizationDialogs.chooseProblemsToUpload(this);
          if (aint == null) {
-            ServerConnection.m843(c_ld, busyindicator);
+            ServerConnection.finishUpload(problemupload, busyindicator);
          } else {
-            upload(c_ld, aint, busyindicator);
-            ServerConnection.m843(c_ld, busyindicator);
-            AccountManager.m1875(c_ld);
+            upload(problemupload, aint, busyindicator);
+            ServerConnection.finishUpload(problemupload, busyindicator);
+            AccountManager.showUploadResults(problemupload);
          }
       }
    }
 
-   static void upload(C_LD c_ld, int[] aint, BusyIndicator busyindicator) {
+   static void upload(ProblemUpload problemupload, int[] aint, BusyIndicator busyindicator) {
       synchronized (problems) {
          Vector vector = new Vector();
          Vector vector1 = new Vector();
          int i = aint.length;
 
          for (int j = 0; j < i; j++) {
-            c_ld.m944();
-            String s = problems.m1778(aint[j]);
+            problemupload.reset();
+            String s = problems.getRecordAt(aint[j]);
             TaggedRecord taggedrecord = new TaggedRecord(s);
             String s1 = getProblemStatement(taggedrecord);
-            c_ld.f510 = taggedrecord.getName();
-            c_ld.f511 = s1;
-            c_ld.f512 = s1;
-            c_ld.f514 = getProblemScheme(c_ld.f510);
-            c_ld.f513 = moduleAbbrs[moduleIndex];
-            c_ld.f515 = getProblemAnswers(c_ld.f510);
-            stripUploadAnswers(c_ld.f515);
-            if (c_ld.f515 != null && c_ld.f515.length > 0 && !isExercise(c_ld.f510) && ServerConnection.m841(c_ld, busyindicator)) {
-               vector.addElement(trimTitle(c_ld.f510));
+            problemupload.problemName = taggedrecord.getName();
+            problemupload.text = s1;
+            problemupload.webText = s1;
+            problemupload.aux = getProblemScheme(problemupload.problemName);
+            problemupload.type = moduleAbbrs[moduleIndex];
+            problemupload.answers = getProblemAnswers(problemupload.problemName);
+            stripUploadAnswers(problemupload.answers);
+            if (problemupload.answers != null
+               && problemupload.answers.length > 0
+               && !isExercise(problemupload.problemName)
+               && ServerConnection.uploadProblem(problemupload, busyindicator)) {
+               vector.addElement(trimTitle(problemupload.problemName));
             } else {
-               vector1.addElement(trimTitle(c_ld.f510));
+               vector1.addElement(trimTitle(problemupload.problemName));
             }
          }
 
-         vector.copyInto(c_ld.f518 = new String[vector.size()]);
-         vector1.copyInto(c_ld.f519 = new String[vector1.size()]);
+         vector.copyInto(problemupload.succeededNames = new String[vector.size()]);
+         vector1.copyInto(problemupload.failedNames = new String[vector1.size()]);
       }
    }
 
@@ -1278,7 +1283,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
 
       for (int j = 0; j < i; j++) {
          TaggedRecord taggedrecord = new TaggedRecord(astring[j]);
-         astring[j] = taggedrecord.m1484("+");
+         astring[j] = taggedrecord.formatFields("+");
       }
    }
 
@@ -1287,7 +1292,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
    }
 
    String saveProblem() {
-      String s = this.problem.m1699(true);
+      String s = this.problem.toRecord(true);
       if (this.errorCount != 0) {
          s = s + this.errorCount + "`e";
       }
@@ -1300,20 +1305,20 @@ class LPSymbolizer extends LogicModule implements C_v_D {
          s = s + this.workTime + "`t";
       }
 
-      return TaggedRecord.m1509(s);
+      return TaggedRecord.toLine(s);
    }
 
    static boolean saveProblems(int i) {
       if (i != -1) {
-         C__C c__c = (C__C)problems.m1779(i);
-         getProblemState(c__c.name, problems, c__c);
+         SymbolizationEntry symbolizationentry = (SymbolizationEntry)problems.getEntryAt(i);
+         getProblemState(symbolizationentry.name, problems, symbolizationentry);
       }
 
       return saveProblems();
    }
 
    static boolean saveProblems() {
-      if (!LogicProgram.m976()) {
+      if (!LogicProgram.checkSameUser()) {
          return false;
       } else {
          try {
@@ -1321,7 +1326,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
             writeUserKey();
             return true;
          } catch (IOException ioexception) {
-            LogicProgram.m971("not004", "symwork.txt");
+            LogicProgram.showFileError("not004", "symwork.txt");
             return false;
          }
       }
@@ -1331,18 +1336,18 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       if (s == null) {
          return true;
       } else {
-         String s1 = this.problem.f1051;
-         String s2 = this.problem.f1052;
+         String s1 = this.problem.problemName;
+         String s2 = this.problem.originalName;
          int i = this.problemIndex;
          if (s2 == null) {
-            this.problem.f1052 = s1;
+            this.problem.originalName = s1;
             s = this.saveProblem();
          }
 
          this.problemIndex = -1;
          if (!this.saveProblems(s, true)) {
             this.problemIndex = i;
-            this.problem.f1052 = s2;
+            this.problem.originalName = s2;
             this.setProblemTitle(s1);
             return false;
          } else {
@@ -1362,27 +1367,27 @@ class LPSymbolizer extends LogicModule implements C_v_D {
          String s1 = null;
          synchronized (problems) {
             if (this.problemIndex == -1) {
-               String s2 = C_WB.m1451(flag ? this.problem.f1051 : null);
+               String s2 = SymbolizationDialogs.askProblemName(flag ? this.problem.problemName : null);
                if (s2 == null) {
                   return false;
                }
 
                this.setProblemTitle(s2);
-               C__C c__c = new C__C(TaggedRecord.m1495(s, s2), problems, false);
-               this.problemIndex = problems.m1771(c__c, false);
+               SymbolizationEntry symbolizationentry = new SymbolizationEntry(TaggedRecord.withName(s, s2), problems, false);
+               this.problemIndex = problems.registerEntry(symbolizationentry, false);
                this.problemIndex = this.problemIndex == -1 ? problems.size() : this.problemIndex + 1;
-               problems.insertElementAt(c__c, this.problemIndex);
+               problems.insertElementAt(symbolizationentry, this.problemIndex);
             } else {
-               s1 = problems.m1778(this.problemIndex);
-               problems.m1776(s, this.problemIndex);
+               s1 = problems.getRecordAt(this.problemIndex);
+               problems.replaceProblem(s, this.problemIndex);
             }
 
             if (!saveProblems(this.problemIndex)) {
                if (s1 == null) {
-                  problems.m1101(this.problemIndex);
+                  problems.removeProblem(this.problemIndex);
                   this.problemIndex = -1;
                } else {
-                  problems.m1776(s1, this.problemIndex);
+                  problems.replaceProblem(s1, this.problemIndex);
                }
 
                return false;
@@ -1398,13 +1403,13 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         ProblemEntry problementry = problems.m1779(aint[j]);
+         ProblemEntry problementry = problems.getEntryAt(aint[j]);
          TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
          String s = taggedrecord.getName();
          String s1 = getProblemStatement(taggedrecord);
          String s2 = taggedrecord.valueAt(taggedrecord.indexOfTag('='));
          if (s2 == null) {
-            taggedrecord = new TaggedRecord(exercises.m1780(s));
+            taggedrecord = new TaggedRecord(exercises.getRecord(s));
             s2 = taggedrecord.valueAt(taggedrecord.indexOfTag('='));
          }
 
@@ -1413,12 +1418,12 @@ class LPSymbolizer extends LogicModule implements C_v_D {
          }
 
          JPanel jpanel = new JPanel();
-         jpanel.setLayout(new C_u_(null, 1, new int[]{dimension.width}));
-         C_NC c_nc;
-         jpanel.add(c_nc = new C_NC(LogicProgram.m1004("\\l" + s + ": " + s1 + "\n" + s2)));
-         c_nc.setLineWrap(true);
-         c_nc.setWrapStyleWord(true);
-         c_nc.setBackground(LogicProgram.f605[1]);
+         jpanel.setLayout(new FixedColumnLayout(null, 1, new int[]{dimension.width}));
+         LogicTextArea logictextarea;
+         jpanel.add(logictextarea = new LogicTextArea(LogicProgram.expandEscapes("\\l" + s + ": " + s1 + "\n" + s2)));
+         logictextarea.setLineWrap(true);
+         logictextarea.setWrapStyleWord(true);
+         logictextarea.setBackground(LogicProgram.printColors[1]);
          vector.add(jpanel);
       }
 
@@ -1431,39 +1436,39 @@ class LPSymbolizer extends LogicModule implements C_v_D {
 
       for (int j = 0; j < i; j++) {
          String s = "";
-         String s1 = exercises.m1778(aint[j]);
+         String s1 = exercises.getRecordAt(aint[j]);
          TaggedRecord taggedrecord = new TaggedRecord(s1);
          String s2 = taggedrecord.getName();
          s = s + trimTitle(s2) + "\n";
          String s3 = getProblemStatement(taggedrecord);
-         s = s + s3 + "\n";
+         String s6 = s + s3 + "\n";
          String s4 = taggedrecord.valueAt(taggedrecord.indexOfTag('='));
          if (s4 != null) {
-            s = s + s4 + "\n";
+            s6 = s6 + s4 + "\n";
          }
 
          String s5 = taggedrecord.valueAt(taggedrecord.indexOfTag('!'));
          if (s5 != null) {
-            s = s + s5 + "\n";
+            s6 = s6 + s5 + "\n";
          }
 
          LPSymbolizer lpsymbolizer = new LPSymbolizer(true);
          lpsymbolizer.loadProblem(s1);
-         Vector vector1 = lpsymbolizer.problem.f1056;
+         Vector vector1 = lpsymbolizer.problem.answers;
          int k = vector1 == null ? 0 : vector1.size();
 
          for (int l = 0; l < k; l++) {
             lpsymbolizer.loadProblem((String)vector1.elementAt(l));
-            s = s + lpsymbolizer.problem.toString() + "\n";
+            s6 = s6 + lpsymbolizer.problem.toString() + "\n";
          }
 
          JPanel jpanel = new JPanel();
-         jpanel.setLayout(new C_u_(null, 1, new int[]{dimension.width}));
-         C_NC c_nc;
-         jpanel.add(c_nc = new C_NC(s));
-         c_nc.setLineWrap(true);
-         c_nc.setWrapStyleWord(true);
-         c_nc.setBackground(LogicProgram.f605[1]);
+         jpanel.setLayout(new FixedColumnLayout(null, 1, new int[]{dimension.width}));
+         LogicTextArea logictextarea;
+         jpanel.add(logictextarea = new LogicTextArea(s6));
+         logictextarea.setLineWrap(true);
+         logictextarea.setWrapStyleWord(true);
+         logictextarea.setBackground(LogicProgram.printColors[1]);
          vector.add(jpanel);
       }
 
@@ -1475,13 +1480,13 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         ProblemEntry problementry = problems.m1779(aint[j]);
+         ProblemEntry problementry = problems.getEntryAt(aint[j]);
          int k = problementry.state;
          TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
          String s = taggedrecord.getName();
          if (!printIncorrect || k == 1) {
             String s1 = getProblemStatement(taggedrecord);
-            String s2 = exercises.m1780(s);
+            String s2 = exercises.getRecord(s);
             String s3 = null;
             if (s2 != null) {
                TaggedRecord taggedrecord1 = new TaggedRecord(s2);
@@ -1494,21 +1499,21 @@ class LPSymbolizer extends LogicModule implements C_v_D {
 
             LPSymbolizer lpsymbolizer = new LPSymbolizer(true);
             lpsymbolizer.loadProblem(taggedrecord);
-            String s4 = DelimitedTokenizer.m1139(lpsymbolizer.problem.toString(), "\\");
+            String s4 = DelimitedTokenizer.escape(lpsymbolizer.problem.toString(), "\\");
             JPanel jpanel = new JPanel();
-            jpanel.setLayout(new C_u_(null, 2, new int[]{20, dimension.width - 20}));
-            C_f_E c_f_e = new C_f_E(C__C.f1128[k]);
-            jpanel.add(c_f_e);
-            C_NC c_nc;
-            jpanel.add(c_nc = new C_NC(LogicProgram.m1004(trimTitle(s) + ": " + s1 + "\\n" + s3 + "\\n\\l" + s4)));
-            c_nc.setLineWrap(true);
-            c_nc.setWrapStyleWord(true);
-            c_nc.setBackground(LogicProgram.f605[1]);
+            jpanel.setLayout(new FixedColumnLayout(null, 2, new int[]{20, dimension.width - 20}));
+            WrappedTextPanel wrappedtextpanel = new WrappedTextPanel(SymbolizationEntry.STATE_CODES[k]);
+            jpanel.add(wrappedtextpanel);
+            LogicTextArea logictextarea;
+            jpanel.add(logictextarea = new LogicTextArea(LogicProgram.expandEscapes(trimTitle(s) + ": " + s1 + "\\n" + s3 + "\\n\\l" + s4)));
+            logictextarea.setLineWrap(true);
+            logictextarea.setWrapStyleWord(true);
+            logictextarea.setBackground(LogicProgram.printColors[1]);
             vector.add(jpanel);
          }
 
-         if (LogicProgram.m1060(logPrint, getExerciseTitle(s))) {
-            LogicProgram.m1082("symdata.txt", "R", problementry.name);
+         if (LogicProgram.selectorMatches(logPrint, getExerciseTitle(s))) {
+            LogicProgram.appendSubmitLog("symdata.txt", "R", problementry.name);
          }
       }
 
@@ -1520,7 +1525,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       Vector vector = new Vector(i);
 
       for (int j = 0; j < i; j++) {
-         ProblemEntry problementry = problems.m1779(aint[j]);
+         ProblemEntry problementry = problems.getEntryAt(aint[j]);
          int k = problementry.state;
          TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
          String s = taggedrecord.getName();
@@ -1529,7 +1534,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
             lpsymbolizer.loadProblem(taggedrecord);
             Vector vector1 = new Vector(2);
             String s1 = getProblemStatement(taggedrecord);
-            String s2 = exercises.m1780(s);
+            String s2 = exercises.getRecord(s);
             String s3 = null;
             if (s2 != null) {
                TaggedRecord taggedrecord1 = new TaggedRecord(s2);
@@ -1540,20 +1545,20 @@ class LPSymbolizer extends LogicModule implements C_v_D {
                s3 = "";
             }
 
-            String s4 = DelimitedTokenizer.m1139(lpsymbolizer.problem.toString(), "\\");
+            String s4 = DelimitedTokenizer.escape(lpsymbolizer.problem.toString(), "\\");
             JPanel jpanel = new JPanel();
-            jpanel.setLayout(new C_u_(null, 2, new int[]{20, dimension.width - 20}));
-            C_f_E c_f_e = new C_f_E(C__C.f1128[k]);
-            jpanel.add(c_f_e);
-            C_NC c_nc;
-            jpanel.add(c_nc = new C_NC(LogicProgram.m1004(trimTitle(s) + ": " + s1 + "\\n" + s3 + "\\n" + s4)));
-            c_nc.setLineWrap(true);
-            c_nc.setWrapStyleWord(true);
-            c_nc.setBackground(LogicProgram.f605[1]);
+            jpanel.setLayout(new FixedColumnLayout(null, 2, new int[]{20, dimension.width - 20}));
+            WrappedTextPanel wrappedtextpanel = new WrappedTextPanel(SymbolizationEntry.STATE_CODES[k]);
+            jpanel.add(wrappedtextpanel);
+            LogicTextArea logictextarea;
+            jpanel.add(logictextarea = new LogicTextArea(LogicProgram.expandEscapes(trimTitle(s) + ": " + s1 + "\\n" + s3 + "\\n" + s4)));
+            logictextarea.setLineWrap(true);
+            logictextarea.setWrapStyleWord(true);
+            logictextarea.setBackground(LogicProgram.printColors[1]);
             jpanel.doLayout();
             JPanel jpanel1 = new JPanel();
             jpanel1.setLayout(new BorderLayout());
-            jpanel1.setBackground(LogicProgram.f605[1]);
+            jpanel1.setBackground(LogicProgram.printColors[1]);
             jpanel1.add(lpsymbolizer.problem, "South");
             Dimension dimension1 = lpsymbolizer.problem.getPreferredSize();
             jpanel1.setPreferredSize(new Dimension(Math.max(dimension.width, dimension1.width), dimension1.height + 20));
@@ -1562,8 +1567,8 @@ class LPSymbolizer extends LogicModule implements C_v_D {
             vector.add(vector1);
          }
 
-         if (LogicProgram.m1060(logPrint, getExerciseTitle(s))) {
-            LogicProgram.m1082("symdata.txt", "P", problementry.name);
+         if (LogicProgram.selectorMatches(logPrint, getExerciseTitle(s))) {
+            LogicProgram.appendSubmitLog("symdata.txt", "P", problementry.name);
          }
       }
 
@@ -1571,7 +1576,7 @@ class LPSymbolizer extends LogicModule implements C_v_D {
    }
 
    static LPSymbolizer getSymParent(Component object) {
-      Object object1 = null;
+      Component object1 = null;
 
       while (object != null && !((object1 = object.getParent()) instanceof LPSymbolizer)) {
          object = object1;
@@ -1580,10 +1585,10 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       return (LPSymbolizer)object1;
    }
 
-   static class C__A extends LogicModule.C__A {
-      boolean f528 = false;
+   static class SymbolizerStartup extends LogicModule.ModuleStartupTask {
+      boolean exercisesReady = false;
 
-      C__A(BusyIndicator busyindicator, Rectangle rectangle, String s) {
+      SymbolizerStartup(BusyIndicator busyindicator, Rectangle rectangle, String s) {
          super(busyindicator, rectangle, s);
       }
 
@@ -1593,9 +1598,9 @@ class LPSymbolizer extends LogicModule implements C_v_D {
       }
 
       @Override
-      public void m959() {
-         if (!this.f528) {
-            this.f528 = true;
+      public void continueStartup() {
+         if (!this.exercisesReady) {
+            this.exercisesReady = true;
             LPSymbolizer.startupAfterExercises(this);
          } else {
             LPSymbolizer.continueStartup();

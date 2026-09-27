@@ -3,13 +3,13 @@ package edu.ucla.phil.logic.pkgB;
 import edu.ucla.phil.logic.FormulaLexerError;
 
 public class Syntax1TokenMgrError extends FormulaLexerError {
-   static final int f169 = 0;
-   static final int f170 = 1;
-   static final int f171 = 2;
-   static final int f172 = 3;
-   int f173;
+   static final int LEXICAL_ERROR = 0;
+   static final int STATIC_LEXER_ERROR = 1;
+   static final int INVALID_LEXICAL_STATE = 2;
+   static final int LOOP_DETECTED = 3;
+   int errorCode;
 
-   protected static final String m257(String s) {
+   protected static final String addEscapes(String s) {
       StringBuffer stringbuffer = new StringBuffer();
 
       for (int i = 0; i < s.length(); i++) {
@@ -54,15 +54,15 @@ public class Syntax1TokenMgrError extends FormulaLexerError {
       return stringbuffer.toString();
    }
 
-   private static final String m258(boolean flag, int k, int i, int j, String s, char c0) {
+   private static final String LexicalError(boolean flag, int k, int i, int j, String s, char c0) {
       return "Lexical error at line "
          + i
          + ", column "
          + j
          + ".  Encountered: "
-         + (flag ? "<EOF> " : "\"" + m257(String.valueOf(c0)) + "\"" + " (" + c0 + "), ")
+         + (flag ? "<EOF> " : "\"" + addEscapes(String.valueOf(c0)) + "\"" + " (" + c0 + "), ")
          + "after : \""
-         + m257(s)
+         + addEscapes(s)
          + "\"";
    }
 
@@ -76,10 +76,10 @@ public class Syntax1TokenMgrError extends FormulaLexerError {
 
    public Syntax1TokenMgrError(String s, int i) {
       super(s);
-      this.f173 = i;
+      this.errorCode = i;
    }
 
    public Syntax1TokenMgrError(boolean flag, int i, int j, int k, String s, char c0, int l) {
-      this(m258(flag, i, j, k, s, c0), l);
+      this(LexicalError(flag, i, j, k, s, c0), l);
    }
 }

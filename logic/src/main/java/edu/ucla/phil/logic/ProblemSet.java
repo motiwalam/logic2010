@@ -6,39 +6,39 @@ import java.util.Vector;
 import javax.swing.SwingUtilities;
 
 abstract class ProblemSet extends Vector implements ModuleConstants {
-   Hashtable f1074 = new Hashtable();
-   Hashtable f1075 = null;
-   String f1076 = null;
-   static String[] f1077 = LogicProgram.symbols;
-   boolean f1078 = false;
-   boolean f1079 = false;
-   boolean f1080 = false;
-   boolean f1081 = false;
-   static boolean f1082 = false;
+   Hashtable entriesByName = new Hashtable();
+   Hashtable headingsByName = null;
+   String storedDigest = null;
+   static String[] symbolTable = LogicProgram.symbols;
+   boolean changed = false;
+   boolean readFromPlainFile = false;
+   boolean skipArgumentCheck = false;
+   boolean plainColors = false;
+   static boolean hideExtraProblems = false;
 
-   abstract String m1106(TaggedRecord taggedrecord);
+   abstract String getProblemStatement(TaggedRecord taggedrecord);
 
-   abstract boolean m1103(TaggedRecord taggedrecord);
+   abstract boolean hasWork(TaggedRecord taggedrecord);
 
-   abstract String m1104(TaggedRecord taggedrecord);
+   abstract String getWork(TaggedRecord taggedrecord);
 
-   abstract String m1105(TaggedRecord taggedrecord);
+   abstract String removeWork(TaggedRecord taggedrecord);
 
-   abstract ProblemEntry m1102(String s, boolean flag);
+   abstract ProblemEntry createEntry(String s, boolean flag);
 
-   abstract int m1107();
+   abstract int getModuleIndex();
 
-   synchronized int m1766(String s) {
+   synchronized int findInsertIndex(String s) {
       if (s == null) {
          return -1;
       } else {
-         s = LogicProgram.m1000(s).toUpperCase();
+         String s2 = LogicProgram.stripNamePrefix(s).toUpperCase();
          int i = this.size();
 
          for (int j = 0; j < i; j++) {
-            String s1 = TaggedRecord.m1493(((ProblemEntry)this.elementAt(j)).name);
-            s1 = LogicProgram.m1000(s1).toUpperCase();
-            int k = s.compareTo(s1);
+            String s1 = TaggedRecord.nameOf(((ProblemEntry)this.elementAt(j)).name);
+            s1 = LogicProgram.stripNamePrefix(s1).toUpperCase();
+            int k = s2.compareTo(s1);
             if (k == 0) {
                return -1;
             }
@@ -52,15 +52,15 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
       }
    }
 
-   int m1767(String s) {
+   int indexOfName(String s) {
       if (s == null) {
          return -1;
       } else {
-         s = LogicProgram.m1000(s);
+         s = LogicProgram.stripNamePrefix(s);
          int i = this.size();
 
          for (int j = 0; j < i; j++) {
-            String s1 = LogicProgram.m1000(TaggedRecord.m1493(((ProblemEntry)this.elementAt(j)).name));
+            String s1 = LogicProgram.stripNamePrefix(TaggedRecord.nameOf(((ProblemEntry)this.elementAt(j)).name));
             if (s.equalsIgnoreCase(s1)) {
                return j;
             }
@@ -70,36 +70,36 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
       }
    }
 
-   String m1768(String s) {
-      return this.m1106(new TaggedRecord(s));
+   String getStatement(String s) {
+      return this.getProblemStatement(new TaggedRecord(s));
    }
 
-   boolean m1769(String s) {
-      return this.m1103(new TaggedRecord(s));
+   boolean hasWork(String s) {
+      return this.hasWork(new TaggedRecord(s));
    }
 
-   static boolean m1770(TaggedRecord taggedrecord) {
-      Hashtable hashtable = taggedrecord.m1506('%');
+   static boolean isExample(TaggedRecord taggedrecord) {
+      Hashtable hashtable = taggedrecord.getKeyValues('%');
       return hashtable != null && hashtable.containsKey("eg");
    }
 
-   synchronized int m1771(ProblemEntry problementry, boolean flag) {
-      String s = TaggedRecord.m1493(problementry.name);
+   synchronized int registerEntry(ProblemEntry problementry, boolean flag) {
+      String s = TaggedRecord.nameOf(problementry.name);
       if (s == null) {
          return -1;
       } else {
-         ProblemEntry problementry1 = this.f1074.put(s.trim().toUpperCase(), problementry);
+         ProblemEntry problementry1 = (ProblemEntry)this.entriesByName.put(s.trim().toUpperCase(), problementry);
          int i = problementry1 == null ? -1 : this.indexOf(problementry1);
          if (i != -1) {
             int j = 1;
 
-            while (this.m1772(s + "-" + j) != null) {
+            while (this.getEntry(s + "-" + j) != null) {
                j++;
             }
 
             s = s + "-" + j;
-            problementry1 = this.m1102(TaggedRecord.m1495(problementry1.name, s), flag);
-            this.f1074.put(s.trim().toUpperCase(), problementry1);
+            problementry1 = this.createEntry(TaggedRecord.withName(problementry1.name, s), flag);
+            this.entriesByName.put(s.trim().toUpperCase(), problementry1);
             this.setElementAt(problementry1, i);
          }
 
@@ -107,50 +107,50 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
       }
    }
 
-   synchronized ProblemEntry m1772(String s) {
-      return s == null ? null : (ProblemEntry)this.f1074.get(s.trim().toUpperCase());
+   synchronized ProblemEntry getEntry(String s) {
+      return s == null ? null : (ProblemEntry)this.entriesByName.get(s.trim().toUpperCase());
    }
 
-   synchronized boolean m1773() {
-      ProblemSet problemset1 = this.m1784();
+   synchronized boolean mergeExercises() {
+      ProblemSet problemset1 = this.getExercises();
       int i = problemset1 == null ? 0 : problemset1.size();
       int j = 0;
-      this.f1078 = false;
+      this.changed = false;
 
       for (int k = 0; k < i; k++) {
-         String s = problemset1.m1778(k);
-         int l = this.m1774(s, j);
+         String s = problemset1.getRecordAt(k);
+         int l = this.mergeExercise(s, j);
          if (l != -1) {
             j = l + 1;
          }
       }
 
-      return this.f1078;
+      return this.changed;
    }
 
-   synchronized int m1774(String s, int i) {
+   synchronized int mergeExercise(String s, int i) {
       TaggedRecord taggedrecord1 = new TaggedRecord(s);
       String s1 = taggedrecord1.getName();
-      String s2 = this.m1106(taggedrecord1);
+      String s2 = this.getProblemStatement(taggedrecord1);
       if (s1 != null && s2 != null) {
-         ProblemEntry problementry = this.m1772(s1);
+         ProblemEntry problementry = this.getEntry(s1);
          int j = problementry == null ? -1 : this.indexOf(problementry);
          if (j == -1) {
             j = i - 1;
          } else {
             TaggedRecord taggedrecord;
-            if (s2.equals(this.m1106(taggedrecord = new TaggedRecord(problementry.name)))) {
+            if (s2.equals(this.getProblemStatement(taggedrecord = new TaggedRecord(problementry.name)))) {
                return j;
             }
 
-            if (!this.m1103(taggedrecord) || m1770(taggedrecord)) {
-               this.m1101(j--);
+            if (!this.hasWork(taggedrecord) || isExample(taggedrecord)) {
+               this.removeProblem(j--);
             }
          }
 
-         this.f1078 = true;
-         ProblemEntry problementry1 = this.m1102(s, true);
-         this.m1771(problementry1, true);
+         this.changed = true;
+         ProblemEntry problementry1 = this.createEntry(s, true);
+         this.registerEntry(problementry1, true);
          this.insertElementAt(problementry1, j + 1);
          return j + 1;
       } else {
@@ -158,29 +158,29 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
       }
    }
 
-   synchronized int m1098(String s, Vector vector, boolean flag) {
-      return this.m1775(new TaggedRecord(s), vector, flag);
+   synchronized int addProblem(String s, Vector vector, boolean flag) {
+      return this.addProblem(new TaggedRecord(s), vector, flag);
    }
 
-   int m1775(TaggedRecord taggedrecord, Vector vector, boolean flag) {
+   int addProblem(TaggedRecord taggedrecord, Vector vector, boolean flag) {
       String s = taggedrecord.getName();
-      String s1 = taggedrecord.m1487();
+      String s1 = taggedrecord.getRawLine();
       if (s == null) {
          System.out.println("problem without title: " + s1);
          return -1;
       } else {
-         int i = flag ? this.m1766(s) : this.size();
+         int i = flag ? this.findInsertIndex(s) : this.size();
          if (i == -1) {
             System.out.println("local problem with duplicate name: " + s);
             return -1;
          } else {
-            if (this.f1075 != null && vector != null) {
-               this.f1075.put(s, vector);
+            if (this.headingsByName != null && vector != null) {
+               this.headingsByName.put(s, vector);
             }
 
-            ProblemEntry problementry = this.m1102(s1, true);
-            problementry.f1121 = taggedrecord.m1505();
-            this.m1771(problementry, true);
+            ProblemEntry problementry = this.createEntry(s1, true);
+            problementry.hidden = taggedrecord.isHidden();
+            this.registerEntry(problementry, true);
             if (flag) {
                this.insertElementAt(problementry, i);
             } else {
@@ -192,32 +192,32 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
       }
    }
 
-   abstract void m1099(LogicModule.C__A c__a);
+   abstract void restateProblems(LogicModule.ModuleStartupTask modulestartuptask);
 
-   synchronized int m1776(String s, int i) {
-      if (TaggedRecord.m1493(s) == null) {
+   synchronized int replaceProblem(String s, int i) {
+      if (TaggedRecord.nameOf(s) == null) {
          return -1;
       } else {
          ProblemEntry problementry = (ProblemEntry)this.elementAt(i);
          if (problementry != null) {
-            this.f1074.remove(TaggedRecord.m1493(problementry.name).trim().toUpperCase());
+            this.entriesByName.remove(TaggedRecord.nameOf(problementry.name).trim().toUpperCase());
          }
 
-         problementry = this.m1102(s, false);
-         this.m1771(problementry, false);
+         problementry = this.createEntry(s, false);
+         this.registerEntry(problementry, false);
          this.setElementAt(problementry, i);
          return i;
       }
    }
 
-   synchronized void m1101(int i) {
-      String s = TaggedRecord.m1493(this.m1778(i));
+   synchronized void removeProblem(int i) {
+      String s = TaggedRecord.nameOf(this.getRecordAt(i));
       if (s != null) {
-         this.f1074.remove(s.trim().toUpperCase());
+         this.entriesByName.remove(s.trim().toUpperCase());
       }
 
       this.removeElementAt(i);
-      Vector vector = this.m1785();
+      Vector vector = this.getInstances();
       int j = vector.size();
 
       for (int k = 0; k < j; k++) {
@@ -230,34 +230,34 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
       }
    }
 
-   synchronized String m1777(UserInfo userinfo) {
-      return userinfo.m1148(new C_a_A(this), (String)userinfo.get(this.m1786()));
+   synchronized String computeDigest(UserInfo userinfo) {
+      return userinfo.computeDigest(new ProblemRecordEnumeration(this), (String)userinfo.get(this.getDigestVersKey()));
    }
 
-   synchronized String m1778(int i) {
-      ProblemEntry problementry = this.m1779(i);
+   synchronized String getRecordAt(int i) {
+      ProblemEntry problementry = this.getEntryAt(i);
       return problementry == null ? null : problementry.name;
    }
 
-   synchronized ProblemEntry m1779(int i) {
+   synchronized ProblemEntry getEntryAt(int i) {
       return i >= 0 && i < this.size() ? (ProblemEntry)this.elementAt(i) : null;
    }
 
-   synchronized String m1780(String s) {
+   synchronized String getRecord(String s) {
       if (s == null) {
          return null;
       } else {
-         ProblemEntry problementry = this.m1772(s);
+         ProblemEntry problementry = this.getEntry(s);
          return problementry == null ? null : problementry.name;
       }
    }
 
-   ProblemListView m1781(
+   ProblemListView createListView(
       LogicModule logicmodule, ProblemSet problemset1, boolean flag, boolean flag1, ProblemSelector problemselector, ProblemSelector problemselector1
    ) {
       BusyIndicator busyindicator = new BusyIndicator(logicmodule, true);
       ProblemListView problemlistview = new ProblemListView(flag);
-      Hashtable hashtable = problemset1 == null ? null : problemset1.f1075;
+      Hashtable hashtable = problemset1 == null ? null : problemset1.headingsByName;
       int i = logicmodule == null ? -1 : logicmodule.problemIndex;
       Color[] acolor = new Color[]{dialogBlack, dialogRed, dialogGreen, dialogRed};
       Color[] acolor1 = new Color[]{dialogBlack, dialogOrange, dialogOrange, dialogOrange};
@@ -265,8 +265,8 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
       int[] aint = new int[j];
 
       for (int k = 0; k < j; k++) {
-         ProblemEntry problementry = this.m1779(k);
-         if ((!problementry.f1121 || flag1) && (!problementry.f1122 || !f1082)) {
+         ProblemEntry problementry = this.getEntryAt(k);
+         if ((!problementry.hidden || flag1) && (!problementry.extraProblem || !hideExtraProblems)) {
             TaggedRecord taggedrecord = new TaggedRecord(problementry.name);
             String s = taggedrecord.getName();
             Vector vector;
@@ -279,49 +279,49 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
                      s1 = " ";
                   }
 
-                  String s2 = LogicProgram.m1004(s1);
-                  C_ZE c_ze = new C_ZE(s2, 2);
-                  c_ze.setForeground(dialogBlue);
-                  c_ze.setEnabled(false);
-                  c_ze.setOpaque(true);
-                  problemlistview.m1526(c_ze);
+                  String s2 = LogicProgram.expandEscapes(s1);
+                  LogicLabel logiclabel = new LogicLabel(s2, 2);
+                  logiclabel.setForeground(dialogBlue);
+                  logiclabel.setEnabled(false);
+                  logiclabel.setOpaque(true);
+                  problemlistview.addItem(logiclabel);
                }
             }
 
-            String s3 = m1783(problemset1, s);
-            if (!LogicProgram.m1060(problemselector1, s3)) {
-               String s4 = this.m1106(taggedrecord);
+            String s3 = lookupName(problemset1, s);
+            if (!LogicProgram.selectorMatches(problemselector1, s3)) {
+               String s4 = this.getProblemStatement(taggedrecord);
                if (s != null && s3 != null) {
-                  s = UserSetup.m2118(s);
+                  s = UserSetup.stripFirstWord(s);
                }
 
                s = (s == null ? "" : s + ":  ") + (s4 == null ? "" : s4.trim());
-               C_QC c_qc = new C_QC(LogicProgram.m995(s, maggie, f1077), 2);
-               c_qc.m1187(LogicProgram.m995(s, maggie, f1077));
-               c_qc.setOpaque(true);
-               if (!this.f1081) {
-                  boolean flag2 = LogicProgram.m1060(problemselector, s3);
-                  c_qc.setForeground(flag2 ? acolor1[problementry.state] : acolor[problementry.state]);
+               AnswerListLabel answerlistlabel = new AnswerListLabel(LogicProgram.translateSymbols(s, maggie, symbolTable), 2);
+               answerlistlabel.setHoverText(LogicProgram.translateSymbols(s, maggie, symbolTable));
+               answerlistlabel.setOpaque(true);
+               if (!this.plainColors) {
+                  boolean flag2 = LogicProgram.selectorMatches(problemselector, s3);
+                  answerlistlabel.setForeground(flag2 ? acolor1[problementry.state] : acolor[problementry.state]);
                }
 
-               aint[k] = problemlistview.m1527();
-               problemlistview.m1526(c_qc);
+               aint[k] = problemlistview.getItemCount();
+               problemlistview.addItem(answerlistlabel);
             }
          }
       }
 
-      j = problemlistview.m1527();
-      problemlistview.f899 = new int[j];
+      j = problemlistview.getItemCount();
+      problemlistview.rowToProblem = new int[j];
       if (j > 0) {
          for (int j1 = 0; j1 < j; j1++) {
-            problemlistview.f899[j1] = -1;
+            problemlistview.rowToProblem[j1] = -1;
          }
 
          j = aint.length;
          int k1 = 0;
 
          while (k1 < j) {
-            problemlistview.f899[aint[k1]] = k1++;
+            problemlistview.rowToProblem[aint[k1]] = k1++;
          }
 
          if (i != -1) {
@@ -331,92 +331,98 @@ abstract class ProblemSet extends Vector implements ModuleConstants {
          }
       }
 
-      busyindicator.m2162(false);
+      busyindicator.setBusy(false);
       return problemlistview;
    }
 
-   static String m1782(String s) {
-      return f1082 ? "h " + s : s;
+   static String markTitle(String s) {
+      return hideExtraProblems ? "h " + s : s;
    }
 
-   static String m1783(ProblemSet problemset, String s) {
+   static String lookupName(ProblemSet problemset, String s) {
       String s1;
-      return problemset != null && (s1 = problemset.m1780(s)) != null ? TaggedRecord.m1493(s1) : null;
+      return problemset != null && (s1 = problemset.getRecord(s)) != null ? TaggedRecord.nameOf(s1) : null;
    }
 
-   ProblemSet m1784() {
-      return (ProblemSet)LogicModule.getStaticField(this.m1107(), "exercises");
+   ProblemSet getExercises() {
+      return (ProblemSet)LogicModule.getStaticField(this.getModuleIndex(), "exercises");
    }
 
-   Vector m1785() {
-      return (Vector)LogicModule.getStaticField(this.m1107(), "instances");
+   Vector getInstances() {
+      return (Vector)LogicModule.getStaticField(this.getModuleIndex(), "instances");
    }
 
-   String m1786() {
-      return (String)LogicModule.getStaticField(this.m1107(), "digestVersKey");
+   String getDigestVersKey() {
+      return (String)LogicModule.getStaticField(this.getModuleIndex(), "digestVersKey");
    }
 
-   class C__A implements Runnable {
-      boolean f1083;
-      int f1084;
-      int f1085;
-      TaggedRecord f1086;
-      LogicModule f1087;
-      LogicModule.C__A f1088;
-      C_h_C f1089;
-      C_d_C f1090;
+   class ProblemRestateTask implements Runnable {
+      boolean changed;
+      int count;
+      int index;
+      TaggedRecord record;
+      LogicModule module;
+      LogicModule.ModuleStartupTask startupTask;
+      SymbolizationProblemSet symbolizerProblems;
+      SymbolizationNode symbolizerChecker;
 
-      C__A(int i, TaggedRecord taggedrecord, LogicModule logicmodule, LogicModule.C__A logicmodule$c__a) {
-         this.f1084 = i;
-         this.f1086 = taggedrecord;
-         this.f1087 = logicmodule;
-         this.f1088 = logicmodule$c__a;
-         this.f1083 = false;
-         this.f1089 = null;
-         this.f1090 = null;
-         this.f1085 = 0;
+      ProblemRestateTask(int i, TaggedRecord taggedrecord, LogicModule logicmodule, LogicModule.ModuleStartupTask logicmodule$modulestartuptask) {
+         this.count = i;
+         this.record = taggedrecord;
+         this.module = logicmodule;
+         this.startupTask = logicmodule$modulestartuptask;
+         this.changed = false;
+         this.symbolizerProblems = null;
+         this.symbolizerChecker = null;
+         this.index = 0;
       }
 
-      C__A(int i, TaggedRecord taggedrecord, C_d_C c_d_c, C_h_C c_h_c, LogicModule.C__A logicmodule$c__a) {
-         this.f1084 = i;
-         this.f1086 = taggedrecord;
-         this.f1087 = null;
-         this.f1088 = logicmodule$c__a;
-         this.f1083 = false;
-         this.f1089 = c_h_c;
-         this.f1090 = c_d_c;
-         this.f1085 = 0;
+      ProblemRestateTask(
+         int i,
+         TaggedRecord taggedrecord,
+         SymbolizationNode symbolizationnode,
+         SymbolizationProblemSet symbolizationproblemset,
+         LogicModule.ModuleStartupTask logicmodule$modulestartuptask
+      ) {
+         this.count = i;
+         this.record = taggedrecord;
+         this.module = null;
+         this.startupTask = logicmodule$modulestartuptask;
+         this.changed = false;
+         this.symbolizerProblems = symbolizationproblemset;
+         this.symbolizerChecker = symbolizationnode;
+         this.index = 0;
       }
 
       @Override
       public void run() {
-         if (this.f1085 == this.f1084) {
-            if (!this.f1083) {
-               this.f1088.m959();
+         if (this.index == this.count) {
+            if (!this.changed) {
+               this.startupTask.continueStartup();
                return;
             }
 
-            this.f1085 = 0;
-            this.f1083 = false;
+            this.index = 0;
+            this.changed = false;
          }
 
-         ProblemEntry problementry = ProblemSet.this.m1779(this.f1085);
+         ProblemEntry problementry = ProblemSet.this.getEntryAt(this.index);
          if (problementry != null && (problementry.state == 3 || problementry.state == 4)) {
             int i = problementry.state;
-            this.f1086.m1471();
-            this.f1086.parse(problementry.name);
-            if (this.f1089 != null && this.f1090 != null) {
-               this.f1090.m1741(this.f1086, this.f1089, (C__C)problementry);
+            this.record.clear();
+            this.record.parse(problementry.name);
+            if (this.symbolizerProblems != null && this.symbolizerChecker != null) {
+               this.symbolizerChecker.evaluateWork(this.record, this.symbolizerProblems, (SymbolizationEntry)problementry);
             } else {
-               problementry.state = this.f1087.getProblemState(this.f1086);
+               problementry.state = this.module.getProblemState(this.record);
             }
 
             if (problementry.state != i) {
-               this.f1083 = true;
+               this.changed = true;
             }
          }
 
-         this.f1085++;
+         this.index++;
          SwingUtilities.invokeLater(this);
       }
    }

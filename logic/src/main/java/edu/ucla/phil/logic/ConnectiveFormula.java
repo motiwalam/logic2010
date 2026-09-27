@@ -12,38 +12,38 @@ public class ConnectiveFormula extends Formula {
       this.kind = 2;
    }
 
-   public void m2040(Formula formula) {
+   public void setLeft(Formula formula) {
       this.children.addElement(formula);
       this.childCount++;
    }
 
-   public void m2041(Formula formula) {
+   public void setRight(Formula formula) {
       this.children.addElement(formula);
       this.childCount++;
    }
 
-   Formula m2042() {
+   Formula getLeft() {
       return (Formula)this.getChild(0);
    }
 
-   Formula m2043() {
+   Formula getRight() {
       return (Formula)this.getChild(1);
    }
 
    @Override
-   Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, C_MB c_mb, Vector vector) {
+   Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, BinderMap bindermap, Vector vector) {
       ConnectiveFormula connectiveformula1 = new ConnectiveFormula(this.symbol);
-      connectiveformula1.f742 = this.f742;
+      connectiveformula1.displayAsInequality = this.displayAsInequality;
 
       for (int i = 0; i < this.childCount; i++) {
-         connectiveformula1.addChild(this.getChild(i).instantiate(expression, schemeinstantiation, c_mb, vector));
+         connectiveformula1.addChild(this.getChild(i).instantiate(expression, schemeinstantiation, bindermap, vector));
       }
 
       return connectiveformula1;
    }
 
-   String m2044(Formula formula, boolean flag, int i) {
-      String s = formula.m1207(i);
+   String formatOperand(Formula formula, boolean flag, int i) {
+      String s = formula.formatMinimal(i);
       if (!(formula instanceof ConnectiveFormula) || formula.childCount == 1) {
          return s;
       } else if (this.childCount != 1 && !this.symbol.equals("&") && !this.symbol.equals("|")) {
@@ -54,48 +54,54 @@ public class ConnectiveFormula extends Formula {
    }
 
    @Override
-   String m1207(int i) {
+   String formatMinimal(int i) {
       Formula formula = (Formula)this.getChild(0);
-      if ((i == -1 || i == 0 && this.f742) && this.symbol.equals("~") && formula.symbol.equals("=")) {
-         return formula.getChild(0).m1207(i) + "<>" + formula.getChild(1).m1207(i);
+      if ((i == -1 || i == 0 && this.displayAsInequality) && this.symbol.equals("~") && formula.symbol.equals("=")) {
+         return formula.getChild(0).formatMinimal(i) + "<>" + formula.getChild(1).formatMinimal(i);
       } else if (this.childCount == 1) {
-         return this.symbol + this.m2044(formula, true, i);
+         return this.symbol + this.formatOperand(formula, true, i);
       } else {
          Formula formula1 = (Formula)this.getChild(1);
-         return this.m2044(formula, false, i) + this.symbol + this.m2044(formula1, true, i);
+         return this.formatOperand(formula, false, i) + this.symbol + this.formatOperand(formula1, true, i);
       }
    }
 
    @Override
-   String m1209(int i) {
+   String formatFull(int i) {
       Formula formula = (Formula)this.getChild(0);
-      if ((i == -1 || i == 0 && this.f742) && this.symbol.equals("~") && formula.symbol.equals("=")) {
-         return formula.getChild(0).m1209(i) + "<>" + formula.getChild(1).m1209(i);
+      if ((i == -1 || i == 0 && this.displayAsInequality) && this.symbol.equals("~") && formula.symbol.equals("=")) {
+         return formula.getChild(0).formatFull(i) + "<>" + formula.getChild(1).formatFull(i);
       } else if (this.childCount == 1) {
-         return this.symbol + formula.m1209(i);
+         return this.symbol + formula.formatFull(i);
       } else {
          Formula formula1 = (Formula)this.getChild(1);
-         return "(" + formula.m1209(i) + this.symbol + formula1.m1209(i) + ")";
+         return "(" + formula.formatFull(i) + this.symbol + formula1.formatFull(i) + ")";
       }
    }
 
    @Override
-   void m1211(C_DD c_dd) {
-      super.m1211(c_dd);
-      if (this.f742 && this.symbol.equals("~") && this.getChild(0).symbol.equals("=")) {
-         c_dd.f281 = c_dd.m458(0).f281;
-         c_dd.m458(0).f277 = c_dd;
-         c_dd.m458(1).f277 = c_dd;
-         c_dd.f283 = (c_dd.m458(1).f282 = (c_dd.m458(0).f282 = 0) + c_dd.m458(0).f283 + "<>".length()) + c_dd.m458(1).f283;
+   void layoutDisplayTree(FormulaParseNode formulaparsenode) {
+      super.layoutDisplayTree(formulaparsenode);
+      if (this.displayAsInequality && this.symbol.equals("~") && this.getChild(0).symbol.equals("=")) {
+         formulaparsenode.children = formulaparsenode.getChild(0).children;
+         formulaparsenode.getChild(0).parent = formulaparsenode;
+         formulaparsenode.getChild(1).parent = formulaparsenode;
+         formulaparsenode.length = (
+               formulaparsenode.getChild(1).offset = (formulaparsenode.getChild(0).offset = 0) + formulaparsenode.getChild(0).length + "<>".length()
+            )
+            + formulaparsenode.getChild(1).length;
       } else if (this.childCount == 1) {
-         c_dd.f283 = (c_dd.m458(0).f282 = this.symbol.length()) + c_dd.m458(0).f283;
+         formulaparsenode.length = (formulaparsenode.getChild(0).offset = this.symbol.length()) + formulaparsenode.getChild(0).length;
       } else {
-         c_dd.f283 = (c_dd.m458(1).f282 = (c_dd.m458(0).f282 = 0) + c_dd.m458(0).f283 + this.symbol.length()) + c_dd.m458(1).f283;
+         formulaparsenode.length = (
+               formulaparsenode.getChild(1).offset = (formulaparsenode.getChild(0).offset = 0) + formulaparsenode.getChild(0).length + this.symbol.length()
+            )
+            + formulaparsenode.getChild(1).length;
       }
    }
 
-   public ConnectiveFormula m2045() {
-      this.f742 = true;
+   public ConnectiveFormula markAsInequality() {
+      this.displayAsInequality = true;
       return this;
    }
 }

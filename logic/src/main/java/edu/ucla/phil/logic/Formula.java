@@ -20,7 +20,7 @@ public abstract class Formula extends Expression {
          object = quantifiedformula;
       }
 
-      ((Expression)object).m1257();
+      ((Expression)object).linkVariables();
       return (Expression)object;
    }
 }

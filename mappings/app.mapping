@@ -660,3 +660,15 @@ class pB UnusedEmptyClassPB
 
 # C_v_C: empty, unused class
 class vC UnusedEmptyClassVC
+
+# LogicProgram: unused compile-time constants (inlined everywhere, so no readers remain).
+# f542..f547 duplicate ModuleConstants' module indices; the others can't be identified.
+f538 UNUSED_CONST_16
+f542 DER_MODULE_INDEX
+f543 INV_MODULE_INDEX
+f544 PAR_MODULE_INDEX
+f545 REC_MODULE_INDEX
+f546 SYM_MODULE_INDEX
+f547 TRU_MODULE_INDEX
+f548 UNUSED_CONST_0
+f549 UNUSED_CONST_2

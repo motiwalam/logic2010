@@ -8,8 +8,8 @@ import java.awt.event.WindowFocusListener;
 import javax.swing.border.EmptyBorder;
 
 class FormulaEntryField extends FormulaTextPane {
-   Frame f424;
-   MessageDialog f425;
+   Frame ownerFrame;
+   MessageDialog ownerDialog;
 
    FormulaEntryField(Frame frame) {
       this("", -1, false, frame);
@@ -30,8 +30,8 @@ class FormulaEntryField extends FormulaTextPane {
    FormulaEntryField(String s, int i, boolean flag, Frame frame) {
       super(s, i, flag);
       this.setBorder(new EmptyBorder(0, 0, 0, 0));
-      this.f424 = frame;
-      this.f425 = null;
+      this.ownerFrame = frame;
+      this.ownerDialog = null;
    }
 
    @Override
@@ -40,60 +40,60 @@ class FormulaEntryField extends FormulaTextPane {
       return s == null ? "" : s;
    }
 
-   void m712(Frame frame) {
-      this.f424 = frame;
+   void setOwnerFrame(Frame frame) {
+      this.ownerFrame = frame;
    }
 
-   void m713(MessageDialog messagedialog) {
-      this.f425 = messagedialog;
+   void setOwnerDialog(MessageDialog messagedialog) {
+      this.ownerDialog = messagedialog;
    }
 
    @Override
-   void m714() {
-      Rectangle rectangle = LogicProgram.m1036(this, null);
-      C_a_E c_a_e;
-      if (this.f425 == null) {
-         c_a_e = new C_a_E(this.f424, this.getName(), false, this);
+   void showKeypad() {
+      Rectangle rectangle = LogicProgram.boundsIn(this, null);
+      SymbolKeypadDialog symbolkeypaddialog;
+      if (this.ownerDialog == null) {
+         symbolkeypaddialog = new SymbolKeypadDialog(this.ownerFrame, this.getName(), false, this);
       } else {
-         c_a_e = new C_a_E(this.f425, this.getName(), false, this);
+         symbolkeypaddialog = new SymbolKeypadDialog(this.ownerDialog, this.getName(), false, this);
       }
 
-      c_a_e.f978 = this.f425;
+      symbolkeypaddialog.ownerDialog = this.ownerDialog;
       String[] astring = new String[]{"\\l->", "\\l~", "\\l&", "\\l|", "\\l<->", "\\l@", "\\l!", "=", "\\l<>", "\\l%"};
-      String[] astring1 = LogicProgram.m1022(LogicProgram.f599);
+      String[] astring1 = LogicProgram.splitChars(LogicProgram.sentenceLetters);
       String[] astring2 = new String[]{"(", ")", ".", "\\l.:"};
-      String[] astring3 = LogicProgram.m1022(LogicProgram.f601);
-      String[] astring4 = LogicProgram.m1022(LogicProgram.f600);
-      String[] astring5 = LogicProgram.m1022("xyzuvw");
+      String[] astring3 = LogicProgram.splitChars(LogicProgram.operationLetters);
+      String[] astring4 = LogicProgram.splitChars(LogicProgram.predicateLetters);
+      String[] astring5 = LogicProgram.splitChars("xyzuvw");
       String[] astring6 = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
       String[][] astring7 = new String[][]{astring, astring1, astring2, astring3, astring4, astring5, astring6};
-      C_JF c_jf;
-      c_a_e.add(c_jf = new C_JF(c_a_e, astring7), "West");
+      KeypadGrid keypadgrid;
+      symbolkeypaddialog.add(keypadgrid = new KeypadGrid(symbolkeypaddialog, astring7), "West");
       String[] astring8 = new String[]{
          "Ctrl+Shift+C", "Ctrl+Shift+N", "Ctrl+Shift+A", "Ctrl+Shift+O", "Ctrl+Shift+B", "Ctrl+Shift+U", "Ctrl+Shift+E", null, "Ctrl+Shift+I", "Ctrl+Shift+D"
       };
       String[] astring9 = new String[]{null, null, null, "Ctrl+Shift+T"};
       String[][] astring10 = new String[][]{astring8, null, astring9};
-      c_jf.m732(astring10);
-      c_jf.setEnabled(true);
-      c_jf.requestFocus();
+      keypadgrid.setToolTips(astring10);
+      keypadgrid.setEnabled(true);
+      keypadgrid.requestFocus();
       astring = new String[]{"space", "backspace", "copy", "paste"};
       String[][] astring11 = new String[][]{astring};
-      c_a_e.add(c_jf = new C_JF(c_a_e, astring11, true, false), "West");
+      symbolkeypaddialog.add(keypadgrid = new KeypadGrid(symbolkeypaddialog, astring11, true, false), "West");
       astring2 = new String[]{null, null, "Ctrl+C", "Ctrl+V"};
       String[][] astring12 = new String[][]{astring2};
-      c_jf.m732(astring12);
-      c_jf.setEnabled(true);
-      c_jf.requestFocus();
-      c_a_e.invalidate();
-      c_a_e.setEnabled(true);
-      c_a_e.requestFocus();
-      c_a_e.m1302(new Point(rectangle.x, rectangle.y + rectangle.height));
-      c_a_e.setResizable(false);
-      c_a_e.m1301();
+      keypadgrid.setToolTips(astring12);
+      keypadgrid.setEnabled(true);
+      keypadgrid.requestFocus();
+      symbolkeypaddialog.invalidate();
+      symbolkeypaddialog.setEnabled(true);
+      symbolkeypaddialog.requestFocus();
+      symbolkeypaddialog.setAnchor(new Point(rectangle.x, rectangle.y + rectangle.height));
+      symbolkeypaddialog.setResizable(false);
+      symbolkeypaddialog.showLater();
    }
 
-   void m715(MessageDialog messagedialog) {
+   void showCaretOnDialogFocus(MessageDialog messagedialog) {
       if (messagedialog != null) {
          messagedialog.addWindowFocusListener(new WindowFocusListener() {
             @Override

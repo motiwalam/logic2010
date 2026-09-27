@@ -7,18 +7,18 @@ import java.net.URL;
 import java.net.URLConnection;
 
 class ServerUrl {
-   private URL f1328 = null;
+   private URL url = null;
 
    public ServerUrl(String s) throws MalformedURLException {
       if (s == null) {
          throw new MalformedURLException("null URL specification");
       } else {
-         String[] astring = this.m2010(s, true);
-         this.f1328 = new URL(astring[0] + astring[3]);
+         String[] astring = this.splitUrl(s, true);
+         this.url = new URL(astring[0] + astring[3]);
       }
    }
 
-   String[] m2010(String s, boolean flag) {
+   String[] splitUrl(String s, boolean flag) {
       String[] astring = new String[]{"", null, null, ""};
       int i = s.indexOf("://");
       if (i != -1) {
@@ -49,7 +49,7 @@ class ServerUrl {
       return astring;
    }
 
-   public static ServerUrl m2011(String s) {
+   public static ServerUrl create(String s) {
       try {
          return new ServerUrl(s);
       } catch (MalformedURLException malformedurlexception) {
@@ -57,36 +57,36 @@ class ServerUrl {
       }
    }
 
-   public String m2012() {
-      return this.f1328.getFile();
+   public String getFile() {
+      return this.url.getFile();
    }
 
-   public String m2013() {
-      return this.f1328.getHost();
+   public String getHost() {
+      return this.url.getHost();
    }
 
-   public int m2014() {
-      return this.f1328.getPort();
+   public int getPort() {
+      return this.url.getPort();
    }
 
-   public String m2015() {
-      return this.f1328.getProtocol();
+   public String getProtocol() {
+      return this.url.getProtocol();
    }
 
-   public URLConnection m2016() throws IOException {
-      return this.f1328.openConnection();
+   public URLConnection openConnection() throws IOException {
+      return this.url.openConnection();
    }
 
-   public InputStream m2017() throws IOException {
-      return this.f1328.openStream();
+   public InputStream openStream() throws IOException {
+      return this.url.openStream();
    }
 
-   public URL m2018() {
-      return this.f1328;
+   public URL getUrl() {
+      return this.url;
    }
 
    @Override
    public String toString() {
-      return this.f1328.toString();
+      return this.url.toString();
    }
 }

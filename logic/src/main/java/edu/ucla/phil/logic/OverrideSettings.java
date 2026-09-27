@@ -6,12 +6,12 @@ import java.io.Reader;
 import java.util.Hashtable;
 
 class OverrideSettings extends Hashtable {
-   String m2082(String s, String s1) {
+   String lookup(String s, String s1) {
       String s2 = (String)this.get(s);
       return s2 == null ? s1 : s2;
    }
 
-   void m2083(Reader reader) {
+   void load(Reader reader) {
       if (reader != null) {
          BufferedReader bufferedreader = reader instanceof BufferedReader ? (BufferedReader)reader : new BufferedReader(reader);
 

@@ -12,40 +12,43 @@ public class MembershipFormula extends Formula {
       this.kind = 7;
    }
 
-   public void m2087(Term term) {
+   public void setElement(Term term) {
       this.children.addElement(term);
       this.childCount++;
    }
 
-   public void m2088(Term term) {
+   public void setSet(Term term) {
       this.children.addElement(term);
       this.childCount++;
    }
 
    @Override
-   Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, C_MB c_mb, Vector vector) {
+   Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, BinderMap bindermap, Vector vector) {
       MembershipFormula membershipformula1 = new MembershipFormula(this.symbol);
 
       for (int i = 0; i < this.childCount; i++) {
-         membershipformula1.addChild(this.getChild(i).instantiate(expression, schemeinstantiation, c_mb, vector));
+         membershipformula1.addChild(this.getChild(i).instantiate(expression, schemeinstantiation, bindermap, vector));
       }
 
       return membershipformula1;
    }
 
    @Override
-   String m1207(int i) {
-      return this.getChild(0).m1207(i) + this.symbol + this.getChild(1).m1207(i);
+   String formatMinimal(int i) {
+      return this.getChild(0).formatMinimal(i) + this.symbol + this.getChild(1).formatMinimal(i);
    }
 
    @Override
-   String m1209(int i) {
-      return this.getChild(0).m1209(i) + this.symbol + this.getChild(1).m1209(i);
+   String formatFull(int i) {
+      return this.getChild(0).formatFull(i) + this.symbol + this.getChild(1).formatFull(i);
    }
 
    @Override
-   void m1211(C_DD c_dd) {
-      super.m1211(c_dd);
-      c_dd.f283 = (c_dd.m458(1).f282 = (c_dd.m458(0).f282 = 0) + c_dd.m458(0).f283 + this.symbol.length()) + c_dd.m458(1).f283;
+   void layoutDisplayTree(FormulaParseNode formulaparsenode) {
+      super.layoutDisplayTree(formulaparsenode);
+      formulaparsenode.length = (
+            formulaparsenode.getChild(1).offset = (formulaparsenode.getChild(0).offset = 0) + formulaparsenode.getChild(0).length + this.symbol.length()
+         )
+         + formulaparsenode.getChild(1).length;
    }
 }

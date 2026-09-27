@@ -28,16 +28,16 @@ class ModuleFrame extends JFrame implements LogicConstants, WindowListener, Comp
 
    ModuleFrame(String s, int i) {
       super(s);
-      this.setIconImages(LogicProgram.f594);
+      this.setIconImages(LogicProgram.iconImages);
       this.addComponentListener(this);
       this.addWindowListener(this);
-      this.m64();
+      this.installHideToggle();
       this.module = null;
       this.setLayout(new BorderLayout(0, 0));
       this.setFont(LogicProgram.getFont(i));
    }
 
-   void m61(Color[] acolor) {
+   void applyColors(Color[] acolor) {
       this.setForeground(acolor[0]);
       this.setBackground(acolor[1]);
       Graphics graphics = this.getGraphics();
@@ -49,7 +49,7 @@ class ModuleFrame extends JFrame implements LogicConstants, WindowListener, Comp
    @Override
    public void windowClosing(WindowEvent windowevent) {
       this.setDefaultCloseOperation(0);
-      this.m62(false);
+      this.closeModule(false);
    }
 
    @Override
@@ -76,13 +76,13 @@ class ModuleFrame extends JFrame implements LogicConstants, WindowListener, Comp
    public void windowOpened(WindowEvent windowevent) {
    }
 
-   void m62(boolean flag) {
+   void closeModule(boolean flag) {
       if (this.module == null || this.module.shutdown(flag)) {
          this.dispose();
       }
    }
 
-   protected void m63(KeyEvent keyevent) {
+   protected void handleQuitKey(KeyEvent keyevent) {
       byte b0 = 15;
       int i = keyevent.getKeyCode();
       int j = keyevent.getModifiers();
@@ -95,13 +95,13 @@ class ModuleFrame extends JFrame implements LogicConstants, WindowListener, Comp
       }
    }
 
-   void m64() {
+   void installHideToggle() {
       AbstractAction abstractaction = new AbstractAction() {
          @Override
          public void actionPerformed(ActionEvent actionevent) {
-            if (LogicProgram.f590) {
-               boolean flag = !ProblemSet.f1082;
-               ProblemSet.f1082 = flag;
+            if (LogicProgram.hideSensitive) {
+               boolean flag = !ProblemSet.hideExtraProblems;
+               ProblemSet.hideExtraProblems = flag;
                LogicModule.eraseWork = flag;
             }
          }
@@ -111,7 +111,7 @@ class ModuleFrame extends JFrame implements LogicConstants, WindowListener, Comp
       inputmap.put(KeyStroke.getKeyStroke(72, 3), "toggleHide");
    }
 
-   void m65() {
+   void showLater() {
       new Thread(this).start();
    }
 

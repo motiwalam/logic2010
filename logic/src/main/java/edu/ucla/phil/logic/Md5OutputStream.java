@@ -9,19 +9,19 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 class Md5OutputStream extends OutputStream {
-   MessageDigest f495;
-   byte[] f496;
-   long f497;
+   MessageDigest md5;
+   byte[] digestBytes;
+   long byteCount;
 
    public Md5OutputStream() {
       try {
-         this.f495 = MessageDigest.getInstance("MD5");
+         this.md5 = MessageDigest.getInstance("MD5");
       } catch (NoSuchAlgorithmException nosuchalgorithmexception) {
-         this.f495 = null;
+         this.md5 = null;
       }
 
-      this.f496 = null;
-      this.f497 = 0L;
+      this.digestBytes = null;
+      this.byteCount = 0L;
    }
 
    @Override
@@ -31,39 +31,39 @@ class Md5OutputStream extends OutputStream {
 
    @Override
    public void write(byte[] abyte) {
-      if (this.f495 != null) {
-         this.f495.update(abyte);
+      if (this.md5 != null) {
+         this.md5.update(abyte);
       }
 
-      this.f497 += abyte.length;
+      this.byteCount += abyte.length;
    }
 
    @Override
    public void write(byte[] abyte, int i, int j) {
-      if (this.f495 != null) {
-         this.f495.update(abyte, i, j);
+      if (this.md5 != null) {
+         this.md5.update(abyte, i, j);
       }
 
-      this.f497 += j;
+      this.byteCount += j;
    }
 
    public byte[] digest() {
-      if (this.f496 == null) {
-         this.f496 = this.f495 == null ? null : this.f495.digest();
+      if (this.digestBytes == null) {
+         this.digestBytes = this.md5 == null ? null : this.md5.digest();
       }
 
-      return this.f496;
+      return this.digestBytes;
    }
 
-   public long m924() {
-      return this.f497;
+   public long getByteCount() {
+      return this.byteCount;
    }
 
-   public void m925(File file1) throws IOException {
-      this.m926(file1, false);
+   public void writeFile(File file1) throws IOException {
+      this.writeFile(file1, false);
    }
 
-   public void m926(File file1, boolean flag) throws IOException {
+   public void writeFile(File file1, boolean flag) throws IOException {
       BufferedInputStream bufferedinputstream = new BufferedInputStream(new FileInputStream(file1));
       byte[] abyte = new byte[4096];
       Base64Codec base64codec = flag ? null : new Base64Codec();
@@ -76,8 +76,8 @@ class Md5OutputStream extends OutputStream {
             }
 
             if (flag) {
-               base64codec.m1999(abyte, 0, i);
-               this.write(base64codec.m2005(true).getBytes());
+               base64codec.addBytes(abyte, 0, i);
+               this.write(base64codec.encodeChunk(true).getBytes());
             } else {
                this.write(abyte, 0, i);
             }
@@ -92,7 +92,7 @@ class Md5OutputStream extends OutputStream {
       }
 
       if (flag) {
-         this.write(base64codec.m2005(false).getBytes());
+         this.write(base64codec.encodeChunk(false).getBytes());
       }
 
       bufferedinputstream.close();

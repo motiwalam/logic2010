@@ -3,82 +3,82 @@ package edu.ucla.phil.logic.pkgB;
 import edu.ucla.phil.logic.FormulaParseException;
 
 public class Syntax1ParseException extends FormulaParseException {
-   protected boolean f149;
-   public Syntax1Token f150;
-   public int[][] f151;
-   public String[] f152;
-   protected String f153 = System.getProperty("line.separator", "\n");
+   protected boolean specialConstructor;
+   public Syntax1Token currentToken;
+   public int[][] expectedTokenSequences;
+   public String[] tokenImage;
+   protected String eol = System.getProperty("line.separator", "\n");
 
    public Syntax1ParseException(Syntax1Token syntax1token, int[][] aint, String[] astring) {
       super("");
-      this.f149 = true;
-      this.f150 = syntax1token;
-      this.f151 = aint;
-      this.f152 = astring;
+      this.specialConstructor = true;
+      this.currentToken = syntax1token;
+      this.expectedTokenSequences = aint;
+      this.tokenImage = astring;
    }
 
    public Syntax1ParseException() {
-      this.f149 = false;
+      this.specialConstructor = false;
    }
 
    public Syntax1ParseException(String s) {
       super(s);
-      this.f149 = false;
+      this.specialConstructor = false;
    }
 
    @Override
    public String getMessage() {
-      if (!this.f149) {
+      if (!this.specialConstructor) {
          return super.getMessage();
       } else {
          String s = "";
          int i = 0;
 
-         for (int j = 0; j < this.f151.length; j++) {
-            if (i < this.f151[j].length) {
-               i = this.f151[j].length;
+         for (int j = 0; j < this.expectedTokenSequences.length; j++) {
+            if (i < this.expectedTokenSequences[j].length) {
+               i = this.expectedTokenSequences[j].length;
             }
 
-            for (int k = 0; k < this.f151[j].length; k++) {
-               s = s + this.f152[this.f151[j][k]] + " ";
+            for (int k = 0; k < this.expectedTokenSequences[j].length; k++) {
+               s = s + this.tokenImage[this.expectedTokenSequences[j][k]] + " ";
             }
 
-            if (this.f151[j][this.f151[j].length - 1] != 0) {
+            if (this.expectedTokenSequences[j][this.expectedTokenSequences[j].length - 1] != 0) {
                s = s + "...";
             }
 
-            s = s + this.f153 + "    ";
+            s = s + this.eol + "    ";
          }
 
          String s1 = "Encountered \"";
-         Syntax1Token syntax1token = this.f150.f233;
+         Syntax1Token syntax1token = this.currentToken.next;
 
          for (int l = 0; l < i; l++) {
             if (l != 0) {
                s1 = s1 + " ";
             }
 
-            if (syntax1token.f227 == 0) {
-               s1 = s1 + this.f152[0];
+            if (syntax1token.kind == 0) {
+               s1 = s1 + this.tokenImage[0];
                break;
             }
 
-            s1 = s1 + this.m236(syntax1token.f232);
-            syntax1token = syntax1token.f233;
+            s1 = s1 + this.add_escapes(syntax1token.image);
+            syntax1token = syntax1token.next;
          }
 
-         s1 = s1 + "\" at line " + this.f150.f233.f228 + ", column " + this.f150.f233.f229 + "." + this.f153;
-         if (this.f151.length == 1) {
-            s1 = s1 + "Was expecting:" + this.f153 + "    ";
+         String s2 = s1 + "\" at line " + this.currentToken.next.beginLine + ", column " + this.currentToken.next.beginColumn + "." + this.eol;
+         if (this.expectedTokenSequences.length == 1) {
+            s1 = s2 + "Was expecting:" + this.eol + "    ";
          } else {
-            s1 = s1 + "Was expecting one of:" + this.f153 + "    ";
+            s1 = s2 + "Was expecting one of:" + this.eol + "    ";
          }
 
          return s1 + s;
       }
    }
 
-   protected String m236(String s) {
+   protected String add_escapes(String s) {
       StringBuffer stringbuffer = new StringBuffer();
 
       for (int i = 0; i < s.length(); i++) {

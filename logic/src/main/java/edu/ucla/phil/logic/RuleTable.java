@@ -6,21 +6,21 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 class RuleTable extends Hashtable {
-   TheoremTable f1468;
-   Vector f1469;
-   Hashtable f1470;
-   Hashtable f1471;
-   RuleProperties f1472;
+   TheoremTable theorems;
+   Vector ruleNames;
+   Hashtable theoremRuleCache;
+   Hashtable headings;
+   RuleProperties properties;
 
    RuleTable(TheoremTable theoremtable) {
-      this.f1468 = theoremtable;
-      this.f1469 = new Vector();
-      this.f1470 = new Hashtable();
-      this.f1471 = new Hashtable();
-      this.f1472 = new RuleProperties();
+      this.theorems = theoremtable;
+      this.ruleNames = new Vector();
+      this.theoremRuleCache = new Hashtable();
+      this.headings = new Hashtable();
+      this.properties = new RuleProperties();
    }
 
-   void m2200(String s, Vector vector) {
+   void addRuleLine(String s, Vector vector) {
       int i = s.length();
       int j = 0;
 
@@ -36,31 +36,31 @@ class RuleTable extends Hashtable {
 
       String s1 = s.substring(j, k);
       String s2 = s.substring(k);
-      if (this.m2203(s1) != null) {
+      if (this.getRule(s1) != null) {
          System.out.println("redefinition of rule " + s1);
       } else {
          Object object;
          if (s2.indexOf(".:") == -1) {
-            object = new Rule(s1, s2, this, this.f1468);
+            object = new Rule(s1, s2, this, this.theorems);
          } else {
             object = new SchematicRule(s1, s2);
          }
 
-         String s3 = ((Rule)object).m1381();
+         String s3 = ((Rule)object).getError();
          if (s3 != null) {
             System.out.println("error in rule " + s1 + ": " + s3);
          } else {
-            this.f1472.m2068((Rule)object);
+            this.properties.registerConverses((Rule)object);
             if (vector != null) {
-               this.f1471.put(s1, vector);
+               this.headings.put(s1, vector);
             }
 
-            this.m2202((Rule)object);
+            this.addRule((Rule)object);
          }
       }
    }
 
-   static RuleTable m2201(Reader reader, TheoremTable theoremtable) {
+   static RuleTable read(Reader reader, TheoremTable theoremtable) {
       if (reader == null) {
          return null;
       } else {
@@ -87,7 +87,7 @@ class RuleTable extends Hashtable {
                      vector.addElement(s.substring(2));
                   }
                } else {
-                  ruletable.m2200(s, vector);
+                  ruletable.addRuleLine(s, vector);
                   vector = null;
                }
             }
@@ -104,47 +104,47 @@ class RuleTable extends Hashtable {
       }
    }
 
-   void m2202(Rule rule) {
-      this.put(rule.f820.toUpperCase(), rule);
-      this.f1469.addElement(rule.f820);
+   void addRule(Rule rule) {
+      this.put(rule.name.toUpperCase(), rule);
+      this.ruleNames.addElement(rule.name);
    }
 
-   Rule m2203(String s) {
+   Rule getRule(String s) {
       return (Rule)this.get(s.toUpperCase());
    }
 
-   Theorem m2204(Integer integer) {
-      return this.f1468 == null ? null : this.f1468.m2199(integer);
+   Theorem getTheorem(Integer integer) {
+      return this.theorems == null ? null : this.theorems.getTheorem(integer);
    }
 
-   Rule m2205(String s) {
-      Integer integer = Rule.m1366(s);
+   Rule findRule(String s) {
+      Integer integer = Rule.parseTheoremNumber(s);
       if (integer != null) {
-         return this.m2204(integer);
+         return this.getTheorem(integer);
       } else {
-         integer = Rule.m1367(s);
+         integer = Rule.parseTheoremRuleNumber(s);
          if (integer != null) {
-            synchronized (this.f1470) {
-               Rule rule = (Rule)this.f1470.get(integer);
+            synchronized (this.theoremRuleCache) {
+               Rule rule = (Rule)this.theoremRuleCache.get(integer);
                if (rule == null) {
-                  rule = Rule.m1377(this.m2204(integer));
+                  rule = Rule.fromTheorem(this.getTheorem(integer));
                   if (rule == null) {
                      return null;
                   }
 
-                  this.f1470.put(integer, rule);
+                  this.theoremRuleCache.put(integer, rule);
                }
 
-               return rule.m1368(s);
+               return rule.findComponent(s);
             }
          } else {
-            return this.m2203(s);
+            return this.getRule(s);
          }
       }
    }
 
-   void m2206(Rule rule) {
-      this.remove(rule.f820.toUpperCase());
-      this.f1469.removeElement(rule.f820);
+   void removeRule(Rule rule) {
+      this.remove(rule.name.toUpperCase());
+      this.ruleNames.removeElement(rule.name);
    }
 }

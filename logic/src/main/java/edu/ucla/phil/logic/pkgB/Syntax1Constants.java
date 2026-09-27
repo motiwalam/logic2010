@@ -1,15 +1,15 @@
 package edu.ucla.phil.logic.pkgB;
 
 public interface Syntax1Constants {
-   int f218 = 0;
-   int f219 = 4;
-   int f220 = 5;
-   int f221 = 6;
-   int f222 = 7;
-   int f223 = 8;
-   int f224 = 9;
-   int f225 = 0;
-   String[] f226 = new String[]{
+   int EOF = 0;
+   int EOL = 4;
+   int VAR = 5;
+   int PRED = 6;
+   int SEN = 7;
+   int OP = 8;
+   int UNK = 9;
+   int DEFAULT = 0;
+   String[] tokenImage = new String[]{
       "<EOF>",
       "\" \"",
       "\"\\r\"",

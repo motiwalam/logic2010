@@ -3,10 +3,10 @@ package edu.ucla.phil.logic;
 import java.util.Hashtable;
 
 class Submission implements ResponseHandler {
-   String f1 = C_GE.m644(".");
-   int f2;
-   int f3;
-   String f4;
+   String ipAddress = SocketLineClient.getLocalIpString(".");
+   int courseUid;
+   int userUid;
+   String passwordHash;
    ServerSession session;
    String evaluation;
    String problemMd5;
@@ -17,18 +17,18 @@ class Submission implements ResponseHandler {
    long duration;
    String timestamp;
    String submissionUid;
-   String[] f15;
-   String[] f16;
+   String[] succeededNames;
+   String[] failedNames;
 
    Submission(int i, int j, ServerSession serversession, String s) {
-      this.f2 = i;
-      this.f3 = j;
-      this.f4 = s;
+      this.courseUid = i;
+      this.userUid = j;
+      this.passwordHash = s;
       this.session = serversession;
-      this.m1();
+      this.reset();
    }
 
-   void m1() {
+   void reset() {
       this.evaluation = null;
       this.problemMd5 = null;
       this.work = null;
@@ -40,8 +40,8 @@ class Submission implements ResponseHandler {
       this.submissionUid = null;
    }
 
-   boolean m2() {
-      return this.f4 != null
+   boolean isComplete() {
+      return this.passwordHash != null
          && this.session != null
          && this.evaluation != null
          && this.problemMd5 != null
@@ -50,17 +50,17 @@ class Submission implements ResponseHandler {
          && this.module != null;
    }
 
-   String m3() {
-      return this.submissionUid + ":" + this.f1 + ":" + this.timestamp;
+   String getLogRecord() {
+      return this.submissionUid + ":" + this.ipAddress + ":" + this.timestamp;
    }
 
    @Override
-   public void m4(String s, Hashtable hashtable) {
-      this.session.m4(s, hashtable);
+   public void setError(String s, Hashtable hashtable) {
+      this.session.setError(s, hashtable);
    }
 
    @Override
-   public ErrorRef m5() {
-      return this.session.m5();
+   public ErrorRef getError() {
+      return this.session.getError();
    }
 }

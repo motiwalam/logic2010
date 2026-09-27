@@ -6,91 +6,91 @@ import java.awt.Rectangle;
 import java.util.Hashtable;
 
 interface DerivationNode {
-   void m6(String s);
+   void setFormulaText(String s);
 
-   String m7(boolean flag);
+   String getFormulaText(boolean flag);
 
-   void m8(String s);
+   void setAnnotationText(String s);
 
-   String m9(boolean flag);
+   String getAnnotationText(boolean flag);
 
-   void m10(String s, boolean flag);
+   void setMessageText(String s, boolean flag);
 
-   void m11(String s);
+   void showMessage(String s);
 
-   void m12(String s, Hashtable hashtable);
+   void showMessage(String s, Hashtable hashtable);
 
-   void m13();
+   void clearMessage();
 
-   C_l_E m14();
+   DerivationLineEditor getFormulaEditor();
 
-   C_l_E m15();
+   DerivationLineEditor getAnnotationEditor();
 
-   int m16();
+   int getIndexInBox();
 
-   DerivationBox m17();
+   DerivationBox getEnclosingBox();
 
-   DerivationLine m18();
+   DerivationLine insertLineAfter();
 
-   void m19(boolean flag);
+   void deleteNode(boolean flag);
 
-   void m20();
+   void moveIntoPreviousBox();
 
-   void m21();
+   void moveOutOfBox();
 
-   void m22(boolean flag);
+   void focusEditor(boolean flag);
 
-   DerivationNode m23(boolean flag);
+   DerivationNode getNextNode(boolean flag);
 
-   DerivationNode m24(boolean flag);
+   DerivationNode getPreviousNode(boolean flag);
 
-   DerivationNode m25();
+   DerivationNode getHeadNode();
 
-   boolean m26();
+   boolean isShowLine();
 
-   boolean m27();
+   boolean isCancelLine();
 
-   boolean m28();
+   boolean areEnclosingBoxesExpanded();
 
-   void m29();
+   void expandEnclosingBoxes();
 
-   int m30();
+   int getLineNumber();
 
-   Rectangle m31();
+   Rectangle getBoundsInProblemPanel();
 
-   DerivationNode m32(int i);
+   DerivationNode findLine(int i);
 
-   int m33(int i);
+   int renumberLines(int i);
 
    void setFont(Font font);
 
-   void m34();
+   void layoutColumns();
 
-   void m35(Color[] acolor);
+   void applyColors(Color[] acolor);
 
-   int m36(boolean flag);
+   int getMaxBoxDepth(boolean flag);
 
-   int m37();
+   int getBoxDepth();
 
-   int m38(boolean flag);
+   int countLines(boolean flag);
 
-   void m39(C_AA c_aa);
+   void addReferrer(LineReference linereference);
 
-   void m40(C_AA c_aa);
+   void removeReferrer(LineReference linereference);
 
-   void m41();
+   void detachReferrers();
 
-   void m42();
+   void retargetReferrers();
 
-   boolean m43();
+   boolean checkSyntax();
 
-   Expression m44();
+   Expression getFormula();
 
-   void m45();
+   void refreshReferenceNumbers();
 
-   boolean m46();
+   boolean verify();
 
-   String m47();
+   String encodeWork();
 
-   String m48();
+   String encodeMessages();
 }

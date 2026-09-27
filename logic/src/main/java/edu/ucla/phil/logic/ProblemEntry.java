@@ -7,25 +7,25 @@ import java.util.Hashtable;
 abstract class ProblemEntry {
    String name;
    int state;
-   boolean f1121;
-   boolean f1122;
-   static final int f1123 = 0;
-   static final int f1124 = 1;
-   static final int f1125 = 2;
-   static final int f1126 = 3;
-   static final int f1127 = 4;
-   static final String[] f1128 = new String[]{"N", "I", "C", "I", "U"};
+   boolean hidden;
+   boolean extraProblem;
+   static final int STATE_NO_WORK = 0;
+   static final int STATE_INCORRECT = 1;
+   static final int STATE_CORRECT = 2;
+   static final int STATE_INCOMPLETE = 3;
+   static final int STATE_UNCHECKED = 4;
+   static final String[] STATE_CODES = new String[]{"N", "I", "C", "I", "U"};
 
-   abstract int m513(String s);
+   abstract int computeState(String s);
 
    ProblemEntry(String s, boolean flag, Hashtable hashtable) {
       this.name = s;
-      this.state = flag ? 4 : this.m513(s);
-      this.f1121 = false;
-      this.f1122 = m1817(s, hashtable);
+      this.state = flag ? 4 : this.computeState(s);
+      this.hidden = false;
+      this.extraProblem = isListed(s, hashtable);
    }
 
-   static Hashtable m1813(Reader reader, Hashtable hashtable) {
+   static Hashtable readProblemNames(Reader reader, Hashtable hashtable) {
       Hashtable hashtable1 = hashtable == null ? new Hashtable() : hashtable;
       ScrambledReader scrambledreader;
       if (reader instanceof ScrambledReader) {
@@ -38,7 +38,7 @@ abstract class ProblemEntry {
          String s;
          while ((s = scrambledreader.readLine()) != null) {
             String s1;
-            if (!TaggedRecord.isBlankOrComment(s) && (s1 = TaggedRecord.m1493(s)) != null) {
+            if (!TaggedRecord.isBlankOrComment(s) && (s1 = TaggedRecord.nameOf(s)) != null) {
                hashtable1.put(s1.trim().toUpperCase(), Boolean.TRUE);
             }
          }
@@ -50,61 +50,61 @@ abstract class ProblemEntry {
       return hashtable1;
    }
 
-   static Hashtable m1814(ProblemSet problemset, Hashtable hashtable) {
+   static Hashtable findExtraProblems(ProblemSet problemset, Hashtable hashtable) {
       Hashtable hashtable1 = new Hashtable();
       int i = problemset.size();
 
       for (int j = 0; j < i; j++) {
          ProblemEntry problementry = (ProblemEntry)problemset.get(j);
          if (problementry != null && problementry.name != null) {
-            String s = TaggedRecord.m1493(problementry.name).trim().toUpperCase();
+            String s = TaggedRecord.nameOf(problementry.name).trim().toUpperCase();
             if (hashtable == null || hashtable.get(s) == null) {
                hashtable1.put(s, Boolean.TRUE);
             }
 
-            problementry.f1122 = m1817(problementry.name, hashtable1);
+            problementry.extraProblem = isListed(problementry.name, hashtable1);
          }
       }
 
       return hashtable1;
    }
 
-   static void m1815(ProblemSet problemset, Hashtable hashtable) {
+   static void markExtraProblems(ProblemSet problemset, Hashtable hashtable) {
       int i = problemset.size();
 
       for (int j = 0; j < i; j++) {
          ProblemEntry problementry = (ProblemEntry)problemset.get(j);
          if (problementry != null && problementry.name != null) {
-            problementry.f1122 = m1817(problementry.name, hashtable);
+            problementry.extraProblem = isListed(problementry.name, hashtable);
          }
       }
    }
 
-   static Hashtable m1816(String s, ProblemSet problemset) {
+   static Hashtable findExtraProblems(String s, ProblemSet problemset) {
       Hashtable hashtable = null;
-      ScrambledReader scrambledreader = LogicProgram.m1067(s, false, true);
+      ScrambledReader scrambledreader = LogicProgram.openProblemFile(s, false, true);
       if (scrambledreader != null) {
-         hashtable = m1813(scrambledreader, hashtable);
+         hashtable = readProblemNames(scrambledreader, hashtable);
       }
 
-      scrambledreader = LogicProgram.m1067(s, true, true);
+      scrambledreader = LogicProgram.openProblemFile(s, true, true);
       if (scrambledreader != null) {
-         hashtable = m1813(scrambledreader, hashtable);
+         hashtable = readProblemNames(scrambledreader, hashtable);
       }
 
-      return m1814(problemset, hashtable);
+      return findExtraProblems(problemset, hashtable);
    }
 
-   static boolean m1817(String s, Hashtable hashtable) {
-      String s1 = TaggedRecord.m1493(s);
+   static boolean isListed(String s, Hashtable hashtable) {
+      String s1 = TaggedRecord.nameOf(s);
       if (s1 == null) {
          return false;
       } else {
-         s1 = s1.trim().toUpperCase();
-         if (s1.startsWith("DEMO")) {
+         String s2 = s1.trim().toUpperCase();
+         if (s2.startsWith("DEMO")) {
             return false;
          } else {
-            return hashtable == null ? false : hashtable.get(s1) != null;
+            return hashtable == null ? false : hashtable.get(s2) != null;
          }
       }
    }

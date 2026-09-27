@@ -8,8 +8,8 @@ class Message {
    String text;
    String buttons;
    boolean isError;
-   static Hashtable f375 = null;
-   static String f376 = "messages";
+   static Hashtable globalMessages = null;
+   static String globalLinkName = "messages";
 
    Message(String s) {
       this.id = s;
@@ -20,16 +20,16 @@ class Message {
    }
 
    static boolean loadMessages() {
-      ScrambledReader scrambledreader = LogicProgram.openDataFile(f376, false);
+      ScrambledReader scrambledreader = LogicProgram.openDataFile(globalLinkName, false);
       if (scrambledreader == null) {
          return false;
       } else {
-         f375 = parseMessages(new TaggedRecord(scrambledreader, true));
-         return f375 != null;
+         globalMessages = parseMessages(new TaggedRecord(scrambledreader, true));
+         return globalMessages != null;
       }
    }
 
-   static boolean m657(int i) {
+   static boolean loadModuleMessages(int i) {
       Class oclass = (Class)LogicModule.getStaticField(i, "messageClass");
       String s = (String)LogicModule.getStaticField(oclass, "linkName");
       ScrambledReader scrambledreader = LogicProgram.openDataFile(s, false);
@@ -52,7 +52,7 @@ class Message {
             int i;
             if ((i = taggedrecord.indexOfTag('n')) != -1) {
                Message message = new Message(taggedrecord.valueAt(i).trim());
-               if ((i = taggedrecord.m1478("ie")) != -1) {
+               if ((i = taggedrecord.indexOfAnyTag("ie")) != -1) {
                   message.title = taggedrecord.valueAt(i).trim();
                   message.isError = taggedrecord.tagAt(i) == 'e';
                }
@@ -74,7 +74,7 @@ class Message {
    }
 
    static Message get(String s) {
-      Message message = f375 == null ? null : (Message)f375.get(s.toLowerCase());
+      Message message = globalMessages == null ? null : (Message)globalMessages.get(s.toLowerCase());
       if (message == null) {
          message = new Message(s);
          message.title = "bad error id";
@@ -87,14 +87,14 @@ class Message {
    }
 
    static String getText(String s) {
-      return m659(get(s));
+      return getText(get(s));
    }
 
-   static String m659(Message message) {
+   static String getText(Message message) {
       return message == null ? null : message.text;
    }
 
-   static String m660(String s, int i) {
+   static String indent(String s, int i) {
       String s1 = "";
       String s2 = " ";
 
@@ -102,15 +102,15 @@ class Message {
          s2 = s2 + s2;
       }
 
-      s2 = s2.substring(0, i);
+      String s4 = s2.substring(0, i);
       String s3 = "\\n";
       int j = -1;
 
       do {
          if ((j = s.indexOf(s3)) == -1) {
-            s1 = s1 + s2 + s;
+            s1 = s1 + s4 + s;
          } else {
-            s1 = s1 + s2 + s.substring(0, j + s3.length());
+            s1 = s1 + s4 + s.substring(0, j + s3.length());
             s = s.substring(j + s3.length());
          }
       } while (j != -1);
@@ -119,10 +119,10 @@ class Message {
    }
 
    static String substitute(String s, Hashtable hashtable) {
-      return m662(s, hashtable, null);
+      return substitute(s, hashtable, null);
    }
 
-   static String m662(String s, Hashtable hashtable, C_k_A[] ac_k_a) {
+   static String substitute(String s, Hashtable hashtable, MessageParamSource[] amessageparamsource) {
       if (s == null) {
          return null;
       } else {
@@ -130,37 +130,37 @@ class Message {
          int i = 0;
          DelimitedTokenizer delimitedtokenizer = new DelimitedTokenizer("\\<");
          DelimitedTokenizer delimitedtokenizer1 = new DelimitedTokenizer("\\>");
-         delimitedtokenizer.m1132(s);
-         m671(hashtable);
+         delimitedtokenizer.setInput(s);
+         addPluralSuffix(hashtable);
 
          while (true) {
-            s1 = s1 + delimitedtokenizer.m1136(true);
-            if (delimitedtokenizer.m1134() != '<') {
+            s1 = s1 + delimitedtokenizer.nextToken(true);
+            if (delimitedtokenizer.getDelimiter() != '<') {
                return s1;
             }
 
-            delimitedtokenizer1.m1132(delimitedtokenizer.m1133());
-            String s3 = delimitedtokenizer1.m1136(true);
-            if (delimitedtokenizer1.m1134() != '>') {
+            delimitedtokenizer1.setInput(delimitedtokenizer.getRemaining());
+            String s3 = delimitedtokenizer1.nextToken(true);
+            if (delimitedtokenizer1.getDelimiter() != '>') {
                return s1 + "<" + s3;
             }
 
-            delimitedtokenizer.m1132(delimitedtokenizer1.m1133());
-            s3 = s3.toLowerCase();
-            if (s3.length() >= 6 && s3.substring(0, 6).equals("indent")) {
+            delimitedtokenizer.setInput(delimitedtokenizer1.getRemaining());
+            String s4 = s3.toLowerCase();
+            if (s4.length() >= 6 && s4.substring(0, 6).equals("indent")) {
                try {
-                  i = Integer.parseInt(s3.substring(6).trim());
+                  i = Integer.parseInt(s4.substring(6).trim());
                } catch (NumberFormatException numberformatexception) {
                   i = 0;
                }
             } else {
                String s2;
-               if (hashtable != null && (s2 = (String)hashtable.get(s3)) != null) {
-                  s1 = s1 + m660(s2, i);
-               } else if ((s2 = m663(ac_k_a, s3)) != null) {
-                  s1 = s1 + m660(s2, i);
+               if (hashtable != null && (s2 = (String)hashtable.get(s4)) != null) {
+                  s1 = s1 + indent(s2, i);
+               } else if ((s2 = lookupParam(amessageparamsource, s4)) != null) {
+                  s1 = s1 + indent(s2, i);
                } else {
-                  s1 = s1 + m660("<" + s3 + ">", i);
+                  s1 = s1 + indent("<" + s4 + ">", i);
                }
 
                i = 0;
@@ -169,12 +169,12 @@ class Message {
       }
    }
 
-   static String m663(C_k_A[] ac_k_a, String s) {
-      if (ac_k_a != null) {
-         int i = ac_k_a.length;
+   static String lookupParam(MessageParamSource[] amessageparamsource, String s) {
+      if (amessageparamsource != null) {
+         int i = amessageparamsource.length;
 
          for (int j = 0; j < i; j++) {
-            String s1 = ac_k_a[j] == null ? null : ac_k_a[j].m547(s);
+            String s1 = amessageparamsource[j] == null ? null : amessageparamsource[j].getParamValue(s);
             if (s1 != null) {
                return s1;
             }
@@ -197,8 +197,8 @@ class Message {
       return hashtable;
    }
 
-   static Hashtable m665(Hashtable hashtable, Hashtable hashtable1) {
-      return LogicProgram.m1050(hashtable, hashtable1, true);
+   static Hashtable mergeParams(Hashtable hashtable, Hashtable hashtable1) {
+      return LogicProgram.mergeTables(hashtable, hashtable1, true);
    }
 
    static Hashtable params(String s, String s1) {
@@ -221,7 +221,7 @@ class Message {
       return putParam(params(s, s1, s2, s3, s4, s5, s6, s7), s8, s9);
    }
 
-   static void m671(Hashtable hashtable) {
+   static void addPluralSuffix(Hashtable hashtable) {
       if (hashtable != null) {
          String s = (String)hashtable.get("n");
          if (s != null) {

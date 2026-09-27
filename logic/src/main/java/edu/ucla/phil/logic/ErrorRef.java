@@ -12,13 +12,13 @@ class ErrorRef extends MessageRef implements ResponseHandler {
    }
 
    @Override
-   public void m4(String s, Hashtable hashtable) {
-      this.f427 = s;
-      this.f428 = hashtable;
+   public void setError(String s, Hashtable hashtable) {
+      this.id = s;
+      this.params = hashtable;
    }
 
    @Override
-   public ErrorRef m5() {
+   public ErrorRef getError() {
       return this;
    }
 }

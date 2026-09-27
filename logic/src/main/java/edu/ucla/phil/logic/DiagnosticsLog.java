@@ -5,13 +5,13 @@ import java.io.PrintWriter;
 public class DiagnosticsLog {
    static PrintWriter out = null;
 
-   static void m1905(String s) {
+   static void log(String s) {
       if (out != null) {
          out.println(s);
       }
    }
 
-   static void m1906(Throwable throwable) {
+   static void logThrowable(Throwable throwable) {
       if (out != null) {
          while (throwable != null) {
             out.println(throwable.toString());

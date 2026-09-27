@@ -1,12 +1,12 @@
 package edu.ucla.phil.logic;
 
 interface ExpressionKinds {
-   int f970 = 0;
-   int f971 = 1;
-   int f972 = 2;
-   int f973 = 3;
-   int f974 = 4;
-   int f975 = 5;
-   int f976 = 6;
-   int f977 = 7;
+   int KIND_ATOMIC = 0;
+   int KIND_QUANTIFIED = 1;
+   int KIND_CONNECTIVE = 2;
+   int KIND_SIMPLE_TERM = 3;
+   int KIND_OPERATION_TERM = 4;
+   int KIND_DESCRIPTION_TERM = 5;
+   int KIND_IDENTITY = 6;
+   int KIND_MEMBERSHIP = 7;
 }

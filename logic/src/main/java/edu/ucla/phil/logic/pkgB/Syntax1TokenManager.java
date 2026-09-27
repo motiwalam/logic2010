@@ -3,25 +3,25 @@ package edu.ucla.phil.logic.pkgB;
 import java.io.IOException;
 
 public class Syntax1TokenManager implements Syntax1Constants {
-   static final int[] f174 = new int[]{1, 2, 13, 14, 9, 10, 17, 18};
-   public static final String[] f175 = new String[]{
+   static final int[] jjnextStates = new int[]{1, 2, 13, 14, 9, 10, 17, 18};
+   public static final String[] jjstrLiteralImages = new String[]{
       "", null, null, null, "\n", null, null, null, null, null, "<->", "->", "&", "|", "=", "<>", "[m]", "~", "@", "!", "(", ")", "%"
    };
-   public static final String[] f176 = new String[]{"DEFAULT"};
-   static final long[] f177 = new long[]{8388593L};
-   static final long[] f178 = new long[]{14L};
-   private static Syntax1CharStream f179;
-   private static final int[] f180 = new int[22];
-   private static final int[] f181 = new int[44];
-   protected static char f182;
-   static int f183 = 0;
-   static int f184 = 0;
-   static int f185;
-   static int f186;
-   static int f187;
-   static int f188;
+   public static final String[] lexStateNames = new String[]{"DEFAULT"};
+   static final long[] jjtoToken = new long[]{8388593L};
+   static final long[] jjtoSkip = new long[]{14L};
+   private static Syntax1CharStream input_stream;
+   private static final int[] jjrounds = new int[22];
+   private static final int[] jjstateSet = new int[44];
+   protected static char curChar;
+   static int curLexState = 0;
+   static int defaultLexState = 0;
+   static int jjnewStateCnt;
+   static int jjround;
+   static int jjmatchedPos;
+   static int jjmatchedKind;
 
-   private static final int m259(int i, long j) {
+   private static final int jjStopStringLiteralDfa_0(int i, long j) {
       switch (i) {
          case 0:
             if ((j & 65536L) != 0L) {
@@ -34,168 +34,168 @@ public class Syntax1TokenManager implements Syntax1Constants {
       }
    }
 
-   private static final int m260(int i, long j) {
-      return m271(m259(i, j), i + 1);
+   private static final int jjStartNfa_0(int i, long j) {
+      return jjMoveNfa_0(jjStopStringLiteralDfa_0(i, j), i + 1);
    }
 
-   private static final int m261(int i, int j) {
-      f188 = j;
-      f187 = i;
+   private static final int jjStopAtPos(int i, int j) {
+      jjmatchedKind = j;
+      jjmatchedPos = i;
       return i + 1;
    }
 
-   private static final int m262(int i, int j, int k) {
-      f188 = j;
-      f187 = i;
+   private static final int jjStartNfaWithStates_0(int i, int j, int k) {
+      jjmatchedKind = j;
+      jjmatchedPos = i;
 
       try {
-         f182 = Syntax1CharStream.m241();
+         curChar = Syntax1CharStream.readChar();
       } catch (IOException ioexception) {
          return i + 1;
       }
 
-      return m271(k, i + 1);
+      return jjMoveNfa_0(k, i + 1);
    }
 
-   private static final int m263() {
-      switch (f182) {
+   private static final int jjMoveStringLiteralDfa0_0() {
+      switch (curChar) {
          case '\n':
-            return m261(0, 4);
+            return jjStopAtPos(0, 4);
          case '!':
-            return m261(0, 19);
+            return jjStopAtPos(0, 19);
          case '%':
-            return m261(0, 22);
+            return jjStopAtPos(0, 22);
          case '&':
-            return m261(0, 12);
+            return jjStopAtPos(0, 12);
          case '(':
-            return m261(0, 20);
+            return jjStopAtPos(0, 20);
          case ')':
-            return m261(0, 21);
+            return jjStopAtPos(0, 21);
          case '-':
-            return m264(2048L);
+            return jjMoveStringLiteralDfa1_0(2048L);
          case '<':
-            return m264(33792L);
+            return jjMoveStringLiteralDfa1_0(33792L);
          case '=':
-            return m261(0, 14);
+            return jjStopAtPos(0, 14);
          case '@':
-            return m261(0, 18);
+            return jjStopAtPos(0, 18);
          case '[':
-            return m264(65536L);
+            return jjMoveStringLiteralDfa1_0(65536L);
          case '|':
-            return m261(0, 13);
+            return jjStopAtPos(0, 13);
          case '~':
-            return m261(0, 17);
+            return jjStopAtPos(0, 17);
          default:
-            return m271(0, 0);
+            return jjMoveNfa_0(0, 0);
       }
    }
 
-   private static final int m264(long i) {
+   private static final int jjMoveStringLiteralDfa1_0(long i) {
       try {
-         f182 = Syntax1CharStream.m241();
+         curChar = Syntax1CharStream.readChar();
       } catch (IOException ioexception) {
-         m259(0, i);
+         jjStopStringLiteralDfa_0(0, i);
          return 1;
       }
 
-      switch (f182) {
+      switch (curChar) {
          case '-':
-            return m265(i, 1024L);
+            return jjMoveStringLiteralDfa2_0(i, 1024L);
          case '>':
             if ((i & 2048L) != 0L) {
-               return m261(1, 11);
+               return jjStopAtPos(1, 11);
             } else if ((i & 32768L) != 0L) {
-               return m261(1, 15);
+               return jjStopAtPos(1, 15);
             }
          default:
-            return m260(0, i);
+            return jjStartNfa_0(0, i);
          case 'm':
-            return m265(i, 65536L);
+            return jjMoveStringLiteralDfa2_0(i, 65536L);
       }
    }
 
-   private static final int m265(long i, long j) {
+   private static final int jjMoveStringLiteralDfa2_0(long i, long j) {
       if ((j = j & i) == 0L) {
-         return m260(0, i);
+         return jjStartNfa_0(0, i);
       } else {
          try {
-            f182 = Syntax1CharStream.m241();
+            curChar = Syntax1CharStream.readChar();
          } catch (IOException ioexception) {
-            m259(1, j);
+            jjStopStringLiteralDfa_0(1, j);
             return 2;
          }
 
-         switch (f182) {
+         switch (curChar) {
             case '>':
                if ((j & 1024L) != 0L) {
-                  return m261(2, 10);
+                  return jjStopAtPos(2, 10);
                }
                break;
             case ']':
                if ((j & 65536L) != 0L) {
-                  return m261(2, 16);
+                  return jjStopAtPos(2, 16);
                }
          }
 
-         return m260(1, j);
+         return jjStartNfa_0(1, j);
       }
    }
 
-   private static final void m266(int i) {
-      if (f180[i] != f186) {
-         f181[f185++] = i;
-         f180[i] = f186;
+   private static final void jjCheckNAdd(int i) {
+      if (jjrounds[i] != jjround) {
+         jjstateSet[jjnewStateCnt++] = i;
+         jjrounds[i] = jjround;
       }
    }
 
-   private static final void m267(int i, int j) {
+   private static final void jjAddStates(int i, int j) {
       do {
-         f181[f185++] = f174[i];
+         jjstateSet[jjnewStateCnt++] = jjnextStates[i];
       } while (i++ != j);
    }
 
-   private static final void m268(int i, int j) {
-      m266(i);
-      m266(j);
+   private static final void jjCheckNAddTwoStates(int i, int j) {
+      jjCheckNAdd(i);
+      jjCheckNAdd(j);
    }
 
-   private static final void m269(int i, int j) {
+   private static final void jjCheckNAddStates(int i, int j) {
       do {
-         m266(f174[i]);
+         jjCheckNAdd(jjnextStates[i]);
       } while (i++ != j);
    }
 
-   private static final void m270(int i) {
-      m266(f174[i]);
-      m266(f174[i + 1]);
+   private static final void jjCheckNAddStates(int i) {
+      jjCheckNAdd(jjnextStates[i]);
+      jjCheckNAdd(jjnextStates[i + 1]);
    }
 
-   private static final int m271(int i, int j) {
+   private static final int jjMoveNfa_0(int i, int j) {
       int k = 0;
-      f185 = 22;
+      jjnewStateCnt = 22;
       int l = 1;
-      f181[0] = i;
+      jjstateSet[0] = i;
       int i1 = 2147483647;
 
       while (true) {
-         if (++f186 == 2147483647) {
-            m273();
+         if (++jjround == 2147483647) {
+            ReInitRounds();
          }
 
-         if (f182 < '@') {
-            long i2 = 1L << f182;
+         if (curChar < '@') {
+            long i2 = 1L << curChar;
 
             do {
                l--;
-               switch (f181[l]) {
+               switch (jjstateSet[l]) {
                   case 0:
-                     if (f182 == '?') {
+                     if (curChar == '?') {
                         i1 = 9;
-                        f181[f185++] = 21;
+                        jjstateSet[jjnewStateCnt++] = 21;
                      }
                      break;
                   case 1:
-                     if (f182 == '0' && i1 > 5) {
+                     if (curChar == '0' && i1 > 5) {
                         i1 = 5;
                      }
                      break;
@@ -205,7 +205,7 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 5;
                         }
 
-                        m266(3);
+                        jjCheckNAdd(3);
                      }
                      break;
                   case 3:
@@ -214,7 +214,7 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 5;
                         }
 
-                        m266(3);
+                        jjCheckNAdd(3);
                      }
                   case 4:
                   case 7:
@@ -225,16 +225,16 @@ public class Syntax1TokenManager implements Syntax1Constants {
                      break;
                   case 5:
                      if ((287667426198290432L & i2) != 0L) {
-                        m268(6, 7);
+                        jjCheckNAddTwoStates(6, 7);
                      }
                      break;
                   case 6:
                      if ((287948901175001088L & i2) != 0L) {
-                        m268(6, 7);
+                        jjCheckNAddTwoStates(6, 7);
                      }
                      break;
                   case 9:
-                     if (f182 == '0' && i1 > 6) {
+                     if (curChar == '0' && i1 > 6) {
                         i1 = 6;
                      }
                      break;
@@ -244,7 +244,7 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 6;
                         }
 
-                        m266(11);
+                        jjCheckNAdd(11);
                      }
                      break;
                   case 11:
@@ -253,11 +253,11 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 6;
                         }
 
-                        m266(11);
+                        jjCheckNAdd(11);
                      }
                      break;
                   case 13:
-                     if (f182 == '0' && i1 > 7) {
+                     if (curChar == '0' && i1 > 7) {
                         i1 = 7;
                      }
                      break;
@@ -267,7 +267,7 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 7;
                         }
 
-                        m266(15);
+                        jjCheckNAdd(15);
                      }
                      break;
                   case 15:
@@ -276,11 +276,11 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 7;
                         }
 
-                        m266(15);
+                        jjCheckNAdd(15);
                      }
                      break;
                   case 17:
-                     if (f182 == '0' && i1 > 8) {
+                     if (curChar == '0' && i1 > 8) {
                         i1 = 8;
                      }
                      break;
@@ -290,7 +290,7 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 8;
                         }
 
-                        m266(19);
+                        jjCheckNAdd(19);
                      }
                      break;
                   case 19:
@@ -299,43 +299,43 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 8;
                         }
 
-                        m266(19);
+                        jjCheckNAdd(19);
                      }
                }
             } while (l != k);
-         } else if (f182 < 128) {
-            long l1 = 1L << (f182 & '?');
+         } else if (curChar < 128) {
+            long l1 = 1L << (curChar & '?');
 
             do {
                l--;
-               switch (f181[l]) {
+               switch (jjstateSet[l]) {
                   case 0:
                      if ((576460743713488896L & l1) != 0L) {
                         if (i1 > 5) {
                            i1 = 5;
                         }
 
-                        m267(0, 1);
+                        jjAddStates(0, 1);
                      } else if ((134152192L & l1) != 0L) {
                         if (i1 > 7) {
                            i1 = 7;
                         }
 
-                        m267(2, 3);
+                        jjAddStates(2, 3);
                      } else if ((65472L & l1) != 0L) {
                         if (i1 > 6) {
                            i1 = 6;
                         }
 
-                        m267(4, 5);
+                        jjAddStates(4, 5);
                      } else if ((62L & l1) != 0L) {
                         if (i1 > 8) {
                            i1 = 8;
                         }
 
-                        m267(6, 7);
-                     } else if (f182 == '{') {
-                        f181[f185++] = 5;
+                        jjAddStates(6, 7);
+                     } else if (curChar == '{') {
+                        jjstateSet[jjnewStateCnt++] = 5;
                      }
                   case 1:
                   case 2:
@@ -355,12 +355,12 @@ public class Syntax1TokenManager implements Syntax1Constants {
                   default:
                      break;
                   case 4:
-                     if (f182 == '{') {
-                        f181[f185++] = 5;
+                     if (curChar == '{') {
+                        jjstateSet[jjnewStateCnt++] = 5;
                      }
                      break;
                   case 7:
-                     if (f182 == '}') {
+                     if (curChar == '}') {
                         i1 = 5;
                      }
                      break;
@@ -370,7 +370,7 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 6;
                         }
 
-                        m267(4, 5);
+                        jjAddStates(4, 5);
                      }
                      break;
                   case 12:
@@ -379,7 +379,7 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 7;
                         }
 
-                        m267(2, 3);
+                        jjAddStates(2, 3);
                      }
                      break;
                   case 16:
@@ -388,7 +388,7 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 8;
                         }
 
-                        m267(6, 7);
+                        jjAddStates(6, 7);
                      }
                      break;
                   case 21:
@@ -397,36 +397,36 @@ public class Syntax1TokenManager implements Syntax1Constants {
                            i1 = 9;
                         }
 
-                        f181[f185++] = 21;
+                        jjstateSet[jjnewStateCnt++] = 21;
                      }
                }
             } while (l != k);
          } else {
-            int j1 = (f182 & 255) >> 6;
-            long k1 = 1L << (f182 & '?');
+            int j1 = (curChar & 255) >> 6;
+            long k1 = 1L << (curChar & '?');
 
             do {
                l--;
-               switch (f181[l]) {
+               switch (jjstateSet[l]) {
                }
             } while (l != k);
          }
 
          if (i1 != 2147483647) {
-            f188 = i1;
-            f187 = j;
+            jjmatchedKind = i1;
+            jjmatchedPos = j;
             i1 = 2147483647;
          }
 
          j++;
-         int j2 = l = f185;
-         f185 = k;
+         int j2 = l = jjnewStateCnt;
+         jjnewStateCnt = k;
          if (j2 == (k = 22 - k)) {
             return j;
          }
 
          try {
-            f182 = Syntax1CharStream.m241();
+            curChar = Syntax1CharStream.readChar();
          } catch (IOException ioexception) {
             return j;
          }
@@ -434,96 +434,96 @@ public class Syntax1TokenManager implements Syntax1Constants {
    }
 
    public Syntax1TokenManager(Syntax1CharStream syntax1charstream) {
-      if (f179 != null) {
+      if (input_stream != null) {
          throw new Syntax1TokenMgrError("ERROR: Second call to constructor of static lexer. You must use ReInit() to initialize the static variables.", 1);
       } else {
-         f179 = syntax1charstream;
+         input_stream = syntax1charstream;
       }
    }
 
    public Syntax1TokenManager(Syntax1CharStream syntax1charstream, int i) {
       this(syntax1charstream);
-      m275(i);
+      SwitchTo(i);
    }
 
-   public static void m272(Syntax1CharStream syntax1charstream) {
-      f185 = 0;
-      f187 = 0;
-      f183 = f184;
-      f179 = syntax1charstream;
-      m273();
+   public static void ReInit(Syntax1CharStream syntax1charstream) {
+      jjnewStateCnt = 0;
+      jjmatchedPos = 0;
+      curLexState = defaultLexState;
+      input_stream = syntax1charstream;
+      ReInitRounds();
    }
 
-   private static final void m273() {
-      f186 = -2147483647;
+   private static final void ReInitRounds() {
+      jjround = -2147483647;
       int i = 22;
 
       while (i-- > 0) {
-         f180[i] = -2147483648;
+         jjrounds[i] = -2147483648;
       }
    }
 
-   public static void m274(Syntax1CharStream syntax1charstream, int i) {
-      m272(syntax1charstream);
-      m275(i);
+   public static void ReInit(Syntax1CharStream syntax1charstream, int i) {
+      ReInit(syntax1charstream);
+      SwitchTo(i);
    }
 
-   public static void m275(int i) {
+   public static void SwitchTo(int i) {
       if (i < 1 && i >= 0) {
-         f183 = i;
+         curLexState = i;
       } else {
          throw new Syntax1TokenMgrError("Error: Ignoring invalid lexical state : " + i + ". State unchanged.", 2);
       }
    }
 
-   private static final Syntax1Token m276() {
-      Syntax1Token syntax1token = Syntax1Token.m373(f188);
-      syntax1token.f227 = f188;
-      String s = f175[f188];
-      syntax1token.f232 = s == null ? Syntax1CharStream.m253() : s;
-      syntax1token.f228 = Syntax1CharStream.m247();
-      syntax1token.f229 = Syntax1CharStream.m246();
-      syntax1token.f230 = Syntax1CharStream.m245();
-      syntax1token.f231 = Syntax1CharStream.m244();
+   private static final Syntax1Token jjFillToken() {
+      Syntax1Token syntax1token = Syntax1Token.newToken(jjmatchedKind);
+      syntax1token.kind = jjmatchedKind;
+      String s = jjstrLiteralImages[jjmatchedKind];
+      syntax1token.image = s == null ? Syntax1CharStream.GetImage() : s;
+      syntax1token.beginLine = Syntax1CharStream.getBeginLine();
+      syntax1token.beginColumn = Syntax1CharStream.getBeginColumn();
+      syntax1token.endLine = Syntax1CharStream.getEndLine();
+      syntax1token.endColumn = Syntax1CharStream.getEndColumn();
       return syntax1token;
    }
 
-   public static final Syntax1Token m277() {
+   public static final Syntax1Token getNextToken() {
       Object object = null;
       int i = 0;
 
       while (true) {
          try {
-            f182 = Syntax1CharStream.m239();
+            curChar = Syntax1CharStream.BeginToken();
          } catch (IOException ioexception) {
-            f188 = 0;
-            return m276();
+            jjmatchedKind = 0;
+            return jjFillToken();
          }
 
          try {
-            while (f182 <= ' ' && (4294976000L & 1L << f182) != 0L) {
-               f182 = Syntax1CharStream.m239();
+            while (curChar <= ' ' && (4294976000L & 1L << curChar) != 0L) {
+               curChar = Syntax1CharStream.BeginToken();
             }
          } catch (IOException ioexception2) {
             continue;
          }
 
-         f188 = 2147483647;
-         f187 = 0;
-         i = m263();
-         if (f188 == 2147483647) {
-            int j = Syntax1CharStream.m245();
-            int k = Syntax1CharStream.m244();
+         jjmatchedKind = 2147483647;
+         jjmatchedPos = 0;
+         i = jjMoveStringLiteralDfa0_0();
+         if (jjmatchedKind == 2147483647) {
+            int j = Syntax1CharStream.getEndLine();
+            int k = Syntax1CharStream.getEndColumn();
             String s = null;
             boolean flag = false;
 
             try {
-               Syntax1CharStream.m241();
-               Syntax1CharStream.m248(1);
+               Syntax1CharStream.readChar();
+               Syntax1CharStream.backup(1);
             } catch (IOException ioexception1) {
                flag = true;
-               s = i <= 1 ? "" : Syntax1CharStream.m253();
-               if (f182 != '\n' && f182 != '\r') {
+               s = i <= 1 ? "" : Syntax1CharStream.GetImage();
+               if (curChar != '\n' && curChar != '\r') {
                   k++;
                } else {
                   j++;
@@ -532,19 +532,19 @@ public class Syntax1TokenManager implements Syntax1Constants {
             }
 
             if (!flag) {
-               Syntax1CharStream.m248(1);
-               s = i <= 1 ? "" : Syntax1CharStream.m253();
+               Syntax1CharStream.backup(1);
+               s = i <= 1 ? "" : Syntax1CharStream.GetImage();
             }
 
-            throw new Syntax1TokenMgrError(flag, f183, j, k, s, f182, 0);
+            throw new Syntax1TokenMgrError(flag, curLexState, j, k, s, curChar, 0);
          }
 
-         if (f187 + 1 < i) {
-            Syntax1CharStream.m248(i - f187 - 1);
+         if (jjmatchedPos + 1 < i) {
+            Syntax1CharStream.backup(i - jjmatchedPos - 1);
          }
 
-         if ((f177[f188 >> 6] & 1L << (f188 & 63)) != 0L) {
-            return m276();
+         if ((jjtoToken[jjmatchedKind >> 6] & 1L << (jjmatchedKind & 63)) != 0L) {
+            return jjFillToken();
          }
       }
    }

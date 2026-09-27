@@ -53,89 +53,89 @@ class ServerConnection implements LogicConstants {
    static ServerUrl deleteProblemUrl = null;
    static ServerUrl sqlGeneratorUrl = null;
    static ServerUrl websiteUrl = null;
-   static File f466 = null;
-   static File f467 = null;
-   static File f468 = null;
-   static File f469 = null;
-   static File f470 = null;
+   static File editDir = null;
+   static File localDir = null;
+   static File adminDir = null;
+   static File nonetDir = null;
+   static File textDir = null;
    static String institution = null;
    static String term = null;
    static String course = null;
    static String ident = null;
    static String textVersion = null;
-   static String f476 = null;
-   static String f477 = null;
-   static String f478 = null;
-   static String f479 = null;
-   static boolean f480 = false;
-   static boolean f481 = false;
-   static boolean f482 = false;
+   static String adminInstitution = null;
+   static String adminTerm = null;
+   static String adminCourse = null;
+   static String adminVersion = null;
+   static boolean adminInstall = false;
+   static boolean installAdminNow = false;
+   static boolean linkedFromNonetDir = false;
    static boolean demoMode = false;
-   static boolean f484 = false;
-   static boolean f485 = false;
-   static boolean f486 = false;
+   static boolean coreUpdateOffered = false;
+   static boolean adminUpdateChecked = false;
+   static boolean backedUpForUpdate = false;
    static Credentials serverCredentials = null;
-   static String f488 = null;
-   static C_a_F f489 = null;
-   static final String f490 = "work/";
+   static String waveToken = null;
+   static LoginResult cachedLogin = null;
+   static final String WORK_DIR_PREFIX = "work/";
    static final String[] WORK_FILES = new String[]{
       "user.txt", "prefs.txt", "derwork.txt", "invwork.txt", "parwork.txt", "recwork.txt", "symwork.txt", "truwork.txt", "keywork.txt"
    };
    static final String[] DATA_FILES = new String[]{"derdata.txt", "invdata.txt", "pardata.txt", "recdata.txt", "symdata.txt", "trudata.txt"};
-   static final String f493 = "work.zip";
-   static final String f494 = "loader.jar";
+   static final String WORK_ZIP_NAME = "work.zip";
+   static final String LOADER_JAR_NAME = "loader.jar";
 
    static boolean readDatabaseLinks() {
       File file1 = LogicProgram.configDir;
       String s = LogicProgram.getLink("editDir");
-      f466 = s == null ? null : resolvePath(file1, s);
+      editDir = s == null ? null : resolvePath(file1, s);
       s = LogicProgram.getLink("localDir");
-      f467 = s == null ? null : resolvePath(file1, s);
+      localDir = s == null ? null : resolvePath(file1, s);
       s = LogicProgram.getLink("textDir");
-      f470 = s == null ? null : resolvePath(file1, s);
+      textDir = s == null ? null : resolvePath(file1, s);
       s = LogicProgram.getLink("adminDir");
-      f468 = s == null ? null : resolvePath(file1, s);
+      adminDir = s == null ? null : resolvePath(file1, s);
       s = LogicProgram.getLink("nonetDir");
-      f469 = s == null ? null : resolvePath(file1, s);
+      nonetDir = s == null ? null : resolvePath(file1, s);
       Hashtable hashtable;
-      if ((hashtable = LogicProgram.readLinks(f470, false)) != null) {
+      if ((hashtable = LogicProgram.readLinks(textDir, false)) != null) {
          institution = LogicProgram.getValue(hashtable, "institution", "").trim();
          term = LogicProgram.getValue(hashtable, "term", "").trim();
          course = LogicProgram.getValue(hashtable, "course", "").trim();
          ident = LogicProgram.getValue(hashtable, "ident", "").trim();
          textVersion = LogicProgram.getValue(hashtable, "version", "").trim();
-         f476 = LogicProgram.getLink("institution", "").trim();
-         f477 = LogicProgram.getLink("term", "").trim();
-         f478 = LogicProgram.getLink("course", "").trim();
-         f479 = LogicProgram.getLink("version", "").trim();
-         f480 = true;
+         adminInstitution = LogicProgram.getLink("institution", "").trim();
+         adminTerm = LogicProgram.getLink("term", "").trim();
+         adminCourse = LogicProgram.getLink("course", "").trim();
+         adminVersion = LogicProgram.getLink("version", "").trim();
+         adminInstall = true;
          s = LogicProgram.getValue(hashtable, "nonetDir", null);
-         f482 = s == null ? false : LogicProgram.canonicalFile(s).equals(LogicProgram.linkDir);
-      } else if ((hashtable = LogicProgram.readLinks(f468, false)) != null && LogicProgram.getValue(hashtable, "textDir", null) != null) {
+         linkedFromNonetDir = s == null ? false : LogicProgram.canonicalFile(s).equals(LogicProgram.linkDir);
+      } else if ((hashtable = LogicProgram.readLinks(adminDir, false)) != null && LogicProgram.getValue(hashtable, "textDir", null) != null) {
          institution = LogicProgram.getLink("institution", "").trim();
          term = LogicProgram.getLink("term", "").trim();
          course = LogicProgram.getLink("course", "").trim();
          ident = LogicProgram.getLink("ident", "").trim();
          textVersion = LogicProgram.getLink("version", "").trim();
-         f476 = LogicProgram.getValue(hashtable, "institution", "").trim();
-         f477 = LogicProgram.getValue(hashtable, "term", "").trim();
-         f478 = LogicProgram.getValue(hashtable, "course", "").trim();
-         f479 = LogicProgram.getValue(hashtable, "version", "").trim();
-         f480 = false;
+         adminInstitution = LogicProgram.getValue(hashtable, "institution", "").trim();
+         adminTerm = LogicProgram.getValue(hashtable, "term", "").trim();
+         adminCourse = LogicProgram.getValue(hashtable, "course", "").trim();
+         adminVersion = LogicProgram.getValue(hashtable, "version", "").trim();
+         adminInstall = false;
       } else {
          institution = LogicProgram.getLink("institution", "").trim();
          term = LogicProgram.getLink("term", "").trim();
          course = LogicProgram.getLink("course", "").trim();
          ident = LogicProgram.getLink("ident", "").trim();
          textVersion = LogicProgram.getLink("version", "").trim();
-         f476 = null;
-         f477 = null;
-         f478 = null;
-         f479 = null;
-         f480 = false;
+         adminInstitution = null;
+         adminTerm = null;
+         adminCourse = null;
+         adminVersion = null;
+         adminInstall = false;
       }
 
-      demoMode = LogicProgram.m970(institution);
+      demoMode = LogicProgram.isDemoName(institution);
       if (institution.equals("")) {
          return false;
       } else {
@@ -191,11 +191,11 @@ class ServerConnection implements LogicConstants {
 
    static ServerUrl getLinkUrl(String s) {
       String s1 = LogicProgram.getLink(s);
-      return m875(s1, new ErrorRef(null));
+      return parseUrl(s1, new ErrorRef(null));
    }
 
    static String httpGet(URL url) {
-      String s = m805(url, null);
+      String s = httpGet(url, null);
       if (DiagnosticsLog.out != null) {
          DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
          DiagnosticsLog.out.println("GET " + url);
@@ -205,7 +205,7 @@ class ServerConnection implements LogicConstants {
       return s;
    }
 
-   static String m805(URL url, HttpDigestAuth httpdigestauth) {
+   static String httpGet(URL url, HttpDigestAuth httpdigestauth) {
       URLConnection urlconnection = null;
 
       String s;
@@ -246,14 +246,14 @@ class ServerConnection implements LogicConstants {
       return s;
    }
 
-   static String m806(ServerUrl serverurl, ServerSession serversession, NetworkTask networktask) {
+   static String postSessionForm(ServerUrl serverurl, ServerSession serversession, NetworkTask networktask) {
       return postForm(serverurl, serversession.encodeForm(), networktask);
    }
 
    static String postForm(ServerUrl serverurl, String s, NetworkTask networktask) {
       Vector vector = new Vector();
       vector.addElement(s.getBytes());
-      String s1 = m810(serverurl, vector, "application/x-www-form-urlencoded", networktask, null, null);
+      String s1 = post(serverurl, vector, "application/x-www-form-urlencoded", networktask, null, null);
       if (DiagnosticsLog.out != null) {
          DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
          DiagnosticsLog.out.println("POST " + serverurl + ": " + s);
@@ -264,11 +264,11 @@ class ServerConnection implements LogicConstants {
    }
 
    static String postMultipart(ServerUrl serverurl, ServerSession serversession, NetworkTask networktask, String s) {
-      return m809(serverurl, serversession.encodeMultipart(s), networktask, s);
+      return postMultipartBody(serverurl, serversession.encodeMultipart(s), networktask, s);
    }
 
-   static String m809(ServerUrl serverurl, Vector vector, NetworkTask networktask, String s) {
-      String s1 = m810(serverurl, vector, "multipart/form-data; boundary=" + s, networktask, null, null);
+   static String postMultipartBody(ServerUrl serverurl, Vector vector, NetworkTask networktask, String s) {
+      String s1 = post(serverurl, vector, "multipart/form-data; boundary=" + s, networktask, null, null);
       if (DiagnosticsLog.out != null) {
          DiagnosticsLog.out.println(LogicProgram.utcTimestamp());
          DiagnosticsLog.out.println("POST " + serverurl + ": ");
@@ -291,22 +291,22 @@ class ServerConnection implements LogicConstants {
       return s1;
    }
 
-   static String m810(ServerUrl serverurl, Vector vector, String s, NetworkTask networktask, File file1, HttpDigestAuth httpdigestauth) {
+   static String post(ServerUrl serverurl, Vector vector, String s, NetworkTask networktask, File file1, HttpDigestAuth httpdigestauth) {
       if (networktask == null) {
-         networktask = m828(10000L);
+         networktask = createWatchdogTask(10000L);
       }
 
-      return m811(serverurl, vector, s, networktask, file1, httpdigestauth);
+      return doPost(serverurl, vector, s, networktask, file1, httpdigestauth);
    }
 
-   static String m811(ServerUrl serverurl, Vector vector, String s, NetworkTask networktask, File file1, HttpDigestAuth httpdigestauth) {
+   static String doPost(ServerUrl serverurl, Vector vector, String s, NetworkTask networktask, File file1, HttpDigestAuth httpdigestauth) {
       URLConnection urlconnection = null;
       Md5OutputStream md5outputstream = new Md5OutputStream();
-      m813(md5outputstream, vector);
+      writeRequestBody(md5outputstream, vector);
 
       String s1;
       try {
-         urlconnection = serverurl.m2016();
+         urlconnection = serverurl.openConnection();
          if (!(urlconnection instanceof HttpURLConnection)) {
             return null;
          }
@@ -314,15 +314,15 @@ class ServerConnection implements LogicConstants {
          HttpURLConnection httpurlconnection = (HttpURLConnection)urlconnection;
          httpurlconnection.setRequestMethod("POST");
          httpurlconnection.setRequestProperty("Content-type", s);
-         httpurlconnection.setRequestProperty("Content-length", md5outputstream.m924() + "");
+         httpurlconnection.setRequestProperty("Content-length", md5outputstream.getByteCount() + "");
          httpurlconnection.setRequestProperty("Content-MD5", new Base64Codec(md5outputstream.digest()).toString());
          httpurlconnection.setConnectTimeout(10000);
          httpurlconnection.setReadTimeout(10000);
          httpurlconnection.setDoOutput(true);
          OutputStream outputstream = httpurlconnection.getOutputStream();
-         networktask.m2059(outputstream);
-         m813(outputstream, vector);
-         networktask.m2059(null);
+         networktask.setOutputStream(outputstream);
+         writeRequestBody(outputstream, vector);
+         networktask.setOutputStream(null);
          httpurlconnection.getHeaderField(0);
          int i = httpurlconnection.getResponseCode();
          if (i < 200 || i >= 300) {
@@ -331,7 +331,7 @@ class ServerConnection implements LogicConstants {
          }
 
          InputStream inputstream = httpurlconnection.getInputStream();
-         networktask.m2057(inputstream);
+         networktask.setInputStream(inputstream);
          BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(inputstream));
          String s3 = System.getProperty("line.separator");
          s1 = "";
@@ -345,10 +345,10 @@ class ServerConnection implements LogicConstants {
          }
 
          if (file1 != null) {
-            m812(bufferedreader, file1);
+            decodeBase64ToFile(bufferedreader, file1);
          }
 
-         networktask.m2057(null);
+         networktask.setInputStream(null);
       } catch (IOException ioexception) {
          if (LogicProgram.debug) {
             ioexception.printStackTrace(System.err);
@@ -364,7 +364,7 @@ class ServerConnection implements LogicConstants {
       return s1;
    }
 
-   static IOException m812(Reader reader, File file1) {
+   static IOException decodeBase64ToFile(Reader reader, File file1) {
       char[] achar = new char[2048];
       Base64Codec base64codec = new Base64Codec();
 
@@ -383,8 +383,8 @@ class ServerConnection implements LogicConstants {
             }
 
             if (i > 0) {
-               base64codec.m2003(new String(achar, 0, i));
-               bufferedoutputstream.write(base64codec.m2001(true));
+               base64codec.addBase64String(new String(achar, 0, i));
+               bufferedoutputstream.write(base64codec.getBytes(true));
             }
          } catch (IOException ioexception5) {
             try {
@@ -397,7 +397,7 @@ class ServerConnection implements LogicConstants {
       }
 
       try {
-         bufferedoutputstream.write(base64codec.m2001(false));
+         bufferedoutputstream.write(base64codec.getBytes(false));
       } catch (IOException ioexception3) {
          try {
             bufferedoutputstream.close();
@@ -415,7 +415,7 @@ class ServerConnection implements LogicConstants {
       return null;
    }
 
-   static IOException m813(OutputStream outputstream, Vector vector) {
+   static IOException writeRequestBody(OutputStream outputstream, Vector vector) {
       int i = vector.size();
 
       for (int j = 0; j < i; j++) {
@@ -451,8 +451,8 @@ class ServerConnection implements LogicConstants {
                   }
 
                   if (k > 0) {
-                     base64codec.m1999(abyte, 0, k);
-                     outputstream.write(base64codec.m2005(true).getBytes());
+                     base64codec.addBytes(abyte, 0, k);
+                     outputstream.write(base64codec.encodeChunk(true).getBytes());
                   }
                } catch (IOException ioexception7) {
                   try {
@@ -465,7 +465,7 @@ class ServerConnection implements LogicConstants {
             }
 
             try {
-               outputstream.write((base64codec.m2005(false) + "\r\n").getBytes());
+               outputstream.write((base64codec.encodeChunk(false) + "\r\n").getBytes());
             } catch (IOException ioexception4) {
                try {
                   bufferedinputstream.close();
@@ -485,11 +485,11 @@ class ServerConnection implements LogicConstants {
       return null;
    }
 
-   static String m814(String s) {
+   static String stubReturnsNull(String s) {
       return null;
    }
 
-   static String m815(String s) {
+   static String sqlQuote(String s) {
       if (s == null) {
          return "NULL";
       } else {
@@ -505,7 +505,7 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static String m816(Integer integer) {
+   static String sqlQuoteInteger(Integer integer) {
       return integer == null ? "NULL" : "'" + integer + "'";
    }
 
@@ -513,21 +513,21 @@ class ServerConnection implements LogicConstants {
       if (s == null) {
          return (Object[][])null;
       } else {
-         C_r_ c_r_ = new C_r_();
-         c_r_.m2047(s, 0);
-         return c_r_.m2050();
+         HtmlTableParser htmltableparser = new HtmlTableParser();
+         htmltableparser.parseTable(s, 0);
+         return htmltableparser.toGrid();
       }
    }
 
-   static int m818(Object[][] aobject, String s) {
-      return m820(aobject, 0, 0, s);
+   static int findRow(Object[][] aobject, String s) {
+      return findRow(aobject, 0, 0, s);
    }
 
-   static int m819(Object[][] aobject, int i, String s) {
-      return m820(aobject, 0, i, s);
+   static int findRow(Object[][] aobject, int i, String s) {
+      return findRow(aobject, 0, i, s);
    }
 
-   static int m820(Object[][] aobject, int i, int j, String s) {
+   static int findRow(Object[][] aobject, int i, int j, String s) {
       if (aobject == null) {
          return -1;
       } else {
@@ -546,25 +546,25 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static String m821(Object[][] aobject, String s, ResponseHandler responsehandler) {
-      return m822(aobject, s, responsehandler, false);
+   static String getResponseValue(Object[][] aobject, String s, ResponseHandler responsehandler) {
+      return getResponseValue(aobject, s, responsehandler, false);
    }
 
-   static String m822(Object[][] aobject, String s, ResponseHandler responsehandler, boolean flag) {
+   static String getResponseValue(Object[][] aobject, String s, ResponseHandler responsehandler, boolean flag) {
       if (aobject == null) {
-         m921("no response from server", responsehandler);
+         reportError("no response from server", responsehandler);
          return null;
       } else {
-         int i = m818(aobject, s);
+         int i = findRow(aobject, s);
          if (i == -1) {
             if (!flag) {
-               m921("Could not find \"" + s.toUpperCase() + "\".", responsehandler);
+               reportError("Could not find \"" + s.toUpperCase() + "\".", responsehandler);
             }
 
             return null;
          } else if (aobject[i].length < 2) {
             if (!flag) {
-               m921("Could not parse \"" + s.toUpperCase() + "\".", responsehandler);
+               reportError("Could not parse \"" + s.toUpperCase() + "\".", responsehandler);
             }
 
             return null;
@@ -572,7 +572,7 @@ class ServerConnection implements LogicConstants {
             String s1 = (String)aobject[i][1];
             if (s1 == null) {
                if (!flag) {
-                  m921("Could not parse \"" + s.toUpperCase() + "\".", responsehandler);
+                  reportError("Could not parse \"" + s.toUpperCase() + "\".", responsehandler);
                }
 
                return null;
@@ -583,19 +583,19 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static Integer m823(Object[][] aobject, String s, ResponseHandler responsehandler) {
-      return m824(aobject, s, responsehandler, false);
+   static Integer getResponseInteger(Object[][] aobject, String s, ResponseHandler responsehandler) {
+      return getResponseInteger(aobject, s, responsehandler, false);
    }
 
-   static Integer m824(Object[][] aobject, String s, ResponseHandler responsehandler, boolean flag) {
-      String s1 = m822(aobject, s, responsehandler, flag);
+   static Integer getResponseInteger(Object[][] aobject, String s, ResponseHandler responsehandler, boolean flag) {
+      String s1 = getResponseValue(aobject, s, responsehandler, flag);
       if (s1 == null) {
          return null;
       } else {
          Integer integer = LogicProgram.parseInteger(s1.trim());
          if (integer == null) {
             if (!flag) {
-               m921("Could not parse \"" + s1 + "\" as a number.", responsehandler);
+               reportError("Could not parse \"" + s1 + "\" as a number.", responsehandler);
             }
 
             return null;
@@ -605,37 +605,37 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static QueryResult m825(ServerUrl serverurl, ServerSession serversession, NetworkTask networktask, String s, BusyIndicator busyindicator) {
+   static QueryResult repostWithNewNonce(ServerUrl serverurl, ServerSession serversession, NetworkTask networktask, String s, BusyIndicator busyindicator) {
       if (busyindicator != null) {
-         busyindicator.m2162(true);
+         busyindicator.setBusy(true);
       }
 
-      m831(serversession, networktask);
+      refreshNonce(serversession, networktask);
       Object[][] aobject = parseResponseTable(postMultipart(serverurl, serversession, networktask, s));
       if (busyindicator != null) {
-         busyindicator.m2162(false);
+         busyindicator.setBusy(false);
       }
 
-      if (!m834(aobject, serversession)) {
+      if (!verifyResponseSignature(aobject, serversession)) {
          return null;
       } else {
-         Integer integer = m920(aobject, serversession);
-         return !m833(integer, serversession) ? null : new QueryResult(aobject, integer);
+         Integer integer = getErrorStatus(aobject, serversession);
+         return !checkAuthStatus(integer, serversession) ? null : new QueryResult(aobject, integer);
       }
    }
 
-   static String m826(String s) {
-      s = m827(s, "+", " ");
+   static String urlDecode(String s) {
+      String s2 = replaceString(s, "+", " ");
       String s1 = "";
       int j = 0;
-      int k = s.length();
+      int k = s2.length();
 
       int i;
-      while ((i = s.indexOf("%", j)) != -1 && i + 3 <= k) {
-         s1 = s1 + s.substring(j, i);
+      while ((i = s2.indexOf("%", j)) != -1 && i + 3 <= k) {
+         s1 = s1 + s2.substring(j, i);
 
          try {
-            s1 = s1 + (char)Integer.parseInt(s.substring(i + 1, i + 3), 16);
+            s1 = s1 + (char)Integer.parseInt(s2.substring(i + 1, i + 3), 16);
             j = i + 3;
          } catch (NumberFormatException numberformatexception) {
             s1 = s1 + "%";
@@ -643,10 +643,10 @@ class ServerConnection implements LogicConstants {
          }
       }
 
-      return s1 + s.substring(j);
+      return s1 + s2.substring(j);
    }
 
-   static String m827(String s, String s1, String s2) {
+   static String replaceString(String s, String s1, String s2) {
       String s3 = "";
       int j = 0;
       int k = s1.length();
@@ -660,7 +660,7 @@ class ServerConnection implements LogicConstants {
       return s3 + s.substring(j);
    }
 
-   static NetworkTask m828(long i) {
+   static NetworkTask createWatchdogTask(long i) {
       String s = "Process Watcher";
       String s1 = "This process has taken over " + i / 1000L + " seconds.\nIf you think it is hung, press Abort.";
       return new NetworkTask(s, s1, i);
@@ -670,7 +670,7 @@ class ServerConnection implements LogicConstants {
       ResponseHandler responsehandler;
       do {
          responsehandler = requestNonce(busyindicator, (NetworkTask)null);
-      } while (responsehandler instanceof ErrorRef && m922(responsehandler));
+      } while (responsehandler instanceof ErrorRef && askRetry(responsehandler));
 
       return responsehandler instanceof ServerSession ? (ServerSession)responsehandler : null;
    }
@@ -685,28 +685,28 @@ class ServerConnection implements LogicConstants {
       }
 
       if (busyindicator != null) {
-         busyindicator.m2162(true);
+         busyindicator.setBusy(true);
       }
 
       Object[][] aobject = parseResponseTable(postForm(nonceUrl, (String)object, networktask));
       if (busyindicator != null) {
-         busyindicator.m2162(false);
+         busyindicator.setBusy(false);
       }
 
       ErrorRef errorref = new ErrorRef(null);
-      Integer integer = m920(aobject, errorref);
+      Integer integer = getErrorStatus(aobject, errorref);
       if (integer == null) {
          return errorref;
       } else if (integer != 0) {
-         m921("status = " + integer, errorref);
+         reportError("status = " + integer, errorref);
          return errorref;
       } else {
-         String s = m821(aobject, "nonce", errorref);
+         String s = getResponseValue(aobject, "nonce", errorref);
          return (ResponseHandler)(s == null ? errorref : new ServerSession(serverCredentials, s));
       }
    }
 
-   static boolean m831(ServerSession serversession, NetworkTask networktask) {
+   static boolean refreshNonce(ServerSession serversession, NetworkTask networktask) {
       Object object = null;
 
       try {
@@ -716,24 +716,24 @@ class ServerConnection implements LogicConstants {
       }
 
       Object[][] aobject = parseResponseTable(postForm(nonceUrl, (String)object, networktask));
-      Integer integer = m920(aobject, serversession);
+      Integer integer = getErrorStatus(aobject, serversession);
       if (integer == null) {
          return false;
       } else if (integer != 0) {
-         m921("status = " + integer, serversession);
+         reportError("status = " + integer, serversession);
          return false;
       } else {
-         String s = m821(aobject, "nonce", serversession);
+         String s = getResponseValue(aobject, "nonce", serversession);
          if (s == null) {
             return false;
          } else {
-            serversession.m49(s);
+            serversession.setNonce(s);
             return true;
          }
       }
    }
 
-   static boolean m832(ServerSession serversession, BusyIndicator busyindicator) {
+   static boolean closeSession(ServerSession serversession, BusyIndicator busyindicator) {
       String s = "";
 
       try {
@@ -745,35 +745,35 @@ class ServerConnection implements LogicConstants {
       }
 
       if (busyindicator != null) {
-         busyindicator.m2162(true);
+         busyindicator.setBusy(true);
       }
 
       Object[][] aobject = parseResponseTable(postForm(nonceUrl, s, (NetworkTask)null));
       if (busyindicator != null) {
-         busyindicator.m2162(false);
+         busyindicator.setBusy(false);
       }
 
-      Integer integer = m920(aobject, serversession);
+      Integer integer = getErrorStatus(aobject, serversession);
       if (integer == null) {
          return false;
       } else if (integer != 0) {
-         m921("status: " + integer, serversession);
+         reportError("status: " + integer, serversession);
          return false;
       } else {
          return true;
       }
    }
 
-   static boolean m833(Integer integer, ResponseHandler responsehandler) {
+   static boolean checkAuthStatus(Integer integer, ResponseHandler responsehandler) {
       if (integer == null) {
          return false;
       } else if (integer < 0) {
          if (integer == -1) {
-            m921("repeated nonce failure", responsehandler);
+            reportError("repeated nonce failure", responsehandler);
          } else if (integer == -2) {
-            m921("internal authentication failure", responsehandler);
+            reportError("internal authentication failure", responsehandler);
          } else {
-            m921("unknown authentication error: " + integer, responsehandler);
+            reportError("unknown authentication error: " + integer, responsehandler);
          }
 
          return false;
@@ -782,27 +782,27 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m834(Object[][] aobject, ServerSession serversession) {
-      String s = m821(aobject, "dgst", serversession);
+   static boolean verifyResponseSignature(Object[][] aobject, ServerSession serversession) {
+      String s = getResponseValue(aobject, "dgst", serversession);
       if (s == null) {
          return false;
       } else {
-         String s1 = m821(aobject, "cnonce", serversession);
+         String s1 = getResponseValue(aobject, "cnonce", serversession);
          if (s1 == null) {
             return false;
          } else {
-            String s2 = m821(aobject, "auth", serversession);
+            String s2 = getResponseValue(aobject, "auth", serversession);
             if (s2 == null) {
                return false;
             } else if (serversession.cnonce != null && serversession.cnonce.equals(s1)) {
-               String[] astring = ServerSession.m54(s);
+               String[] astring = ServerSession.splitFieldList(s);
                String s3 = "";
                int i = astring == null ? 0 : astring.length;
 
                for (int j = 0; j < i; j++) {
-                  int k = m818(aobject, astring[j]);
+                  int k = findRow(aobject, astring[j]);
                   if (k == -1) {
-                     m921("Could not find \"" + astring[j] + "\".", serversession);
+                     reportError("Could not find \"" + astring[j] + "\".", serversession);
                      return false;
                   }
 
@@ -818,13 +818,13 @@ class ServerConnection implements LogicConstants {
 
                String s5 = Scrambler.md5Hex(serversession.cnonce + ":" + serversession.credentials.password + ":" + Scrambler.md5Hex(s3));
                if (!s5.equals(s2)) {
-                  m921("signature mismatch", serversession);
+                  reportError("signature mismatch", serversession);
                   return false;
                } else {
                   return true;
                }
             } else {
-               m921("client nonce mismatch", serversession);
+               reportError("client nonce mismatch", serversession);
                return false;
             }
          }
@@ -838,16 +838,16 @@ class ServerConnection implements LogicConstants {
             return null;
          } else {
             UserInfo userinfo = LogicProgram.user;
-            C_a_F c_a_f = C_a_F.m1642(serversession, userinfo, busyindicator, 1);
-            if (c_a_f != null && AccountManager.m1863(userinfo, "not048", false, false) != null) {
+            LoginResult loginresult = LoginResult.login(serversession, userinfo, busyindicator, 1);
+            if (loginresult != null && AccountManager.chooseCourse(userinfo, "not048", false, false) != null) {
                if (userinfo.dirty) {
                   userinfo.save();
                }
 
-               int i = userinfo.f665 == null ? 0 : userinfo.f665;
-               return new Submission(i, c_a_f.f980, serversession, c_a_f.f979);
+               int i = userinfo.courseUid == null ? 0 : userinfo.courseUid;
+               return new Submission(i, loginresult.userUid, serversession, loginresult.passwordHash);
             } else {
-               m832(serversession, busyindicator);
+               closeSession(serversession, busyindicator);
                return null;
             }
          }
@@ -858,14 +858,14 @@ class ServerConnection implements LogicConstants {
    }
 
    static boolean submit(Submission submission, BusyIndicator busyindicator) {
-      if (submission.m2() && !demoMode) {
+      if (submission.isComplete() && !demoMode) {
          Message message = Message.get("not070");
          NetworkTask networktask = new NetworkTask(message.id, message.text);
 
          boolean flag;
          do {
             flag = submitOnce(submission, busyindicator, networktask);
-         } while (!flag && m922(submission));
+         } while (!flag && askRetry(submission));
 
          return flag;
       } else {
@@ -876,8 +876,8 @@ class ServerConnection implements LogicConstants {
    static boolean submitOnce(Submission submission, BusyIndicator busyindicator, NetworkTask networktask) {
       String s = "logic_user_uid.logic_course_uid.evaluation.tproblem_md5.twork.problem_name.module.help_count.duration";
       Hashtable hashtable = new Hashtable();
-      hashtable.put("logic_user_uid", submission.f3 + "");
-      hashtable.put("logic_course_uid", submission.f2 + "");
+      hashtable.put("logic_user_uid", submission.userUid + "");
+      hashtable.put("logic_course_uid", submission.courseUid + "");
       hashtable.put("evaluation", submission.evaluation);
       hashtable.put("tproblem_md5", submission.problemMd5);
       hashtable.put("twork", submission.work);
@@ -885,61 +885,61 @@ class ServerConnection implements LogicConstants {
       hashtable.put("module", submission.module);
       hashtable.put("help_count", submission.helpCount + "");
       hashtable.put("duration", submission.duration + "");
-      if (f488 != null) {
+      if (waveToken != null) {
          s = s + ".wave_token";
-         hashtable.put("wave_token", f488);
+         hashtable.put("wave_token", waveToken);
       }
 
-      if (submission.f1 != null) {
+      if (submission.ipAddress != null) {
          s = s + ".ip";
-         hashtable.put("ip", submission.f1);
+         hashtable.put("ip", submission.ipAddress);
       }
 
       submission.session.setParams(hashtable, s);
       if (busyindicator != null) {
-         busyindicator.m2162(true);
+         busyindicator.setBusy(true);
       }
 
       Object[][] aobject = parseResponseTable(postMultipart(submissionUrl, submission.session, networktask, "submit"));
       if (busyindicator != null) {
-         busyindicator.m2162(false);
+         busyindicator.setBusy(false);
       }
 
-      if (!m834(aobject, submission.session)) {
+      if (!verifyResponseSignature(aobject, submission.session)) {
          return false;
       } else {
-         Integer integer = m920(aobject, submission);
+         Integer integer = getErrorStatus(aobject, submission);
          if (integer == null) {
             return false;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(submissionUrl, submission.session, networktask, "submit", busyindicator);
+               QueryResult queryresult = repostWithNewNonce(submissionUrl, submission.session, networktask, "submit", busyindicator);
                if (queryresult == null) {
                   return false;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             if (integer != 0) {
-               m921("status = " + integer, submission);
+               reportError("status = " + integer, submission);
                return false;
             } else {
-               submission.timestamp = m822(aobject, "dtTimestamp", submission, true);
-               submission.submissionUid = m822(aobject, "logic_submission_uid", submission, true);
+               submission.timestamp = getResponseValue(aobject, "dtTimestamp", submission, true);
+               submission.submissionUid = getResponseValue(aobject, "logic_submission_uid", submission, true);
                return true;
             }
          }
       }
    }
 
-   static void m838(Submission submission, BusyIndicator busyindicator) {
-      m832(submission.session, busyindicator);
+   static void finishSubmission(Submission submission, BusyIndicator busyindicator) {
+      closeSession(submission.session, busyindicator);
       submission.session = null;
    }
 
-   static boolean m839(File file1) {
+   static boolean saveWorkZip(File file1) {
       File file2 = new File(LogicProgram.configDir, "work.zip");
 
       FileOutputStream fileoutputstream;
@@ -949,7 +949,7 @@ class ServerConnection implements LogicConstants {
          return false;
       }
 
-      boolean flag = m845(file1, fileoutputstream);
+      boolean flag = zipWork(file1, fileoutputstream);
 
       try {
          fileoutputstream.close();
@@ -963,37 +963,37 @@ class ServerConnection implements LogicConstants {
       return flag;
    }
 
-   static C_LD m840(BusyIndicator busyindicator) {
-      if (!demoMode && f480 && !LogicProgram.noNetwork && uploadUrl != null) {
+   static ProblemUpload prepareUpload(BusyIndicator busyindicator) {
+      if (!demoMode && adminInstall && !LogicProgram.noNetwork && uploadUrl != null) {
          ServerSession serversession = openSession(busyindicator);
          if (serversession == null) {
             return null;
          } else {
             UserInfo userinfo = LogicProgram.user;
-            if (userinfo.f664 == null) {
-               Boolean obool = m906(serversession, userinfo, null, null);
+            if (userinfo.userUid == null) {
+               Boolean obool = verifyUser(serversession, userinfo, null, null);
                if (obool == null || !obool) {
-                  m832(serversession, null);
+                  closeSession(serversession, null);
                   return null;
                }
             }
 
-            ErrorRef errorref = UserSetup.m2102(null, "instructor");
+            ErrorRef errorref = UserSetup.checkAccess(null, "instructor");
             if (errorref != null) {
-               String s = errorref.m716();
+               String s = errorref.getId();
                if (s != null) {
-                  MessageDialog.showMessage(Message.get(s), errorref.f428, null, null);
+                  MessageDialog.showMessage(Message.get(s), errorref.params, null, null);
                }
 
-               m832(serversession, null);
+               closeSession(serversession, null);
                return null;
             } else {
-               CourseInfo courseinfo = m861();
-               if (courseinfo.f623 == null) {
-                  m832(serversession, null);
+               CourseInfo courseinfo = getConfiguredCourse();
+               if (courseinfo.courseUid == null) {
+                  closeSession(serversession, null);
                   return null;
                } else {
-                  return new C_LD(serversession, userinfo.f664, courseinfo.f623, FormulaParser.getSyntax());
+                  return new ProblemUpload(serversession, userinfo.userUid, courseinfo.courseUid, FormulaParser.getSyntax());
                }
             }
          }
@@ -1003,8 +1003,8 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m841(C_LD c_ld, BusyIndicator busyindicator) {
-      if (c_ld == null) {
+   static boolean uploadProblem(ProblemUpload problemupload, BusyIndicator busyindicator) {
+      if (problemupload == null) {
          return false;
       } else {
          Message message = Message.get("not070");
@@ -1012,94 +1012,94 @@ class ServerConnection implements LogicConstants {
 
          boolean flag;
          do {
-            flag = m842(c_ld, busyindicator, networktask);
-         } while (!flag && m922(c_ld));
+            flag = uploadProblemOnce(problemupload, busyindicator, networktask);
+         } while (!flag && askRetry(problemupload));
 
          return flag;
       }
    }
 
-   static boolean m842(C_LD c_ld, BusyIndicator busyindicator, NetworkTask networktask) {
+   static boolean uploadProblemOnce(ProblemUpload problemupload, BusyIndicator busyindicator, NetworkTask networktask) {
       String s = "logic_user_uid.logic_course_uid.problem_name.text.webtext.syntax.type.aux.num_answers";
       Hashtable hashtable = new Hashtable();
-      hashtable.put("logic_user_uid", c_ld.f507 + "");
-      hashtable.put("logic_course_uid", c_ld.f508 + "");
-      hashtable.put("problem_name", c_ld.f510);
-      hashtable.put("text", c_ld.f511);
-      hashtable.put("webtext", c_ld.f512);
-      hashtable.put("syntax", c_ld.f509 + "");
-      hashtable.put("type", c_ld.f513);
-      hashtable.put("aux", c_ld.f514 == null ? "" : c_ld.f514);
-      if (c_ld.f515 == null) {
+      hashtable.put("logic_user_uid", problemupload.userUid + "");
+      hashtable.put("logic_course_uid", problemupload.courseUid + "");
+      hashtable.put("problem_name", problemupload.problemName);
+      hashtable.put("text", problemupload.text);
+      hashtable.put("webtext", problemupload.webText);
+      hashtable.put("syntax", problemupload.syntax + "");
+      hashtable.put("type", problemupload.type);
+      hashtable.put("aux", problemupload.aux == null ? "" : problemupload.aux);
+      if (problemupload.answers == null) {
          hashtable.put("num_answers", "0");
       } else {
-         hashtable.put("num_answers", c_ld.f515.length + "");
-         int i = c_ld.f515.length;
+         hashtable.put("num_answers", problemupload.answers.length + "");
+         int i = problemupload.answers.length;
 
          for (int j = 0; j < i; j++) {
             s = s + ".answer_" + (j + 1);
-            hashtable.put("answer_" + (j + 1), c_ld.f515[j]);
+            hashtable.put("answer_" + (j + 1), problemupload.answers[j]);
          }
       }
 
-      c_ld.f506.setParams(hashtable, s);
+      problemupload.session.setParams(hashtable, s);
       if (busyindicator != null) {
-         busyindicator.m2162(true);
+         busyindicator.setBusy(true);
       }
 
-      Object[][] aobject = parseResponseTable(postMultipart(uploadUrl, c_ld.f506, networktask, "upload"));
+      Object[][] aobject = parseResponseTable(postMultipart(uploadUrl, problemupload.session, networktask, "upload"));
       if (busyindicator != null) {
-         busyindicator.m2162(false);
+         busyindicator.setBusy(false);
       }
 
-      if (!m834(aobject, c_ld.f506)) {
+      if (!verifyResponseSignature(aobject, problemupload.session)) {
          return false;
       } else {
-         Integer integer = m920(aobject, c_ld);
+         Integer integer = getErrorStatus(aobject, problemupload);
          if (integer == null) {
             return false;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(uploadUrl, c_ld.f506, networktask, "upload", busyindicator);
+               QueryResult queryresult = repostWithNewNonce(uploadUrl, problemupload.session, networktask, "upload", busyindicator);
                if (queryresult == null) {
                   return false;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             if (integer != 0) {
-               m921("status = " + integer, c_ld);
+               reportError("status = " + integer, problemupload);
                return false;
             } else {
-               c_ld.f516 = m822(aobject, "dtTimestamp", c_ld, true);
-               c_ld.f517 = m822(aobject, "logic_inst_problem_uid", c_ld, true);
+               problemupload.timestamp = getResponseValue(aobject, "dtTimestamp", problemupload, true);
+               problemupload.problemUid = getResponseValue(aobject, "logic_inst_problem_uid", problemupload, true);
                return true;
             }
          }
       }
    }
 
-   static void m843(C_LD c_ld, BusyIndicator busyindicator) {
-      m832(c_ld.f506, busyindicator);
-      c_ld.f506 = null;
+   static void finishUpload(ProblemUpload problemupload, BusyIndicator busyindicator) {
+      closeSession(problemupload.session, busyindicator);
+      problemupload.session = null;
    }
 
-   static String m844(File file1) {
+   static String zipWorkToBase64(File file1) {
       ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
-      C_WC c_wc = new C_WC(bytearrayoutputstream);
-      boolean flag = m845(file1, c_wc);
+      Base64OutputStream base64outputstream = new Base64OutputStream(bytearrayoutputstream);
+      boolean flag = zipWork(file1, base64outputstream);
 
       try {
-         c_wc.close();
+         base64outputstream.close();
       } catch (IOException ioexception) {
       }
 
       return flag ? bytearrayoutputstream.toString() : null;
    }
 
-   static boolean m845(File file1, OutputStream outputstream) {
+   static boolean zipWork(File file1, OutputStream outputstream) {
       if (!file1.exists()) {
          return false;
       } else {
@@ -1171,21 +1171,21 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m846(boolean flag, File file1) {
+   static boolean restoreFromWorkZip(boolean flag, File file1) {
       File file2 = new File(LogicProgram.configDir, "work.zip");
 
       try {
-         return m848(new FileInputStream(file2), flag, file1);
+         return unzipWork(new FileInputStream(file2), flag, file1);
       } catch (FileNotFoundException filenotfoundexception) {
          return false;
       }
    }
 
-   static boolean m847(String s, boolean flag, File file1) {
-      return m848(new C_LE(new ByteArrayInputStream(s.getBytes())), flag, file1);
+   static boolean unzipBase64Work(String s, boolean flag, File file1) {
+      return unzipWork(new Base64InputStream(new ByteArrayInputStream(s.getBytes())), flag, file1);
    }
 
-   static boolean m848(InputStream inputstream, boolean flag, File file1) {
+   static boolean unzipWork(InputStream inputstream, boolean flag, File file1) {
       ZipInputStream zipinputstream = null;
       FileOutputStream fileoutputstream = null;
 
@@ -1203,19 +1203,19 @@ class ServerConnection implements LogicConstants {
             }
 
             String s = zipentry.getName();
-            s = m851(s);
+            String s2 = normalizeZipEntryName(s);
             if (zipentry.isDirectory()) {
-               if (s.equalsIgnoreCase("work/")) {
-                  file2 = new File(file1, s);
+               if (s2.equalsIgnoreCase("work/")) {
+                  file2 = new File(file1, s2);
                   if (!file2.exists()) {
                      file2.mkdirs();
                   }
                }
             } else if (file2 != null) {
-               String s1 = s.toLowerCase();
-               int j = LogicProgram.m1051(WORK_FILES, s1.substring("work/".length()));
+               String s1 = s2.toLowerCase();
+               int j = LogicProgram.indexOf(WORK_FILES, s1.substring("work/".length()));
                if (s1.startsWith("work/") && (flag ? j == 0 || j == 1 : j != -1)) {
-                  fileoutputstream = new FileOutputStream(new File(file1, s));
+                  fileoutputstream = new FileOutputStream(new File(file1, s2));
 
                   int i;
                   while ((i = zipinputstream.read(abyte)) != -1) {
@@ -1246,7 +1246,7 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m849() {
+   static boolean hasModuleWorkFiles() {
       for (int i = 2; i < WORK_FILES.length; i++) {
          if (new File(LogicProgram.workDir, WORK_FILES[i]).exists()) {
             return true;
@@ -1256,38 +1256,38 @@ class ServerConnection implements LogicConstants {
       return false;
    }
 
-   static Hashtable m850() {
-      CourseInfo courseinfo = m861();
-      Institution institutionx = Institution.m1293(courseinfo.f620);
-      return Message.params("dbsite", courseinfo.f620, "dbterm", institutionx.m1299(courseinfo.f621), "dbcourse", courseinfo.f622);
+   static Hashtable getCourseMessageParams() {
+      CourseInfo courseinfo = getConfiguredCourse();
+      Institution institutionx = Institution.forName(courseinfo.institution);
+      return Message.params("dbsite", courseinfo.institution, "dbterm", institutionx.displayTerm(courseinfo.term), "dbcourse", courseinfo.course);
    }
 
-   static String m851(String s) {
+   static String normalizeZipEntryName(String s) {
       String s1 = "logic/";
       return s.toLowerCase().startsWith(s1) ? "work/" + s.substring(s1.length()) : s;
    }
 
-   static C_XA m852(UserInfo userinfo, BusyIndicator busyindicator) {
+   static BackupRequest prepareBackup(UserInfo userinfo, BusyIndicator busyindicator) {
       ServerSession serversession = openSession(busyindicator);
       if (serversession == null) {
          return null;
       } else {
-         C_a_F c_a_f = f489 != null ? f489 : C_a_F.m1642(serversession, userinfo, busyindicator, 1);
-         if (c_a_f == null) {
-            m832(serversession, busyindicator);
+         LoginResult loginresult = cachedLogin != null ? cachedLogin : LoginResult.login(serversession, userinfo, busyindicator, 1);
+         if (loginresult == null) {
+            closeSession(serversession, busyindicator);
             return null;
          } else {
-            return new C_XA(c_a_f.f980, serversession, c_a_f.f979);
+            return new BackupRequest(loginresult.userUid, serversession, loginresult.passwordHash);
          }
       }
    }
 
-   static boolean m853(C_XA c_xa, NetworkTask networktask) {
-      if (c_xa.m1462() && c_xa.f868 != null) {
+   static boolean uploadBackup(BackupRequest backuprequest, NetworkTask networktask) {
+      if (backuprequest.isReady() && backuprequest.backupKey != null) {
          boolean flag;
          do {
-            flag = m854(c_xa, networktask);
-         } while (!flag && m922(c_xa));
+            flag = uploadBackupOnce(backuprequest, networktask);
+         } while (!flag && askRetry(backuprequest));
 
          return flag;
       } else {
@@ -1295,39 +1295,39 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m854(C_XA c_xa, NetworkTask networktask) {
+   static boolean uploadBackupOnce(BackupRequest backuprequest, NetworkTask networktask) {
       String s = "userid.sectionid.data.key";
       Hashtable hashtable = new Hashtable();
-      hashtable.put("userid", c_xa.f865 + "");
+      hashtable.put("userid", backuprequest.userUid + "");
       hashtable.put("sectionid", "0");
-      hashtable.put("data", c_xa.f869);
-      hashtable.put("key", c_xa.f868);
-      if (c_xa.f864 != null) {
+      hashtable.put("data", backuprequest.data);
+      hashtable.put("key", backuprequest.backupKey);
+      if (backuprequest.ipAddress != null) {
          s = s + ".ip";
-         hashtable.put("ip", c_xa.f864);
+         hashtable.put("ip", backuprequest.ipAddress);
       }
 
-      c_xa.f867.setParams(hashtable, s);
-      Object[][] aobject = parseResponseTable(postMultipart(backupUrl, c_xa.f867, networktask, "backup"));
-      if (!m834(aobject, c_xa.f867)) {
+      backuprequest.session.setParams(hashtable, s);
+      Object[][] aobject = parseResponseTable(postMultipart(backupUrl, backuprequest.session, networktask, "backup"));
+      if (!verifyResponseSignature(aobject, backuprequest.session)) {
          return false;
       } else {
-         Integer integer = m920(aobject, c_xa);
+         Integer integer = getErrorStatus(aobject, backuprequest);
          if (integer == null) {
             return false;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(backupUrl, c_xa.f867, networktask, "backup", null);
+               QueryResult queryresult = repostWithNewNonce(backupUrl, backuprequest.session, networktask, "backup", null);
                if (queryresult == null) {
                   return false;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             if (integer != 0) {
-               m921("status = " + integer, c_xa);
+               reportError("status = " + integer, backuprequest);
                return false;
             } else {
                return true;
@@ -1336,18 +1336,18 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m855(C_FC c_fc, NetworkTask networktask, boolean flag) {
+   static boolean saveProblemRecord(ProblemDbRecord problemdbrecord, NetworkTask networktask, boolean flag) {
       if (insertProblemUrl != null && updateProblemUrl != null) {
-         c_fc.f305 = openSession(null);
-         if (c_fc.f305 == null) {
+         problemdbrecord.session = openSession(null);
+         if (problemdbrecord.session == null) {
             return false;
          } else {
             Boolean obool;
             do {
-               obool = m856(c_fc, networktask, flag);
-            } while (obool == null && m922(c_fc.f305));
+               obool = saveProblemRecordOnce(problemdbrecord, networktask, flag);
+            } while (obool == null && askRetry(problemdbrecord.session));
 
-            m832(c_fc.f305, null);
+            closeSession(problemdbrecord.session, null);
             return obool != null && obool;
          }
       } else {
@@ -1355,40 +1355,40 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static Boolean m856(C_FC c_fc, NetworkTask networktask, boolean flag) {
+   static Boolean saveProblemRecordOnce(ProblemDbRecord problemdbrecord, NetworkTask networktask, boolean flag) {
       String s = "problem_name.tProblem.tProblem_md5.tWeb_form_problem.common_name.comment.version.syntax";
       Hashtable hashtable = new Hashtable();
-      hashtable.put("problem_name", m815(c_fc.f306));
-      hashtable.put("tProblem", m815(c_fc.f307));
-      hashtable.put("tProblem_md5", m815(c_fc.m538()));
-      hashtable.put("tWeb_form_problem", m815(c_fc.m539()));
-      hashtable.put("common_name", m815(c_fc.f308));
-      hashtable.put("comment", m815(c_fc.m540()));
-      hashtable.put("version", m816(c_fc.f310));
-      hashtable.put("syntax", m815(FormulaParser.getSyntax() + ""));
-      c_fc.f305.setParams(hashtable, s);
+      hashtable.put("problem_name", sqlQuote(problemdbrecord.problemName));
+      hashtable.put("tProblem", sqlQuote(problemdbrecord.problemText));
+      hashtable.put("tProblem_md5", sqlQuote(problemdbrecord.getProblemMd5()));
+      hashtable.put("tWeb_form_problem", sqlQuote(problemdbrecord.getWebFormProblem()));
+      hashtable.put("common_name", sqlQuote(problemdbrecord.commonName));
+      hashtable.put("comment", sqlQuote(problemdbrecord.getTruncatedComment()));
+      hashtable.put("version", sqlQuoteInteger(problemdbrecord.version));
+      hashtable.put("syntax", sqlQuote(FormulaParser.getSyntax() + ""));
+      problemdbrecord.session.setParams(hashtable, s);
       Object[][] aobject = parseResponseTable(
-         postMultipart(flag ? updateProblemUrl : insertProblemUrl, c_fc.f305, networktask, flag ? "update_problem" : "insert_problem")
+         postMultipart(flag ? updateProblemUrl : insertProblemUrl, problemdbrecord.session, networktask, flag ? "update_problem" : "insert_problem")
       );
-      if (!m834(aobject, c_fc.f305)) {
+      if (!verifyResponseSignature(aobject, problemdbrecord.session)) {
          return false;
       } else {
-         Integer integer = m920(aobject, c_fc);
+         Integer integer = getErrorStatus(aobject, problemdbrecord);
          if (integer == null) {
             return false;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(insertProblemUrl, c_fc.f305, networktask, "backup", null);
+               QueryResult queryresult = repostWithNewNonce(insertProblemUrl, problemdbrecord.session, networktask, "backup", null);
                if (queryresult == null) {
                   return false;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             if (integer != 0) {
-               m921("status = " + integer, c_fc);
+               reportError("status = " + integer, problemdbrecord);
                return false;
             } else {
                return true;
@@ -1397,51 +1397,51 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m857(C_FC c_fc, NetworkTask networktask) {
+   static boolean deleteProblemRecord(ProblemDbRecord problemdbrecord, NetworkTask networktask) {
       if (deleteProblemUrl == null) {
          return false;
       } else {
-         c_fc.f305 = openSession(null);
-         if (c_fc.f305 == null) {
+         problemdbrecord.session = openSession(null);
+         if (problemdbrecord.session == null) {
             return false;
          } else {
             Boolean obool;
             do {
-               obool = m858(c_fc, networktask);
-            } while (obool == null && m922(c_fc.f305));
+               obool = deleteProblemRecordOnce(problemdbrecord, networktask);
+            } while (obool == null && askRetry(problemdbrecord.session));
 
-            m832(c_fc.f305, null);
+            closeSession(problemdbrecord.session, null);
             return obool != null && obool;
          }
       }
    }
 
-   static Boolean m858(C_FC c_fc, NetworkTask networktask) {
+   static Boolean deleteProblemRecordOnce(ProblemDbRecord problemdbrecord, NetworkTask networktask) {
       String s = "problem_name.syntax";
       Hashtable hashtable = new Hashtable();
-      hashtable.put("problem_name", c_fc.f306);
+      hashtable.put("problem_name", problemdbrecord.problemName);
       hashtable.put("syntax", FormulaParser.getSyntax());
-      c_fc.f305.setParams(hashtable, s);
-      Object[][] aobject = parseResponseTable(postMultipart(deleteProblemUrl, c_fc.f305, networktask, "delete_problem"));
-      if (!m834(aobject, c_fc.f305)) {
+      problemdbrecord.session.setParams(hashtable, s);
+      Object[][] aobject = parseResponseTable(postMultipart(deleteProblemUrl, problemdbrecord.session, networktask, "delete_problem"));
+      if (!verifyResponseSignature(aobject, problemdbrecord.session)) {
          return false;
       } else {
-         Integer integer = m920(aobject, c_fc);
+         Integer integer = getErrorStatus(aobject, problemdbrecord);
          if (integer == null) {
             return false;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(insertProblemUrl, c_fc.f305, networktask, "backup", null);
+               QueryResult queryresult = repostWithNewNonce(insertProblemUrl, problemdbrecord.session, networktask, "backup", null);
                if (queryresult == null) {
                   return false;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             if (integer != 0) {
-               m921("status = " + integer, c_fc);
+               reportError("status = " + integer, problemdbrecord);
                return false;
             } else {
                return true;
@@ -1450,7 +1450,7 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m859() {
+   static boolean isExamVersionCurrent() {
       if (LogicProgram.getCredentials("exam") == null) {
          return false;
       } else {
@@ -1460,52 +1460,52 @@ class ServerConnection implements LogicConstants {
          } else {
             Boolean obool;
             do {
-               obool = m860(serversession);
-            } while (obool == null && m922(serversession));
+               obool = isExamVersionCurrentOnce(serversession);
+            } while (obool == null && askRetry(serversession));
 
-            m832(serversession, null);
+            closeSession(serversession, null);
             return obool == null || obool;
          }
       }
    }
 
-   static Boolean m860(ServerSession serversession) {
-      CourseInfo courseinfo = m861();
+   static Boolean isExamVersionCurrentOnce(ServerSession serversession) {
+      CourseInfo courseinfo = getConfiguredCourse();
       if (courseinfo == null) {
          return null;
       } else {
          Hashtable hashtable = new Hashtable();
-         hashtable.put("logic_course_uid", courseinfo.f623 + "");
+         hashtable.put("logic_course_uid", courseinfo.courseUid + "");
          hashtable.put("arch", LogicProgram.arch);
          serversession.setParams(hashtable, "logic_course_uid");
          Object[][] aobject = parseResponseTable(postMultipart(loadRemoteUrl, serversession, (NetworkTask)null, "load_remote"));
-         if (!m834(aobject, serversession)) {
+         if (!verifyResponseSignature(aobject, serversession)) {
             return null;
          } else {
-            Integer integer = m920(aobject, serversession);
+            Integer integer = getErrorStatus(aobject, serversession);
             if (integer == null) {
                return null;
             } else {
                if (integer == -1) {
-                  QueryResult queryresult = m825(loadRemoteUrl, serversession, (NetworkTask)null, "load_remote", null);
+                  QueryResult queryresult = repostWithNewNonce(loadRemoteUrl, serversession, (NetworkTask)null, "load_remote", null);
                   if (queryresult == null) {
                      return null;
                   }
 
-                  aobject = queryresult.f1362;
-                  integer = queryresult.f1363;
+                  aobject = queryresult.table;
+                  integer = queryresult.status;
                }
 
                if (integer != 0) {
-                  m921("no remote data", serversession);
+                  reportError("no remote data", serversession);
                   return null;
                } else {
-                  String s1 = f480 ? f479 : textVersion;
-                  String s = m821(aobject, f480 ? "admin version" : "text version", serversession);
+                  String s1 = adminInstall ? adminVersion : textVersion;
+                  String s = getResponseValue(aobject, adminInstall ? "admin version" : "text version", serversession);
                   if (s == null) {
                      return null;
                   } else {
-                     return m867(s.trim(), s1, true) ? Boolean.TRUE : Boolean.FALSE;
+                     return isUpToDate(s.trim(), s1, true) ? Boolean.TRUE : Boolean.FALSE;
                   }
                }
             }
@@ -1513,34 +1513,34 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static CourseInfo m861() {
-      CourseInfo[] acourseinfo = CourseInfo.m1120(institution, term, course);
+   static CourseInfo getConfiguredCourse() {
+      CourseInfo[] acourseinfo = CourseInfo.findCourses(institution, term, course);
       return acourseinfo != null && acourseinfo.length != 0 ? acourseinfo[0] : null;
    }
 
-   static int m862(UserInfo userinfo) {
+   static int checkForUpdates(UserInfo userinfo) {
       ServerSession serversession = openSession(null);
       if (serversession == null) {
          return 1;
       } else {
-         int i = m863(serversession, userinfo);
-         m832(serversession, null);
+         int i = checkForUpdates(serversession, userinfo);
+         closeSession(serversession, null);
          return i;
       }
    }
 
-   static int m863(ServerSession serversession, UserInfo userinfo) {
+   static int checkForUpdates(ServerSession serversession, UserInfo userinfo) {
       int i;
       do {
-         i = m864(serversession, userinfo);
-      } while (i == 4 && m922(serversession));
+         i = checkForUpdatesOnce(serversession, userinfo);
+      } while (i == 4 && askRetry(serversession));
 
       return i;
    }
 
-   static int m864(ServerSession serversession, UserInfo userinfo) {
+   static int checkForUpdatesOnce(ServerSession serversession, UserInfo userinfo) {
       NetworkTask networktask = new NetworkTask(LPInfo.programName, "Checking for updates...");
-      Integer integer1 = userinfo.m1164();
+      Integer integer1 = userinfo.getCourseUid();
       if (integer1 == null) {
          return 1;
       } else {
@@ -1549,126 +1549,128 @@ class ServerConnection implements LogicConstants {
          hashtable.put("arch", LogicProgram.arch);
          serversession.setParams(hashtable, "logic_course_uid.arch");
          Object[][] aobject = parseResponseTable(postMultipart(loadRemoteUrl, serversession, networktask, "load_remote"));
-         if (!m834(aobject, serversession)) {
+         if (!verifyResponseSignature(aobject, serversession)) {
             return 4;
          } else {
-            Integer integer = m920(aobject, serversession);
+            Integer integer = getErrorStatus(aobject, serversession);
             if (integer == null) {
                return 4;
             } else {
                if (integer == -1) {
-                  QueryResult queryresult = m825(loadRemoteUrl, serversession, networktask, "load_remote", null);
+                  QueryResult queryresult = repostWithNewNonce(loadRemoteUrl, serversession, networktask, "load_remote", null);
                   if (queryresult == null) {
                      return 4;
                   }
 
-                  aobject = queryresult.f1362;
-                  integer = queryresult.f1363;
+                  aobject = queryresult.table;
+                  integer = queryresult.status;
                }
 
                if (integer != 0) {
-                  m921("no remote data", serversession);
+                  reportError("no remote data", serversession);
                   return 4;
                } else {
-                  C_j_B c_j_b = new C_j_B();
-                  String s6 = m821(aobject, "code version", serversession);
+                  UpdateInfo updateinfo = new UpdateInfo();
+                  String s6 = getResponseValue(aobject, "code version", serversession);
                   if (s6 == null) {
                      return 1;
                   } else {
                      String s = s6.trim();
-                     s6 = m821(aobject, "text version", serversession);
+                     s6 = getResponseValue(aobject, "text version", serversession);
                      if (s6 == null) {
                         return 1;
                      } else {
                         String s1 = s6.trim();
-                        s6 = m821(aobject, "loader version", serversession);
+                        s6 = getResponseValue(aobject, "loader version", serversession);
                         if (s6 == null) {
                            return 1;
                         } else {
-                           c_j_b.f1183 = s6.trim();
-                           s6 = m821(aobject, "download URL", serversession);
+                           updateinfo.loaderVersion = s6.trim();
+                           s6 = getResponseValue(aobject, "download URL", serversession);
                            if (s6 == null) {
                               return 1;
                            } else {
-                              ServerUrl serverurl = m875(s6.trim(), serversession);
+                              ServerUrl serverurl = parseUrl(s6.trim(), serversession);
                               if (serverurl == null) {
                                  return 1;
                               } else {
-                                 s6 = m821(aobject, "download text", serversession);
+                                 s6 = getResponseValue(aobject, "download text", serversession);
                                  if (s6 == null) {
                                     return 1;
                                  } else {
                                     String s2 = s6.trim();
-                                    s6 = m821(aobject, "update URL", serversession);
+                                    s6 = getResponseValue(aobject, "update URL", serversession);
                                     if (s6 == null) {
                                        return 1;
                                     } else {
-                                       ServerUrl serverurl1 = m875(s6.trim(), serversession);
+                                       ServerUrl serverurl1 = parseUrl(s6.trim(), serversession);
                                        if (serverurl1 == null) {
                                           return 1;
                                        } else {
-                                          s6 = m821(aobject, "update text", serversession);
+                                          s6 = getResponseValue(aobject, "update text", serversession);
                                           if (s6 == null) {
                                              return 1;
                                           } else {
                                              String s3 = s6.trim();
-                                             s6 = m821(aobject, "loader URL", serversession);
+                                             s6 = getResponseValue(aobject, "loader URL", serversession);
                                              if (s6 == null) {
                                                 return 1;
                                              } else {
-                                                c_j_b.f1182 = m875(s6.trim(), serversession);
-                                                if (c_j_b.f1182 == null) {
+                                                updateinfo.loaderUrl = parseUrl(s6.trim(), serversession);
+                                                if (updateinfo.loaderUrl == null) {
                                                    return 1;
                                                 } else {
-                                                   s6 = m821(aobject, "admin version", serversession);
+                                                   s6 = getResponseValue(aobject, "admin version", serversession);
                                                    if (s6 == null) {
                                                       return 1;
                                                    } else {
                                                       String s4 = s6.trim();
-                                                      s6 = m821(aobject, "admin url", serversession);
+                                                      s6 = getResponseValue(aobject, "admin url", serversession);
                                                       if (s6 == null) {
                                                          return 1;
                                                       } else {
-                                                         ServerUrl serverurl2 = m875(s6.trim(), serversession);
-                                                         s6 = m821(aobject, "admin text", serversession);
+                                                         ServerUrl serverurl2 = parseUrl(s6.trim(), serversession);
+                                                         s6 = getResponseValue(aobject, "admin text", serversession);
                                                          if (s6 == null) {
                                                             return 1;
                                                          } else {
                                                             String s5 = s6.trim();
-                                                            s6 = m822(aobject, "wave token", serversession, true);
-                                                            f488 = s6 == null ? null : s6.trim();
-                                                            c_j_b.f1184 = userinfo;
+                                                            s6 = getResponseValue(aobject, "wave token", serversession, true);
+                                                            waveToken = s6 == null ? null : s6.trim();
+                                                            updateinfo.user = userinfo;
                                                             int i = 0;
-                                                            boolean flag = m865(userinfo);
-                                                            if (!f484 && !m867(s, LogicProgram.codeVersion, flag) && !LogicProgram.f580) {
-                                                               f484 = true;
-                                                               c_j_b.f1180 = serverurl;
-                                                               c_j_b.f1181 = s2;
-                                                               c_j_b.f1187 = m870(s2);
-                                                               if (c_j_b.f1187 == 0 && LogicProgram.f583 && !f486) {
-                                                                  c_j_b.f1186 = true;
+                                                            boolean flag = matchesConfiguredCourse(userinfo);
+                                                            if (!coreUpdateOffered && !isUpToDate(s, LogicProgram.codeVersion, flag) && !LogicProgram.fromIde) {
+                                                               coreUpdateOffered = true;
+                                                               updateinfo.downloadUrl = serverurl;
+                                                               updateinfo.downloadText = s2;
+                                                               updateinfo.method = getUpdateMethod(s2);
+                                                               if (updateinfo.method == 0 && LogicProgram.workPresent && !backedUpForUpdate) {
+                                                                  updateinfo.backupRequired = true;
                                                                }
 
-                                                               c_j_b.f1185 = false;
+                                                               updateinfo.localUpdate = false;
 
                                                                do {
-                                                                  i = m869(c_j_b, c_j_b.f1186 ? "not046" : "not033");
-                                                               } while (c_j_b.f1186 && i == 5);
-                                                            } else if (!flag || !m867(s1, textVersion, true)) {
-                                                               c_j_b.f1180 = serverurl1;
-                                                               c_j_b.f1181 = s3;
-                                                               c_j_b.f1187 = 1;
-                                                               c_j_b.f1185 = true;
-                                                               i = m869(c_j_b, flag ? "not034" : "not047");
-                                                            } else if (!f485 && serverurl2 != null && (f479 != null || m868(userinfo))) {
-                                                               f485 = true;
-                                                               flag = m866(userinfo);
-                                                               if (!flag || !m867(s4, f479, true)) {
-                                                                  c_j_b.f1180 = serverurl2;
-                                                                  c_j_b.f1181 = s5;
-                                                                  c_j_b.f1187 = 1;
-                                                                  c_j_b.f1185 = true;
-                                                                  i = m869(c_j_b, flag ? "not036" : "not049");
+                                                                  i = promptForUpdate(updateinfo, updateinfo.backupRequired ? "not046" : "not033");
+                                                               } while (updateinfo.backupRequired && i == 5);
+                                                            } else if (!flag || !isUpToDate(s1, textVersion, true)) {
+                                                               updateinfo.downloadUrl = serverurl1;
+                                                               updateinfo.downloadText = s3;
+                                                               updateinfo.method = 1;
+                                                               updateinfo.localUpdate = true;
+                                                               i = promptForUpdate(updateinfo, flag ? "not034" : "not047");
+                                                            } else if (!adminUpdateChecked
+                                                               && serverurl2 != null
+                                                               && (adminVersion != null || askInstallAdminVersion(userinfo))) {
+                                                               adminUpdateChecked = true;
+                                                               flag = matchesAdminCourse(userinfo);
+                                                               if (!flag || !isUpToDate(s4, adminVersion, true)) {
+                                                                  updateinfo.downloadUrl = serverurl2;
+                                                                  updateinfo.downloadText = s5;
+                                                                  updateinfo.method = 1;
+                                                                  updateinfo.localUpdate = true;
+                                                                  i = promptForUpdate(updateinfo, flag ? "not036" : "not049");
                                                                }
                                                             }
 
@@ -1693,71 +1695,71 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m865(UserInfo userinfo) {
+   static boolean matchesConfiguredCourse(UserInfo userinfo) {
       if (!institution.equalsIgnoreCase(userinfo.getInstitution())) {
          return false;
       } else if (!term.equalsIgnoreCase(userinfo.getTerm())) {
          return false;
       } else {
-         return !course.equalsIgnoreCase(userinfo.getClassName()) ? false : userinfo.m1163() != null;
+         return !course.equalsIgnoreCase(userinfo.getClassName()) ? false : userinfo.getCourse() != null;
       }
    }
 
-   static boolean m866(UserInfo userinfo) {
-      if (f476 == null || !f476.equalsIgnoreCase(userinfo.getInstitution())) {
+   static boolean matchesAdminCourse(UserInfo userinfo) {
+      if (adminInstitution == null || !adminInstitution.equalsIgnoreCase(userinfo.getInstitution())) {
          return false;
-      } else if (f477 == null || !f477.equalsIgnoreCase(userinfo.getTerm())) {
+      } else if (adminTerm == null || !adminTerm.equalsIgnoreCase(userinfo.getTerm())) {
          return false;
       } else {
-         return f478 == null || !f478.equalsIgnoreCase(userinfo.getClassName()) ? false : userinfo.m1163() != null;
+         return adminCourse == null || !adminCourse.equalsIgnoreCase(userinfo.getClassName()) ? false : userinfo.getCourse() != null;
       }
    }
 
-   static boolean m867(String s, String s1, boolean flag) {
+   static boolean isUpToDate(String s, String s1, boolean flag) {
       int i = s.compareTo(s1);
       return flag && !s.endsWith("x") && !s1.endsWith("x") ? i <= 0 : i == 0;
    }
 
-   static boolean m868(UserInfo userinfo) {
-      if (!userinfo.m1171("instructor")) {
+   static boolean askInstallAdminVersion(UserInfo userinfo) {
+      if (!userinfo.hasRelation("instructor")) {
          return false;
       } else {
          Message message = Message.get("not060");
-         C_b_E c_b_e = new C_b_E(message.buttons);
-         MessageDialog.showMessage(message, null, null, c_b_e);
-         return f481 = c_b_e.f1027 == 1;
+         ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+         MessageDialog.showMessage(message, null, null, buttonchoicehandler);
+         return installAdminNow = buttonchoicehandler.choice == 1;
       }
    }
 
-   static int m869(C_j_B c_j_b, String s) {
-      if (c_j_b.f1187 == 2) {
-         return m873(c_j_b);
+   static int promptForUpdate(UpdateInfo updateinfo, String s) {
+      if (updateinfo.method == 2) {
+         return showUpdateInstructions(updateinfo);
       } else {
          Message message = Message.get(s);
-         C_SE c_se = new C_SE(message.buttons, c_j_b);
-         Hashtable hashtable = c_j_b.f1184.m1165();
-         Message.putParam(hashtable, "text", c_j_b.f1181);
-         MessageDialog.showMessage(message, hashtable, null, c_se);
-         return c_se.f772;
+         UpdatePromptHandler updateprompthandler = new UpdatePromptHandler(message.buttons, updateinfo);
+         Hashtable hashtable = updateinfo.user.getMessageParams();
+         Message.putParam(hashtable, "text", updateinfo.downloadText);
+         MessageDialog.showMessage(message, hashtable, null, updateprompthandler);
+         return updateprompthandler.result;
       }
    }
 
-   static int m870(String s) {
+   static int getUpdateMethod(String s) {
       String s1 = s.trim().toUpperCase();
       return !s1.startsWith("HTTP://") && !s1.startsWith("HTTPS://") ? 0 : 2;
    }
 
-   static boolean m871(C_j_B c_j_b, boolean flag) {
-      Integer integer = LogicProgram.instanceGuard == null ? null : LogicProgram.instanceGuard.m1935();
+   static boolean writeLoadInfo(UpdateInfo updateinfo, boolean flag) {
+      Integer integer = LogicProgram.instanceGuard == null ? null : LogicProgram.instanceGuard.getPort();
       BufferedWriter bufferedwriter = null;
 
       try {
-         bufferedwriter = new BufferedWriter(new FileWriter(LogicProgram.f560));
-         bufferedwriter.write("source:" + c_j_b.f1180);
+         bufferedwriter = new BufferedWriter(new FileWriter(LogicProgram.loadInfoFile));
+         bufferedwriter.write("source:" + updateinfo.downloadUrl);
          bufferedwriter.newLine();
          bufferedwriter.write("configDir:" + LogicProgram.configDir);
          bufferedwriter.newLine();
-         bufferedwriter.write("rootDir:" + LogicProgram.f554);
+         bufferedwriter.write("rootDir:" + LogicProgram.rootDir);
          bufferedwriter.newLine();
          bufferedwriter.write("progDir:" + LogicProgram.progDir);
          bufferedwriter.newLine();
@@ -1765,31 +1767,31 @@ class ServerConnection implements LogicConstants {
          bufferedwriter.newLine();
          bufferedwriter.write("arch:" + LogicProgram.arch);
          bufferedwriter.newLine();
-         bufferedwriter.write("type:" + (c_j_b.f1185 ? "local" : "core"));
+         bufferedwriter.write("type:" + (updateinfo.localUpdate ? "local" : "core"));
          bufferedwriter.newLine();
-         if (integer != null && !LogicProgram.overrides.m2082("SoloCheck", "yes").equalsIgnoreCase("no")) {
+         if (integer != null && !LogicProgram.overrides.lookup("SoloCheck", "yes").equalsIgnoreCase("no")) {
             bufferedwriter.write("soloPort:" + integer);
             bufferedwriter.newLine();
          }
 
-         if (!LogicProgram.f583) {
+         if (!LogicProgram.workPresent) {
             bufferedwriter.write("workDeleted:");
             bufferedwriter.newLine();
          }
 
          bufferedwriter.write("needBackup:");
-         if (LogicProgram.f583 && !f486) {
+         if (LogicProgram.workPresent && !backedUpForUpdate) {
             bufferedwriter.write("true");
          } else {
             bufferedwriter.write("false");
          }
 
          bufferedwriter.newLine();
-         bufferedwriter.write("institution:" + c_j_b.f1184.getInstitution());
+         bufferedwriter.write("institution:" + updateinfo.user.getInstitution());
          bufferedwriter.newLine();
-         bufferedwriter.write("term:" + c_j_b.f1184.getTerm());
+         bufferedwriter.write("term:" + updateinfo.user.getTerm());
          bufferedwriter.newLine();
-         bufferedwriter.write("course:" + c_j_b.f1184.getClassName());
+         bufferedwriter.write("course:" + updateinfo.user.getClassName());
          bufferedwriter.newLine();
          bufferedwriter.flush();
          bufferedwriter.close();
@@ -1808,87 +1810,87 @@ class ServerConnection implements LogicConstants {
          return false;
       }
 
-      LogicProgram.f571 = false;
+      LogicProgram.deleteLoadInfo = false;
       return true;
    }
 
-   static int m872(C_j_B c_j_b) {
-      if (c_j_b.f1187 == 1) {
-         return m874(c_j_b);
+   static int performUpdate(UpdateInfo updateinfo) {
+      if (updateinfo.method == 1) {
+         return downloadDirectUpdate(updateinfo);
       } else {
          Object object = null;
 
          do {
-            object = m876(c_j_b.f1182, c_j_b);
-         } while (object == null && m922(c_j_b));
+            object = fetchLoaderJar(updateinfo.loaderUrl, updateinfo);
+         } while (object == null && askRetry(updateinfo));
 
          if (object == null) {
             return 1;
-         } else if (!m871(c_j_b, true)) {
+         } else if (!writeLoadInfo(updateinfo, true)) {
             return 1;
          } else {
             boolean flag;
             do {
-               flag = m878((File)object, c_j_b);
-            } while (!flag && m922(c_j_b));
+               flag = launchLoader((File)object, updateinfo);
+            } while (!flag && askRetry(updateinfo));
 
             return flag ? 3 : 1;
          }
       }
    }
 
-   static int m873(C_j_B c_j_b) {
+   static int showUpdateInstructions(UpdateInfo updateinfo) {
       Message message;
-      if (LogicProgram.f567 != null) {
+      if (LogicProgram.backupName != null) {
          message = Message.get("not084");
       } else {
          message = Message.get("not085");
       }
 
-      C_p_F c_p_f = new C_p_F(message.buttons, c_j_b.f1181);
-      MessageDialog.showMessage(message, null, null, c_p_f);
-      return c_p_f.f1338;
+      UpdateInstructionsHandler updateinstructionshandler = new UpdateInstructionsHandler(message.buttons, updateinfo.downloadText);
+      MessageDialog.showMessage(message, null, null, updateinstructionshandler);
+      return updateinstructionshandler.result;
    }
 
-   static int m874(C_j_B c_j_b) {
+   static int downloadDirectUpdate(UpdateInfo updateinfo) {
       while (true) {
          HttpDownloader httpdownloader = new HttpDownloader();
-         if (!httpdownloader.m1856(c_j_b.f1180, c_j_b.f1185 ? LogicProgram.configDir : LogicProgram.f554, null)) {
+         if (!httpdownloader.download(updateinfo.downloadUrl, updateinfo.localUpdate ? LogicProgram.configDir : LogicProgram.rootDir, null)) {
             Message message = Message.get("not086");
-            C_b_E c_b_e = new C_b_E(message.buttons);
-            MessageDialog.showMessage(message, null, null, c_b_e);
-            if (c_b_e.f1027 == 0) {
+            ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+            MessageDialog.showMessage(message, null, null, buttonchoicehandler);
+            if (buttonchoicehandler.choice == 0) {
                continue;
             }
 
             return 1;
          }
 
-         LogicProgram.f591 = true;
-         LogicProgram.f592 = c_j_b.f1184;
+         LogicProgram.reinitializing = true;
+         LogicProgram.reinitUser = updateinfo.user;
          return 2;
       }
    }
 
-   static ServerUrl m875(String s, ResponseHandler responsehandler) {
+   static ServerUrl parseUrl(String s, ResponseHandler responsehandler) {
       if (s == null) {
          return null;
       } else {
          try {
             return new ServerUrl(s);
          } catch (MalformedURLException malformedurlexception) {
-            m921("could not interpret " + s + " as a URL.", responsehandler);
+            reportError("could not interpret " + s + " as a URL.", responsehandler);
             return null;
          }
       }
    }
 
-   static File m876(ServerUrl serverurl, C_j_B c_j_b) {
+   static File fetchLoaderJar(ServerUrl serverurl, UpdateInfo updateinfo) {
       File file1 = new File(LogicProgram.progDir, "loader.jar");
-      String s = m881(file1, "edu.ucla.phil.logic.LPUpdateLoader", "version");
-      if (s == null || c_j_b.f1183 == null || c_j_b.f1183.compareTo(s) > 0) {
+      String s = readJarStaticField(file1, "edu.ucla.phil.logic.LPUpdateLoader", "version");
+      if (s == null || updateinfo.loaderVersion == null || updateinfo.loaderVersion.compareTo(s) > 0) {
          HttpDownloader httpdownloader = new HttpDownloader();
-         if (!httpdownloader.m1856(serverurl, file1, m828(10000L))) {
+         if (!httpdownloader.download(serverurl, file1, createWatchdogTask(10000L))) {
             MessageDialog.showMessage(Message.get("not061"), null, null, null);
             return null;
          }
@@ -1902,8 +1904,8 @@ class ServerConnection implements LogicConstants {
       return file2.isAbsolute() ? file2 : new File(file1, s);
    }
 
-   static boolean m878(File file1, ResponseHandler responsehandler) {
-      String[] astring = new String[]{"java", "-Dload.info=" + LogicProgram.f560, "-jar", file1.getPath()};
+   static boolean launchLoader(File file1, ResponseHandler responsehandler) {
+      String[] astring = new String[]{"java", "-Dload.info=" + LogicProgram.loadInfoFile, "-jar", file1.getPath()};
       if (LogicProgram.arch.equals("windows")) {
          astring[0] = "javaw";
       } else if (LogicProgram.arch.equals("macos")) {
@@ -1912,51 +1914,51 @@ class ServerConnection implements LogicConstants {
 
       try {
          Runtime.getRuntime().exec(astring, null, LogicProgram.configDir);
-         m879();
+         moveTextFilesToTrash();
          return true;
       } catch (IOException ioexception) {
          if (responsehandler == null) {
             MessageDialog.showMessage(Message.get("not063"), null, null, null);
          } else {
-            responsehandler.m4("not063", null);
+            responsehandler.setError("not063", null);
          }
 
          return false;
       }
    }
 
-   static void m879() {
-      File file1 = LogicProgram.f562;
+   static void moveTextFilesToTrash() {
+      File file1 = LogicProgram.textDir;
       File[] afile = file1 == null ? null : file1.listFiles();
       int i = afile == null ? 0 : afile.length;
       if (i != 0) {
-         if (!LogicProgram.f563.exists()) {
-            LogicProgram.f563.mkdirs();
-            if (!LogicProgram.f563.exists()) {
+         if (!LogicProgram.trashDir.exists()) {
+            LogicProgram.trashDir.mkdirs();
+            if (!LogicProgram.trashDir.exists()) {
                return;
             }
          }
 
          for (int j = 0; j < i; j++) {
             File file3 = afile[j];
-            File file2 = new File(LogicProgram.f563, file3.getName());
+            File file2 = new File(LogicProgram.trashDir, file3.getName());
             if (file2.exists()) {
                int k = 1;
 
                do {
-                  file2 = new File(LogicProgram.f563, file3.getName() + "-" + ++k);
+                  file2 = new File(LogicProgram.trashDir, file3.getName() + "-" + ++k);
                } while (file2.exists());
             }
 
             file3.renameTo(file2);
          }
 
-         m880();
+         emptyTrash();
       }
    }
 
-   static void m880() {
-      File[] afile = LogicProgram.f563.listFiles();
+   static void emptyTrash() {
+      File[] afile = LogicProgram.trashDir.listFiles();
       int i = afile == null ? 0 : afile.length;
 
       for (int j = 0; j < i; j++) {
@@ -1965,93 +1967,93 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static String m881(File file1, String s, String s1) {
+   static String readJarStaticField(File file1, String s, String s1) {
       if (!file1.exists()) {
          return null;
       } else {
-         C_RA c_ra = new C_RA(file1);
+         JarClassLoader jarclassloader = new JarClassLoader(file1);
 
          try {
-            return (String)c_ra.loadClass(s).getField(s1).get(null);
+            return (String)jarclassloader.loadClass(s).getField(s1).get(null);
          } catch (Exception exception) {
             return null;
          }
       }
    }
 
-   static String[] m882(UserInfo userinfo, NetworkTask networktask) {
+   static String[] getUserRelations(UserInfo userinfo, NetworkTask networktask) {
       ServerSession serversession = openSession(null);
       if (serversession == null) {
          return null;
       } else {
-         String[] astring = m883(serversession, userinfo, networktask);
-         m832(serversession, null);
+         String[] astring = getUserRelations(serversession, userinfo, networktask);
+         closeSession(serversession, null);
          return astring;
       }
    }
 
-   static String[] m883(ServerSession serversession, UserInfo userinfo, NetworkTask networktask) {
-      if (userinfo.f664 == null) {
-         Boolean obool = m906(serversession, userinfo, null, networktask);
+   static String[] getUserRelations(ServerSession serversession, UserInfo userinfo, NetworkTask networktask) {
+      if (userinfo.userUid == null) {
+         Boolean obool = verifyUser(serversession, userinfo, null, networktask);
          if (obool == null || !obool) {
             return null;
          }
       }
 
-      userinfo.f665 = userinfo.m1164();
-      if (userinfo.f665 == null) {
+      userinfo.courseUid = userinfo.getCourseUid();
+      if (userinfo.courseUid == null) {
          return null;
       } else {
          String[] astring;
          do {
-            astring = m884(serversession, userinfo, networktask);
-         } while (astring == null && m922(serversession));
+            astring = getUserRelationsOnce(serversession, userinfo, networktask);
+         } while (astring == null && askRetry(serversession));
 
          return astring;
       }
    }
 
-   static String[] m884(ServerSession serversession, UserInfo userinfo, NetworkTask networktask) {
+   static String[] getUserRelationsOnce(ServerSession serversession, UserInfo userinfo, NetworkTask networktask) {
       Hashtable hashtable = new Hashtable();
-      hashtable.put("logic_user_uid", userinfo.f664 + "");
-      hashtable.put("logic_course_uid", userinfo.f665 + "");
+      hashtable.put("logic_user_uid", userinfo.userUid + "");
+      hashtable.put("logic_course_uid", userinfo.courseUid + "");
       serversession.setParams(hashtable, "logic_user_uid.logic_course_uid");
       Object[][] aobject = parseResponseTable(postMultipart(getUserRelationUrl, serversession, networktask, "getUserCourseRelations"));
-      if (!m834(aobject, serversession)) {
+      if (!verifyResponseSignature(aobject, serversession)) {
          return null;
       } else {
-         Integer integer = m920(aobject, serversession);
+         Integer integer = getErrorStatus(aobject, serversession);
          if (integer == null) {
             return null;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(getUserRelationUrl, serversession, networktask, "getUserCourseRelations", null);
+               QueryResult queryresult = repostWithNewNonce(getUserRelationUrl, serversession, networktask, "getUserCourseRelations", null);
                if (queryresult == null) {
                   return null;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             if (integer != 0) {
-               m921("no remote data", serversession);
+               reportError("no remote data", serversession);
                return null;
             } else {
-               String s = m821(aobject, "reln count", serversession);
+               String s = getResponseValue(aobject, "reln count", serversession);
                if (s == null) {
                   return null;
                } else {
                   Integer integer1 = LogicProgram.parseInteger(s.trim());
                   if (integer1 == null) {
-                     m921("Could not parse \"" + s + "\" as a number.", serversession);
+                     reportError("Could not parse \"" + s + "\" as a number.", serversession);
                      return null;
                   } else {
                      int i = integer1;
                      String[] astring = new String[i];
 
                      for (int j = 0; j < i; j++) {
-                        s = m821(aobject, "reln_" + (j + 1), serversession);
+                        s = getResponseValue(aobject, "reln_" + (j + 1), serversession);
                         if (s == null) {
                            return null;
                         }
@@ -2067,107 +2069,107 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m885(UserInfo userinfo, String s, NetworkTask networktask) {
+   static boolean addUserRelation(UserInfo userinfo, String s, NetworkTask networktask) {
       ServerSession serversession = openSession(null);
       if (serversession == null) {
          return false;
       } else {
-         boolean flag = m886(serversession, userinfo, s, networktask);
-         m832(serversession, null);
+         boolean flag = addUserRelation(serversession, userinfo, s, networktask);
+         closeSession(serversession, null);
          return flag;
       }
    }
 
-   static boolean m886(ServerSession serversession, UserInfo userinfo, String s, NetworkTask networktask) {
+   static boolean addUserRelation(ServerSession serversession, UserInfo userinfo, String s, NetworkTask networktask) {
       if (demoMode) {
          return false;
-      } else if (userinfo.f666 != null && LogicProgram.m1051(userinfo.f666, s.toLowerCase()) != -1) {
+      } else if (userinfo.relations != null && LogicProgram.indexOf(userinfo.relations, s.toLowerCase()) != -1) {
          return true;
       } else {
-         if (userinfo.f664 == null) {
-            Boolean obool = m906(serversession, userinfo, null, networktask);
+         if (userinfo.userUid == null) {
+            Boolean obool = verifyUser(serversession, userinfo, null, networktask);
             if (obool == null || !obool) {
                return false;
             }
          }
 
-         userinfo.f665 = userinfo.m1164();
-         if (userinfo.f665 == null) {
+         userinfo.courseUid = userinfo.getCourseUid();
+         if (userinfo.courseUid == null) {
             return false;
          } else {
             boolean flag;
             do {
-               flag = m887(serversession, userinfo, s, networktask);
-            } while (!flag && m922(serversession));
+               flag = addUserRelationOnce(serversession, userinfo, s, networktask);
+            } while (!flag && askRetry(serversession));
 
             return flag;
          }
       }
    }
 
-   static boolean m887(ServerSession serversession, UserInfo userinfo, String s, NetworkTask networktask) {
-      userinfo.f666 = null;
+   static boolean addUserRelationOnce(ServerSession serversession, UserInfo userinfo, String s, NetworkTask networktask) {
+      userinfo.relations = null;
       Hashtable hashtable = new Hashtable();
-      hashtable.put("logic_user_uid", userinfo.f664 + "");
-      hashtable.put("logic_course_uid", userinfo.f665 + "");
+      hashtable.put("logic_user_uid", userinfo.userUid + "");
+      hashtable.put("logic_course_uid", userinfo.courseUid + "");
       hashtable.put("relation", s);
       serversession.setParams(hashtable, "logic_user_uid.logic_course_uid.relation");
       Object[][] aobject = parseResponseTable(postMultipart(addUserRelationUrl, serversession, networktask, "addUserCourseRelation"));
-      Integer integer = m920(aobject, serversession);
+      Integer integer = getErrorStatus(aobject, serversession);
       if (integer == null) {
          return false;
       } else {
          if (integer == -1) {
-            QueryResult queryresult = m825(addUserRelationUrl, serversession, networktask, "addUserCourseRelation", null);
+            QueryResult queryresult = repostWithNewNonce(addUserRelationUrl, serversession, networktask, "addUserCourseRelation", null);
             if (queryresult == null) {
                return false;
             }
 
-            aobject = queryresult.f1362;
-            integer = queryresult.f1363;
+            aobject = queryresult.table;
+            integer = queryresult.status;
          }
 
          if (integer != 0) {
-            m921("status = " + integer, serversession);
+            reportError("status = " + integer, serversession);
             return false;
          } else {
-            userinfo.f666 = m883(serversession, userinfo, networktask);
+            userinfo.relations = getUserRelations(serversession, userinfo, networktask);
             return true;
          }
       }
    }
 
-   static Boolean m888(UserInfo userinfo, String s, NetworkTask networktask) {
+   static Boolean ensureInitialBackup(UserInfo userinfo, String s, NetworkTask networktask) {
       if (s == null) {
          return null;
       } else {
          ServerSession serversession = openSession(null);
          if (serversession == null) {
             return Boolean.FALSE;
-         } else if (!m886(serversession, userinfo, "student", networktask)) {
-            m832(serversession, null);
+         } else if (!addUserRelation(serversession, userinfo, "student", networktask)) {
+            closeSession(serversession, null);
             return Boolean.FALSE;
          } else {
-            C_XA c_xa = new C_XA(userinfo.f664, serversession, "password");
-            c_xa.f868 = s;
+            BackupRequest backuprequest = new BackupRequest(userinfo.userUid, serversession, "password");
+            backuprequest.backupKey = s;
 
             Boolean obool;
             try {
-               if (!m889(c_xa, null, networktask)) {
+               if (!fetchBackupInfo(backuprequest, null, networktask)) {
                   return Boolean.FALSE;
                }
 
-               if (c_xa.m1463() != 0) {
+               if (backuprequest.countBackupsForKey() != 0) {
                   return null;
                }
 
-               if ((c_xa.f869 = m844(LogicProgram.workDir)) != null) {
-                  return m853(c_xa, networktask) ? Boolean.TRUE : Boolean.FALSE;
+               if ((backuprequest.data = zipWorkToBase64(LogicProgram.workDir)) != null) {
+                  return uploadBackup(backuprequest, networktask) ? Boolean.TRUE : Boolean.FALSE;
                }
 
                obool = Boolean.FALSE;
             } finally {
-               m895(c_xa, null);
+               finishBackupRequest(backuprequest, null);
             }
 
             return obool;
@@ -2175,71 +2177,71 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m889(C_XA c_xa, BusyIndicator busyindicator, NetworkTask networktask) {
-      if (!c_xa.m1462()) {
+   static boolean fetchBackupInfo(BackupRequest backuprequest, BusyIndicator busyindicator, NetworkTask networktask) {
+      if (!backuprequest.isReady()) {
          return false;
       } else {
          boolean flag;
          do {
-            flag = m890(c_xa, busyindicator, networktask);
-         } while (!flag && m922(c_xa));
+            flag = fetchBackupInfoOnce(backuprequest, busyindicator, networktask);
+         } while (!flag && askRetry(backuprequest));
 
          return flag;
       }
    }
 
-   static boolean m890(C_XA c_xa, BusyIndicator busyindicator, NetworkTask networktask) {
+   static boolean fetchBackupInfoOnce(BackupRequest backuprequest, BusyIndicator busyindicator, NetworkTask networktask) {
       String s = "userid";
       Hashtable hashtable = new Hashtable();
-      hashtable.put("userid", c_xa.f865 + "");
-      c_xa.f867.setParams(hashtable, s);
+      hashtable.put("userid", backuprequest.userUid + "");
+      backuprequest.session.setParams(hashtable, s);
       if (busyindicator != null) {
-         busyindicator.m2162(true);
+         busyindicator.setBusy(true);
       }
 
-      Object[][] aobject = parseResponseTable(postMultipart(backupInfoUrl, c_xa.f867, networktask, "backup_info"));
+      Object[][] aobject = parseResponseTable(postMultipart(backupInfoUrl, backuprequest.session, networktask, "backup_info"));
       if (busyindicator != null) {
-         busyindicator.m2162(false);
+         busyindicator.setBusy(false);
       }
 
-      if (!m834(aobject, c_xa.f867)) {
+      if (!verifyResponseSignature(aobject, backuprequest.session)) {
          return false;
       } else {
-         Integer integer = m920(aobject, c_xa);
+         Integer integer = getErrorStatus(aobject, backuprequest);
          if (integer == null) {
             return false;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(backupInfoUrl, c_xa.f867, networktask, "backup_info", busyindicator);
+               QueryResult queryresult = repostWithNewNonce(backupInfoUrl, backuprequest.session, networktask, "backup_info", busyindicator);
                if (queryresult == null) {
                   return false;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             if (integer != 0) {
-               m921("status = " + integer, c_xa);
+               reportError("status = " + integer, backuprequest);
                return false;
             } else {
-               Integer integer2 = m823(aobject, "backup count", c_xa);
+               Integer integer2 = getResponseInteger(aobject, "backup count", backuprequest);
                if (integer2 == null) {
                   return false;
                } else {
                   int i = integer2;
-                  c_xa.f872 = new C_w_D[i];
+                  backuprequest.backups = new BackupEntry[i];
 
                   for (int j = 0; j < i; j++) {
-                     int k = m818(aobject, "backup_" + (j + 1));
+                     int k = findRow(aobject, "backup_" + (j + 1));
                      if (k == -1) {
-                        m921("Could not find \"BACKUP_" + (j + 1) + "\".", c_xa);
+                        reportError("Could not find \"BACKUP_" + (j + 1) + "\".", backuprequest);
                         return false;
                      }
 
                      Object[] aobject1 = aobject[k];
                      if (aobject1.length < 5 || aobject1[1] == null || aobject1[2] == null || aobject1[4] == null) {
-                        m921("Could not parse \"BACKUP_" + (j + 1) + "\".", c_xa);
+                        reportError("Could not parse \"BACKUP_" + (j + 1) + "\".", backuprequest);
                         return false;
                      }
 
@@ -2247,11 +2249,11 @@ class ServerConnection implements LogicConstants {
                      String s2 = ((String)aobject1[2]).trim();
                      Integer integer1 = LogicProgram.parseInteger(((String)aobject1[4]).trim());
                      if (integer1 == null) {
-                        m921("Could not parse \"BACKUP_" + (j + 1) + "\".", c_xa);
+                        reportError("Could not parse \"BACKUP_" + (j + 1) + "\".", backuprequest);
                         return false;
                      }
 
-                     c_xa.f872[j] = new C_w_D(s1, s2, integer1);
+                     backuprequest.backups[j] = new BackupEntry(s1, s2, integer1);
                   }
 
                   return true;
@@ -2261,103 +2263,103 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m891(C_XA c_xa, NetworkTask networktask) {
-      if (!c_xa.m1462()) {
+   static boolean restoreBackup(BackupRequest backuprequest, NetworkTask networktask) {
+      if (!backuprequest.isReady()) {
          return false;
       } else {
          boolean flag;
          do {
-            flag = m892(c_xa, networktask);
-         } while (!flag && m922(c_xa));
+            flag = restoreBackupOnce(backuprequest, networktask);
+         } while (!flag && askRetry(backuprequest));
 
          if (!flag) {
-            m904(LogicProgram.workDir);
+            deleteFilesIn(LogicProgram.workDir);
          }
 
          return flag;
       }
    }
 
-   static boolean m892(C_XA c_xa, NetworkTask networktask) {
+   static boolean restoreBackupOnce(BackupRequest backuprequest, NetworkTask networktask) {
       String s = "backup";
       Hashtable hashtable = new Hashtable();
-      hashtable.put("backup", c_xa.f871 + "");
-      c_xa.f867.setParams(hashtable, s);
-      Object[][] aobject = parseResponseTable(postMultipart(restoreUrl, c_xa.f867, networktask, "restore"));
-      if (!m834(aobject, c_xa.f867)) {
+      hashtable.put("backup", backuprequest.selectedBackupId + "");
+      backuprequest.session.setParams(hashtable, s);
+      Object[][] aobject = parseResponseTable(postMultipart(restoreUrl, backuprequest.session, networktask, "restore"));
+      if (!verifyResponseSignature(aobject, backuprequest.session)) {
          return false;
       } else {
-         Integer integer = m920(aobject, c_xa);
+         Integer integer = getErrorStatus(aobject, backuprequest);
          if (integer == null) {
             return false;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(restoreUrl, c_xa.f867, networktask, "restore", null);
+               QueryResult queryresult = repostWithNewNonce(restoreUrl, backuprequest.session, networktask, "restore", null);
                if (queryresult == null) {
                   return false;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             if (integer != 0) {
-               m921("status = " + integer, c_xa);
+               reportError("status = " + integer, backuprequest);
                return false;
             } else {
-               c_xa.f869 = m821(aobject, "data", c_xa);
-               return c_xa.f869 != null;
+               backuprequest.data = getResponseValue(aobject, "data", backuprequest);
+               return backuprequest.data != null;
             }
          }
       }
    }
 
-   static boolean m893(C_XA c_xa, BusyIndicator busyindicator, NetworkTask networktask) {
-      if (!c_xa.m1462()) {
+   static boolean deleteBackup(BackupRequest backuprequest, BusyIndicator busyindicator, NetworkTask networktask) {
+      if (!backuprequest.isReady()) {
          return false;
       } else {
          boolean flag;
          do {
-            flag = m894(c_xa, busyindicator, networktask);
-         } while (!flag && m922(c_xa));
+            flag = deleteBackupOnce(backuprequest, busyindicator, networktask);
+         } while (!flag && askRetry(backuprequest));
 
          return flag;
       }
    }
 
-   static boolean m894(C_XA c_xa, BusyIndicator busyindicator, NetworkTask networktask) {
+   static boolean deleteBackupOnce(BackupRequest backuprequest, BusyIndicator busyindicator, NetworkTask networktask) {
       String s = "backup";
       Hashtable hashtable = new Hashtable();
-      hashtable.put("backup", c_xa.f871 + "");
+      hashtable.put("backup", backuprequest.selectedBackupId + "");
       if (busyindicator != null) {
-         busyindicator.m2162(true);
+         busyindicator.setBusy(true);
       }
 
-      c_xa.f867.setParams(hashtable, s);
-      Object[][] aobject = parseResponseTable(postMultipart(deleteBackupUrl, c_xa.f867, networktask, "delete_backup"));
+      backuprequest.session.setParams(hashtable, s);
+      Object[][] aobject = parseResponseTable(postMultipart(deleteBackupUrl, backuprequest.session, networktask, "delete_backup"));
       if (busyindicator != null) {
-         busyindicator.m2162(false);
+         busyindicator.setBusy(false);
       }
 
-      if (!m834(aobject, c_xa.f867)) {
+      if (!verifyResponseSignature(aobject, backuprequest.session)) {
          return false;
       } else {
-         Integer integer = m920(aobject, c_xa);
+         Integer integer = getErrorStatus(aobject, backuprequest);
          if (integer == null) {
             return false;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(deleteBackupUrl, c_xa.f867, networktask, "delete_backup", busyindicator);
+               QueryResult queryresult = repostWithNewNonce(deleteBackupUrl, backuprequest.session, networktask, "delete_backup", busyindicator);
                if (queryresult == null) {
                   return false;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             if (integer != 0) {
-               m921("status = " + integer, c_xa);
+               reportError("status = " + integer, backuprequest);
                return false;
             } else {
                return true;
@@ -2366,40 +2368,40 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static void m895(C_XA c_xa, BusyIndicator busyindicator) {
-      m832(c_xa.f867, busyindicator);
-      c_xa.f867 = null;
+   static void finishBackupRequest(BackupRequest backuprequest, BusyIndicator busyindicator) {
+      closeSession(backuprequest.session, busyindicator);
+      backuprequest.session = null;
    }
 
-   static boolean m896(String s, BusyIndicator busyindicator) {
+   static boolean backupWork(String s, BusyIndicator busyindicator) {
       if (s == null) {
          MessageDialog.showMessage(Message.get("not041"), null, null, null);
          return false;
-      } else if (!MainMenu.m2211()) {
+      } else if (!MainMenu.saveAll()) {
          return false;
       } else {
-         C_XA c_xa = m852(LogicProgram.user, busyindicator);
-         if (c_xa == null) {
+         BackupRequest backuprequest = prepareBackup(LogicProgram.user, busyindicator);
+         if (backuprequest == null) {
             return false;
          } else {
-            c_xa.f868 = s;
+            backuprequest.backupKey = s;
             Message message = Message.get("not020");
             NetworkTask networktask = new NetworkTask(message.id, message.text);
-            c_xa.f869 = m844(LogicProgram.workDir);
-            if (c_xa.f869 == null) {
-               m895(c_xa, busyindicator);
+            backuprequest.data = zipWorkToBase64(LogicProgram.workDir);
+            if (backuprequest.data == null) {
+               finishBackupRequest(backuprequest, busyindicator);
                MessageDialog.showMessage(Message.get("not015"), null, null, null);
                return false;
-            } else if (!m853(c_xa, networktask)) {
-               m895(c_xa, busyindicator);
+            } else if (!uploadBackup(backuprequest, networktask)) {
+               finishBackupRequest(backuprequest, busyindicator);
                return false;
             } else {
-               if (m889(c_xa, busyindicator, networktask)) {
-                  c_xa.m1468(LogicProgram.f566, busyindicator, networktask);
+               if (fetchBackupInfo(backuprequest, busyindicator, networktask)) {
+                  backuprequest.pruneBackups(LogicProgram.maxBackups, busyindicator, networktask);
                }
 
-               m895(c_xa, busyindicator);
-               LogicProgram.f581 = false;
+               finishBackupRequest(backuprequest, busyindicator);
+               LogicProgram.backupNeeded = false;
                MessageDialog.showMessage(Message.get("not017"), null, null, null);
                return true;
             }
@@ -2407,58 +2409,58 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static Boolean m897(String s, String s1, NewUserInfo newuserinfo) {
+   static Boolean hasBackup(String s, String s1, NewUserInfo newuserinfo) {
       ServerSession serversession = openSession(null);
       if (serversession == null) {
          return null;
       } else {
-         Boolean obool = m898(s, s1, serversession, newuserinfo);
-         m832(serversession, null);
+         Boolean obool = hasBackup(s, s1, serversession, newuserinfo);
+         closeSession(serversession, null);
          return obool;
       }
    }
 
-   static Boolean m898(String s, String s1, ServerSession serversession, NewUserInfo newuserinfo) {
-      Boolean obool = m906(serversession, newuserinfo, null, (NetworkTask)null);
+   static Boolean hasBackup(String s, String s1, ServerSession serversession, NewUserInfo newuserinfo) {
+      Boolean obool = verifyUser(serversession, newuserinfo, null, (NetworkTask)null);
       if (obool != null && obool) {
-         C_XA c_xa = new C_XA(newuserinfo.f664, serversession, "hasBackup");
-         if (!m889(c_xa, null, (NetworkTask)null)) {
+         BackupRequest backuprequest = new BackupRequest(newuserinfo.userUid, serversession, "hasBackup");
+         if (!fetchBackupInfo(backuprequest, null, (NetworkTask)null)) {
             return null;
-         } else if (s1 != null && c_xa.m1464(s1) != 0) {
+         } else if (s1 != null && backuprequest.countBackups(s1) != 0) {
             return Boolean.TRUE;
          } else {
-            return s != null && c_xa.m1464(s) != 0 ? Boolean.TRUE : Boolean.FALSE;
+            return s != null && backuprequest.countBackups(s) != 0 ? Boolean.TRUE : Boolean.FALSE;
          }
       } else {
          return obool;
       }
    }
 
-   static boolean m899(String s, String s1, NewUserInfo newuserinfo) {
+   static boolean restoreWork(String s, String s1, NewUserInfo newuserinfo) {
       if (s1 == null && s == null) {
          MessageDialog.showMessage(Message.get("not040"), null, null, null);
          return false;
-      } else if (newuserinfo == null && (newuserinfo = AccountManager.m1869()) == null) {
+      } else if (newuserinfo == null && (newuserinfo = AccountManager.createNewUser()) == null) {
          return false;
       } else {
-         C_XA c_xa = m852(newuserinfo, null);
-         if (c_xa == null) {
+         BackupRequest backuprequest = prepareBackup(newuserinfo, null);
+         if (backuprequest == null) {
             return false;
-         } else if (!m889(c_xa, null, (NetworkTask)null)) {
-            m895(c_xa, null);
+         } else if (!fetchBackupInfo(backuprequest, null, (NetworkTask)null)) {
+            finishBackupRequest(backuprequest, null);
             return false;
          } else {
             boolean flag = true;
             if (s1 != null) {
-               c_xa.f868 = s1;
-               if (c_xa.m1463() != 0) {
+               backuprequest.backupKey = s1;
+               if (backuprequest.countBackupsForKey() != 0) {
                   flag = false;
                   if (LogicProgram.getCredentials("restore") != null) {
-                     ErrorRef errorref = UserSetup.m2103("restore", null, "not095");
+                     ErrorRef errorref = UserSetup.checkAccess("restore", null, "not095");
                      if (errorref != null) {
-                        String s2 = errorref.m716();
+                        String s2 = errorref.getId();
                         if (s2 != null) {
-                           MessageDialog.showMessage(Message.get(s2), errorref.f428, null, null);
+                           MessageDialog.showMessage(Message.get(s2), errorref.params, null, null);
                         }
 
                         flag = true;
@@ -2469,27 +2471,27 @@ class ServerConnection implements LogicConstants {
             }
 
             if (flag && s != null) {
-               c_xa.f868 = s;
+               backuprequest.backupKey = s;
             }
 
-            if (!UserSetup.m2116(c_xa)) {
-               m895(c_xa, null);
+            if (!UserSetup.chooseBackup(backuprequest)) {
+               finishBackupRequest(backuprequest, null);
                return false;
             } else {
                Message message = Message.get("not021");
                NetworkTask networktask = new NetworkTask(message.id, message.text);
-               if (!m891(c_xa, networktask)) {
-                  m895(c_xa, null);
+               if (!restoreBackup(backuprequest, networktask)) {
+                  finishBackupRequest(backuprequest, null);
                   return false;
                } else {
-                  boolean flag1 = m847(c_xa.f869, flag, LogicProgram.configDir);
+                  boolean flag1 = unzipBase64Work(backuprequest.data, flag, LogicProgram.configDir);
                   if (flag1) {
-                     LogicProgram.f581 = false;
+                     LogicProgram.backupNeeded = false;
                   } else {
                      MessageDialog.showMessage(Message.get("not016"), null, null, null);
                   }
 
-                  m895(c_xa, null);
+                  finishBackupRequest(backuprequest, null);
                   return true;
                }
             }
@@ -2497,30 +2499,30 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m900(File file1, File file2) {
+   static boolean copyWork(File file1, File file2) {
       boolean flag = false;
       if (file1 != null && file2 != null) {
          Hashtable hashtable = Message.params("source", file1.getParent(), "dest", file2.toString());
          Message message = Message.get("not026");
-         C_b_E c_b_e = new C_b_E(message.buttons);
-         MessageDialog.showMessage(message, hashtable, null, c_b_e);
-         if (c_b_e.f1027 != 0) {
+         ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+         MessageDialog.showMessage(message, hashtable, null, buttonchoicehandler);
+         if (buttonchoicehandler.choice != 0) {
             return false;
          }
 
          if (file2.equals(LogicProgram.configDir)) {
-            m903(false);
+            deleteWork(false);
          } else {
-            m904(new File(file2, "work"));
+            deleteFilesIn(new File(file2, "work"));
          }
 
          ErrorRef errorref = new ErrorRef("not025", hashtable);
 
-         while (!(flag = m901(file1, file2)) && m922(errorref)) {
+         while (!(flag = copyWorkFiles(file1, file2)) && askRetry(errorref)) {
          }
 
          if (flag) {
-            LogicProgram.f582 = false;
+            LogicProgram.copyNeeded = false;
             MessageDialog.showMessage(Message.get("not024"), null, null, null);
          }
       }
@@ -2528,17 +2530,17 @@ class ServerConnection implements LogicConstants {
       return flag;
    }
 
-   static boolean m901(File file1, File file2) {
+   static boolean copyWorkFiles(File file1, File file2) {
       if (!file1.exists()) {
          return false;
       } else {
          boolean flag = false;
          Message message = Message.get("not066");
          ProgressDialog progressdialog = new ProgressDialog(message.id, message.text, false);
-         progressdialog.m1284(20, 10);
-         String s = m844(file1);
+         progressdialog.showWithMargins(20, 10);
+         String s = zipWorkToBase64(file1);
          if (s != null) {
-            flag = m847(s, false, file2);
+            flag = unzipBase64Work(s, false, file2);
          }
 
          progressdialog.dispose();
@@ -2546,35 +2548,35 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static int m902() {
-      return m903(true);
+   static int deleteWork() {
+      return deleteWork(true);
    }
 
-   static int m903(boolean flag) {
+   static int deleteWork(boolean flag) {
       Object object = null;
       if (flag) {
          Message message = Message.get("not030");
-         C_b_E c_b_e = new C_b_E(message.buttons);
-         MessageDialog.showMessage(message, null, null, c_b_e);
-         if (c_b_e.f1027 != 0) {
+         ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+         MessageDialog.showMessage(message, null, null, buttonchoicehandler);
+         if (buttonchoicehandler.choice != 0) {
             return 1;
          }
       }
 
-      LogicProgram.f581 = false;
-      LogicProgram.f582 = false;
-      LogicProgram.m979();
-      object = m904(LogicProgram.workDir);
-      LogicProgram.f583 = false;
-      LogicProgram.m978();
-      object = LogicProgram.m980((String[])object);
-      if (object == null) {
+      LogicProgram.backupNeeded = false;
+      LogicProgram.copyNeeded = false;
+      LogicProgram.closeDebugLogs();
+      object = deleteFilesIn(LogicProgram.workDir);
+      LogicProgram.workPresent = false;
+      LogicProgram.openDebugLogs();
+      String[] astring1 = LogicProgram.excludeLogFiles((String[])object);
+      if (astring1 == null) {
          return 0;
       } else {
-         int k = ((Object[])object).length;
+         int k = astring1.length;
 
          for (int i = 0; i < k; i++) {
-            DiagnosticsLog.m1905("file not deleted: " + ((Object[])object)[i]);
+            DiagnosticsLog.log("file not deleted: " + astring1[i]);
          }
 
          if (flag) {
@@ -2583,22 +2585,22 @@ class ServerConnection implements LogicConstants {
             SizedPanel sizedpanel = new SizedPanel();
             sizedpanel.setLayout(new BorderLayout());
             SizedPanel sizedpanel1 = new SizedPanel();
-            sizedpanel1.setLayout(new C_m_A());
+            sizedpanel1.setLayout(new VerticalStackLayout());
 
             for (int j = 0; j < k; j++) {
-               sizedpanel1.add(new C_ZE((String)((Object[])object)[j]));
+               sizedpanel1.add(new LogicLabel(astring1[j]));
             }
 
             SizedPanel sizedpanel2 = new SizedPanel();
-            sizedpanel2.setLayout(new C_m_A());
-            sizedpanel2.add(new C_ZE(Message.getText("not032")));
+            sizedpanel2.setLayout(new VerticalStackLayout());
+            sizedpanel2.add(new LogicLabel(Message.getText("not032")));
             sizedpanel.add(sizedpanel2, "North");
             JScrollPane jscrollpane = new JScrollPane(sizedpanel1);
             sizedpanel.add(jscrollpane, "Center");
             String[] astring = new String[]{"OK"};
             MessageDialog messagedialog = new MessageDialog(moduleframe, "not032", sizedpanel, astring);
             messagedialog.setSize(dimension);
-            messagedialog.m1323(MessageDialog.m1321(dimension), true);
+            messagedialog.showAt(MessageDialog.centeredLocation(dimension), true);
             moduleframe.dispose();
          }
 
@@ -2606,7 +2608,7 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static String[] m904(File file1) {
+   static String[] deleteFilesIn(File file1) {
       String[] astring = null;
       Vector vector = new Vector();
       if (file1.isDirectory()) {
@@ -2621,35 +2623,35 @@ class ServerConnection implements LogicConstants {
          }
 
          if ((i = vector.size()) != 0) {
-            astring = vector.toArray(new String[i]);
+            astring = (String[])vector.toArray(new String[i]);
          }
       }
 
       return astring;
    }
 
-   static Boolean m905(UserInfo userinfo, BusyIndicator busyindicator, NetworkTask networktask) {
+   static Boolean verifyUser(UserInfo userinfo, BusyIndicator busyindicator, NetworkTask networktask) {
       ServerSession serversession = openSession(busyindicator);
       if (serversession == null) {
          return null;
       } else {
-         Boolean obool = m906(serversession, userinfo, busyindicator, networktask);
-         m832(serversession, busyindicator);
+         Boolean obool = verifyUser(serversession, userinfo, busyindicator, networktask);
+         closeSession(serversession, busyindicator);
          return obool;
       }
    }
 
-   static Boolean m906(ServerSession serversession, UserInfo userinfo, BusyIndicator busyindicator, NetworkTask networktask) {
+   static Boolean verifyUser(ServerSession serversession, UserInfo userinfo, BusyIndicator busyindicator, NetworkTask networktask) {
       Boolean obool;
       do {
-         obool = m907(serversession, userinfo, busyindicator, networktask);
-      } while (obool == null && m922(serversession));
+         obool = verifyUserOnce(serversession, userinfo, busyindicator, networktask);
+      } while (obool == null && askRetry(serversession));
 
       return obool;
    }
 
-   static Boolean m907(ServerSession serversession, UserInfo userinfo, BusyIndicator busyindicator, NetworkTask networktask) {
-      String s = userinfo.m1154(true);
+   static Boolean verifyUserOnce(ServerSession serversession, UserInfo userinfo, BusyIndicator busyindicator, NetworkTask networktask) {
+      String s = userinfo.getStudentId(true);
       if (s.trim().equals("")) {
          return Boolean.FALSE;
       } else {
@@ -2658,43 +2660,43 @@ class ServerConnection implements LogicConstants {
          hashtable.put("institution", userinfo.getInstitution());
          serversession.setParams(hashtable, "uid.institution");
          if (busyindicator != null) {
-            busyindicator.m2162(true);
+            busyindicator.setBusy(true);
          }
 
          Object[][] aobject = parseResponseTable(postMultipart(verifyUrl, serversession, networktask, "userExists"));
          if (busyindicator != null) {
-            busyindicator.m2162(false);
+            busyindicator.setBusy(false);
          }
 
-         if (!m834(aobject, serversession)) {
+         if (!verifyResponseSignature(aobject, serversession)) {
             return null;
          } else {
-            Integer integer = m920(aobject, serversession);
+            Integer integer = getErrorStatus(aobject, serversession);
             if (integer == null) {
                return null;
             } else {
                if (integer == -1) {
-                  QueryResult queryresult = m825(verifyUrl, serversession, networktask, "userExists", null);
+                  QueryResult queryresult = repostWithNewNonce(verifyUrl, serversession, networktask, "userExists", null);
                   if (queryresult == null) {
                      return null;
                   }
 
-                  aobject = queryresult.f1362;
-                  integer = queryresult.f1363;
+                  aobject = queryresult.table;
+                  integer = queryresult.status;
                }
 
                if (integer != 0) {
-                  m921("status = " + integer, serversession);
+                  reportError("status = " + integer, serversession);
                   return null;
                } else {
-                  Integer integer1 = m823(aobject, "return_value", serversession);
+                  Integer integer1 = getResponseInteger(aobject, "return_value", serversession);
                   if (integer1 == null) {
                      return null;
                   } else if (integer1 != 1) {
                      return Boolean.FALSE;
                   } else {
-                     userinfo.f664 = m823(aobject, "logic_user_uid", serversession);
-                     return userinfo.f664 == null ? null : Boolean.TRUE;
+                     userinfo.userUid = getResponseInteger(aobject, "logic_user_uid", serversession);
+                     return userinfo.userUid == null ? null : Boolean.TRUE;
                   }
                }
             }
@@ -2702,14 +2704,14 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static Integer m908(ServerSession serversession, UserInfo userinfo, C__F c__f, String s, int i) {
+   static Integer loginUser(ServerSession serversession, UserInfo userinfo, PasswordEntry passwordentry, String s, int i) {
       if (userinfo == null) {
          return null;
       } else {
          Integer integer;
          do {
-            integer = m909(serversession, userinfo, (NetworkTask)null, c__f, s, i);
-         } while (integer == null && m922(serversession));
+            integer = loginUserOnce(serversession, userinfo, (NetworkTask)null, passwordentry, s, i);
+         } while (integer == null && askRetry(serversession));
 
          if (integer == null) {
             return null;
@@ -2719,29 +2721,29 @@ class ServerConnection implements LogicConstants {
                   return null;
                }
 
-               if (c__f.f934) {
+               if (passwordentry.retried) {
                   MessageDialog.showMessage("Authorization Failed", s, null, null);
                   return null;
                }
 
-               c__f.f934 = true;
-               userinfo.f664 = m910(serversession, userinfo, c__f, s, i);
+               passwordentry.retried = true;
+               userinfo.userUid = retryLogin(serversession, userinfo, passwordentry, s, i);
             }
 
-            if (userinfo.f664 == null) {
+            if (userinfo.userUid == null) {
                return null;
             } else {
                if (userinfo instanceof NewUserInfo) {
-                  ((NewUserInfo)userinfo).f381 = c__f.f933 == null ? c__f.f932 : c__f.f933;
+                  ((NewUserInfo)userinfo).passwordHash = passwordentry.newPassword == null ? passwordentry.password : passwordentry.newPassword;
                }
 
-               return userinfo.f664;
+               return userinfo.userUid;
             }
          }
       }
    }
 
-   static Integer m909(ServerSession serversession, UserInfo userinfo, NetworkTask networktask, C__F c__f, String s, int i) {
+   static Integer loginUserOnce(ServerSession serversession, UserInfo userinfo, NetworkTask networktask, PasswordEntry passwordentry, String s, int i) {
       Hashtable hashtable = new Hashtable();
       boolean flag = userinfo instanceof NewUserInfo;
       if (!flag) {
@@ -2750,8 +2752,8 @@ class ServerConnection implements LogicConstants {
          hashtable.put("last_name", userinfo.getLastName());
       }
 
-      hashtable.put("uid", userinfo.m1154(true));
-      hashtable.put("password", c__f.f932);
+      hashtable.put("uid", userinfo.getStudentId(true));
+      hashtable.put("password", passwordentry.password);
       if (!flag) {
          hashtable.put("email", userinfo.getEmail());
       }
@@ -2765,26 +2767,26 @@ class ServerConnection implements LogicConstants {
       }
 
       Object[][] aobject = parseResponseTable(postMultipart(userUrl, serversession, networktask, "loginUser"));
-      if (!m834(aobject, serversession)) {
+      if (!verifyResponseSignature(aobject, serversession)) {
          return null;
       } else {
-         Integer integer = m920(aobject, serversession);
+         Integer integer = getErrorStatus(aobject, serversession);
          if (integer == null) {
             return null;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(userUrl, serversession, networktask, "loginUser", null);
+               QueryResult queryresult = repostWithNewNonce(userUrl, serversession, networktask, "loginUser", null);
                if (queryresult == null) {
                   return null;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             if (integer == 0) {
-               userinfo.f664 = m823(aobject, "logic_user_uid", serversession);
-               if (userinfo.f664 == null) {
+               userinfo.userUid = getResponseInteger(aobject, "logic_user_uid", serversession);
+               if (userinfo.userUid == null) {
                   return null;
                }
             }
@@ -2794,42 +2796,42 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static Integer m910(ServerSession serversession, UserInfo userinfo, C__F c__f, String s, int i) {
-      if (AccountManager.m1865(serversession, userinfo, c__f, s) == null) {
+   static Integer retryLogin(ServerSession serversession, UserInfo userinfo, PasswordEntry passwordentry, String s, int i) {
+      if (AccountManager.reenterPassword(serversession, userinfo, passwordentry, s) == null) {
          return null;
-      } else if (m908(serversession, userinfo, c__f, s, i) != null) {
-         return userinfo.f664;
+      } else if (loginUser(serversession, userinfo, passwordentry, s, i) != null) {
+         return userinfo.userUid;
       } else if (LogicProgram.getCredentials("developer") == null) {
          return null;
       } else {
-         ErrorRef errorref = UserSetup.m2102("developer", "Developer");
+         ErrorRef errorref = UserSetup.checkAccess("developer", "Developer");
          if (errorref != null) {
-            String s1 = errorref.m716();
+            String s1 = errorref.getId();
             if (s1 != null) {
-               MessageDialog.showMessage(Message.get(s1), errorref.f428, null, null);
+               MessageDialog.showMessage(Message.get(s1), errorref.params, null, null);
             }
 
             return null;
          } else {
-            Boolean obool = m906(serversession, userinfo, null, (NetworkTask)null);
-            return obool != null && obool ? userinfo.f664 : null;
+            Boolean obool = verifyUser(serversession, userinfo, null, (NetworkTask)null);
+            return obool != null && obool ? userinfo.userUid : null;
          }
       }
    }
 
-   static Boolean m911(ServerSession serversession, UserInfo userinfo) {
-      Boolean obool = m906(serversession, userinfo, null, (NetworkTask)null);
+   static Boolean checkRegistration(ServerSession serversession, UserInfo userinfo) {
+      Boolean obool = verifyUser(serversession, userinfo, null, (NetworkTask)null);
       if (obool == null) {
          return Boolean.FALSE;
       } else if (!obool) {
          return null;
       } else {
-         C_a_F c_a_f = C_a_F.m1642(serversession, userinfo, null, 1);
-         if (c_a_f == null) {
+         LoginResult loginresult = LoginResult.login(serversession, userinfo, null, 1);
+         if (loginresult == null) {
             return Boolean.FALSE;
          } else {
             if (LogicProgram.mainMenu == null) {
-               f489 = c_a_f;
+               cachedLogin = loginresult;
             }
 
             return Boolean.TRUE;
@@ -2837,51 +2839,51 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static UserInfo m912(String s, String s1) {
+   static UserInfo fetchUserInfo(String s, String s1) {
       ServerSession serversession = openSession(null);
       if (serversession == null) {
          return null;
       } else {
-         UserInfo userinfo = m913(serversession, s, s1);
-         m832(serversession, null);
+         UserInfo userinfo = fetchUserInfo(serversession, s, s1);
+         closeSession(serversession, null);
          return userinfo;
       }
    }
 
-   static UserInfo m913(ServerSession serversession, String s, String s1) {
+   static UserInfo fetchUserInfo(ServerSession serversession, String s, String s1) {
       if (userInfoUrl == null) {
          return null;
       } else {
          UserInfo userinfo;
          do {
-            userinfo = m914(serversession, s, s1);
-         } while (userinfo == null && m922(serversession));
+            userinfo = fetchUserInfoOnce(serversession, s, s1);
+         } while (userinfo == null && askRetry(serversession));
 
          return userinfo;
       }
    }
 
-   static UserInfo m914(ServerSession serversession, String s, String s1) {
+   static UserInfo fetchUserInfoOnce(ServerSession serversession, String s, String s1) {
       Hashtable hashtable = new Hashtable();
       hashtable.put("institution", s);
       hashtable.put("studentID", s1);
       serversession.setParams(hashtable, "institution.studentID");
       Object[][] aobject = parseResponseTable(postMultipart(userInfoUrl, serversession, (NetworkTask)null, "getUserInfo"));
-      if (!m834(aobject, serversession)) {
+      if (!verifyResponseSignature(aobject, serversession)) {
          return null;
       } else {
-         Integer integer = m920(aobject, serversession);
+         Integer integer = getErrorStatus(aobject, serversession);
          if (integer == null) {
             return null;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(userInfoUrl, serversession, (NetworkTask)null, "getUserInfo", null);
+               QueryResult queryresult = repostWithNewNonce(userInfoUrl, serversession, (NetworkTask)null, "getUserInfo", null);
                if (queryresult == null) {
                   return null;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             return integer != 0 ? null : null;
@@ -2889,37 +2891,37 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m915(ServerSession serversession, int i, String s, String s1) {
+   static boolean changePassword(ServerSession serversession, int i, String s, String s1) {
       Boolean obool;
       do {
-         obool = m916(serversession, (NetworkTask)null, i, s, s1);
-      } while (obool == null && m922(serversession));
+         obool = changePasswordOnce(serversession, (NetworkTask)null, i, s, s1);
+      } while (obool == null && askRetry(serversession));
 
       return obool != null && obool;
    }
 
-   static Boolean m916(ServerSession serversession, NetworkTask networktask, int i, String s, String s1) {
+   static Boolean changePasswordOnce(ServerSession serversession, NetworkTask networktask, int i, String s, String s1) {
       Hashtable hashtable = new Hashtable();
       hashtable.put("logic_user_uid", i + "");
       hashtable.put("old_password", s);
       hashtable.put("new_password", s1);
       serversession.setParams(hashtable, "logic_user_uid.old_password.new_password");
       Object[][] aobject = parseResponseTable(postMultipart(passwordUrl, serversession, networktask, "changePassword"));
-      if (!m834(aobject, serversession)) {
+      if (!verifyResponseSignature(aobject, serversession)) {
          return null;
       } else {
-         Integer integer = m920(aobject, serversession);
+         Integer integer = getErrorStatus(aobject, serversession);
          if (integer == null) {
             return null;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(passwordUrl, serversession, networktask, "changePassword", null);
+               QueryResult queryresult = repostWithNewNonce(passwordUrl, serversession, networktask, "changePassword", null);
                if (queryresult == null) {
                   return null;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             return integer == 0 ? Boolean.TRUE : Boolean.FALSE;
@@ -2927,72 +2929,72 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static boolean m917() {
+   static boolean fetchCourseList() {
       ServerSession serversession = openSession(null);
       if (serversession == null) {
          return false;
       } else {
-         boolean flag = m918(serversession);
-         m832(serversession, null);
+         boolean flag = fetchCourseList(serversession);
+         closeSession(serversession, null);
          return flag;
       }
    }
 
-   static boolean m918(ServerSession serversession) {
+   static boolean fetchCourseList(ServerSession serversession) {
       Message message = Message.get("not071");
 
       boolean flag;
       do {
          NetworkTask networktask = new NetworkTask(message.id, message.text);
-         flag = m919(serversession, networktask);
-      } while (!flag && m922(serversession));
+         flag = fetchCourseListOnce(serversession, networktask);
+      } while (!flag && askRetry(serversession));
 
       return flag;
    }
 
-   static boolean m919(ServerSession serversession, NetworkTask networktask) {
+   static boolean fetchCourseListOnce(ServerSession serversession, NetworkTask networktask) {
       Vector vector = new Vector();
       Hashtable hashtable = new Hashtable();
       hashtable.put("arch", LogicProgram.arch);
       serversession.setParams(hashtable, "arch");
       Object[][] aobject = parseResponseTable(postMultipart(courseRemoteUrl, serversession, networktask, "getRemoteCourses"));
-      if (!m834(aobject, serversession)) {
+      if (!verifyResponseSignature(aobject, serversession)) {
          return false;
       } else {
-         Integer integer = m920(aobject, serversession);
+         Integer integer = getErrorStatus(aobject, serversession);
          if (integer == null) {
             return false;
          } else {
             if (integer == -1) {
-               QueryResult queryresult = m825(courseRemoteUrl, serversession, networktask, "getRemoteCourses", null);
+               QueryResult queryresult = repostWithNewNonce(courseRemoteUrl, serversession, networktask, "getRemoteCourses", null);
                if (queryresult == null) {
                   return false;
                }
 
-               aobject = queryresult.f1362;
-               integer = queryresult.f1363;
+               aobject = queryresult.table;
+               integer = queryresult.status;
             }
 
             if (integer != 0) {
-               m921("status = " + integer, serversession);
+               reportError("status = " + integer, serversession);
                return false;
             } else {
-               Integer integer3 = m823(aobject, "course count", serversession);
+               Integer integer3 = getResponseInteger(aobject, "course count", serversession);
                if (integer3 == null) {
                   return false;
                } else {
                   int i = integer3;
 
                   for (int j = 1; j <= i; j++) {
-                     int k = m818(aobject, "course_" + j);
+                     int k = findRow(aobject, "course_" + j);
                      if (k == -1) {
-                        m921("Could not find \"COURSE" + j + "\".", serversession);
+                        reportError("Could not find \"COURSE" + j + "\".", serversession);
                         return false;
                      }
 
                      Integer integer1 = LogicProgram.parseInteger((String)aobject[k][4]);
                      if (integer1 == null) {
-                        m921("Could not parse \"" + (String)aobject[k][4] + "\" as a number.", serversession);
+                        reportError("Could not parse \"" + (String)aobject[k][4] + "\" as a number.", serversession);
                         return false;
                      }
 
@@ -3003,7 +3005,7 @@ class ServerConnection implements LogicConstants {
 
                      Integer integer2 = null;
                      if (aobject[k].length > 6 && (integer2 = LogicProgram.parseInteger((String)aobject[k][6])) == null) {
-                        m921("Could not parse \"" + (String)aobject[k][6] + "\" as a number.", serversession);
+                        reportError("Could not parse \"" + (String)aobject[k][6] + "\" as a number.", serversession);
                         return false;
                      }
 
@@ -3012,10 +3014,10 @@ class ServerConnection implements LogicConstants {
                      vector.addElement(courseinfo);
                   }
 
-                  CourseInfo.f628 = new CourseInfo[vector.size()];
-                  vector.copyInto(CourseInfo.f628);
-                  C_WA c_wa = new C_WA(new C_d_B());
-                  CourseInfo.f628 = (CourseInfo[])c_wa.m1425(CourseInfo.f628);
+                  CourseInfo.allCourses = new CourseInfo[vector.size()];
+                  vector.copyInto(CourseInfo.allCourses);
+                  MergeSorter mergesorter = new MergeSorter(new CourseOrder());
+                  CourseInfo.allCourses = (CourseInfo[])mergesorter.sort(CourseInfo.allCourses);
                   return true;
                }
             }
@@ -3023,11 +3025,11 @@ class ServerConnection implements LogicConstants {
       }
    }
 
-   static Integer m920(Object[][] aobject, ResponseHandler responsehandler) {
-      return m823(aobject, "error status", responsehandler);
+   static Integer getErrorStatus(Object[][] aobject, ResponseHandler responsehandler) {
+      return getResponseInteger(aobject, "error status", responsehandler);
    }
 
-   static void m921(String s, ResponseHandler responsehandler) {
+   static void reportError(String s, ResponseHandler responsehandler) {
       if (responsehandler == null) {
          Message message = Message.get("not008");
          MessageDialog.showMessage(message.id, message.text + "\n\n" + s, null, null);
@@ -3037,34 +3039,34 @@ class ServerConnection implements LogicConstants {
             hashtable.put("commErrorMsg", s);
          }
 
-         responsehandler.m4("not008", hashtable);
+         responsehandler.setError("not008", hashtable);
       }
    }
 
-   static boolean m922(ResponseHandler responsehandler) {
+   static boolean askRetry(ResponseHandler responsehandler) {
       Message message1 = Message.get("not037");
       ErrorRef errorref;
       String s;
       Message message;
-      if (responsehandler != null && (errorref = responsehandler.m5()) != null && errorref.f427 != null) {
-         message = Message.get(errorref.f427);
-         s = message.text;
-         if (errorref.f428 != null) {
-            s = Message.substitute(s, errorref.f428);
-            String s1 = (String)errorref.f428.get("commErrorMsg");
+      if (responsehandler != null && (errorref = responsehandler.getError()) != null && errorref.id != null) {
+         message = Message.get(errorref.id);
+         String s2 = message.text;
+         if (errorref.params != null) {
+            s2 = Message.substitute(s2, errorref.params);
+            String s1 = (String)errorref.params.get("commErrorMsg");
             if (s1 != null) {
-               s = s + "\n\n" + s1;
+               s2 = s2 + "\n\n" + s1;
             }
          }
 
-         s = s + "\n\n" + message1.text;
+         s = s2 + "\n\n" + message1.text;
       } else {
          message = message1;
          s = message1.text;
       }
 
-      C_b_E c_b_e = new C_b_E(message1.buttons);
-      MessageDialog.showMessage(message.id, s, null, c_b_e);
-      return c_b_e.f1027 == 0;
+      ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message1.buttons);
+      MessageDialog.showMessage(message.id, s, null, buttonchoicehandler);
+      return buttonchoicehandler.choice == 0;
    }
 }

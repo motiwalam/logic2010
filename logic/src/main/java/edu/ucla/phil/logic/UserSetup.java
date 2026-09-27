@@ -12,29 +12,29 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 class UserSetup implements LogicConstants {
-   static Vector f1396 = new Vector();
-   static Vector f1397 = new Vector();
+   static Vector verifiedPasswordUsers = new Vector();
+   static Vector verifiedRelations = new Vector();
 
-   static boolean m2101(String s, String s1) {
-      return m2102(s, s1) == null;
+   static boolean hasAccess(String s, String s1) {
+      return checkAccess(s, s1) == null;
    }
 
-   static ErrorRef m2102(String s, String s1) {
-      return m2103(s, s1, null);
+   static ErrorRef checkAccess(String s, String s1) {
+      return checkAccess(s, s1, null);
    }
 
-   static ErrorRef m2103(String s, String s1, String s2) {
+   static ErrorRef checkAccess(String s, String s1, String s2) {
       if (s1 != null && !LogicProgram.noNetwork) {
-         if (f1397.contains(s1.toLowerCase())) {
+         if (verifiedRelations.contains(s1.toLowerCase())) {
             return null;
          } else {
             Hashtable hashtable = Message.params("relation", s1);
-            NewUserInfo newuserinfo = AccountManager.m1871("not055", hashtable);
+            NewUserInfo newuserinfo = AccountManager.identifyPrivilegedUser("not055", hashtable);
             if (newuserinfo == null) {
                return new ErrorRef(null);
-            } else if (newuserinfo.m1171(s1)) {
-               if (!LogicProgram.f589) {
-                  f1397.addElement(s1.toLowerCase());
+            } else if (newuserinfo.hasRelation(s1)) {
+               if (!LogicProgram.repeatAuth) {
+                  verifiedRelations.addElement(s1.toLowerCase());
                }
 
                return null;
@@ -49,32 +49,32 @@ class UserSetup implements LogicConstants {
          Credentials credentials;
          if ((credentials = LogicProgram.getCredentials(s)) == null) {
             return new ErrorRef("not012", Message.params("user", s));
-         } else if (f1396.contains(s.toLowerCase())) {
+         } else if (verifiedPasswordUsers.contains(s.toLowerCase())) {
             return null;
          } else if (credentials.password != null && credentials.password.length() >= 6) {
             JPanel jpanel = new JPanel();
-            jpanel.setLayout(new C_m_A());
+            jpanel.setLayout(new VerticalStackLayout());
             Message message;
             if (s2 != null && (message = Message.get(s2)) != null) {
-               jpanel.add(new EditableTextPane(LogicProgram.m1004(message.text)));
+               jpanel.add(new EditableTextPane(LogicProgram.expandEscapes(message.text)));
             }
 
             message = Message.get("not050");
-            jpanel.add(new C_ZE(Message.substitute(message.text, Message.params("user", credentials.user))));
-            C_q_ c_q_;
-            jpanel.add(c_q_ = new C_q_(20));
-            c_q_.setEchoChar('*');
+            jpanel.add(new LogicLabel(Message.substitute(message.text, Message.params("user", credentials.user))));
+            PasswordInputField passwordinputfield;
+            jpanel.add(passwordinputfield = new PasswordInputField(20));
+            passwordinputfield.setEchoChar('*');
             String[] astring = new String[]{"OK", "Cancel"};
             MessageDialog messagedialog = new MessageDialog(null, message.id, jpanel, astring);
             messagedialog.pack();
-            messagedialog.m1314(0);
-            c_q_.requestFocus();
-            messagedialog.m1323(null, true);
-            if (messagedialog.f790 != 0) {
+            messagedialog.setDefaultButtonIndex(0);
+            passwordinputfield.requestFocus();
+            messagedialog.showAt(null, true);
+            if (messagedialog.selectedButton != 0) {
                return new ErrorRef(null);
-            } else if (new String(c_q_.getPassword()).equals(credentials.password)) {
-               if (!LogicProgram.f589) {
-                  f1396.addElement(credentials.user.toLowerCase());
+            } else if (new String(passwordinputfield.getPassword()).equals(credentials.password)) {
+               if (!LogicProgram.repeatAuth) {
+                  verifiedPasswordUsers.addElement(credentials.user.toLowerCase());
                }
 
                return null;
@@ -88,49 +88,49 @@ class UserSetup implements LogicConstants {
       }
    }
 
-   static int m2104(ErrorRef errorref) {
+   static int showErrorChoice(ErrorRef errorref) {
       String s;
-      if (errorref != null && (s = errorref.m716()) != null) {
+      if (errorref != null && (s = errorref.getId()) != null) {
          Message message = Message.get(s);
-         C_b_E c_b_e = new C_b_E(message.buttons);
-         MessageDialog.showMessage(message, errorref.m717(), null, c_b_e);
-         return c_b_e.f1027;
+         ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+         MessageDialog.showMessage(message, errorref.getParams(), null, buttonchoicehandler);
+         return buttonchoicehandler.choice;
       } else {
          return -1;
       }
    }
 
-   static boolean m2105(String s) {
+   static boolean confirmSubmitAll(String s) {
       if (LogicProgram.noNetwork) {
          return false;
       } else {
          Message message = Message.get("not069");
          Hashtable hashtable = Message.params("module", s);
-         C_b_E c_b_e = new C_b_E(message.buttons);
-         MessageDialog.showMessage(message, hashtable, null, c_b_e);
-         return c_b_e.f1027 == 0;
+         ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+         MessageDialog.showMessage(message, hashtable, null, buttonchoicehandler);
+         return buttonchoicehandler.choice == 0;
       }
    }
 
-   static Boolean m2106(UserInfo userinfo, boolean flag) {
+   static Boolean confirmIdentity(UserInfo userinfo, boolean flag) {
       Message message = Message.get(flag ? "not035" : "not022");
-      Hashtable hashtable = userinfo.m1165();
-      C_b_E c_b_e = new C_b_E(message.buttons);
-      MessageDialog.showMessage(message, hashtable, null, c_b_e);
-      if (c_b_e.f1027 < 0 || c_b_e.f1027 > (flag ? 1 : 2)) {
+      Hashtable hashtable = userinfo.getMessageParams();
+      ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+      MessageDialog.showMessage(message, hashtable, null, buttonchoicehandler);
+      if (buttonchoicehandler.choice < 0 || buttonchoicehandler.choice > (flag ? 1 : 2)) {
          return Boolean.FALSE;
-      } else if (c_b_e.f1027 == (flag ? 0 : 1)) {
-         ServerConnection.m902();
+      } else if (buttonchoicehandler.choice == (flag ? 0 : 1)) {
+         ServerConnection.deleteWork();
          return null;
-      } else if ((flag || c_b_e.f1027 != 2) && userinfo.m1163() != null) {
+      } else if ((flag || buttonchoicehandler.choice != 2) && userinfo.getCourse() != null) {
          return Boolean.TRUE;
       } else {
-         String s = !flag && c_b_e.f1027 == 2 ? "not044" : "not045";
-         return AccountManager.m1863(userinfo, s, true, false) == null ? Boolean.FALSE : Boolean.TRUE;
+         String s = !flag && buttonchoicehandler.choice == 2 ? "not044" : "not045";
+         return AccountManager.chooseCourse(userinfo, s, true, false) == null ? Boolean.FALSE : Boolean.TRUE;
       }
    }
 
-   static Boolean m2107(UserInfo userinfo, boolean flag, boolean flag1) {
+   static Boolean confirmIdentityAndPreferences(UserInfo userinfo, boolean flag, boolean flag1) {
       Message message;
       if (flag1) {
          message = Message.get("not094");
@@ -140,21 +140,21 @@ class UserSetup implements LogicConstants {
          message = Message.get("not022");
       }
 
-      Hashtable hashtable = userinfo.m1165();
-      C_b_E c_b_e = new C_b_E(message.buttons);
+      Hashtable hashtable = userinfo.getMessageParams();
+      ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
       String s = message.text;
       if (hashtable != null) {
          s = Message.substitute(s, hashtable);
       }
 
       SizedPanel sizedpanel = new SizedPanel();
-      sizedpanel.m934(LogicProgram.f541.width * 3 / 4);
-      sizedpanel.m937(true);
+      sizedpanel.setLimitWidth(LogicProgram.screenSize.width * 3 / 4);
+      sizedpanel.setMaximumOnly(true);
       sizedpanel.setLayout(new BorderLayout());
       sizedpanel.setBackground(LogicConstants.bruinAsh);
-      EditableTextPane editabletextpane = new EditableTextPane(LogicProgram.m1004(s));
-      editabletextpane.m1787(true);
-      editabletextpane.m1789(true);
+      EditableTextPane editabletextpane = new EditableTextPane(LogicProgram.expandEscapes(s));
+      editabletextpane.setWrapLines(true);
+      editabletextpane.setWrapWords(true);
       editabletextpane.setEnabled(false);
       editabletextpane.setDisabledTextColor(LogicConstants.bruinBlack);
       editabletextpane.setBackground(LogicConstants.bruinAsh);
@@ -162,13 +162,13 @@ class UserSetup implements LogicConstants {
       SizedPanel sizedpanel1 = new SizedPanel();
       sizedpanel1.setLayout(new FlowLayout());
       sizedpanel1.setBackground(LogicConstants.bruinAsh);
-      boolean flag3 = LogicProgram.f603;
-      sizedpanel1.add(new C_d_D("Monochrome: "));
-      C_NE c_ne;
-      sizedpanel1.add(c_ne = new C_NE(""));
-      c_ne.setSelected(flag3);
-      sizedpanel1.add(new C_CC(LogicProgram.fontSize, 2, true, Color.black));
-      sizedpanel1.add(new C_d_D("Set Font Size: "));
+      boolean flag3 = LogicProgram.monochrome;
+      sizedpanel1.add(new FontLabel("Monochrome: "));
+      ScaledCheckBox scaledcheckbox;
+      sizedpanel1.add(scaledcheckbox = new ScaledCheckBox(""));
+      scaledcheckbox.setSelected(flag3);
+      sizedpanel1.add(new SizedSeparator(LogicProgram.fontSize, 2, true, Color.black));
+      sizedpanel1.add(new FontLabel("Set Font Size: "));
       String s2 = new Integer(LogicProgram.fontSize).toString();
       EditableTextPane editabletextpane1 = new EditableTextPane(s2);
       editabletextpane1.setBackground(LogicConstants.bruinWhite);
@@ -176,57 +176,57 @@ class UserSetup implements LogicConstants {
       sizedpanel.add(sizedpanel1, "West");
       String[] astring = new String[]{"OK"};
       int i = 0;
-      if (c_b_e != null) {
-         astring = c_b_e.m445();
-         i = c_b_e.m446();
+      if (buttonchoicehandler != null) {
+         astring = buttonchoicehandler.getLabels();
+         i = buttonchoicehandler.getDefaultIndex();
       }
 
       MessageDialog messagedialog = new MessageDialog(null, message.id, sizedpanel, astring);
       messagedialog.pack();
-      messagedialog.m1315(c_b_e);
-      messagedialog.m1314(i);
+      messagedialog.addHandler(buttonchoicehandler);
+      messagedialog.setDefaultButtonIndex(i);
       if (i != -1) {
-         messagedialog.f791[i].requestFocus();
+         messagedialog.buttons[i].requestFocus();
       }
 
-      messagedialog.m1322(null);
-      boolean flag2 = c_ne.isSelected();
+      messagedialog.showAt(null);
+      boolean flag2 = scaledcheckbox.isSelected();
       if (flag2 != flag3) {
-         LogicProgram.workPrefs.put("monochrome", flag2 ? "true" : "false");
-         LogicProgram.workPrefs.m2155(LogicProgram.f558);
-         LogicProgram.m1059();
+         LogicProgram.workPrefs.putPref("monochrome", flag2 ? "true" : "false");
+         LogicProgram.workPrefs.save(LogicProgram.workPrefsFile);
+         LogicProgram.applyColorPrefs();
       }
 
       String s1 = editabletextpane1.getText().trim();
       if (!s1.equals(s2)) {
-         int j = LogicProgram.m1028(s1);
+         int j = LogicProgram.parseFontSize(s1);
          if (j < 6) {
             s1 = "6";
-         } else if (j > ProgressDialog.m1288() * 5 / 3) {
+         } else if (j > ProgressDialog.getDefaultFontSize() * 5 / 3) {
             s1 = "5/3";
          }
 
-         LogicProgram.prefs.put("font size", s1);
-         LogicProgram.prefs.m2155(LogicProgram.f557);
-         LogicProgram.m1058();
+         LogicProgram.prefs.putPref("font size", s1);
+         LogicProgram.prefs.save(LogicProgram.prefsFile);
+         LogicProgram.applyPrefsFontSize();
       }
 
       if (flag1) {
-         return c_b_e.f1027 != 0 ? Boolean.FALSE : Boolean.TRUE;
-      } else if (c_b_e.f1027 < 0 || c_b_e.f1027 > (flag ? 1 : 2)) {
+         return buttonchoicehandler.choice != 0 ? Boolean.FALSE : Boolean.TRUE;
+      } else if (buttonchoicehandler.choice < 0 || buttonchoicehandler.choice > (flag ? 1 : 2)) {
          return Boolean.FALSE;
-      } else if (c_b_e.f1027 == (flag ? 0 : 1)) {
-         ServerConnection.m902();
+      } else if (buttonchoicehandler.choice == (flag ? 0 : 1)) {
+         ServerConnection.deleteWork();
          return null;
-      } else if ((flag || c_b_e.f1027 != 2) && userinfo.m1163() != null) {
+      } else if ((flag || buttonchoicehandler.choice != 2) && userinfo.getCourse() != null) {
          return Boolean.TRUE;
       } else {
-         String s3 = !flag && c_b_e.f1027 == 2 ? "not044" : "not045";
-         return AccountManager.m1863(userinfo, s3, true, false) == null ? Boolean.FALSE : Boolean.TRUE;
+         String s3 = !flag && buttonchoicehandler.choice == 2 ? "not044" : "not045";
+         return AccountManager.chooseCourse(userinfo, s3, true, false) == null ? Boolean.FALSE : Boolean.TRUE;
       }
    }
 
-   static File m2108(File file1, File file2) {
+   static File chooseInstalledVersion(File file1, File file2) {
       Hashtable hashtable = LogicProgram.readLinks(file1, false);
       Hashtable hashtable1 = LogicProgram.readLinks(file2, false);
       if (hashtable == null || LogicProgram.getValue(hashtable, "textDir", null) == null) {
@@ -242,10 +242,10 @@ class UserSetup implements LogicConstants {
       } else {
          Message message = Message.get("not087");
          String s = hashtable == null ? "Student.Local" : (hashtable1 == null ? "Student.Instructor" : "Student.Instructor.Local");
-         C_b_E c_b_e = new C_b_E(s);
-         MessageDialog.showMessage(message, null, null, c_b_e);
-         if (c_b_e.f1027 >= 0) {
-            String s1 = c_b_e.f272[c_b_e.f1027];
+         ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(s);
+         MessageDialog.showMessage(message, null, null, buttonchoicehandler);
+         if (buttonchoicehandler.choice >= 0) {
+            String s1 = buttonchoicehandler.labels[buttonchoicehandler.choice];
             if ("Student".equals(s1)) {
                return null;
             }
@@ -259,8 +259,8 @@ class UserSetup implements LogicConstants {
             }
 
             if ("Remove".equals(s1)) {
-               m2109(file1);
-               m2109(file2);
+               deleteRecursively(file1);
+               deleteRecursively(file2);
             }
          }
 
@@ -268,7 +268,7 @@ class UserSetup implements LogicConstants {
       }
    }
 
-   static boolean m2109(File file1) {
+   static boolean deleteRecursively(File file1) {
       boolean flag = true;
       if (file1 != null && file1.exists()) {
          if (file1.isDirectory()) {
@@ -276,7 +276,7 @@ class UserSetup implements LogicConstants {
             int i = astring == null ? 0 : astring.length;
 
             for (int j = 0; j < i; j++) {
-               if (!m2109(new File(file1, astring[j]))) {
+               if (!deleteRecursively(new File(file1, astring[j]))) {
                   flag = false;
                }
             }
@@ -292,45 +292,45 @@ class UserSetup implements LogicConstants {
       }
    }
 
-   static Boolean m2110(UserInfo userinfo) {
+   static Boolean askContinueOrDelete(UserInfo userinfo) {
       Message message = Message.get("not074");
-      C_b_E c_b_e = new C_b_E(message.buttons);
-      MessageDialog.showMessage(message, null, null, c_b_e);
-      if (c_b_e.f1027 == 0) {
-         return ServerConnection.m902() == 0 ? null : Boolean.FALSE;
+      ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+      MessageDialog.showMessage(message, null, null, buttonchoicehandler);
+      if (buttonchoicehandler.choice == 0) {
+         return ServerConnection.deleteWork() == 0 ? null : Boolean.FALSE;
       } else {
-         return c_b_e.f1027 == 1 ? Boolean.TRUE : Boolean.FALSE;
+         return buttonchoicehandler.choice == 1 ? Boolean.TRUE : Boolean.FALSE;
       }
    }
 
-   static boolean m2111() {
+   static boolean offerDeleteWork() {
       Message message = Message.get("not078");
-      C_b_E c_b_e = new C_b_E(message.buttons);
-      MessageDialog.showMessage(message, null, null, c_b_e);
-      return c_b_e.f1027 != 0 ? false : ServerConnection.m903(true) == 0;
+      ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+      MessageDialog.showMessage(message, null, null, buttonchoicehandler);
+      return buttonchoicehandler.choice != 0 ? false : ServerConnection.deleteWork(true) == 0;
    }
 
-   static boolean m2112(UserInfo userinfo) {
+   static boolean askRestoreOrQuit(UserInfo userinfo) {
       Hashtable hashtable = Message.params("institution", userinfo.getInstitution(), "studentID", userinfo.getStudentId());
       Message message = Message.get("not075");
-      C_b_E c_b_e = new C_b_E(message.buttons);
-      MessageDialog.showMessage(message, hashtable, null, c_b_e);
-      return c_b_e.f1027 != 0;
+      ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+      MessageDialog.showMessage(message, hashtable, null, buttonchoicehandler);
+      return buttonchoicehandler.choice != 0;
    }
 
-   static Boolean m2113(UserInfo userinfo) {
+   static Boolean askRegister(UserInfo userinfo) {
       Hashtable hashtable = Message.params("institution", userinfo.getInstitution(), "studentID", userinfo.getStudentId());
       Message message = Message.get("not076");
-      C_b_E c_b_e = new C_b_E(message.buttons);
-      MessageDialog.showMessage(message, hashtable, null, c_b_e);
-      if (c_b_e.f1027 == 0) {
+      ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+      MessageDialog.showMessage(message, hashtable, null, buttonchoicehandler);
+      if (buttonchoicehandler.choice == 0) {
          return Boolean.TRUE;
       } else {
-         return c_b_e.f1027 == 1 ? Boolean.FALSE : null;
+         return buttonchoicehandler.choice == 1 ? Boolean.FALSE : null;
       }
    }
 
-   static boolean m2114(String s, String s1, boolean flag) {
+   static boolean offerRegisterOrRestore(String s, String s1, boolean flag) {
       boolean flag1 = !LogicProgram.noNetwork && (s != null || s1 != null);
       if (!flag && !flag1) {
          return false;
@@ -340,23 +340,23 @@ class UserSetup implements LogicConstants {
             message = Message.get("not088");
          }
 
-         C_b_E c_b_e = new C_b_E(message.buttons);
-         MessageDialog.showMessage(message, null, null, c_b_e);
-         if (flag && c_b_e.f1027 == 0) {
-            ServerConnection.m903(false);
+         ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+         MessageDialog.showMessage(message, null, null, buttonchoicehandler);
+         if (flag && buttonchoicehandler.choice == 0) {
+            ServerConnection.deleteWork(false);
             return true;
-         } else if (flag1 && c_b_e.f1027 == (flag ? 1 : 0)) {
-            ServerConnection.m903(false);
-            return ServerConnection.m899(s, s1, null);
+         } else if (flag1 && buttonchoicehandler.choice == (flag ? 1 : 0)) {
+            ServerConnection.deleteWork(false);
+            return ServerConnection.restoreWork(s, s1, null);
          } else {
             return false;
          }
       }
    }
 
-   static boolean m2115(BusyIndicator busyindicator) {
-      boolean flag = !LogicProgram.noNetwork && LogicProgram.f581 && LogicProgram.f567 != null;
-      boolean flag1 = LogicProgram.f582 && LogicProgram.f551 != null;
+   static boolean offerBackupBeforeQuit(BusyIndicator busyindicator) {
+      boolean flag = !LogicProgram.noNetwork && LogicProgram.backupNeeded && LogicProgram.backupName != null;
+      boolean flag1 = LogicProgram.copyNeeded && LogicProgram.copyDir != null;
       if (!flag && !flag1) {
          return true;
       } else {
@@ -369,9 +369,9 @@ class UserSetup implements LogicConstants {
             message = Message.get("not031");
          }
 
-         C_b_E c_b_e = new C_b_E(message.buttons);
-         MessageDialog.showMessage(message, null, null, c_b_e);
-         int i = c_b_e.f1027;
+         ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+         MessageDialog.showMessage(message, null, null, buttonchoicehandler);
+         int i = buttonchoicehandler.choice;
          if (i == -1) {
             return false;
          } else if (flag && flag1 ? i != 3 : i != 1) {
@@ -379,11 +379,11 @@ class UserSetup implements LogicConstants {
                boolean flag2 = true;
                boolean flag3 = true;
                if (flag && (i == 0 || flag1 && i == 2)) {
-                  flag2 = ServerConnection.m896(LogicProgram.f567, busyindicator);
+                  flag2 = ServerConnection.backupWork(LogicProgram.backupName, busyindicator);
                }
 
                if (flag1 && (flag ? i == 1 || i == 2 : i == 0)) {
-                  flag3 = ServerConnection.m900(LogicProgram.workDir, LogicProgram.f551);
+                  flag3 = ServerConnection.copyWork(LogicProgram.workDir, LogicProgram.copyDir);
                }
 
                return flag2 && flag3;
@@ -396,16 +396,16 @@ class UserSetup implements LogicConstants {
       }
    }
 
-   static boolean m2116(C_XA c_xa) {
-      int i = c_xa.f872 == null ? 0 : c_xa.f872.length;
+   static boolean chooseBackup(BackupRequest backuprequest) {
+      int i = backuprequest.backups == null ? 0 : backuprequest.backups.length;
       Vector vector = new Vector();
       ProblemListView problemlistview = new ProblemListView(false);
 
       for (int j = 0; j < i; j++) {
-         C_w_D c_w_d = c_xa.f872[j];
-         if (c_w_d.m2159() && c_w_d.f1429.equalsIgnoreCase(c_xa.f868)) {
-            vector.addElement(c_w_d);
-            problemlistview.m1526(new C_ZE(c_w_d.f1430));
+         BackupEntry backupentry = backuprequest.backups[j];
+         if (backupentry.isValid() && backupentry.key.equalsIgnoreCase(backuprequest.backupKey)) {
+            vector.addElement(backupentry);
+            problemlistview.addItem(new LogicLabel(backupentry.date));
          }
       }
 
@@ -417,36 +417,36 @@ class UserSetup implements LogicConstants {
          jscrollpane.setViewportView(problemlistview);
          String[] astring = new String[]{"OK", "Cancel"};
          MessageDialog messagedialog = new MessageDialog(null, "Please Choose a Backup", jscrollpane, astring);
-         problemlistview.m1528(messagedialog, 0);
+         problemlistview.setDialog(messagedialog, 0);
          Dimension dimension = new Dimension(20 * LogicProgram.fontSize, 15 * LogicProgram.fontSize);
          messagedialog.setSize(dimension);
-         messagedialog.m1317("bakChosen");
+         messagedialog.setBoundsKey("bakChosen");
          problemlistview.setSelectedIndex(i - 1);
          problemlistview.requestFocus();
-         messagedialog.m1323(MessageDialog.m1321(dimension), true);
-         if (messagedialog.f790 != 0) {
+         messagedialog.showAt(MessageDialog.centeredLocation(dimension), true);
+         if (messagedialog.selectedButton != 0) {
             return false;
          } else {
             int k = problemlistview.getSelectedIndex();
             if (k == -1) {
                return false;
             } else {
-               c_xa.f871 = ((C_w_D)vector.elementAt(k)).f1431;
+               backuprequest.selectedBackupId = ((BackupEntry)vector.elementAt(k)).backupId;
                return true;
             }
          }
       }
    }
 
-   static boolean m2117(String s) {
+   static boolean confirmDeleteWork(String s) {
       Message message = Message.get(s);
-      C_b_E c_b_e = new C_b_E(message.buttons);
-      MessageDialog.showMessage(message, null, null, c_b_e);
-      int i = c_b_e.f1027;
-      return i == 0 && ServerConnection.m903(true) == 0;
+      ButtonChoiceHandler buttonchoicehandler = new ButtonChoiceHandler(message.buttons);
+      MessageDialog.showMessage(message, null, null, buttonchoicehandler);
+      int i = buttonchoicehandler.choice;
+      return i == 0 && ServerConnection.deleteWork(true) == 0;
    }
 
-   static String m2118(String s) {
+   static String stripFirstWord(String s) {
       if (s == null) {
          return null;
       } else {
@@ -459,7 +459,7 @@ class UserSetup implements LogicConstants {
       }
    }
 
-   static String m2119(String s, String s1) {
+   static String stripPrefix(String s, String s1) {
       if (s == null) {
          return null;
       } else {

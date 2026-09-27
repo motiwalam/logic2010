@@ -7,10 +7,10 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 
-class SizedPanel extends JPanel implements C_TE, C_LC {
-   private Dimension f503;
-   private boolean f504 = false;
-   boolean f505;
+class SizedPanel extends JPanel implements FocusPreference, ModuleComponentMarker {
+   private Dimension sizeLimit;
+   private boolean maximumOnly = false;
+   boolean focusableFlag;
 
    SizedPanel() {
       this(null);
@@ -25,68 +25,68 @@ class SizedPanel extends JPanel implements C_TE, C_LC {
    }
 
    SizedPanel(Dimension dimension) {
-      this.f503 = dimension;
-      this.f505 = true;
+      this.sizeLimit = dimension;
+      this.focusableFlag = true;
       this.setLayout(new BorderLayout());
       this.setBackground(null);
       this.setForeground(null);
       this.enableEvents(8L);
    }
 
-   void m934(int i) {
-      if (this.f503 == null) {
-         this.f503 = new Dimension(i, -1);
+   void setLimitWidth(int i) {
+      if (this.sizeLimit == null) {
+         this.sizeLimit = new Dimension(i, -1);
       } else {
-         this.f503.width = i;
+         this.sizeLimit.width = i;
       }
    }
 
-   void m935(int i) {
-      if (this.f503 == null) {
-         this.f503 = new Dimension(-1, i);
+   void setLimitHeight(int i) {
+      if (this.sizeLimit == null) {
+         this.sizeLimit = new Dimension(-1, i);
       } else {
-         this.f503.height = i;
+         this.sizeLimit.height = i;
       }
    }
 
-   void m936(Dimension dimension) {
-      this.f503 = dimension;
+   void setSizeLimit(Dimension dimension) {
+      this.sizeLimit = dimension;
    }
 
-   void m937(boolean flag) {
-      this.f504 = flag;
+   void setMaximumOnly(boolean flag) {
+      this.maximumOnly = flag;
    }
 
-   boolean m938() {
-      return this.f504;
+   boolean isMaximumOnly() {
+      return this.maximumOnly;
    }
 
-   Dimension m939() {
-      return this.f503;
+   Dimension getSizeLimit() {
+      return this.sizeLimit;
    }
 
-   Dimension m940(Dimension dimension) {
-      if (this.f503 != null && dimension != null) {
-         if (this.f503.width >= 0 && (!this.f504 || dimension.width > this.f503.width)) {
-            dimension.width = this.f503.width;
+   Dimension constrain(Dimension dimension) {
+      if (this.sizeLimit != null && dimension != null) {
+         if (this.sizeLimit.width >= 0 && (!this.maximumOnly || dimension.width > this.sizeLimit.width)) {
+            dimension.width = this.sizeLimit.width;
          }
 
-         if (this.f503.height >= 0 && (!this.f504 || dimension.height > this.f503.height)) {
-            dimension.height = this.f503.height;
+         if (this.sizeLimit.height >= 0 && (!this.maximumOnly || dimension.height > this.sizeLimit.height)) {
+            dimension.height = this.sizeLimit.height;
          }
       }
 
       return dimension;
    }
 
-   Rectangle m941(Rectangle rectangle) {
-      if (this.f503 != null && rectangle != null) {
-         if (this.f503.width >= 0 && (!this.f504 || rectangle.width > this.f503.width)) {
-            rectangle.width = this.f503.width;
+   Rectangle constrain(Rectangle rectangle) {
+      if (this.sizeLimit != null && rectangle != null) {
+         if (this.sizeLimit.width >= 0 && (!this.maximumOnly || rectangle.width > this.sizeLimit.width)) {
+            rectangle.width = this.sizeLimit.width;
          }
 
-         if (this.f503.height >= 0 && (!this.f504 || rectangle.height > this.f503.height)) {
-            rectangle.height = this.f503.height;
+         if (this.sizeLimit.height >= 0 && (!this.maximumOnly || rectangle.height > this.sizeLimit.height)) {
+            rectangle.height = this.sizeLimit.height;
          }
       }
 
@@ -95,50 +95,50 @@ class SizedPanel extends JPanel implements C_TE, C_LC {
 
    @Override
    public Dimension getPreferredSize() {
-      return this.m940(super.getPreferredSize());
+      return this.constrain(super.getPreferredSize());
    }
 
-   public Dimension m942(Dimension dimension) {
-      return this.m940(super.getPreferredSize());
+   public Dimension getConstrainedPreferredSize(Dimension dimension) {
+      return this.constrain(super.getPreferredSize());
    }
 
    @Override
    public void setSize(int i, int j) {
-      Dimension dimension = this.m940(new Dimension(i, j));
+      Dimension dimension = this.constrain(new Dimension(i, j));
       super.setSize(dimension.width, dimension.height);
    }
 
    @Override
    public void setSize(Dimension dimension) {
-      super.setSize(this.m940(dimension));
+      super.setSize(this.constrain(dimension));
    }
 
    @Override
    public void setBounds(Rectangle rectangle) {
-      super.setBounds(this.m941(rectangle));
+      super.setBounds(this.constrain(rectangle));
    }
 
    @Override
    public void setBounds(int i, int j, int k, int l) {
-      Rectangle rectangle = this.m941(new Rectangle(i, j, k, l));
+      Rectangle rectangle = this.constrain(new Rectangle(i, j, k, l));
       super.setBounds(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
    }
 
    @Override
    public void setFocusable(boolean flag) {
-      this.f505 = flag;
+      this.focusableFlag = flag;
       super.setFocusable(flag);
    }
 
    @Override
-   public boolean m943() {
-      return this.f505;
+   public boolean wantsFocus() {
+      return this.focusableFlag;
    }
 
    @Override
    public void processEvent(AWTEvent awtevent) {
       if (awtevent.getID() == 400) {
-         LogicProgram.m1086(this, (KeyEvent)awtevent);
+         LogicProgram.forwardKeyEvent(this, (KeyEvent)awtevent);
       } else {
          super.processEvent(awtevent);
       }

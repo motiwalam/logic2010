@@ -1,0 +1,564 @@
+diff -ruN a/edu/ucla/phil/logic/AnswerManagerHandler.java b/edu/ucla/phil/logic/AnswerManagerHandler.java
+--- a/edu/ucla/phil/logic/AnswerManagerHandler.java
++++ b/edu/ucla/phil/logic/AnswerManagerHandler.java
+@@ -65,7 +65,7 @@
+          lpsymbolizer.problem.userAnswerKey = flag;
+          LPSymbolizer.userKey.put(s, s2);
+          if (lpsymbolizer.problem.answerKeys != null && lpsymbolizer.problem.answerKeys != "") {
+-            lpsymbolizer.problem.answerKeys = lpsymbolizer.problem.answerKeys + "." + DelimitedTokenizer.escape(s, "\\.");
++            lpsymbolizer.problem.answerKeys += "." + DelimitedTokenizer.escape(s, "\\.");
+          } else {
+             lpsymbolizer.problem.answerKeys = DelimitedTokenizer.escape(s, "\\.");
+          }
+diff -ruN a/edu/ucla/phil/logic/BoundVariableMap.java b/edu/ucla/phil/logic/BoundVariableMap.java
+--- a/edu/ucla/phil/logic/BoundVariableMap.java
++++ b/edu/ucla/phil/logic/BoundVariableMap.java
+@@ -212,7 +212,13 @@
+       if (!this.matchBinders(expression, expression1, aint)) {
+          return false;
+       } else {
+-         return !this.renameBinders(expression, expression2, aint, null) ? false : expression2.isIdentical(expression1);
++         if (!this.renameBinders(expression, expression2, aint, null)) {
++            return false;
++         } else if (!expression2.isIdentical(expression1)) {
++            return false;
++         } else {
++            return true;
++         }
+       }
+    }
+ 
+diff -ruN a/edu/ucla/phil/logic/ChoiceButton.java b/edu/ucla/phil/logic/ChoiceButton.java
+--- a/edu/ucla/phil/logic/ChoiceButton.java
++++ b/edu/ucla/phil/logic/ChoiceButton.java
+@@ -172,7 +172,6 @@
+       return astring1;
+    }
+ 
+-   @Override
+    void invalidateParent() {
+       JComponent jcomponent = (JComponent)this.getParent();
+       if (jcomponent == null) {
+diff -ruN a/edu/ucla/phil/logic/DerivationLineChecker.java b/edu/ucla/phil/logic/DerivationLineChecker.java
+--- a/edu/ucla/phil/logic/DerivationLineChecker.java
++++ b/edu/ucla/phil/logic/DerivationLineChecker.java
+@@ -574,8 +574,7 @@
+             }
+          }
+ 
+-         this.line.box.strategyConsistent = this.line.box.strategyConsistent
+-            & (this.ruleName.equals("IE") || this.ruleName.equals("CIE") || this.ruleName.equals("BD") || this.ruleName.startsWith("ASS "));
++         this.line.box.strategyConsistent &= (this.ruleName.equals("IE") || this.ruleName.equals("CIE") || this.ruleName.equals("BD") || this.ruleName.startsWith("ASS "));
+          Justification justification = (Justification)this.line.justifications.elementAt(this.stepIndex);
+          if (justification != null) {
+             if (justification.reapply(this)) {
+@@ -1974,7 +1973,7 @@
+       if (s.equals("rule name")) {
+          return this.ruleName;
+       } else if (s.equals("stack")) {
+-         Object object = "\\l";
++         String object = "\\l";
+ 
+          for (int j1 = 0; j1 < this.argumentCount; j1++) {
+             if (j1 != 0) {
+@@ -2026,7 +2025,7 @@
+             return s4 + "\\l";
+          } else if (s.equals("rule forms premises") && this.automaticForms != null) {
+             int k = this.maxPremises;
+-            Object object1 = "\\l";
++            String object1 = "\\l";
+ 
+             for (int l1 = 0; l1 < k; l1++) {
+                if (l1 != 0) {
+diff -ruN a/edu/ucla/phil/logic/DerivationLine.java b/edu/ucla/phil/logic/DerivationLine.java
+--- a/edu/ucla/phil/logic/DerivationLine.java
++++ b/edu/ucla/phil/logic/DerivationLine.java
+@@ -186,7 +186,7 @@
+          if (s.equals("premises")) {
+             Expression[] aexpression1 = this.box.module.premises;
+             int j1 = aexpression1 == null ? 0 : aexpression1.length;
+-            Object object = "\\l";
++            String object = "\\l";
+ 
+             for (int k = 0; k < j1; k++) {
+                if (k != 0) {
+diff -ruN a/edu/ucla/phil/logic/DerivationMenuBar.java b/edu/ucla/phil/logic/DerivationMenuBar.java
+--- a/edu/ucla/phil/logic/DerivationMenuBar.java
++++ b/edu/ucla/phil/logic/DerivationMenuBar.java
+@@ -8,6 +8,7 @@
+ import java.awt.event.ActionListener;
+ import java.awt.event.KeyEvent;
+ import java.io.BufferedWriter;
++import java.io.Writer;
+ import java.io.FileWriter;
+ import java.io.IOException;
+ import javax.swing.JMenu;
+@@ -138,8 +139,8 @@
+                            try {
+                               String s4 = "----------------";
+                               BufferedWriter bufferedwriter;
+-                              if (filewriter instanceof BufferedWriter) {
+-                                 bufferedwriter = (BufferedWriter)filewriter;
++                              if ((Writer)filewriter instanceof BufferedWriter) {
++                                 bufferedwriter = (BufferedWriter)(Writer)filewriter;
+                               } else {
+                                  bufferedwriter = new BufferedWriter(filewriter);
+                               }
+diff -ruN a/edu/ucla/phil/logic/DialogRadioButton.java b/edu/ucla/phil/logic/DialogRadioButton.java
+--- a/edu/ucla/phil/logic/DialogRadioButton.java
++++ b/edu/ucla/phil/logic/DialogRadioButton.java
+@@ -15,7 +15,7 @@
+    @Override
+    public boolean handleEvent(Event event) {
+       if (event.id == 401 && event.key == 10) {
+-         Object object = this;
++         Component object = this;
+ 
+          while (object != null && !(object instanceof MessageDialog)) {
+             object = object.getParent();
+diff -ruN a/edu/ucla/phil/logic/FormulaParseNode.java b/edu/ucla/phil/logic/FormulaParseNode.java
+--- a/edu/ucla/phil/logic/FormulaParseNode.java
++++ b/edu/ucla/phil/logic/FormulaParseNode.java
+@@ -183,20 +183,17 @@
+    }
+ 
+    FormulaParseNode getRoot(boolean flag) {
+-      FormulaParseNode formulaparsenode2 = this;
+-
+-      while (true) {
+-         FormulaParseNode formulaparsenode1 = formulaparsenode2.parent;
+-         if (formulaparsenode2.parent == null) {
+-            if (flag) {
+-               formulaparsenode2.prepareText();
+-            }
+-
+-            return formulaparsenode2;
+-         }
++      FormulaParseNode node = this;
++      FormulaParseNode parent;
++      while ((parent = node.parent) != null) {
++         node = parent;
++      }
+ 
+-         formulaparsenode2 = formulaparsenode1;
++      if (flag) {
++         node.prepareText();
+       }
++
++      return node;
+    }
+ 
+    FormulaParseNode findNode(Expression expressionx) {
+@@ -397,7 +394,7 @@
+ 
+    static void convertRanges(int[] aint, int[] aint1, IntervalSet intervalset, boolean flag) {
+       if (!intervalset.inverted) {
+-         for (byte b0 = 0; b0 < intervalset.count - 1; b0 += 2) {
++         for (int b0 = 0; b0 < intervalset.count - 1; b0 += 2) {
+             int[] aint2 = findDisplayRange(aint, aint1, intervalset.boundaries[b0], intervalset.boundaries[b0 + 1] - intervalset.boundaries[b0], flag);
+             if (aint2 != null) {
+                intervalset.boundaries[b0] = aint2[0];
+diff -ruN a/edu/ucla/phil/logic/InterchangeJustification.java b/edu/ucla/phil/logic/InterchangeJustification.java
+--- a/edu/ucla/phil/logic/InterchangeJustification.java
++++ b/edu/ucla/phil/logic/InterchangeJustification.java
+@@ -284,12 +284,12 @@
+ 
+    @Override
+    public String toString() {
+-      Object object = "";
++      String object = "";
+       if (this.path != null) {
+          object = object + this.path;
+       }
+ 
+-      Object object1 = object + (this.reversed ? "<" : ">");
++      String object1 = object + (this.reversed ? "<" : ">");
+       if (this.ruleApplication != null) {
+          object1 = object1 + this.ruleApplication;
+       } else if (this.equivalenceLine != null) {
+diff -ruN a/edu/ucla/phil/logic/IntervalSet.java b/edu/ucla/phil/logic/IntervalSet.java
+--- a/edu/ucla/phil/logic/IntervalSet.java
++++ b/edu/ucla/phil/logic/IntervalSet.java
+@@ -126,7 +126,7 @@
+ 
+    public IntervalSet shift(int i) {
+       for (int j = 0; j < this.count; j++) {
+-         this.boundaries[j] = this.boundaries[j] + i;
++         this.boundaries[j] += i;
+       }
+ 
+       return this;
+@@ -180,7 +180,7 @@
+          String s1 = "";
+          int i = intervalset2.count - 1;
+ 
+-         for (byte b0 = 0; b0 < i; b0 += 2) {
++         for (int b0 = 0; b0 < i; b0 += 2) {
+             s1 = s1 + s.substring(intervalset2.boundaries[b0], intervalset2.boundaries[b0 + 1]);
+          }
+ 
+diff -ruN a/edu/ucla/phil/logic/LogicProgram.java b/edu/ucla/phil/logic/LogicProgram.java
+--- a/edu/ucla/phil/logic/LogicProgram.java
++++ b/edu/ucla/phil/logic/LogicProgram.java
+@@ -1034,7 +1034,7 @@
+             return astring;
+          } else {
+             i = vector.size();
+-            return i == 0 ? null : vector.toArray(new String[i]);
++            return i == 0 ? null : (String[])vector.toArray(new String[i]);
+          }
+       }
+    }
+@@ -1689,7 +1689,7 @@
+       if (container == null) {
+          return false;
+       } else {
+-         Object object = component;
++         Component object = component;
+ 
+          while (object != null && object != container) {
+             object = object.getParent();
+@@ -2280,7 +2280,7 @@
+       ScrambledReader scrambledreader = null;
+       Hashtable hashtable = null;
+       if (file1 != null && progDir != null) {
+-         Object object;
++         String s;
+          try {
+             File file2;
+             if (scrambleKey == null) {
+@@ -2311,7 +2311,7 @@
+                return hashtable;
+             }
+ 
+-            object = null;
++            hashtable = null;
+          } catch (IOException ioexception1) {
+             return null;
+          } finally {
+@@ -2323,7 +2323,7 @@
+             }
+          }
+ 
+-         return (Hashtable)object;
++         return hashtable;
+       } else {
+          return null;
+       }
+@@ -2529,7 +2529,7 @@
+    }
+ 
+    static KeyListener findParentKeyListener(Component object) {
+-      Object object1 = null;
++      Component object1 = null;
+ 
+       while (object != null && !((object1 = object.getParent()) instanceof KeyListener)) {
+          object = object1;
+diff -ruN a/edu/ucla/phil/logic/LPDerivation.java b/edu/ucla/phil/logic/LPDerivation.java
+--- a/edu/ucla/phil/logic/LPDerivation.java
++++ b/edu/ucla/phil/logic/LPDerivation.java
+@@ -602,9 +602,9 @@
+             this.proofWidths[l1 - 1] = this.widthInfo[l1][0] * this.indent + this.widthInfo[l1][1] * i2 / l;
+          }
+ 
+-         this.proofWidths[0] = this.proofWidths[0] + j1 * this.indent;
++         this.proofWidths[0] += j1 * this.indent;
+          System.arraycopy(this.proofWidths, 0, this.problemWidths, 0, this.lineColumns - 1);
+-         this.problemWidths[0] = this.problemWidths[0] + this.problemWidths[1];
++         this.problemWidths[0] += this.problemWidths[1];
+          this.problemWidths[1] = 0;
+          this.userComment.setColumnWidths(this.numberSize.width, this.problemWidths[0] + this.problemWidths[2]);
+          this.problem.layoutColumns();
+diff -ruN a/edu/ucla/phil/logic/LPSymbolizer.java b/edu/ucla/phil/logic/LPSymbolizer.java
+--- a/edu/ucla/phil/logic/LPSymbolizer.java
++++ b/edu/ucla/phil/logic/LPSymbolizer.java
+@@ -1576,7 +1576,7 @@
+    }
+ 
+    static LPSymbolizer getSymParent(Component object) {
+-      Object object1 = null;
++      Component object1 = null;
+ 
+       while (object != null && !((object1 = object.getParent()) instanceof LPSymbolizer)) {
+          object = object1;
+diff -ruN a/edu/ucla/phil/logic/MainMenu.java b/edu/ucla/phil/logic/MainMenu.java
+--- a/edu/ucla/phil/logic/MainMenu.java
++++ b/edu/ucla/phil/logic/MainMenu.java
+@@ -221,7 +221,13 @@
+          } else if (!LPTruthAnalysis.checkQuit(hashtable, hashtable1)) {
+             return false;
+          } else {
+-            return !showSubmitSummary(hashtable, hashtable1) ? false : UserSetup.offerBackupBeforeQuit(new BusyIndicator(this));
++            if (!showSubmitSummary(hashtable, hashtable1)) {
++               return false;
++            } else if (!UserSetup.offerBackupBeforeQuit(new BusyIndicator(this))) {
++               return false;
++            } else {
++               return true;
++            }
+          }
+       }
+    }
+@@ -266,7 +272,13 @@
+       } else if (!saveInstances(LPRecognition.instances)) {
+          return false;
+       } else {
+-         return !saveInstances(LPSymbolizer.instances) ? false : saveInstances(LPTruthAnalysis.instances);
++         if (!saveInstances(LPSymbolizer.instances)) {
++            return false;
++         } else if (!saveInstances(LPTruthAnalysis.instances)) {
++            return false;
++         } else {
++            return true;
++         }
+       }
+    }
+ 
+@@ -408,11 +420,11 @@
+       }
+ 
+       if (lastModuleLocation.x < 5) {
+-         lastModuleLocation.x = lastModuleLocation.x + (LogicProgram.screenSize.width - moduleSize.width - lastModuleLocation.x - 5) / 24 * 24;
++         lastModuleLocation.x += (LogicProgram.screenSize.width - moduleSize.width - lastModuleLocation.x - 5) / 24 * 24;
+       }
+ 
+       if (lastModuleLocation.y + moduleSize.height >= LogicProgram.screenSize.height - 30) {
+-         lastModuleLocation.y = lastModuleLocation.y - (lastModuleLocation.y - 5) / 24 * 24;
++         lastModuleLocation.y -= (lastModuleLocation.y - 5) / 24 * 24;
+       }
+ 
+       return new Rectangle(lastModuleLocation.x, lastModuleLocation.y, moduleSize.width, moduleSize.height);
+diff -ruN a/edu/ucla/phil/logic/MergeSorter.java b/edu/ucla/phil/logic/MergeSorter.java
+--- a/edu/ucla/phil/logic/MergeSorter.java
++++ b/edu/ucla/phil/logic/MergeSorter.java
+@@ -11,7 +11,7 @@
+ 
+    public int[] sortIndices(Object[] aobject) {
+       int j = aobject.length;
+-      byte b0 = 1;
++      int width = 1;
+       int[] aint = new int[j];
+       int[] aint1 = new int[j];
+       int i = 0;
+@@ -20,23 +20,23 @@
+          aint[i] = i++;
+       }
+ 
+-      while (b0 < j) {
++      while (width < j) {
+          int k = 0;
+ 
+          while (k < j) {
+-            int l = k + b0;
++            int l = k + width;
+             if (l > j) {
+                l = j;
+             }
+ 
+             this.mergeRuns(aobject, aint, k, l, aint1);
+-            k = l + b0;
++            k = l + width;
+          }
+ 
+          int[] aint2 = aint1;
+          aint1 = aint;
+          aint = aint2;
+-         b0 *= 2;
++         width *= 2;
+       }
+ 
+       return aint;
+diff -ruN a/edu/ucla/phil/logic/OperationInterpretation.java b/edu/ucla/phil/logic/OperationInterpretation.java
+--- a/edu/ucla/phil/logic/OperationInterpretation.java
++++ b/edu/ucla/phil/logic/OperationInterpretation.java
+@@ -93,7 +93,7 @@
+    }
+ 
+    String encodeValueTable() {
+-      Object object = "";
++      String object = "";
+       boolean flag = false;
+       if (this.valueTable != null) {
+          Hashtable hashtable = groupByValue(this.valueTable);
+diff -ruN a/edu/ucla/phil/logic/ParseTreeFormulaText.java b/edu/ucla/phil/logic/ParseTreeFormulaText.java
+--- a/edu/ucla/phil/logic/ParseTreeFormulaText.java
++++ b/edu/ucla/phil/logic/ParseTreeFormulaText.java
+@@ -50,7 +50,7 @@
+          int i = this.parseNode.getTextRange()[0];
+ 
+          for (int j = 0; j < intervalset.count; j++) {
+-            intervalset.boundaries[j] = intervalset.boundaries[j] - i;
++            intervalset.boundaries[j] -= i;
+          }
+ 
+          LogicProgram.translateSymbols(this.parseNode.toString(), maggie, SYMBOLS, intervalset.boundaries);
+@@ -144,7 +144,7 @@
+          s.getChars(aint[0], aint[1], this.highlightChars, 0);
+          Graphics graphics = this.getGraphics();
+          this.highlightOrigin = this.getCharLocation(aint[0]);
+-         this.highlightOrigin.y = this.highlightOrigin.y + graphics.getFontMetrics().getAscent();
++         this.highlightOrigin.y += graphics.getFontMetrics().getAscent();
+          return true;
+       }
+    }
+diff -ruN a/edu/ucla/phil/logic/pkgA/Syntax2Parser.java b/edu/ucla/phil/logic/pkgA/Syntax2Parser.java
+--- a/edu/ucla/phil/logic/pkgA/Syntax2Parser.java
++++ b/edu/ucla/phil/logic/pkgA/Syntax2Parser.java
+@@ -1355,8 +1355,8 @@
+    }
+ 
+    private static final Syntax2Token jj_consume_token(int i) throws Syntax2ParseException {
+-      Syntax2Token syntax2token = token;
+-      if (token.next != null) {
++      Syntax2Token syntax2token;
++      if ((syntax2token = token).next != null) {
+          token = token.next;
+       } else {
+          token = token.next = Syntax2TokenManager.getNextToken();
+diff -ruN a/edu/ucla/phil/logic/pkgB/Syntax1Parser.java b/edu/ucla/phil/logic/pkgB/Syntax1Parser.java
+--- a/edu/ucla/phil/logic/pkgB/Syntax1Parser.java
++++ b/edu/ucla/phil/logic/pkgB/Syntax1Parser.java
+@@ -1355,8 +1355,8 @@
+    }
+ 
+    private static final Syntax1Token jj_consume_token(int i) throws Syntax1ParseException {
+-      Syntax1Token syntax1token = token;
+-      if (token.next != null) {
++      Syntax1Token syntax1token;
++      if ((syntax1token = token).next != null) {
+          token = token.next;
+       } else {
+          token = token.next = Syntax1TokenManager.getNextToken();
+diff -ruN a/edu/ucla/phil/logic/PredicateInterpretation.java b/edu/ucla/phil/logic/PredicateInterpretation.java
+--- a/edu/ucla/phil/logic/PredicateInterpretation.java
++++ b/edu/ucla/phil/logic/PredicateInterpretation.java
+@@ -80,7 +80,7 @@
+    }
+ 
+    String encodeExtension() {
+-      Object object = "";
++      String object = "";
+       int i = this.extension == null ? 0 : this.extension.size();
+ 
+       for (int j = 0; j < i; j++) {
+diff -ruN a/edu/ucla/phil/logic/ProblemSet.java b/edu/ucla/phil/logic/ProblemSet.java
+--- a/edu/ucla/phil/logic/ProblemSet.java
++++ b/edu/ucla/phil/logic/ProblemSet.java
+@@ -88,7 +88,7 @@
+       if (s == null) {
+          return -1;
+       } else {
+-         ProblemEntry problementry1 = this.entriesByName.put(s.trim().toUpperCase(), problementry);
++         ProblemEntry problementry1 = (ProblemEntry)this.entriesByName.put(s.trim().toUpperCase(), problementry);
+          int i = problementry1 == null ? -1 : this.indexOf(problementry1);
+          if (i != -1) {
+             int j = 1;
+diff -ruN a/edu/ucla/phil/logic/SchemeInstantiation.java b/edu/ucla/phil/logic/SchemeInstantiation.java
+--- a/edu/ucla/phil/logic/SchemeInstantiation.java
++++ b/edu/ucla/phil/logic/SchemeInstantiation.java
+@@ -276,7 +276,7 @@
+       if (this.pendingLetters == null) {
+          return "null";
+       } else {
+-         Object object = "";
++         String object = "";
+          Enumeration enumeration = this.pendingLetters.elements();
+ 
+          while (enumeration.hasMoreElements()) {
+diff -ruN a/edu/ucla/phil/logic/Scrambler.java b/edu/ucla/phil/logic/Scrambler.java
+--- a/edu/ucla/phil/logic/Scrambler.java
++++ b/edu/ucla/phil/logic/Scrambler.java
+@@ -139,7 +139,7 @@
+             return astring;
+          }
+ 
+-         s1 = (String[][])null;
++         astring = null;
+       } catch (IOException ioexception1) {
+          return astring;
+       } finally {
+@@ -151,7 +151,7 @@
+          }
+       }
+ 
+-      return s1;
++      return astring;
+    }
+ 
+    static String md5Base64(File file1) {
+diff -ruN a/edu/ucla/phil/logic/ServerConnection.java b/edu/ucla/phil/logic/ServerConnection.java
+--- a/edu/ucla/phil/logic/ServerConnection.java
++++ b/edu/ucla/phil/logic/ServerConnection.java
+@@ -2623,7 +2623,7 @@
+          }
+ 
+          if ((i = vector.size()) != 0) {
+-            astring = vector.toArray(new String[i]);
++            astring = (String[])vector.toArray(new String[i]);
+          }
+       }
+ 
+diff -ruN a/edu/ucla/phil/logic/SymbolizationNode.java b/edu/ucla/phil/logic/SymbolizationNode.java
+--- a/edu/ucla/phil/logic/SymbolizationNode.java
++++ b/edu/ucla/phil/logic/SymbolizationNode.java
+@@ -542,7 +542,7 @@
+ 
+    @Override
+    public String toString() {
+-      Object object = LogicProgram.translateSymbols(connSymbol[this.connective], maggie, displaySymbols);
++      String object = LogicProgram.translateSymbols(connSymbol[this.connective], maggie, displaySymbols);
+       String s = LogicProgram.translateSymbols(this.getLabel(), maggie, displaySymbols);
+       switch (this.connective) {
+          case 0:
+@@ -562,7 +562,7 @@
+          case 10:
+             return this.getChildNode(0) + " " + object + " " + this.getChildNode(1);
+          case 11:
+-            Object object1 = s;
++            String object1 = s;
+             int i = this.argTypes.length;
+             boolean flag = i > 1 || this.outType == 1 && i > 0;
+             if (flag) {
+diff -ruN a/edu/ucla/phil/logic/SymbolizationToolbar.java b/edu/ucla/phil/logic/SymbolizationToolbar.java
+--- a/edu/ucla/phil/logic/SymbolizationToolbar.java
++++ b/edu/ucla/phil/logic/SymbolizationToolbar.java
+@@ -211,7 +211,7 @@
+       if (ServerConnection.adminInstall) {
+          ChoiceListener choicelistener = new ChoiceListener() {
+             @Override
+-            public void choiceChanged(ChoiceButton choicebutton1, int j, int j) {
++            public void choiceChanged(ChoiceButton choicebutton1, int i0, int j) {
+                String s = choicebutton1.getChoice(j);
+                if (s != null) {
+                   if (s.equalsIgnoreCase("Statement")) {
+diff -ruN a/edu/ucla/phil/logic/TruthProblemPanel.java b/edu/ucla/phil/logic/TruthProblemPanel.java
+--- a/edu/ucla/phil/logic/TruthProblemPanel.java
++++ b/edu/ucla/phil/logic/TruthProblemPanel.java
+@@ -126,8 +126,13 @@
+ 
+             for (int l = 0; l <= this.premiseCount; l++) {
+                k = s3.indexOf(46);
+-               astring[l] = k == -1 ? s3 : s3.substring(0, k);
+-               s3 = k == -1 ? "" : s3.substring(k + 1);
++               if (k == -1) {
++                  astring[l] = s3;
++                  s3 = "";
++               } else {
++                  astring[l] = s3.substring(0, k);
++                  s3 = s3.substring(k + 1);
++               }
+             }
+ 
+             hashtable.put(s1.toUpperCase(), astring);
+diff -ruN a/edu/ucla/phil/logic/TruthValueTreeLabel.java b/edu/ucla/phil/logic/TruthValueTreeLabel.java
+--- a/edu/ucla/phil/logic/TruthValueTreeLabel.java
++++ b/edu/ucla/phil/logic/TruthValueTreeLabel.java
+@@ -125,7 +125,7 @@
+          int[] aint1 = formulaparsenode.parenDepth;
+          int i = aint.length - 1;
+ 
+-         for (byte b0 = 0; b0 < intervalset.count - 1; b0 += 2) {
++         for (int b0 = 0; b0 < intervalset.count - 1; b0 += 2) {
+             int j = intervalset.boundaries[b0];
+             int k = intervalset.boundaries[b0 + 1];
+             int l = aint[j];

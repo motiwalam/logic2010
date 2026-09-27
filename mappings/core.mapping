@@ -16,8 +16,8 @@ class UC ProgramLauncher              # C_UC: builds a java command line (-Dlink
 class m SingleInstanceGuard           # C_m_: "TCPSolo" server socket: prevents two running copies
 class tA OverrideSettings             # C_t_A: override.txt (key:value, plain text)
 class wB PreferencesFile              # C_w_B: prefs.txt (case-insensitive key:value)
-m2150 get
-m2151 put
+m2150 getPref
+m2151 putPref
 m2153 load
 class SD ProgressDialog               # C_SD: "Starting the program..." splash/progress box
 

@@ -3,7 +3,7 @@ package edu.ucla.phil.logic;
 import java.util.Vector;
 
 public class SimpleTerm extends Term {
-   private Expression f1172;
+   private Expression binder;
 
    public SimpleTerm(String s) {
       super(s);
@@ -14,41 +14,41 @@ public class SimpleTerm extends Term {
       this.kind = 3;
    }
 
-   public void m1848(Expression expression) {
-      this.f1172 = expression;
+   public void setBinder(Expression expression) {
+      this.binder = expression;
    }
 
-   boolean m1849() {
-      return this.f1172 != null;
+   boolean hasBinder() {
+      return this.binder != null;
    }
 
-   Expression m1850() {
-      return this.f1172;
+   Expression getBinder() {
+      return this.binder;
    }
 
    @Override
-   boolean m1236(Expression expression, C_MB c_mb) {
+   boolean isAlphaEquivalent(Expression expression, BinderMap bindermap) {
       if (!(expression instanceof SimpleTerm)) {
          return false;
       } else {
-         Expression expression1 = ((SimpleTerm)expression).f1172;
-         if (this.f1172 != null) {
+         Expression expression1 = ((SimpleTerm)expression).binder;
+         if (this.binder != null) {
             if (expression1 == null) {
                return false;
             }
 
-            boolean flag = this.m1261();
-            boolean flag1 = ((SimpleTerm)expression).m1261();
+            boolean flag = this.isArgumentPlaceholder();
+            boolean flag1 = ((SimpleTerm)expression).isArgumentPlaceholder();
             if (flag != flag1) {
                return false;
             }
 
             if (flag) {
-               return this.f1172.m1219(this.symbol) == expression1.m1219(expression.symbol);
+               return this.binder.indexOfChildSymbol(this.symbol) == expression1.indexOfChildSymbol(expression.symbol);
             }
 
-            if (c_mb != null) {
-               return c_mb.m1091(this.f1172) == expression1;
+            if (bindermap != null) {
+               return bindermap.getCounterpart(this.binder) == expression1;
             }
          } else if (expression1 != null) {
             return false;
@@ -59,45 +59,45 @@ public class SimpleTerm extends Term {
    }
 
    @Override
-   Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, C_MB c_mb, Vector vector) {
-      Expression expression1 = this.f1172 == null ? null : c_mb.m1092(expression, this.f1172, vector);
+   Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, BinderMap bindermap, Vector vector) {
+      Expression expression1 = this.binder == null ? null : bindermap.getCounterpart(expression, this.binder, vector);
       if (schemeinstantiation != null && expression == null && expression1 == null) {
-         C_PB c_pb = new C_PB(this);
-         LetterReplacement letterreplacement = schemeinstantiation.m1878(c_pb);
+         TermLetter termletter = new TermLetter(this);
+         LetterReplacement letterreplacement = schemeinstantiation.getReplacement(termletter);
          if (letterreplacement != null) {
-            return letterreplacement.f368.instantiate(this, schemeinstantiation, c_mb, vector);
+            return letterreplacement.replacement.instantiate(this, schemeinstantiation, bindermap, vector);
          }
 
-         if (this.f1172 != null) {
-            schemeinstantiation.m1886(c_pb);
+         if (this.binder != null) {
+            schemeinstantiation.addPendingLetter(termletter);
          }
       }
 
-      if (this.m1261() && expression != null) {
+      if (this.isArgumentPlaceholder() && expression != null) {
          vector.addElement(this);
-         Expression expression2 = expression.getChild(this.f1172.m1219(this.symbol)).instantiate(null, schemeinstantiation, c_mb, vector);
+         Expression expression2 = expression.getChild(this.binder.indexOfChildSymbol(this.symbol)).instantiate(null, schemeinstantiation, bindermap, vector);
          vector.removeElementAt(vector.size() - 1);
          return expression2;
       } else {
          SimpleTerm simpleterm1 = new SimpleTerm(this.symbol);
-         simpleterm1.f1172 = expression1;
+         simpleterm1.binder = expression1;
          return simpleterm1;
       }
    }
 
    @Override
-   void m1230(String s, ExpressionPath expressionpath, Vector vector) {
+   void findBoundVariableOccurrences(String s, ExpressionPath expressionpath, Vector vector) {
       if (s != null) {
-         if (this.m1262() && s.equals(this.symbol)) {
+         if (this.isBoundVariable() && s.equals(this.symbol)) {
             vector.addElement(expressionpath.clone());
          }
       }
    }
 
    @Override
-   int m1242(Vector vector, int i) {
-      if (this.f1172 != null) {
-         Expression expression = this.f1172.getChild(0);
+   int renameBoundVariables(Vector vector, int i) {
+      if (this.binder != null) {
+         Expression expression = this.binder.getChild(0);
          if (this == expression && i < vector.size()) {
             String s = (String)vector.elementAt(i);
             if (s != null && !s.equals("")) {
@@ -114,48 +114,48 @@ public class SimpleTerm extends Term {
    }
 
    @Override
-   void m1258(C_JD c_jd) {
-      this.f1172 = (Expression)c_jd.get(this.symbol);
+   void linkVariables(VariableScope variablescope) {
+      this.binder = (Expression)variablescope.get(this.symbol);
    }
 
    @Override
-   void m1260(C_JD c_jd, Vector vector) {
-      Expression expression = (Expression)c_jd.get(this.symbol);
-      if (this.f1172 != expression) {
+   void findMislinkedVariables(VariableScope variablescope, Vector vector) {
+      Expression expression = (Expression)variablescope.get(this.symbol);
+      if (this.binder != expression) {
          vector.addElement(new Expression[]{expression, this});
       }
    }
 
    @Override
-   void m1264(Expression expression) {
-      if (this.f1172 == null && expression.m1219(this.symbol) != -1) {
-         this.f1172 = expression;
+   void linkArgumentPlaceholders(Expression expression) {
+      if (this.binder == null && expression.indexOfChildSymbol(this.symbol) != -1) {
+         this.binder = expression;
       }
    }
 
    @Override
-   boolean m1265(Expression expression) {
-      return this.symbol.equals(LogicProgram.m1015(this.symbol)) && (expression == null || expression.m1219(this.symbol) == -1);
+   boolean hasUndeclaredPlaceholder(Expression expression) {
+      return this.symbol.equals(LogicProgram.findNumberedPlaceholder(this.symbol)) && (expression == null || expression.indexOfChildSymbol(this.symbol) == -1);
    }
 
    @Override
-   boolean m1261() {
-      return this.f1172 != null && this.f1172.m1263();
+   boolean isArgumentPlaceholder() {
+      return this.binder != null && this.binder.bindsArguments();
    }
 
    @Override
-   boolean m1262() {
-      return this.f1172 != null && !this.f1172.m1263();
+   boolean isBoundVariable() {
+      return this.binder != null && !this.binder.bindsArguments();
    }
 
-   static boolean m1851(String s) {
-      return m1852(s, false);
+   static boolean isSimpleTerm(String s) {
+      return isSimpleTerm(s, false);
    }
 
-   static boolean m1852(String s, boolean flag) {
+   static boolean isSimpleTerm(String s, boolean flag) {
       Expression expression;
       try {
-         expression = LogicProgram.m1008(s, true, flag);
+         expression = LogicProgram.parseFormula(s, true, flag);
       } catch (FormulaParseException formulaparseexception) {
          return false;
       }
@@ -164,57 +164,60 @@ public class SimpleTerm extends Term {
    }
 
    @Override
-   void m1253(Vector vector, Vector vector1) {
+   void collectTermSymbols(Vector vector, Vector vector1) {
       if (vector != null && !vector.contains(this.symbol)) {
          vector.addElement(this.symbol);
       }
 
-      if (!this.m1262() && vector1 != null && !vector1.contains(this.symbol)) {
+      if (!this.isBoundVariable() && vector1 != null && !vector1.contains(this.symbol)) {
          vector1.addElement(this.symbol);
       }
    }
 
    @Override
-   void m1277(Vector vector) {
-      if (!this.m1262() && !vector.contains(this.symbol)) {
+   void collectFreeVariables(Vector vector) {
+      if (!this.isBoundVariable() && !vector.contains(this.symbol)) {
          vector.addElement(this.symbol);
       }
    }
 
    @Override
-   boolean m1268(Expression expression, Expression expression1, SchemeInstantiation schemeinstantiation, C_MB c_mb, Vector vector) {
-      if (this.f1172 == null) {
+   boolean match(Expression expression, Expression expression1, SchemeInstantiation schemeinstantiation, BinderMap bindermap, Vector vector) {
+      if (this.binder == null) {
          if (expression1 != null) {
-            return expression == null ? schemeinstantiation.m1881(this, expression1) : super.m1268(expression, expression1, schemeinstantiation, c_mb, vector);
+            return expression == null
+               ? schemeinstantiation.addReplacement(this, expression1)
+               : super.match(expression, expression1, schemeinstantiation, bindermap, vector);
          } else {
-            return expression != null || schemeinstantiation.m1885(this) && schemeinstantiation.m1887(this, null, c_mb, vector);
+            return expression != null || schemeinstantiation.addPendingLetter(this) && schemeinstantiation.deferMatch(this, null, bindermap, vector);
          }
-      } else if (this.m1261()) {
+      } else if (this.isArgumentPlaceholder()) {
          vector.addElement(this);
-         boolean flag = expression.getChild(this.f1172.m1219(this.symbol)).m1268(null, expression1, schemeinstantiation, c_mb, vector);
+         boolean flag = expression.getChild(this.binder.indexOfChildSymbol(this.symbol)).match(null, expression1, schemeinstantiation, bindermap, vector);
          vector.removeElementAt(vector.size() - 1);
          return flag;
       } else {
-         return expression1 == null || expression1 instanceof SimpleTerm && ((SimpleTerm)expression1).m1850() == c_mb.m1092(expression, this.f1172, vector);
+         return expression1 == null
+            || expression1 instanceof SimpleTerm && ((SimpleTerm)expression1).getBinder() == bindermap.getCounterpart(expression, this.binder, vector);
       }
    }
 
    @Override
-   Expression m1247(Vector vector, int i, SchemeInstantiation schemeinstantiation) {
-      if (this.m1262()) {
-         this.symbol = this.f1172.getChild(0).symbol;
+   Expression abstractQuantifiers(Vector vector, int i, SchemeInstantiation schemeinstantiation) {
+      if (this.isBoundVariable()) {
+         this.symbol = this.binder.getChild(0).symbol;
       }
 
       return this;
    }
 
    @Override
-   boolean m1252(Expression expression) {
-      return this.f1172 == expression;
+   boolean containsVariableBoundBy(Expression expression) {
+      return this.binder == expression;
    }
 
    @Override
-   void m1246(Vector vector) {
+   void collectSchematicLetters(Vector vector) {
       SchematicLetter schematicletter = this.getSchematicLetter();
       if (schematicletter != null && vector.indexOf(schematicletter) == -1) {
          vector.addElement(schematicletter);
@@ -223,37 +226,37 @@ public class SimpleTerm extends Term {
 
    @Override
    SchematicLetter getSchematicLetter() {
-      return this.m1262() ? null : new C_PB(this);
+      return this.isBoundVariable() ? null : new TermLetter(this);
    }
 
    @Override
-   boolean m1273(SchemeInstantiation schemeinstantiation) {
-      return this.m1262() ? true : schemeinstantiation.m1885(this);
+   boolean addPendingLetters(SchemeInstantiation schemeinstantiation) {
+      return this.isBoundVariable() ? true : schemeinstantiation.addPendingLetter(this);
    }
 
    @Override
-   boolean m1274(SchemeInstantiation schemeinstantiation) {
-      return this.m1262() || schemeinstantiation.m1878(this.getSchematicLetter()) != null;
+   boolean isFullyInstantiated(SchemeInstantiation schemeinstantiation) {
+      return this.isBoundVariable() || schemeinstantiation.getReplacement(this.getSchematicLetter()) != null;
    }
 
    @Override
-   boolean m1210() {
+   boolean usesArgumentParens() {
       return true;
    }
 
    @Override
-   String m1207(int i) {
+   String formatMinimal(int i) {
       return this.symbol;
    }
 
    @Override
-   String m1209(int i) {
+   String formatFull(int i) {
       return this.symbol;
    }
 
    @Override
-   void m1211(C_DD c_dd) {
-      super.m1211(c_dd);
-      c_dd.f283 = this.symbol.length();
+   void layoutDisplayTree(FormulaParseNode formulaparsenode) {
+      super.layoutDisplayTree(formulaparsenode);
+      formulaparsenode.length = this.symbol.length();
    }
 }

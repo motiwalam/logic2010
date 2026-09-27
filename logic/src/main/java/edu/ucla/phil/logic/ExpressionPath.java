@@ -16,7 +16,7 @@ public class ExpressionPath implements Cloneable {
       this.indexes = aint;
    }
 
-   public static ExpressionPath m1746(int[] aint) {
+   public static ExpressionPath fromArray(int[] aint) {
       return aint == null ? null : new ExpressionPath(aint);
    }
 
@@ -37,11 +37,11 @@ public class ExpressionPath implements Cloneable {
       return expressionpath1;
    }
 
-   public void m1747(int[] aint) {
-      this.m1748(aint, 0, aint.length);
+   public void append(int[] aint) {
+      this.append(aint, 0, aint.length);
    }
 
-   public void m1748(int[] aint, int i, int j) {
+   public void append(int[] aint, int i, int j) {
       if (this.indexes.length < this.depth + j) {
          int k = this.indexes.length;
 
@@ -64,7 +64,7 @@ public class ExpressionPath implements Cloneable {
       this.depth += j;
    }
 
-   public void m1749(int i) {
+   public void push(int i) {
       if (this.indexes.length <= this.depth) {
          int j = this.indexes.length;
 
@@ -84,7 +84,7 @@ public class ExpressionPath implements Cloneable {
       this.depth++;
    }
 
-   public int m1750(int i) {
+   public int indexOf(int i) {
       for (int j = 0; j < this.depth; j++) {
          if (this.indexes[j] == i) {
             return j;
@@ -94,7 +94,7 @@ public class ExpressionPath implements Cloneable {
       return -1;
    }
 
-   public int m1751(ExpressionPath expressionpath1) {
+   public int commonPrefixLength(ExpressionPath expressionpath1) {
       if (expressionpath1 == null) {
          return 0;
       } else {
@@ -110,7 +110,7 @@ public class ExpressionPath implements Cloneable {
       }
    }
 
-   public int[] m1752() {
+   public int[] toArray() {
       int[] aint = new int[this.depth];
       if (this.depth > 0) {
          System.arraycopy(this.indexes, 0, aint, 0, this.depth);
@@ -121,14 +121,14 @@ public class ExpressionPath implements Cloneable {
 
    @Override
    public String toString() {
-      return m1754(this.indexes, 0, this.depth);
+      return format(this.indexes, 0, this.depth);
    }
 
-   public static String m1753(int[] aint) {
-      return m1754(aint, 0, aint.length);
+   public static String format(int[] aint) {
+      return format(aint, 0, aint.length);
    }
 
-   public static String m1754(int[] aint, int i, int j) {
+   public static String format(int[] aint, int i, int j) {
       String s = "{";
 
       for (int k = 0; k < j; k++) {
@@ -138,7 +138,7 @@ public class ExpressionPath implements Cloneable {
       return s + "}";
    }
 
-   public static int[] m1755(String s) {
+   public static int[] parse(String s) {
       int i = s.indexOf("{");
       int j = s.indexOf("}");
       if (i != -1 && j != -1 && j >= i) {

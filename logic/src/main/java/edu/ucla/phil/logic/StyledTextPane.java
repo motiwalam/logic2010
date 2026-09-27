@@ -23,10 +23,10 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
-class StyledTextPane extends JTextPane implements C_LC {
-   static StyleContext f1092 = null;
-   boolean f1093 = false;
-   private boolean f1094 = false;
+class StyledTextPane extends JTextPane implements ModuleComponentMarker {
+   static StyleContext styleContext = null;
+   boolean wrapLines = false;
+   private boolean inWidthCheck = false;
 
    StyledTextPane() {
       this.setMargin(new Insets(0, 1, 0, 1));
@@ -45,18 +45,18 @@ class StyledTextPane extends JTextPane implements C_LC {
       this.setText(s);
    }
 
-   void m1787(boolean flag) {
-      this.f1093 = flag;
+   void setWrapLines(boolean flag) {
+      this.wrapLines = flag;
    }
 
-   boolean m1788() {
-      return this.f1093;
+   boolean isWrapLines() {
+      return this.wrapLines;
    }
 
-   void m1789(boolean flag) {
+   void setWrapWords(boolean flag) {
    }
 
-   boolean m1790() {
+   boolean isWrapWords() {
       return true;
    }
 
@@ -68,18 +68,18 @@ class StyledTextPane extends JTextPane implements C_LC {
       }
    }
 
-   void m1791(Color color) {
-      this.m1793(StyleConstants.Foreground, color);
+   void setTextForeground(Color color) {
+      this.setTextColorAttribute(StyleConstants.Foreground, color);
    }
 
-   void m1792(Color color) {
-      this.m1793(StyleConstants.Background, color);
+   void setTextBackground(Color color) {
+      this.setTextColorAttribute(StyleConstants.Background, color);
    }
 
-   void m1793(Object object, Color color) {
+   void setTextColorAttribute(Object object, Color color) {
       if (color != null) {
-         if (f1092 == null) {
-            f1092 = new StyleContext();
+         if (styleContext == null) {
+            styleContext = new StyleContext();
          }
 
          AttributeSet attributeset = null;
@@ -96,7 +96,7 @@ class StyledTextPane extends JTextPane implements C_LC {
             attributeset = SimpleAttributeSet.EMPTY;
          }
 
-         AttributeSet attributeset1 = f1092.addAttribute(attributeset, object, color);
+         AttributeSet attributeset1 = styleContext.addAttribute(attributeset, object, color);
          StyledDocument styleddocument1 = this.getStyledDocument();
          if (styleddocument1 != null) {
             styleddocument1.setCharacterAttributes(0, 2147483647, attributeset1, false);
@@ -109,9 +109,9 @@ class StyledTextPane extends JTextPane implements C_LC {
       }
    }
 
-   void m1794(boolean flag) {
-      if (f1092 == null) {
-         f1092 = new StyleContext();
+   void setUnderlined(boolean flag) {
+      if (styleContext == null) {
+         styleContext = new StyleContext();
       }
 
       AttributeSet attributeset;
@@ -125,7 +125,7 @@ class StyledTextPane extends JTextPane implements C_LC {
          attributeset = SimpleAttributeSet.EMPTY;
       }
 
-      AttributeSet attributeset1 = f1092.addAttribute(attributeset, StyleConstants.Underline, flag);
+      AttributeSet attributeset1 = styleContext.addAttribute(attributeset, StyleConstants.Underline, flag);
       StyledDocument styleddocument = this.getStyledDocument();
       if (styleddocument != null) {
          styleddocument.setCharacterAttributes(0, 2147483647, attributeset1, false);
@@ -139,7 +139,7 @@ class StyledTextPane extends JTextPane implements C_LC {
       this.repaint();
    }
 
-   public void m1795(String s, int i, int j) {
+   public void replaceRange(String s, int i, int j) {
       if (j < i) {
          throw new IllegalArgumentException("end before start");
       } else {
@@ -159,7 +159,7 @@ class StyledTextPane extends JTextPane implements C_LC {
       }
    }
 
-   public void m1796(String s, int i) {
+   public void insertText(String s, int i) {
       Document document = this.getDocument();
       if (document != null) {
          try {
@@ -172,18 +172,18 @@ class StyledTextPane extends JTextPane implements C_LC {
 
    @Override
    public synchronized boolean getScrollableTracksViewportWidth() {
-      if (this.f1094) {
+      if (this.inWidthCheck) {
          return false;
       } else {
          Container container = this.getParent();
-         if (!this.f1093 && container instanceof JViewport) {
+         if (!this.wrapLines && container instanceof JViewport) {
             boolean flag = false;
-            this.f1094 = true;
+            this.inWidthCheck = true;
 
             try {
                flag = container.getWidth() > this.getPreferredSize().width;
             } finally {
-               this.f1094 = false;
+               this.inWidthCheck = false;
             }
 
             return flag;
@@ -193,7 +193,7 @@ class StyledTextPane extends JTextPane implements C_LC {
       }
    }
 
-   Point m1797(int i) {
+   Point getPositionLocation(int i) {
       try {
          Rectangle rectangle = this.modelToView(i);
          if (rectangle == null) {
@@ -207,7 +207,7 @@ class StyledTextPane extends JTextPane implements C_LC {
       }
    }
 
-   void m1798(int i) {
+   void scrollToPosition(int i) {
       try {
          this.scrollRectToVisible(this.modelToView(i));
       } catch (BadLocationException badlocationexception) {
@@ -215,7 +215,7 @@ class StyledTextPane extends JTextPane implements C_LC {
       }
    }
 
-   int m1799() {
+   int getDocumentLength() {
       StyledDocument styleddocument = this.getStyledDocument();
       return styleddocument == null ? 0 : styleddocument.getLength();
    }

@@ -3,42 +3,44 @@ package edu.ucla.phil.logic;
 import java.util.Hashtable;
 
 abstract class Institution {
-   static Institution[] f774 = new Institution[]{new C_m_E(), new C_p_C(), new C_o_C(), new C_l_C(), new C_v_E(), new C_f_B()};
-   static Hashtable f775 = new Hashtable();
+   static Institution[] KNOWN_INSTITUTIONS = new Institution[]{
+      new UclaInstitution(), new UcsbInstitution(), new UcsdInstitution(), new YaleInstitution(), new SunysbInstitution(), new BounInstitution()
+   };
+   static Hashtable byName = new Hashtable();
 
-   static Institution m1293(String s) {
+   static Institution forName(String s) {
       if (s == null) {
          return null;
       } else {
-         Institution institution = (Institution)f775.get(s.toUpperCase());
+         Institution institution = (Institution)byName.get(s.toUpperCase());
          if (institution != null) {
             return institution;
          } else {
-            C_e_C c_e_c = new C_e_C(s);
-            f775.put(c_e_c.m1294().toUpperCase(), c_e_c);
-            return c_e_c;
+            StandardInstitution standardinstitution = new StandardInstitution(s);
+            byName.put(standardinstitution.getCode().toUpperCase(), standardinstitution);
+            return standardinstitution;
          }
       }
    }
 
-   abstract String m1294();
+   abstract String getCode();
 
-   abstract String m1295(String s);
+   abstract String normalizeStudentId(String s);
 
-   abstract C_P m1296(String s);
+   abstract TermCode parseTerm(String s);
 
-   abstract String m1297(C_P c_p);
+   abstract String formatTermCode(TermCode termcode);
 
-   abstract String m1298(C_P c_p);
+   abstract String formatTermName(TermCode termcode);
 
-   String m1299(String s) {
-      C_P c_p = this.m1296(s);
-      return c_p == null ? s : this.m1298(c_p);
+   String displayTerm(String s) {
+      TermCode termcode = this.parseTerm(s);
+      return termcode == null ? s : this.formatTermName(termcode);
    }
 
    static {
-      for (int i = 0; i < f774.length; i++) {
-         f775.put(f774[i].m1294().toUpperCase(), f774[i]);
+      for (int i = 0; i < KNOWN_INSTITUTIONS.length; i++) {
+         byName.put(KNOWN_INSTITUTIONS[i].getCode().toUpperCase(), KNOWN_INSTITUTIONS[i]);
       }
    }
 }

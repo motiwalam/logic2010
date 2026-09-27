@@ -12,38 +12,38 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class PreferencesFile extends Hashtable {
-   Hashtable f1425 = new Hashtable();
+   Hashtable originalKeys = new Hashtable();
 
    PreferencesFile() {
    }
 
-   String get(String s) {
+   String getPref(String s) {
       return (String)this.get(s.trim().toUpperCase());
    }
 
-   void put(String s, String s1) {
+   void putPref(String s, String s1) {
       String s2 = s.trim().toUpperCase();
-      this.f1425.put(s2, s);
+      this.originalKeys.put(s2, s);
       this.put(s2, s1);
    }
 
-   void m2152(String s) {
+   void removeKey(String s) {
       String s1 = s.trim().toUpperCase();
-      this.f1425.remove(s1);
+      this.originalKeys.remove(s1);
       this.remove(s1);
    }
 
    void load(File file1) {
       if (file1.exists()) {
          try {
-            this.m2154(new FileReader(file1));
+            this.load(new FileReader(file1));
          } catch (IOException ioexception) {
             System.out.println(ioexception.getMessage());
          }
       }
    }
 
-   void m2154(Reader reader) {
+   void load(Reader reader) {
       if (reader != null) {
          BufferedReader bufferedreader = reader instanceof BufferedReader ? (BufferedReader)reader : new BufferedReader(reader);
 
@@ -62,7 +62,7 @@ public class PreferencesFile extends Hashtable {
             if (!s.startsWith("#")) {
                int i = s.indexOf(":");
                if (i != -1) {
-                  this.put(s.substring(0, i), s.substring(i + 1));
+                  this.putPref(s.substring(0, i), s.substring(i + 1));
                }
             }
          }
@@ -76,25 +76,25 @@ public class PreferencesFile extends Hashtable {
       }
    }
 
-   void m2155(File file1) {
+   void save(File file1) {
       if (!this.isEmpty()) {
          try {
-            this.m2156(new FileWriter(file1));
+            this.save(new FileWriter(file1));
          } catch (IOException ioexception) {
             System.out.println(ioexception.getMessage());
          }
       }
    }
 
-   void m2156(Writer writer) {
+   void save(Writer writer) {
       if (writer != null) {
-         if (this.f1425 != null && !this.isEmpty()) {
+         if (this.originalKeys != null && !this.isEmpty()) {
             BufferedWriter bufferedwriter = writer instanceof BufferedWriter ? (BufferedWriter)writer : new BufferedWriter(writer);
             Enumeration enumeration = this.keys();
 
             while (enumeration.hasMoreElements()) {
                String s = (String)enumeration.nextElement();
-               String s1 = (String)this.f1425.get(s);
+               String s1 = (String)this.originalKeys.get(s);
 
                try {
                   bufferedwriter.write(s1 + ":" + (String)this.get(s));

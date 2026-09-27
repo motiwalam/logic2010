@@ -8,48 +8,48 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
    protected String symbol;
    protected Vector children;
    protected int childCount;
-   protected boolean f742;
+   protected boolean displayAsInequality;
 
    Expression(String s) {
       this.symbol = s;
       this.children = new Vector();
       this.childCount = 0;
-      this.f742 = false;
+      this.displayAsInequality = false;
       this.initKind();
    }
 
    @Override
    public String toString() {
-      return this.m1205(true, 0);
+      return this.format(true, 0);
    }
 
-   String m1205(boolean flag, int i) {
-      return flag ? this.m1207(i) : this.m1209(i);
+   String format(boolean flag, int i) {
+      return flag ? this.formatMinimal(i) : this.formatFull(i);
    }
 
-   String m1206() {
-      return this.m1207(-1);
+   String toCanonicalString() {
+      return this.formatMinimal(-1);
    }
 
-   abstract String m1207(int i);
+   abstract String formatMinimal(int i);
 
-   String m1208() {
-      return this.m1209(1);
+   String toFullyParenthesizedString() {
+      return this.formatFull(1);
    }
 
-   abstract String m1209(int i);
+   abstract String formatFull(int i);
 
-   boolean m1210() {
+   boolean usesArgumentParens() {
       return false;
    }
 
-   void m1211(C_DD c_dd) {
-      c_dd.f281 = this.childCount == 0 ? null : new Vector();
+   void layoutDisplayTree(FormulaParseNode formulaparsenode) {
+      formulaparsenode.children = this.childCount == 0 ? null : new Vector();
 
       for (int i = 0; i < this.childCount; i++) {
-         C_DD c_dd1 = new C_DD(this.getChild(i));
-         c_dd1.f277 = c_dd;
-         c_dd.f281.addElement(c_dd1);
+         FormulaParseNode formulaparsenode1 = new FormulaParseNode(this.getChild(i));
+         formulaparsenode1.parent = formulaparsenode;
+         formulaparsenode.children.addElement(formulaparsenode1);
       }
    }
 
@@ -76,7 +76,7 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
       return i >= 0 && i < this.childCount ? (Expression)this.children.elementAt(i) : null;
    }
 
-   int m1218(String s, int i) {
+   int indexOfChildSymbol(String s, int i) {
       int j = i;
 
       while (j < this.childCount && !s.equals(this.getChild(j).symbol)) {
@@ -86,104 +86,104 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
       return j == this.childCount ? -1 : j;
    }
 
-   int m1219(String s) {
-      return this.m1218(s, 0);
+   int indexOfChildSymbol(String s) {
+      return this.indexOfChildSymbol(s, 0);
    }
 
-   Expression m1220(ExpressionPath expressionpath) {
-      return this.m1221(expressionpath, null);
+   Expression getSubexpression(ExpressionPath expressionpath) {
+      return this.getSubexpression(expressionpath, null);
    }
 
-   Expression m1221(ExpressionPath expressionpath, Vector vector) {
-      return expressionpath == null ? null : this.m1222(expressionpath.indexes, 0, expressionpath.depth, vector);
+   Expression getSubexpression(ExpressionPath expressionpath, Vector vector) {
+      return expressionpath == null ? null : this.getSubexpression(expressionpath.indexes, 0, expressionpath.depth, vector);
    }
 
-   Expression m1222(int[] aint, int i, int j, Vector vector) {
+   Expression getSubexpression(int[] aint, int i, int j, Vector vector) {
       if (i == j) {
          return this;
       } else {
          Expression expression1 = this.getChild(aint[i]);
-         return expression1 == null ? null : expression1.m1222(aint, i + 1, j, vector);
+         return expression1 == null ? null : expression1.getSubexpression(aint, i + 1, j, vector);
       }
    }
 
-   Vector m1223(Expression expression1) {
+   Vector findOccurrences(Expression expression1) {
       Vector vector = new Vector();
-      this.m1224(expression1, new ExpressionPath(), vector);
+      this.findOccurrences(expression1, new ExpressionPath(), vector);
       return vector;
    }
 
-   void m1224(Expression expression1, ExpressionPath expressionpath, Vector vector) {
-      if (this.m1235(expression1)) {
+   void findOccurrences(Expression expression1, ExpressionPath expressionpath, Vector vector) {
+      if (this.isIdentical(expression1)) {
          vector.addElement(expressionpath.clone());
       } else {
          for (int i = 0; i < this.childCount; i++) {
-            expressionpath.m1749(i);
-            this.getChild(i).m1224(expression1, expressionpath, vector);
+            expressionpath.push(i);
+            this.getChild(i).findOccurrences(expression1, expressionpath, vector);
             expressionpath.depth--;
          }
       }
    }
 
-   Vector m1225(SchematicLetter schematicletter) {
+   Vector findLetterOccurrences(SchematicLetter schematicletter) {
       Vector vector = new Vector();
-      this.m1226(schematicletter, new ExpressionPath(), vector);
+      this.findLetterOccurrences(schematicletter, new ExpressionPath(), vector);
       return vector;
    }
 
-   void m1226(SchematicLetter schematicletter, ExpressionPath expressionpath, Vector vector) {
+   void findLetterOccurrences(SchematicLetter schematicletter, ExpressionPath expressionpath, Vector vector) {
       if (schematicletter != null) {
          if (schematicletter.equals(this.getSchematicLetter())) {
             vector.addElement(expressionpath.clone());
          }
 
          for (int i = 0; i < this.childCount; i++) {
-            expressionpath.m1749(i);
-            this.getChild(i).m1226(schematicletter, expressionpath, vector);
+            expressionpath.push(i);
+            this.getChild(i).findLetterOccurrences(schematicletter, expressionpath, vector);
             expressionpath.depth--;
          }
       }
    }
 
-   Vector m1227(String s) {
+   Vector findSymbolOccurrences(String s) {
       Vector vector = new Vector();
-      this.m1228(s, new ExpressionPath(), vector);
+      this.findSymbolOccurrences(s, new ExpressionPath(), vector);
       return vector;
    }
 
-   void m1228(String s, ExpressionPath expressionpath, Vector vector) {
+   void findSymbolOccurrences(String s, ExpressionPath expressionpath, Vector vector) {
       if (s.equals(this.symbol)) {
          vector.addElement(expressionpath.clone());
       }
 
       for (int i = 0; i < this.childCount; i++) {
-         expressionpath.m1749(i);
-         this.getChild(i).m1228(s, expressionpath, vector);
+         expressionpath.push(i);
+         this.getChild(i).findSymbolOccurrences(s, expressionpath, vector);
          expressionpath.depth--;
       }
    }
 
-   Vector m1229(String s) {
+   Vector findBoundVariableOccurrences(String s) {
       Vector vector = new Vector();
-      this.m1230(s, new ExpressionPath(), vector);
+      this.findBoundVariableOccurrences(s, new ExpressionPath(), vector);
       return vector;
    }
 
-   void m1230(String s, ExpressionPath expressionpath, Vector vector) {
+   void findBoundVariableOccurrences(String s, ExpressionPath expressionpath, Vector vector) {
       if (s != null) {
          for (int i = 0; i < this.childCount; i++) {
-            expressionpath.m1749(i);
-            this.getChild(i).m1230(s, expressionpath, vector);
+            expressionpath.push(i);
+            this.getChild(i).findBoundVariableOccurrences(s, expressionpath, vector);
             expressionpath.depth--;
          }
       }
    }
 
-   ExpressionPath m1231(Expression expression1) {
-      return this.m1232(this.m1233(expression1));
+   ExpressionPath getDifferencePath(Expression expression1) {
+      return this.commonPathPrefix(this.findDifferences(expression1));
    }
 
-   ExpressionPath m1232(Vector vector) {
+   ExpressionPath commonPathPrefix(Vector vector) {
       int i = vector == null ? 0 : vector.size();
       if (i == 0) {
          return null;
@@ -191,24 +191,24 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
          ExpressionPath expressionpath = (ExpressionPath)vector.elementAt(0);
 
          for (int j = 1; j < i; j++) {
-            expressionpath.depth = expressionpath.m1751((ExpressionPath)vector.elementAt(j));
+            expressionpath.depth = expressionpath.commonPrefixLength((ExpressionPath)vector.elementAt(j));
          }
 
          return expressionpath;
       }
    }
 
-   Vector m1233(Expression expression1) {
+   Vector findDifferences(Expression expression1) {
       Vector vector = new Vector();
-      this.m1234(expression1, new ExpressionPath(), vector);
+      this.findDifferences(expression1, new ExpressionPath(), vector);
       return vector;
    }
 
-   private void m1234(Expression expression1, ExpressionPath expressionpath, Vector vector) {
+   private void findDifferences(Expression expression1, ExpressionPath expressionpath, Vector vector) {
       if (expression1 != null && this.symbol.equals(expression1.symbol) && this.childCount == expression1.childCount) {
          for (int i = 0; i < this.childCount; i++) {
-            expressionpath.m1749(i);
-            this.getChild(i).m1234(expression1.getChild(i), expressionpath, vector);
+            expressionpath.push(i);
+            this.getChild(i).findDifferences(expression1.getChild(i), expressionpath, vector);
             expressionpath.depth--;
          }
       } else {
@@ -216,10 +216,10 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
       }
    }
 
-   boolean m1235(Expression expression1) {
+   boolean isIdentical(Expression expression1) {
       if (expression1 != null && this.symbol.equals(expression1.symbol) && this.childCount == expression1.childCount) {
          for (int i = 0; i < this.childCount; i++) {
-            if (!this.getChild(i).m1235(expression1.getChild(i))) {
+            if (!this.getChild(i).isIdentical(expression1.getChild(i))) {
                return false;
             }
          }
@@ -230,10 +230,10 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
       }
    }
 
-   boolean m1236(Expression expression1, C_MB c_mb) {
+   boolean isAlphaEquivalent(Expression expression1, BinderMap bindermap) {
       if (expression1 != null && this.symbol.equals(expression1.symbol) && this.childCount == expression1.childCount) {
          for (int i = 0; i < this.childCount; i++) {
-            if (!this.getChild(i).m1236(expression1.getChild(i), c_mb)) {
+            if (!this.getChild(i).isAlphaEquivalent(expression1.getChild(i), bindermap)) {
                return false;
             }
          }
@@ -245,90 +245,90 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
    }
 
    Expression copy() {
-      return this.instantiate(null, null, new C_MB(), new Vector());
+      return this.instantiate(null, null, new BinderMap(), new Vector());
    }
 
    Expression instantiate(SchemeInstantiation schemeinstantiation) {
-      return this.instantiate(null, schemeinstantiation, new C_MB(), new Vector());
+      return this.instantiate(null, schemeinstantiation, new BinderMap(), new Vector());
    }
 
-   Expression m1239(SchemeInstantiation schemeinstantiation, C_MB c_mb) {
-      return this.instantiate(null, schemeinstantiation, c_mb, new Vector());
+   Expression instantiate(SchemeInstantiation schemeinstantiation, BinderMap bindermap) {
+      return this.instantiate(null, schemeinstantiation, bindermap, new Vector());
    }
 
-   abstract Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, C_MB c_mb, Vector vector);
+   abstract Expression instantiate(Expression expression, SchemeInstantiation schemeinstantiation, BinderMap bindermap, Vector vector);
 
-   void m1241(Vector vector) {
+   void renameBoundVariables(Vector vector) {
       if (vector != null) {
-         this.m1242(vector, 0);
+         this.renameBoundVariables(vector, 0);
       }
    }
 
-   int m1242(Vector vector, int i) {
+   int renameBoundVariables(Vector vector, int i) {
       for (int j = 0; j < this.childCount; j++) {
-         i = this.getChild(j).m1242(vector, i);
+         i = this.getChild(j).renameBoundVariables(vector, i);
       }
 
       return i;
    }
 
-   Vector m1243() {
-      return this.m1244(new Vector());
+   Vector getBinders() {
+      return this.collectBinders(new Vector());
    }
 
-   Vector m1244(Vector vector) {
+   Vector collectBinders(Vector vector) {
       for (int i = 0; i < this.childCount; i++) {
-         this.getChild(i).m1244(vector);
+         this.getChild(i).collectBinders(vector);
       }
 
       return vector;
    }
 
-   Vector m1245() {
+   Vector getSchematicLetters() {
       Vector vector = new Vector();
-      this.m1246(vector);
+      this.collectSchematicLetters(vector);
       return vector;
    }
 
-   void m1246(Vector vector) {
+   void collectSchematicLetters(Vector vector) {
       for (int i = 0; i < this.childCount; i++) {
-         this.getChild(i).m1246(vector);
+         this.getChild(i).collectSchematicLetters(vector);
       }
    }
 
-   Expression m1247(Vector vector, int i, SchemeInstantiation schemeinstantiation) {
+   Expression abstractQuantifiers(Vector vector, int i, SchemeInstantiation schemeinstantiation) {
       for (int j = 0; j < this.childCount; j++) {
-         this.children.setElementAt(this.getChild(j).m1247(vector, i, schemeinstantiation), j);
+         this.children.setElementAt(this.getChild(j).abstractQuantifiers(vector, i, schemeinstantiation), j);
       }
 
       return this;
    }
 
-   Expression m1248() {
-      return this.copy().m1247(this.m1245(), 0, new SchemeInstantiation());
+   Expression toTruthFunctionalForm() {
+      return this.copy().abstractQuantifiers(this.getSchematicLetters(), 0, new SchemeInstantiation());
    }
 
-   Expression m1249(int i, String s) {
-      return this.copy().m1251(i, s, false);
+   Expression expandOutermostQuantifier(int i, String s) {
+      return this.copy().expandQuantifiers(i, s, false);
    }
 
-   Expression m1250(int i, String s) {
-      return this.copy().m1251(i, s, true);
+   Expression expandQuantifiers(int i, String s) {
+      return this.copy().expandQuantifiers(i, s, true);
    }
 
-   Expression m1251(int i, String s, boolean flag) {
+   Expression expandQuantifiers(int i, String s, boolean flag) {
       if (flag) {
          for (int j = 0; j < this.childCount; j++) {
-            this.children.setElementAt(this.getChild(j).m1251(i, s, true), j);
+            this.children.setElementAt(this.getChild(j).expandQuantifiers(i, s, true), j);
          }
       }
 
       return this;
    }
 
-   boolean m1252(Expression expression1) {
+   boolean containsVariableBoundBy(Expression expression1) {
       for (int i = 0; i < this.childCount; i++) {
-         if (this.getChild(i).m1252(expression1)) {
+         if (this.getChild(i).containsVariableBoundBy(expression1)) {
             return true;
          }
       }
@@ -336,26 +336,26 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
       return false;
    }
 
-   void m1253(Vector vector, Vector vector1) {
+   void collectTermSymbols(Vector vector, Vector vector1) {
       for (int i = 0; i < this.childCount; i++) {
-         this.getChild(i).m1253(vector, vector1);
+         this.getChild(i).collectTermSymbols(vector, vector1);
       }
    }
 
-   C_L m1254() {
-      Vector vector = this.m1243();
+   BoundVariableNames getBoundVariableNames() {
+      Vector vector = this.getBinders();
       int i = vector.size();
-      C_L c_l = new C_L();
+      BoundVariableNames boundvariablenames = new BoundVariableNames();
 
       for (int j = 0; j < i; j++) {
-         c_l.addElement(((Expression)vector.elementAt(j)).getChild(0).getSymbol());
+         boundvariablenames.addElement(((Expression)vector.elementAt(j)).getChild(0).getSymbol());
       }
 
-      return c_l;
+      return boundvariablenames;
    }
 
-   boolean m1255(Expression expression1) {
-      return this.kind == 2 && this.symbol.equals("~") && this.getChild(0).m1235(expression1);
+   boolean isNegationOf(Expression expression1) {
+      return this.kind == 2 && this.symbol.equals("~") && this.getChild(0).isIdentical(expression1);
    }
 
    public ConnectiveFormula negate() {
@@ -364,50 +364,50 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
       return connectiveformula;
    }
 
-   Expression m1257() {
-      this.m1258(new C_JD());
+   Expression linkVariables() {
+      this.linkVariables(new VariableScope());
       return this;
    }
 
-   void m1258(C_JD c_jd) {
+   void linkVariables(VariableScope variablescope) {
       for (int i = 0; i < this.childCount; i++) {
-         this.getChild(i).m1258(c_jd);
+         this.getChild(i).linkVariables(variablescope);
       }
    }
 
-   Vector m1259() {
+   Vector findMislinkedVariables() {
       Vector vector = new Vector();
-      this.m1260(new C_JD(), vector);
+      this.findMislinkedVariables(new VariableScope(), vector);
       return vector.size() == 0 ? null : vector;
    }
 
-   void m1260(C_JD c_jd, Vector vector) {
+   void findMislinkedVariables(VariableScope variablescope, Vector vector) {
       for (int i = 0; i < this.childCount; i++) {
-         this.getChild(i).m1260(c_jd, vector);
+         this.getChild(i).findMislinkedVariables(variablescope, vector);
       }
    }
 
-   boolean m1261() {
+   boolean isArgumentPlaceholder() {
       return false;
    }
 
-   boolean m1262() {
+   boolean isBoundVariable() {
       return false;
    }
 
-   boolean m1263() {
+   boolean bindsArguments() {
       return false;
    }
 
-   void m1264(Expression expression1) {
+   void linkArgumentPlaceholders(Expression expression1) {
       for (int i = 0; i < this.childCount; i++) {
-         this.getChild(i).m1264(expression1);
+         this.getChild(i).linkArgumentPlaceholders(expression1);
       }
    }
 
-   boolean m1265(Expression expression1) {
+   boolean hasUndeclaredPlaceholder(Expression expression1) {
       for (int i = 0; i < this.childCount; i++) {
-         if (this.getChild(i).m1265(expression1)) {
+         if (this.getChild(i).hasUndeclaredPlaceholder(expression1)) {
             return true;
          }
       }
@@ -415,18 +415,18 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
       return false;
    }
 
-   boolean m1266(Expression expression1, SchemeInstantiation schemeinstantiation) {
-      return this.m1268(null, expression1, schemeinstantiation, new C_MB(), new Vector());
+   boolean match(Expression expression1, SchemeInstantiation schemeinstantiation) {
+      return this.match(null, expression1, schemeinstantiation, new BinderMap(), new Vector());
    }
 
-   boolean m1267(Expression expression1, SchemeInstantiation schemeinstantiation, C_MB c_mb) {
-      return this.m1268(null, expression1, schemeinstantiation, c_mb, new Vector());
+   boolean match(Expression expression1, SchemeInstantiation schemeinstantiation, BinderMap bindermap) {
+      return this.match(null, expression1, schemeinstantiation, bindermap, new Vector());
    }
 
-   boolean m1268(Expression expression1, Expression expression2, SchemeInstantiation schemeinstantiation, C_MB c_mb, Vector vector) {
+   boolean match(Expression expression1, Expression expression2, SchemeInstantiation schemeinstantiation, BinderMap bindermap, Vector vector) {
       if (expression2 == null || this.kind == expression2.kind && this.symbol.equals(expression2.symbol) && this.childCount == expression2.childCount) {
          for (int i = 0; i < this.childCount; i++) {
-            if (!this.getChild(i).m1268(expression1, expression2 == null ? null : expression2.getChild(i), schemeinstantiation, c_mb, vector)) {
+            if (!this.getChild(i).match(expression1, expression2 == null ? null : expression2.getChild(i), schemeinstantiation, bindermap, vector)) {
                return false;
             }
          }
@@ -437,76 +437,76 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
       }
    }
 
-   boolean m1269(Expression expression1, SchemeInstantiation schemeinstantiation, C_MB c_mb, Vector vector) {
+   boolean matchLetter(Expression expression1, SchemeInstantiation schemeinstantiation, BinderMap bindermap, Vector vector) {
       SchematicLetter schematicletter = this.getSchematicLetter();
       LetterReplacement letterreplacement;
-      if ((letterreplacement = schemeinstantiation.m1878(schematicletter)) != null) {
-         return letterreplacement.f368.m1268(this, expression1, schemeinstantiation, c_mb, vector);
+      if ((letterreplacement = schemeinstantiation.getReplacement(schematicletter)) != null) {
+         return letterreplacement.replacement.match(this, expression1, schemeinstantiation, bindermap, vector);
       } else {
          if (expression1 != null) {
-            letterreplacement = this.m1271(expression1, c_mb, vector);
-            if (letterreplacement.f369 == null) {
-               return schemeinstantiation.m1880(schematicletter, letterreplacement);
+            letterreplacement = this.buildReplacement(expression1, bindermap, vector);
+            if (letterreplacement.error == null) {
+               return schemeinstantiation.putReplacement(schematicletter, letterreplacement);
             }
 
-            Hashtable hashtable = letterreplacement.f369.f428;
+            Hashtable hashtable = letterreplacement.error.params;
             if (hashtable == null || hashtable.get("addMissingKey") == null) {
-               schemeinstantiation.f1190 = letterreplacement.f369.f427;
-               schemeinstantiation.f1191 = hashtable;
+               schemeinstantiation.errorId = letterreplacement.error.id;
+               schemeinstantiation.errorParams = hashtable;
                return false;
             }
          }
 
-         ErrorRef errorref = this.m1270(expression1);
+         ErrorRef errorref = this.checkReplacementType(expression1);
          if (errorref != null) {
-            schemeinstantiation.f1190 = errorref.f427;
-            schemeinstantiation.f1191 = errorref.f428;
+            schemeinstantiation.errorId = errorref.id;
+            schemeinstantiation.errorParams = errorref.params;
             return false;
          } else {
-            return this.m1273(schemeinstantiation) && schemeinstantiation.m1887(this, expression1, c_mb, vector);
+            return this.addPendingLetters(schemeinstantiation) && schemeinstantiation.deferMatch(this, expression1, bindermap, vector);
          }
       }
    }
 
-   ErrorRef m1270(Expression expression) {
+   ErrorRef checkReplacementType(Expression expression) {
       return null;
    }
 
-   LetterReplacement m1271(Expression expression1, C_MB c_mb, Vector vector) {
+   LetterReplacement buildReplacement(Expression expression1, BinderMap bindermap, Vector vector) {
       SchemeInstantiation schemeinstantiation = new SchemeInstantiation();
       SchemeInstantiation schemeinstantiation1 = new SchemeInstantiation();
       Hashtable hashtable = Message.params("pattern", "\\l" + this + "\\l", "replacement", "\\l" + expression1 + "\\l");
 
       for (int i = 0; i < this.childCount; i++) {
          Expression expression2;
-         if (!(expression2 = this.getChild(i)).m1262()) {
+         if (!(expression2 = this.getChild(i)).isBoundVariable()) {
             Message.putParam(hashtable, "n", i + 1 + "");
             hashtable.put("addMissingKey", "");
             return new LetterReplacement(new ErrorRef("dererr065", hashtable));
          }
 
-         Expression expression3 = ((SimpleTerm)expression2).m1850();
-         Expression expression4 = c_mb.m1092(null, expression3, vector).getChild(0);
-         SimpleTerm simpleterm = new SimpleTerm(SchematicLetter.m1853(i));
-         if (!schemeinstantiation.m1881(new SimpleTerm(expression2.symbol), simpleterm)) {
+         Expression expression3 = ((SimpleTerm)expression2).getBinder();
+         Expression expression4 = bindermap.getCounterpart(null, expression3, vector).getChild(0);
+         SimpleTerm simpleterm = new SimpleTerm(SchematicLetter.placeholder(i));
+         if (!schemeinstantiation.addReplacement(new SimpleTerm(expression2.symbol), simpleterm)) {
             Message.putParam(hashtable, "n", i + 1 + "");
             hashtable.put("addMissingKey", "");
             return new LetterReplacement(new ErrorRef("dererr066", hashtable));
          }
 
-         schemeinstantiation1.m1881(new SimpleTerm(expression4.symbol), simpleterm);
+         schemeinstantiation1.addReplacement(new SimpleTerm(expression4.symbol), simpleterm);
       }
 
       Expression expression5 = this.instantiate(schemeinstantiation);
       Expression expression6 = expression1.instantiate(schemeinstantiation1);
       LetterReplacement letterreplacement = new LetterReplacement(expression5, expression6);
-      if (letterreplacement.f369 == null) {
+      if (letterreplacement.error == null) {
          Message.putParam(hashtable, "dummy pattern", expression5 + "");
          Message.putParam(hashtable, "dummy replacement", expression6 + "");
-         if (!schemeinstantiation1.m1889().isEmpty()) {
-            letterreplacement.f369 = new ErrorRef("dererr061");
-         } else if (expression6.m1259() != null) {
-            letterreplacement.f369 = new ErrorRef("dererr061");
+         if (!schemeinstantiation1.getPendingLetters().isEmpty()) {
+            letterreplacement.error = new ErrorRef("dererr061");
+         } else if (expression6.findMislinkedVariables() != null) {
+            letterreplacement.error = new ErrorRef("dererr061");
          }
       }
 
@@ -517,19 +517,19 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
       return null;
    }
 
-   boolean m1273(SchemeInstantiation schemeinstantiation) {
+   boolean addPendingLetters(SchemeInstantiation schemeinstantiation) {
       boolean flag = true;
 
       for (int i = 0; i < this.childCount; i++) {
-         flag &= this.getChild(i).m1273(schemeinstantiation);
+         flag &= this.getChild(i).addPendingLetters(schemeinstantiation);
       }
 
       return flag;
    }
 
-   boolean m1274(SchemeInstantiation schemeinstantiation) {
+   boolean isFullyInstantiated(SchemeInstantiation schemeinstantiation) {
       for (int i = 0; i < this.childCount; i++) {
-         if (!this.getChild(i).m1274(schemeinstantiation)) {
+         if (!this.getChild(i).isFullyInstantiated(schemeinstantiation)) {
             return false;
          }
       }
@@ -543,13 +543,13 @@ public abstract class Expression implements ExpressionKinds, LogicConstants {
 
    Vector getFreeVariables() {
       Vector vector = new Vector();
-      this.m1277(vector);
+      this.collectFreeVariables(vector);
       return vector;
    }
 
-   void m1277(Vector vector) {
+   void collectFreeVariables(Vector vector) {
       for (int i = 0; i < this.childCount; i++) {
-         this.getChild(i).m1277(vector);
+         this.getChild(i).collectFreeVariables(vector);
       }
    }
 }

@@ -8,8 +8,8 @@ import java.util.Vector;
 
 class Scrambler {
    static final String ALPHABET = "\t !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
-   static final int f1491 = "\t !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~".length();
-   static final int[] f1492 = m2221("\t !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
+   static final int ALPHABET_SIZE = "\t !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~".length();
+   static final int[] ALPHABET_INDEX = buildIndexTable("\t !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
    static final String DEFAULT_KEY = "the Logic Program is protected by international copyright law";
 
    static String scramble(String s) {
@@ -27,14 +27,14 @@ class Scrambler {
             char c0 = s.charAt(l);
             if (j != 0) {
                char c1 = s1.charAt(l % j);
-               if (c1 < f1492.length && f1492[c1] != -1) {
-                  k += f1492[c1];
+               if (c1 < ALPHABET_INDEX.length && ALPHABET_INDEX[c1] != -1) {
+                  k += ALPHABET_INDEX[c1];
                }
             }
 
-            if (c0 < f1492.length && f1492[c0] != -1) {
-               int i1 = k + f1492[c0];
-               s2 = s2 + "\t !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~".charAt(k = i1 % f1491);
+            if (c0 < ALPHABET_INDEX.length && ALPHABET_INDEX[c0] != -1) {
+               int i1 = k + ALPHABET_INDEX[c0];
+               s2 = s2 + "\t !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~".charAt(k = i1 % ALPHABET_SIZE);
             } else {
                s2 = s2 + c0;
             }
@@ -61,16 +61,16 @@ class Scrambler {
             char c0 = s.charAt(l);
             if (j != 0) {
                char c1 = s1.charAt(l % j);
-               if (c1 < f1492.length && f1492[c1] != -1) {
-                  k += f1492[c1];
+               if (c1 < ALPHABET_INDEX.length && ALPHABET_INDEX[c1] != -1) {
+                  k += ALPHABET_INDEX[c1];
                }
             }
 
-            if (c0 < f1492.length && f1492[c0] != -1) {
+            if (c0 < ALPHABET_INDEX.length && ALPHABET_INDEX[c0] != -1) {
                s2 = s2
                   + "\t !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
-                     .charAt(f1491 - 1 - (k - f1492[c0] + f1491 - 1) % f1491);
-               k = f1492[c0];
+                     .charAt(ALPHABET_SIZE - 1 - (k - ALPHABET_INDEX[c0] + ALPHABET_SIZE - 1) % ALPHABET_SIZE);
+               k = ALPHABET_INDEX[c0];
             } else {
                s2 = s2 + c0;
             }
@@ -82,7 +82,7 @@ class Scrambler {
       }
    }
 
-   private static int[] m2221(String s) {
+   private static int[] buildIndexTable(String s) {
       int i = -1;
       int j = s.length();
 
@@ -109,7 +109,7 @@ class Scrambler {
       return aint;
    }
 
-   static String[][] m2222() {
+   static String[][] readScramblerMap() {
       BufferedReader bufferedreader = null;
       Vector vector = new Vector();
       String[][] astring = (String[][])null;
@@ -139,7 +139,7 @@ class Scrambler {
             return astring;
          }
 
-         s1 = (String[][])null;
+         astring = null;
       } catch (IOException ioexception1) {
          return astring;
       } finally {
@@ -151,7 +151,7 @@ class Scrambler {
          }
       }
 
-      return s1;
+      return astring;
    }
 
    static String md5Base64(File file1) {
@@ -161,7 +161,7 @@ class Scrambler {
          Md5OutputStream md5outputstream = new Md5OutputStream();
 
          try {
-            md5outputstream.m925(file1);
+            md5outputstream.writeFile(file1);
          } catch (IOException ioexception) {
             return null;
          }
@@ -195,12 +195,12 @@ class Scrambler {
          Md5OutputStream md5outputstream = new Md5OutputStream();
 
          try {
-            md5outputstream.m925(file1);
+            md5outputstream.writeFile(file1);
          } catch (IOException ioexception) {
             return null;
          }
 
-         return new HexEncoder(md5outputstream.digest()).m1947(flag);
+         return new HexEncoder(md5outputstream.digest()).toHexString(flag);
       }
    }
 
@@ -214,7 +214,7 @@ class Scrambler {
       } else {
          Md5OutputStream md5outputstream = new Md5OutputStream();
          md5outputstream.write(abyte);
-         return new HexEncoder(md5outputstream.digest()).m1947(flag);
+         return new HexEncoder(md5outputstream.digest()).toHexString(flag);
       }
    }
 

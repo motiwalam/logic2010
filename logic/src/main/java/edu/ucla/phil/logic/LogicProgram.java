@@ -54,119 +54,119 @@ import javax.swing.UIManager;
 import javax.swing.text.StyledDocument;
 
 public class LogicProgram implements LogicConstants {
-   static C_V f529 = null;
+   static ErrorLogStream errorLog = null;
    static OverrideSettings overrides = null;
    static PreferencesFile prefs = null;
    static PreferencesFile workPrefs = null;
    static UserInfo user;
-   static RuleTable f534 = null;
+   static RuleTable ruleTable = null;
    static Hashtable links = null;
    static Hashtable coreInfo = null;
    static String scrambleKey = null;
-   static final int f538 = 16;
-   static int fontSize = ProgressDialog.m1288();
-   static Font[] f540;
-   static Dimension f541 = Toolkit.getDefaultToolkit().getScreenSize();
-   static final int f542 = 0;
-   static final int f543 = 1;
-   static final int f544 = 2;
-   static final int f545 = 3;
-   static final int f546 = 4;
-   static final int f547 = 5;
-   static final int f548 = 0;
-   static final int f549 = 2;
+   static final int UNUSED_CONST_16 = 16;
+   static int fontSize = ProgressDialog.getDefaultFontSize();
+   static Font[] bundledFonts;
+   static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+   static final int DER_MODULE_INDEX = 0;
+   static final int INV_MODULE_INDEX = 1;
+   static final int PAR_MODULE_INDEX = 2;
+   static final int REC_MODULE_INDEX = 3;
+   static final int SYM_MODULE_INDEX = 4;
+   static final int TRU_MODULE_INDEX = 5;
+   static final int UNUSED_CONST_0 = 0;
+   static final int UNUSED_CONST_2 = 2;
    static File configDir;
-   static File f551;
+   static File copyDir;
    static File linkDir;
    static File progDir;
-   static File f554;
+   static File rootDir;
    static File workDir;
-   static File f556;
-   static File f557;
-   static File f558;
+   static File overrideFile;
+   static File prefsFile;
+   static File workPrefsFile;
    static File userFile;
-   static File f560;
+   static File loadInfoFile;
    static File ruleDir;
-   static File f562;
-   static File f563;
-   static String f564;
-   static String f565;
-   static int f566 = 1;
-   static String f567 = null;
-   static String f568 = null;
+   static File textDir;
+   static File trashDir;
+   static String windowsDir;
+   static String failDir;
+   static int maxBackups = 1;
+   static String backupName = null;
+   static String restoreName = null;
    static String codeVersion = null;
    static String arch = null;
-   static boolean f571 = true;
+   static boolean deleteLoadInfo = true;
    static boolean debug = false;
    static boolean printingEnabled = true;
    static boolean overheadColors = false;
    static boolean remote = false;
    static boolean noNetwork = false;
-   static boolean f577 = false;
-   static boolean f578 = false;
-   static boolean f579 = true;
-   static boolean f580 = false;
-   static boolean f581 = false;
-   static boolean f582 = false;
-   static boolean f583 = true;
-   static boolean f584 = false;
-   static boolean f585 = false;
+   static boolean hiddenMode = false;
+   static boolean unusedFlagA = false;
+   static boolean unusedFlagB = true;
+   static boolean fromIde = false;
+   static boolean backupNeeded = false;
+   static boolean copyNeeded = false;
+   static boolean workPresent = true;
+   static boolean noCoreProblems = false;
+   static boolean altSymbols = false;
    static MainMenu mainMenu = null;
    static SingleInstanceGuard instanceGuard = null;
-   static Integer f588 = null;
-   static boolean f589 = false;
-   static boolean f590 = false;
-   static boolean f591 = false;
-   static UserInfo f592;
-   static String f593 = null;
-   static ArrayList<Image> f594 = null;
+   static Integer soloPort = null;
+   static boolean repeatAuth = false;
+   static boolean hideSensitive = false;
+   static boolean reinitializing = false;
+   static UserInfo reinitUser;
+   static String optionO = null;
+   static ArrayList<Image> iconImages = null;
    static Hashtable credentials = null;
    static String[] symbols = kaplan1;
-   static String[] f597 = kaplan5;
-   static String[] f598 = html1;
-   static String f599 = "PQRSTUVWXYZ";
-   static String f600 = "FGHIJKLMNO";
-   static String f601 = "ABCDE";
-   static String f602 = "abcdefghijklmnopqrstuvwxyz";
-   static boolean f603 = false;
-   static Color[] f604 = new Color[]{
+   static String[] encodedSymbols = kaplan5;
+   static String[] htmlSymbols = html1;
+   static String sentenceLetters = "PQRSTUVWXYZ";
+   static String predicateLetters = "FGHIJKLMNO";
+   static String operationLetters = "ABCDE";
+   static String variableLetters = "abcdefghijklmnopqrstuvwxyz";
+   static boolean monochrome = false;
+   static Color[] bruinColors = new Color[]{
       bruinGold, bruinBlue, bruinBluf, bruinRed, bruinWhite, bruinNavy, bruinWhite, bruinBlue, bruinGray, bruinBlack, bruinMaize
    };
-   static Color[] f605 = new Color[]{
+   static Color[] printColors = new Color[]{
       bruinBlack, bruinWhite, bruinWhite, bruinBlack, bruinWhite, bruinBlack, bruinWhite, bruinBlack, bruinWhite, bruinBlack, bruinWhite
    };
-   static Color[] f606 = new Color[]{
+   static Color[] monochromeColors = new Color[]{
       bruinBlack, bruinWhite, bruinAsh, bruinRed, bruinWhite, bruinBlack, bruinWhite, bruinBlack, bruinGray, bruinBlack, bruinWhite
    };
-   static Color[] f607 = f603 ? f606 : f604;
+   static Color[] moduleColors = monochrome ? monochromeColors : bruinColors;
 
    public static void main(String[] astring) {
-      SwingUtilities.invokeLater(new LogicProgram.C__A());
+      SwingUtilities.invokeLater(new LogicProgram.ProgramStartup());
    }
 
    static void loadIconsAndFonts() {
       int[] aint = new int[]{256, 128, 48, 32, 24, 16};
-      f594 = new ArrayList<>(aint.length);
+      iconImages = new ArrayList<>(aint.length);
       Toolkit toolkit = Toolkit.getDefaultToolkit();
 
       for (int i = 0; i < aint.length; i++) {
          URL url = ClassLoader.getSystemResource("images/Logic2010_" + aint[i] + ".png");
          ImageIcon imageicon = new ImageIcon(url);
-         f594.add(imageicon.getImage());
+         iconImages.add(imageicon.getImage());
       }
 
-      f540 = new Font[2];
+      bundledFonts = new Font[2];
       GraphicsEnvironment graphicsenvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
       try {
          InputStream inputstream;
          if ((inputstream = ClassLoader.getSystemResourceAsStream("fonts/mplus-1p-lsp-medium.ttf")) != null) {
-            graphicsenvironment.registerFont(f540[0] = Font.createFont(0, inputstream));
+            graphicsenvironment.registerFont(bundledFonts[0] = Font.createFont(0, inputstream));
             inputstream.close();
          }
 
          if ((inputstream = ClassLoader.getSystemResourceAsStream("fonts/mplus-1p-lsp-bold.ttf")) != null) {
-            graphicsenvironment.registerFont(f540[1] = Font.createFont(0, inputstream));
+            graphicsenvironment.registerFont(bundledFonts[1] = Font.createFont(0, inputstream));
             inputstream.close();
          }
       } catch (Exception exception) {
@@ -175,18 +175,18 @@ public class LogicProgram implements LogicConstants {
    }
 
    static int initialize() {
-      if (!f591) {
+      if (!reinitializing) {
          String s = System.getProperty("config.dir");
          if (s == null) {
             s = System.getProperty("user.dir");
          }
 
          configDir = canonicalFile(s);
-         f556 = new File(configDir, "override.txt");
-         f557 = new File(configDir, "prefs.txt");
+         overrideFile = new File(configDir, "override.txt");
+         prefsFile = new File(configDir, "prefs.txt");
          workDir = new File(configDir, "work");
-         f558 = new File(workDir, "prefs.txt");
-         if (!m965(configDir)) {
+         workPrefsFile = new File(workDir, "prefs.txt");
+         if (!isWritableDirectory(configDir)) {
             MessageDialog.showMessage(
                "Permission Error",
                "Cannot write to the installation location.\nThe program must be installed in a folder\nto which you can write.\n\nTry installing again either in the default\ndirectory or on the Desktop or in your\nDownloads directory.",
@@ -199,19 +199,19 @@ public class LogicProgram implements LogicConstants {
          userFile = new File(workDir, "user.txt");
          linkDir = canonicalFile(System.getProperty("link.dir"));
          progDir = canonicalFile(System.getProperty("prog.dir"));
-         f554 = canonicalFile(System.getProperty("root.dir"));
+         rootDir = canonicalFile(System.getProperty("root.dir"));
          String s1 = System.getProperty("from.ide");
          if ("1".equals(s1)) {
-            f580 = true;
+            fromIde = true;
          }
 
-         f563 = new File(progDir, "trash");
-         f560 = progDir == null ? null : new File(progDir, "loadinfo.txt");
-         f551 = canonicalFile(System.getProperty("copy.dir"));
-         f564 = System.getProperty("com.ms.windir");
-         f565 = System.getProperty("fail.dir");
-         if (f560.exists()) {
-            Hashtable hashtable = m966();
+         trashDir = new File(progDir, "trash");
+         loadInfoFile = progDir == null ? null : new File(progDir, "loadinfo.txt");
+         copyDir = canonicalFile(System.getProperty("copy.dir"));
+         windowsDir = System.getProperty("com.ms.windir");
+         failDir = System.getProperty("fail.dir");
+         if (loadInfoFile.exists()) {
+            Hashtable hashtable = readLoadInfo();
             String s2 = (String)hashtable.get("linkDir");
             if (s2 != null) {
                linkDir = canonicalFile((String)hashtable.get("linkDir"));
@@ -219,22 +219,22 @@ public class LogicProgram implements LogicConstants {
          }
 
          overrides = new OverrideSettings();
-         if (f556.exists()) {
+         if (overrideFile.exists()) {
             try {
-               overrides.m2083(new FileReader(f556));
+               overrides.load(new FileReader(overrideFile));
             } catch (Exception exception) {
                System.out.println(exception.getMessage());
             }
          }
 
          prefs = new PreferencesFile();
-         prefs.load(f557);
+         prefs.load(prefsFile);
          workPrefs = new PreferencesFile();
-         workPrefs.load(f558);
+         workPrefs.load(workPrefsFile);
       }
 
       ProgressDialog progressdialog = new ProgressDialog(LPInfo.programName, "Starting the program...", false);
-      progressdialog.m1284(30, 20);
+      progressdialog.showWithMargins(30, 20);
       FormulaParser.disableTracing();
       if ((coreInfo = readCoreInfo()) == null) {
          progressdialog.dispose();
@@ -251,13 +251,13 @@ public class LogicProgram implements LogicConstants {
             File file3 = null;
 
             while ((links = readLinks(linkDir, true)) != null) {
-               f562 = new File(ruleDir, "text");
-               if (!f562.exists()) {
-                  f562 = null;
+               textDir = new File(ruleDir, "text");
+               if (!textDir.exists()) {
+                  textDir = null;
                } else {
-                  File[] afile = f562.listFiles();
+                  File[] afile = textDir.listFiles();
                   if (afile == null || afile.length == 0) {
-                     f562 = null;
+                     textDir = null;
                   }
                }
 
@@ -267,33 +267,33 @@ public class LogicProgram implements LogicConstants {
                   return 1;
                }
 
-               if (file3 == null && (!f591 || ServerConnection.f481) && !f560.exists()) {
+               if (file3 == null && (!reinitializing || ServerConnection.installAdminNow) && !loadInfoFile.exists()) {
                   String s3 = getLink("adminDir");
                   File file1 = s3 == null ? null : ServerConnection.resolvePath(configDir, s3);
                   s3 = getLink("nonetDir");
                   File file2 = s3 == null ? null : ServerConnection.resolvePath(configDir, s3);
-                  if ((file3 = UserSetup.m2108(file1, file2)) != null) {
+                  if ((file3 = UserSetup.chooseInstalledVersion(file1, file2)) != null) {
                      linkDir = file3;
                   }
 
-                  ServerConnection.f481 = false;
+                  ServerConnection.installAdminNow = false;
                } else {
                   file3 = null;
                }
 
                if (file3 == null) {
-                  if (f565 != null) {
+                  if (failDir != null) {
                      progressdialog.dispose();
-                     JOptionPane.showMessageDialog(null, "Could not set directory to " + DelimitedTokenizer.m1139(f565, "\\") + ".", "No Work Directory", 0);
+                     JOptionPane.showMessageDialog(null, "Could not set directory to " + DelimitedTokenizer.escape(failDir, "\\") + ".", "No Work Directory", 0);
                      return 1;
                   }
 
-                  m969();
+                  migrateOldWorkDir();
                   if (!workDir.exists()) {
                      workDir.mkdir();
                   } else if (workDir.isFile()) {
                      progressdialog.dispose();
-                     JOptionPane.showMessageDialog(null, DelimitedTokenizer.m1139(workDir + "", "\\") + " is not a directory.", "No User Directory", 0);
+                     JOptionPane.showMessageDialog(null, DelimitedTokenizer.escape(workDir + "", "\\") + " is not a directory.", "No User Directory", 0);
                      return 1;
                   }
 
@@ -306,29 +306,29 @@ public class LogicProgram implements LogicConstants {
                   }
 
                   readOptions(scrambledreader);
-                  readOptions(m1065("options", false));
+                  readOptions(openLocalFile("options", false));
                   if (overheadColors) {
-                     f607 = f606;
+                     moduleColors = monochromeColors;
                   }
 
                   if (debug) {
-                     m978();
+                     openDebugLogs();
                   }
 
-                  m1058();
-                  m1059();
-                  m1057();
-                  if (!arch.equalsIgnoreCase("macos") && !overrides.m2082("SoloCheck", "yes").equalsIgnoreCase("no")) {
-                     if (instanceGuard != null && instanceGuard.f1264 != f588) {
-                        instanceGuard.m1937();
+                  applyPrefsFontSize();
+                  applyColorPrefs();
+                  applyOverrideFontSize();
+                  if (!arch.equalsIgnoreCase("macos") && !overrides.lookup("SoloCheck", "yes").equalsIgnoreCase("no")) {
+                     if (instanceGuard != null && instanceGuard.port != soloPort) {
+                        instanceGuard.stopServer();
                         instanceGuard = null;
                      }
 
-                     if (instanceGuard == null && f588 != null) {
-                        instanceGuard = new SingleInstanceGuard(f588, "cogito");
+                     if (instanceGuard == null && soloPort != null) {
+                        instanceGuard = new SingleInstanceGuard(soloPort, "cogito");
                      }
 
-                     if (instanceGuard != null && !instanceGuard.isAlive() && !instanceGuard.m1933()) {
+                     if (instanceGuard != null && !instanceGuard.isAlive() && !instanceGuard.startServer()) {
                         progressdialog.dispose();
                         JOptionPane.showMessageDialog(null, "There is already a copy of Logic 2010\nrunning on this computer.", "Logic 2010 Running", 1);
                         return 1;
@@ -342,12 +342,12 @@ public class LogicProgram implements LogicConstants {
                   }
 
                   if (ServerConnection.demoMode) {
-                     f567 = null;
-                     f568 = null;
+                     backupName = null;
+                     restoreName = null;
                   }
 
                   progressdialog.dispose();
-                  ServerConnection.m880();
+                  ServerConnection.emptyTrash();
                   return 0;
                }
             }
@@ -365,7 +365,7 @@ public class LogicProgram implements LogicConstants {
             user = null;
             if (userFile.exists()) {
                if ((user = UserInfo.load(false)) == null) {
-                  if (UserSetup.m2111()) {
+                  if (UserSetup.offerDeleteWork()) {
                      continue;
                   }
 
@@ -373,9 +373,9 @@ public class LogicProgram implements LogicConstants {
                }
 
                if (remote) {
-                  if (!f591) {
-                     if (!f560.exists()) {
-                        Boolean obool = UserSetup.m2110(user);
+                  if (!reinitializing) {
+                     if (!loadInfoFile.exists()) {
+                        Boolean obool = UserSetup.askContinueOrDelete(user);
                         if (obool == null) {
                            continue;
                         }
@@ -384,7 +384,7 @@ public class LogicProgram implements LogicConstants {
                            return 1;
                         }
 
-                        obool = UserSetup.m2107(user, false, false);
+                        obool = UserSetup.confirmIdentityAndPreferences(user, false, false);
                         if (obool == null) {
                            continue;
                         }
@@ -397,7 +397,7 @@ public class LogicProgram implements LogicConstants {
                            user.save();
                         }
 
-                        obool = AccountManager.m1872(user);
+                        obool = AccountManager.verifyAccount(user);
                         if (obool == null) {
                            continue;
                         }
@@ -405,17 +405,17 @@ public class LogicProgram implements LogicConstants {
                         if (!obool) {
                            return 1;
                         }
-                     } else if (m966() == null) {
+                     } else if (readLoadInfo() == null) {
                         return 1;
                      }
                   }
 
                   int i;
-                  if ((i = ServerConnection.m862(user)) != 0) {
+                  if ((i = ServerConnection.checkForUpdates(user)) != 0) {
                      return i;
                   }
                } else if (getCredentials("exam") != null) {
-                  Boolean obool2 = UserSetup.m2107(user, true, false);
+                  Boolean obool2 = UserSetup.confirmIdentityAndPreferences(user, true, false);
                   if (obool2 == null) {
                      continue;
                   }
@@ -427,8 +427,8 @@ public class LogicProgram implements LogicConstants {
                   if (user.dirty) {
                      user.save();
                   }
-               } else if (ServerConnection.f480) {
-                  Boolean obool3 = UserSetup.m2107(user, false, true);
+               } else if (ServerConnection.adminInstall) {
+                  Boolean obool3 = UserSetup.confirmIdentityAndPreferences(user, false, true);
                   if (obool3 == null) {
                      continue;
                   }
@@ -438,20 +438,21 @@ public class LogicProgram implements LogicConstants {
                   }
                }
             } else {
-               f583 = false;
+               workPresent = false;
                if (remote) {
                   Object object;
-                  if (f591) {
-                     object = f592;
+                  if (reinitializing) {
+                     object = reinitUser;
                   } else {
                      object = new NewUserInfo();
-                     if ((!f560.exists() || !m967((UserInfo)object)) && AccountManager.m1863((UserInfo)object, "not027", true, false) == null) {
+                     if ((!loadInfoFile.exists() || !readCourseFromLoadInfo((UserInfo)object))
+                        && AccountManager.chooseCourse((UserInfo)object, "not027", true, false) == null) {
                         return 1;
                      }
                   }
 
                   int j;
-                  if ((j = ServerConnection.m862((UserInfo)object)) != 0) {
+                  if ((j = ServerConnection.checkForUpdates((UserInfo)object)) != 0) {
                      return j;
                   }
                }
@@ -462,7 +463,7 @@ public class LogicProgram implements LogicConstants {
                      user.save();
                   }
 
-                  Boolean obool4 = UserSetup.m2107(user, false, true);
+                  Boolean obool4 = UserSetup.confirmIdentityAndPreferences(user, false, true);
                   if (obool4 == null) {
                      continue;
                   }
@@ -471,13 +472,13 @@ public class LogicProgram implements LogicConstants {
                      return 1;
                   }
                } else {
-                  if (!UserSetup.m2114(f568, f567, getCredentials("exam") == null)) {
+                  if (!UserSetup.offerRegisterOrRestore(restoreName, backupName, getCredentials("exam") == null)) {
                      return 1;
                   }
 
                   if (userFile.exists()) {
                      if ((user = UserInfo.load(false)) == null) {
-                        if (UserSetup.m2111()) {
+                        if (UserSetup.offerDeleteWork()) {
                            continue;
                         }
 
@@ -485,40 +486,40 @@ public class LogicProgram implements LogicConstants {
                      }
 
                      if (remote) {
-                        if (!m968(user)) {
+                        if (!checkUserCourse(user)) {
                            return 1;
                         }
 
                         int k;
-                        if ((k = ServerConnection.m862(user)) != 0) {
+                        if ((k = ServerConnection.checkForUpdates(user)) != 0) {
                            return k;
                         }
                      }
                   } else {
                      boolean flag = false;
                      if (remote) {
-                        NewUserInfo newuserinfo = AccountManager.m1869();
+                        NewUserInfo newuserinfo = AccountManager.createNewUser();
                         if (newuserinfo == null) {
                            return 1;
                         }
 
-                        Boolean obool1 = ServerConnection.m897(f568, f567, newuserinfo);
+                        Boolean obool1 = ServerConnection.hasBackup(restoreName, backupName, newuserinfo);
                         if (obool1 == null) {
                            return 1;
                         }
 
                         if (obool1) {
-                           if (UserSetup.m2112(newuserinfo)) {
+                           if (UserSetup.askRestoreOrQuit(newuserinfo)) {
                               return 1;
                            }
 
-                           ServerConnection.m903(false);
-                           if (!ServerConnection.m899(f568, f567, newuserinfo)) {
+                           ServerConnection.deleteWork(false);
+                           if (!ServerConnection.restoreWork(restoreName, backupName, newuserinfo)) {
                               return 1;
                            }
 
                            if ((user = UserInfo.load(false)) == null) {
-                              if (UserSetup.m2111()) {
+                              if (UserSetup.offerDeleteWork()) {
                                  continue;
                               }
 
@@ -527,7 +528,7 @@ public class LogicProgram implements LogicConstants {
 
                            flag = true;
                         } else {
-                           Boolean obool8 = UserSetup.m2113(newuserinfo);
+                           Boolean obool8 = UserSetup.askRegister(newuserinfo);
                            if (obool8 == null) {
                               return 1;
                            }
@@ -542,8 +543,8 @@ public class LogicProgram implements LogicConstants {
                         user = new UserInfo();
                      }
 
-                     while (!user.m683()) {
-                        if (!user.m1170()) {
+                     while (!user.isComplete()) {
+                        if (!user.editInfo()) {
                            return 1;
                         }
                      }
@@ -554,16 +555,16 @@ public class LogicProgram implements LogicConstants {
 
                      if (remote) {
                         if (flag) {
-                           if (!m968(user)) {
+                           if (!checkUserCourse(user)) {
                               return 1;
                            }
 
                            int l;
-                           if ((l = ServerConnection.m862(user)) != 0) {
+                           if ((l = ServerConnection.checkForUpdates(user)) != 0) {
                               return l;
                            }
                         } else {
-                           Boolean obool6 = AccountManager.m1872(user);
+                           Boolean obool6 = AccountManager.verifyAccount(user);
                            if (obool6 == null) {
                               continue;
                            }
@@ -573,14 +574,14 @@ public class LogicProgram implements LogicConstants {
                            }
 
                            int i1;
-                           if ((i1 = ServerConnection.m862(user)) != 0) {
+                           if ((i1 = ServerConnection.checkForUpdates(user)) != 0) {
                               return i1;
                            }
                         }
                      }
                   }
 
-                  Boolean obool5 = UserSetup.m2107(user, false, true);
+                  Boolean obool5 = UserSetup.confirmIdentityAndPreferences(user, false, true);
                   if (obool5 == null) {
                      continue;
                   }
@@ -593,34 +594,34 @@ public class LogicProgram implements LogicConstants {
 
             if (remote) {
                if (getCredentials("exam") != null) {
-                  if (user.m1160()) {
-                     if (ServerConnection.m849()) {
-                        if (UserSetup.m2117("not097")) {
+                  if (user.usesWorkBackupKey()) {
+                     if (ServerConnection.hasModuleWorkFiles()) {
+                        if (UserSetup.confirmDeleteWork("not097")) {
                            continue;
                         }
 
                         return 1;
                      }
 
-                     user.m1162(f567);
-                  } else if (!user.m1161().equalsIgnoreCase(f567)) {
-                     if (UserSetup.m2117("not098")) {
+                     user.setBackupKey(backupName);
+                  } else if (!user.getBackupKey().equalsIgnoreCase(backupName)) {
+                     if (UserSetup.confirmDeleteWork("not098")) {
                         continue;
                      }
 
                      return 1;
                   }
-               } else if (!user.m1160()) {
-                  if (UserSetup.m2117("not096")) {
+               } else if (!user.usesWorkBackupKey()) {
+                  if (UserSetup.confirmDeleteWork("not096")) {
                      continue;
                   }
 
                   return 1;
                }
 
-               if ("work".equalsIgnoreCase(f567)) {
+               if ("work".equalsIgnoreCase(backupName)) {
                   NetworkTask networktask = new NetworkTask(LPInfo.programName, "Checking database for user...");
-                  Boolean obool7 = ServerConnection.m888(user, f567, networktask);
+                  Boolean obool7 = ServerConnection.ensureInitialBackup(user, backupName, networktask);
                   if (obool7 != null) {
                      if (!obool7) {
                         MessageDialog.showMessage(Message.get("not059"), null, null, null);
@@ -631,7 +632,7 @@ public class LogicProgram implements LogicConstants {
                   }
                } else if (!ServerConnection.demoMode) {
                   NetworkTask networktask1 = new NetworkTask(LPInfo.programName, "Checking database for user...");
-                  if (!ServerConnection.m885(user, "student", networktask1)) {
+                  if (!ServerConnection.addUserRelation(user, "student", networktask1)) {
                      MessageDialog.showMessage(Message.get("not059"), null, null, null);
                      return 1;
                   }
@@ -641,53 +642,53 @@ public class LogicProgram implements LogicConstants {
             return 0;
          }
       } finally {
-         if (f571 && f560.exists()) {
-            f560.delete();
+         if (deleteLoadInfo && loadInfoFile.exists()) {
+            loadInfoFile.delete();
          }
       }
    }
 
    static boolean loadRulesAndTheorems() {
       ProgressDialog progressdialog = new ProgressDialog(LPInfo.programName, "Reading rules and theorems...", false);
-      progressdialog.m1284(20, 10);
+      progressdialog.showWithMargins(20, 10);
       ScrambledReader scrambledreader = openDataFile("theorems", false);
       if (scrambledreader == null) {
          progressdialog.dispose();
-         m971("not001", "the theorems file");
+         showFileError("not001", "the theorems file");
          return false;
       } else {
-         TheoremTable theoremtable = TheoremTable.m2198(scrambledreader);
+         TheoremTable theoremtable = TheoremTable.read(scrambledreader);
          scrambledreader = openDataFile("rules", false);
          if (scrambledreader == null) {
             progressdialog.dispose();
-            m971("not001", "the rules file");
+            showFileError("not001", "the rules file");
             return false;
          } else {
-            f534 = RuleTable.m2201(scrambledreader, theoremtable);
-            if (theoremtable != null && f534 != null) {
+            ruleTable = RuleTable.read(scrambledreader, theoremtable);
+            if (theoremtable != null && ruleTable != null) {
                progressdialog.dispose();
                if (getCredentials("instructor") != null) {
-                  ErrorRef errorref = getCredentials("exam") == null ? UserSetup.m2102("instructor", null) : UserSetup.m2102(null, "Instructor");
+                  ErrorRef errorref = getCredentials("exam") == null ? UserSetup.checkAccess("instructor", null) : UserSetup.checkAccess(null, "Instructor");
                   if (errorref != null) {
-                     String s = errorref.m716();
+                     String s = errorref.getId();
                      if (s != null) {
-                        MessageDialog.showMessage(Message.get(s), errorref.f428, null, null);
+                        MessageDialog.showMessage(Message.get(s), errorref.params, null, null);
                      }
 
                      return false;
                   }
                } else if (getCredentials("exam") != null) {
-                  ErrorRef errorref1 = UserSetup.m2102("exam", null);
+                  ErrorRef errorref1 = UserSetup.checkAccess("exam", null);
                   if (errorref1 != null) {
-                     String s1 = errorref1.m716();
+                     String s1 = errorref1.getId();
                      if (s1 != null) {
-                        MessageDialog.showMessage(Message.get(s1), errorref1.f428, null, null);
+                        MessageDialog.showMessage(Message.get(s1), errorref1.params, null, null);
                      }
 
                      return false;
                   }
 
-                  if (!noNetwork && !m964()) {
+                  if (!noNetwork && !submitExamStart()) {
                      return false;
                   }
                }
@@ -695,25 +696,25 @@ public class LogicProgram implements LogicConstants {
                return true;
             } else {
                progressdialog.dispose();
-               m971("not002", "theorems and/or rules file");
+               showFileError("not002", "theorems and/or rules file");
                return false;
             }
          }
       }
    }
 
-   static boolean m964() {
+   static boolean submitExamStart() {
       ServerSession serversession = ServerConnection.openSession(null);
-      if (user.f664 == null) {
-         Boolean obool = ServerConnection.m906(serversession, user, null, null);
+      if (user.userUid == null) {
+         Boolean obool = ServerConnection.verifyUser(serversession, user, null, null);
          if (obool == null || !obool) {
-            ServerConnection.m832(serversession, null);
+            ServerConnection.closeSession(serversession, null);
             return false;
          }
       }
 
-      int i = user.f665 == null ? 40 : user.f665;
-      Submission submission = new Submission(i, user.f664, serversession, "password");
+      int i = user.courseUid == null ? 40 : user.courseUid;
+      Submission submission = new Submission(i, user.userUid, serversession, "password");
       submission.problemMd5 = Scrambler.md5Base64("");
       submission.evaluation = "X";
       submission.work = "none";
@@ -722,11 +723,11 @@ public class LogicProgram implements LogicConstants {
       submission.helpCount = 0;
       submission.duration = 0L;
       boolean flag = ServerConnection.submit(submission, null);
-      ServerConnection.m838(submission, null);
+      ServerConnection.finishSubmission(submission, null);
       return flag;
    }
 
-   static boolean m965(File file1) {
+   static boolean isWritableDirectory(File file1) {
       char[] achar = new char[256];
       int i = 0;
       String s = "This file can be written.";
@@ -813,12 +814,12 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static Hashtable m966() {
+   static Hashtable readLoadInfo() {
       Hashtable hashtable = new Hashtable();
       BufferedReader bufferedreader = null;
 
       try {
-         bufferedreader = new BufferedReader(new FileReader(f560));
+         bufferedreader = new BufferedReader(new FileReader(loadInfoFile));
 
          String s;
          while ((s = bufferedreader.readLine()) != null) {
@@ -829,7 +830,7 @@ public class LogicProgram implements LogicConstants {
          }
 
          if (hashtable.get("workDeleted") != null) {
-            f583 = false;
+            workPresent = false;
          }
       } catch (IOException ioexception1) {
          hashtable = null;
@@ -845,8 +846,8 @@ public class LogicProgram implements LogicConstants {
       return hashtable;
    }
 
-   static boolean m967(UserInfo userinfo) {
-      Hashtable hashtable = m966();
+   static boolean readCourseFromLoadInfo(UserInfo userinfo) {
+      Hashtable hashtable = readLoadInfo();
       if (hashtable == null) {
          return false;
       } else {
@@ -870,19 +871,19 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static boolean m968(UserInfo userinfo) {
-      CourseInfo courseinfo = userinfo.m1163();
-      CourseInfo courseinfo1 = ServerConnection.m861();
+   static boolean checkUserCourse(UserInfo userinfo) {
+      CourseInfo courseinfo = userinfo.getCourse();
+      CourseInfo courseinfo1 = ServerConnection.getConfiguredCourse();
       if (courseinfo == null) {
-         if (AccountManager.m1863(userinfo, "not045", true, false) == null) {
+         if (AccountManager.chooseCourse(userinfo, "not045", true, false) == null) {
             return false;
          }
 
          if (userinfo.dirty) {
             userinfo.save();
          }
-      } else if (courseinfo1 != null && !courseinfo.f623.equals(courseinfo1.f623)) {
-         if (AccountManager.m1863(userinfo, "not080", true, true) == null) {
+      } else if (courseinfo1 != null && !courseinfo.courseUid.equals(courseinfo1.courseUid)) {
+         if (AccountManager.chooseCourse(userinfo, "not080", true, true) == null) {
             return false;
          }
 
@@ -894,34 +895,34 @@ public class LogicProgram implements LogicConstants {
       return true;
    }
 
-   static void m969() {
+   static void migrateOldWorkDir() {
       File file1 = new File(configDir, "logic");
       if (file1.isDirectory()) {
          file1.renameTo(workDir);
       }
    }
 
-   static boolean m970(String s) {
+   static boolean isDemoName(String s) {
       return s.equalsIgnoreCase("Demo") || s.equalsIgnoreCase("Test");
    }
 
-   static void m971(String s, String s1) {
+   static void showFileError(String s, String s1) {
       Hashtable hashtable = Message.params("file name", s1, "user name", user.getFullName());
       MessageDialog.showMessage(Message.get(s), hashtable, null, null);
    }
 
-   static void m972(String s, String s1) {
+   static void showProblemError(String s, String s1) {
       Hashtable hashtable = Message.params("problem name", s1);
       MessageDialog.showMessage(Message.get(s), hashtable, null, null);
    }
 
-   static String m973() {
+   static String currentStackTrace() {
       StringWriter stringwriter = new StringWriter();
       new Throwable().fillInStackTrace().printStackTrace(new PrintWriter(stringwriter));
       return stringwriter.toString();
    }
 
-   static void m974(String s) {
+   static void logStackTrace(String s) {
       try {
          throw new Throwable(s);
       } catch (Throwable throwable) {
@@ -934,23 +935,23 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static boolean m975() {
+   static boolean checkWorkDir() {
       if (workDir.exists() && !workDir.isFile()) {
          return true;
       } else {
-         Hashtable hashtable = Message.params("user dir", DelimitedTokenizer.m1139(workDir + "", "\\"));
+         Hashtable hashtable = Message.params("user dir", DelimitedTokenizer.escape(workDir + "", "\\"));
          MessageDialog.showMessage(Message.get("not009"), hashtable, null, null);
          return false;
       }
    }
 
-   static boolean m976() {
-      if (!m975()) {
+   static boolean checkSameUser() {
+      if (!checkWorkDir()) {
          return false;
       } else {
          UserInfo userinfo = UserInfo.load(false);
-         String s = userinfo == null ? null : userinfo.m1146();
-         String s1 = user == null ? null : user.m1146();
+         String s = userinfo == null ? null : userinfo.computeDigest();
+         String s1 = user == null ? null : user.computeDigest();
          if (s != null && s1 != null && s.equals(s1)) {
             return true;
          } else {
@@ -963,23 +964,23 @@ public class LogicProgram implements LogicConstants {
 
    static void exit() {
       if (instanceGuard != null) {
-         instanceGuard.m1937();
+         instanceGuard.stopServer();
       }
 
-      if (f571 && f560 != null && f560.exists()) {
-         f560.delete();
+      if (deleteLoadInfo && loadInfoFile != null && loadInfoFile.exists()) {
+         loadInfoFile.delete();
       }
 
-      m979();
+      closeDebugLogs();
       System.exit(0);
    }
 
-   static void m978() {
+   static void openDebugLogs() {
       if (debug) {
          try {
-            f529 = new C_V(new FileOutputStream(new File(workDir, "errors.txt")), true);
+            errorLog = new ErrorLogStream(new FileOutputStream(new File(workDir, "errors.txt")), true);
          } catch (IOException ioexception1) {
-            f529 = null;
+            errorLog = null;
             ioexception1.printStackTrace(System.out);
          }
 
@@ -992,12 +993,12 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static void m979() {
+   static void closeDebugLogs() {
       if (debug) {
-         if (f529 != null) {
+         if (errorLog != null) {
             try {
-               f529.close();
-               f529 = null;
+               errorLog.close();
+               errorLog = null;
             } catch (Exception exception1) {
             }
          }
@@ -1012,7 +1013,7 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static String[] m980(String[] astring) {
+   static String[] excludeLogFiles(String[] astring) {
       if (astring == null) {
          return null;
       } else {
@@ -1033,83 +1034,83 @@ public class LogicProgram implements LogicConstants {
             return astring;
          } else {
             i = vector.size();
-            return i == 0 ? null : vector.toArray(new String[i]);
+            return i == 0 ? null : (String[])vector.toArray(new String[i]);
          }
       }
    }
 
-   static EditableTextPane m981(String s) {
-      return m984(s, 0, 2147483647, false);
+   static EditableTextPane createFormulaPane(String s) {
+      return createFormulaPane(s, 0, 2147483647, false);
    }
 
-   static EditableTextPane m982(String s, boolean flag) {
-      return m984(s, 0, 2147483647, flag);
+   static EditableTextPane createFormulaPane(String s, boolean flag) {
+      return createFormulaPane(s, 0, 2147483647, flag);
    }
 
-   static EditableTextPane m983(String s, int i, boolean flag) {
-      return m984(s, i, i, flag);
+   static EditableTextPane createFormulaPane(String s, int i, boolean flag) {
+      return createFormulaPane(s, i, i, flag);
    }
 
-   static EditableTextPane m984(String s, int i, int j, boolean flag) {
-      EditableTextPane editabletextpane = new EditableTextPane(m995(s, maggie, symbols), i, j, flag);
+   static EditableTextPane createFormulaPane(String s, int i, int j, boolean flag) {
+      EditableTextPane editabletextpane = new EditableTextPane(translateSymbols(s, maggie, symbols), i, j, flag);
       editabletextpane.setEditable(false);
       return editabletextpane;
    }
 
-   static C_M m985(String s, int i) {
-      return m991(s, i, 0, 2147483647, null);
+   static LinePanel createFormulaRow(String s, int i) {
+      return createFormulaRow(s, i, 0, 2147483647, null);
    }
 
-   static C_M m986(C_e_B c_e_b, int i) {
-      return m990(c_e_b, i, 0, 2147483647);
+   static LinePanel createFormulaRow(HighlightedText highlightedtext, int i) {
+      return createFormulaRow(highlightedtext, i, 0, 2147483647);
    }
 
-   static C_M m987(String s, int i, int j) {
-      return m991(s, i, 0, j, null);
+   static LinePanel createFormulaRow(String s, int i, int j) {
+      return createFormulaRow(s, i, 0, j, null);
    }
 
-   static C_M m988(C_e_B c_e_b, int i, int j) {
-      return m990(c_e_b, i, 0, j);
+   static LinePanel createFormulaRow(HighlightedText highlightedtext, int i, int j) {
+      return createFormulaRow(highlightedtext, i, 0, j);
    }
 
-   static C_M m989(String s, int i, int j, int k) {
-      return m991(s, i, j, k, null);
+   static LinePanel createFormulaRow(String s, int i, int j, int k) {
+      return createFormulaRow(s, i, j, k, null);
    }
 
-   static C_M m990(C_e_B c_e_b, int i, int j, int k) {
-      return m991(c_e_b.f1069, i, j, k, C_CB.m420(c_e_b.f1070));
+   static LinePanel createFormulaRow(HighlightedText highlightedtext, int i, int j, int k) {
+      return createFormulaRow(highlightedtext.text, i, j, k, TextHighlighter.fromRanges(highlightedtext.layers));
    }
 
-   static C_M m991(String s, int i, int j, int k, C_CB c_cb) {
-      C_M c_m = new C_M();
-      c_m.setLayout(new FlowLayout(0, 0, 0));
-      StyledDocument styleddocument = m998(s, maggie, symbols, c_cb == null ? null : c_cb.m415());
+   static LinePanel createFormulaRow(String s, int i, int j, int k, TextHighlighter texthighlighter) {
+      LinePanel linepanel = new LinePanel();
+      linepanel.setLayout(new FlowLayout(0, 0, 0));
+      StyledDocument styleddocument = translateToDocument(s, maggie, symbols, texthighlighter == null ? null : texthighlighter.copy());
       EditableTextPane editabletextpane = new EditableTextPane(styleddocument, j, k, false);
       editabletextpane.setEditable(false);
-      c_m.add(new C_M(i));
-      c_m.add(editabletextpane);
-      c_m.add(new C_M(i));
-      return c_m;
+      linepanel.add(new LinePanel(i));
+      linepanel.add(editabletextpane);
+      linepanel.add(new LinePanel(i));
+      return linepanel;
    }
 
-   static C_ZE m992(String s) {
-      s = m995(s, maggie, symbols);
-      return new C_ZE(s);
+   static LogicLabel createFormulaLabel(String s) {
+      s = translateSymbols(s, maggie, symbols);
+      return new LogicLabel(s);
    }
 
-   static String m993(String s) {
-      return m995(s, maggie, symbols);
+   static String translateSymbols(String s) {
+      return translateSymbols(s, maggie, symbols);
    }
 
-   static StyledDocument m994(String s, C_CB c_cb) {
-      return m998(s, maggie, symbols, c_cb);
+   static StyledDocument translateToDocument(String s, TextHighlighter texthighlighter) {
+      return translateToDocument(s, maggie, symbols, texthighlighter);
    }
 
-   static String m995(String s, String[] astring, String[] astring1) {
-      return m996(s, astring, astring1, (int[])null);
+   static String translateSymbols(String s, String[] astring, String[] astring1) {
+      return translateSymbols(s, astring, astring1, (int[])null);
    }
 
-   static String m996(String s, String[] astring, String[] astring1, int[] aint) {
+   static String translateSymbols(String s, String[] astring, String[] astring1, int[] aint) {
       if (s == null) {
          return null;
       } else {
@@ -1127,7 +1128,7 @@ public class LogicProgram implements LogicConstants {
                }
             }
 
-            String s2 = m1015(s);
+            String s2 = findNumberedPlaceholder(s);
             int i1 = s2 == null ? -1 : s.indexOf(s2);
             if (i1 != -1 && (i == -1 || i1 < i)) {
                i = i1 + s2.length();
@@ -1142,7 +1143,7 @@ public class LogicProgram implements LogicConstants {
                s1 = s1 + s.substring(0, i);
                s = s.substring(i);
             } else {
-               m1002(aint, s1.length() + i, astring1[j].length() - astring[j].length());
+               shiftPositions(aint, s1.length() + i, astring1[j].length() - astring[j].length());
                s1 = s1 + s.substring(0, i) + astring1[j];
                s = s.substring(i + astring[j].length());
             }
@@ -1150,52 +1151,52 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static String m997(String s, String[] astring, String[] astring1, C_n_F c_n_f) {
-      return m996(s, astring, astring1, c_n_f == null ? null : c_n_f.f1316);
+   static String translateSymbols(String s, String[] astring, String[] astring1, IntervalSet intervalset) {
+      return translateSymbols(s, astring, astring1, intervalset == null ? null : intervalset.boundaries);
    }
 
-   static StyledDocument m998(String s, String[] astring, String[] astring1, C_CB c_cb) {
-      if (c_cb != null) {
-         int i = c_cb.m416();
+   static StyledDocument translateToDocument(String s, String[] astring, String[] astring1, TextHighlighter texthighlighter) {
+      if (texthighlighter != null) {
+         int i = texthighlighter.size();
 
          for (int j = 0; j < i; j++) {
-            m997(s, astring, astring1, (C_n_F)c_cb.f255.elementAt(j));
+            translateSymbols(s, astring, astring1, (IntervalSet)texthighlighter.ranges.elementAt(j));
          }
       }
 
-      s = m995(s, astring, astring1);
-      return C_CB.m419(new C_e_B(s, c_cb != null ? c_cb.f255 : null));
+      s = translateSymbols(s, astring, astring1);
+      return TextHighlighter.createDocument(new HighlightedText(s, texthighlighter != null ? texthighlighter.ranges : null));
    }
 
-   static C_e_B m999(C_e_B c_e_b, String[] astring, String[] astring1) {
-      if (c_e_b.f1070 != null) {
-         int i = c_e_b.f1070.size();
+   static HighlightedText translateStyledText(HighlightedText highlightedtext, String[] astring, String[] astring1) {
+      if (highlightedtext.layers != null) {
+         int i = highlightedtext.layers.size();
 
          for (int j = 0; j < i; j++) {
-            m997(c_e_b.f1069, astring, astring1, (C_n_F)c_e_b.f1070.elementAt(j));
+            translateSymbols(highlightedtext.text, astring, astring1, (IntervalSet)highlightedtext.layers.elementAt(j));
          }
       }
 
-      c_e_b.f1069 = m995(c_e_b.f1069, astring, astring1);
-      return c_e_b;
+      highlightedtext.text = translateSymbols(highlightedtext.text, astring, astring1);
+      return highlightedtext;
    }
 
-   static String m1000(String s) {
+   static String stripNamePrefix(String s) {
       if (s == null) {
          return null;
       } else {
-         s = s.trim();
-         int i = s.indexOf(32);
+         String s1 = s.trim();
+         int i = s1.indexOf(32);
          if (i == -1) {
-            return s;
+            return s1;
          } else {
-            int j = s.substring(0, i).lastIndexOf(46);
-            return j == -1 ? s : s.substring(j + 1).trim();
+            int j = s1.substring(0, i).lastIndexOf(46);
+            return j == -1 ? s1 : s1.substring(j + 1).trim();
          }
       }
    }
 
-   static int[] m1001(String s, int i, String[] astring) {
+   static int[] symbolBoundsAt(String s, int i, String[] astring) {
       int j = astring.length;
       int k = s.length();
       if (k == 0) {
@@ -1233,7 +1234,7 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static void m1002(int[] aint, int i, int j) {
+   static void shiftPositions(int[] aint, int i, int j) {
       if (aint != null && j != 0) {
          int k = aint.length;
 
@@ -1245,7 +1246,7 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static String[] m1003(String s) {
+   static String[] splitLines(String s) {
       Vector vector = new Vector();
 
       int i;
@@ -1260,14 +1261,14 @@ public class LogicProgram implements LogicConstants {
       return astring;
    }
 
-   static String m1004(String s) {
+   static String expandEscapes(String s) {
       boolean flag = false;
       String s1 = "";
 
       int i;
       while ((i = s.indexOf("\\")) != -1) {
          if (flag) {
-            s1 = s1 + m995(s.substring(0, i), maggie, symbols);
+            s1 = s1 + translateSymbols(s.substring(0, i), maggie, symbols);
          } else {
             s1 = s1 + s.substring(0, i);
          }
@@ -1288,7 +1289,7 @@ public class LogicProgram implements LogicConstants {
       }
 
       if (flag) {
-         s1 = s1 + m995(s, maggie, symbols);
+         s1 = s1 + translateSymbols(s, maggie, symbols);
       } else {
          s1 = s1 + s;
       }
@@ -1296,7 +1297,7 @@ public class LogicProgram implements LogicConstants {
       return s1;
    }
 
-   static String m1005(String s) {
+   static String escapeBackslashes(String s) {
       String s1 = "";
 
       int i;
@@ -1308,38 +1309,38 @@ public class LogicProgram implements LogicConstants {
       return s1 + s;
    }
 
-   static Expression m1006(String s) throws FormulaParseException {
-      return m1009(s, false, false, false);
+   static Expression parseFormula(String s) throws FormulaParseException {
+      return parseFormula(s, false, false, false);
    }
 
-   static Expression m1007(String s, boolean flag) throws FormulaParseException {
-      return m1009(s, flag, false, false);
+   static Expression parseFormula(String s, boolean flag) throws FormulaParseException {
+      return parseFormula(s, flag, false, false);
    }
 
-   static Expression m1008(String s, boolean flag, boolean flag1) throws FormulaParseException {
-      return m1009(s, flag, flag1, false);
+   static Expression parseFormula(String s, boolean flag, boolean flag1) throws FormulaParseException {
+      return parseFormula(s, flag, flag1, false);
    }
 
-   static Expression m1009(String s, boolean flag, boolean flag1, boolean flag2) throws FormulaParseException {
+   static Expression parseFormula(String s, boolean flag, boolean flag1, boolean flag2) throws FormulaParseException {
       try {
          if (s != null && !s.trim().equals("")) {
             FormulaParser.reinit(new StringReader(s + "\n"));
             Expression expression = FormulaParser.parse();
             if (expression != null) {
-               expression.m1257();
+               expression.linkVariables();
             }
 
             String s1;
-            if (!flag1 && (s1 = m1015(s)) != null) {
+            if (!flag1 && (s1 = findNumberedPlaceholder(s)) != null) {
                throw new FormulaParseException("Parse error, column " + (s.indexOf(s1) + 1) + ".");
             } else {
                String s4;
-               if (!flag2 && (s4 = m1023(s)) != null) {
+               if (!flag2 && (s4 = findQuestionVariable(s)) != null) {
                   throw new FormulaParseException("Parse error, column " + (s.indexOf(s4) + 1) + ".");
                } else {
-                  C_DD c_dd = new C_DD(expression);
-                  c_dd.f284 = s;
-                  if (!c_dd.m490()) {
+                  FormulaParseNode formulaparsenode = new FormulaParseNode(expression);
+                  formulaparsenode.text = s;
+                  if (!formulaparsenode.isParenthesizationValid()) {
                      throw new FormulaParseException(s + " is not well formed");
                   } else if (!flag && expression instanceof Term) {
                      throw new FormulaParseException("Syntax error: expected Formula but found Term");
@@ -1353,20 +1354,20 @@ public class LogicProgram implements LogicConstants {
          }
       } catch (FormulaParseException formulaparseexception) {
          String s3 = formulaparseexception.getMessage();
-         int j = m1024(s3);
+         int j = parseErrorColumn(s3);
          if (j != -1) {
             int[] aint1 = new int[]{j};
-            m996(s, maggie, symbols, aint1);
+            translateSymbols(s, maggie, symbols, aint1);
             throw new FormulaParseException("Parse error at position " + aint1[0] + ".");
          } else {
             throw formulaparseexception;
          }
       } catch (FormulaLexerError formulalexererror) {
          String s2 = formulalexererror.getMessage();
-         int i = m1024(s2);
+         int i = parseErrorColumn(s2);
          if (i != -1) {
             int[] aint = new int[]{i};
-            m996(s, maggie, symbols, aint);
+            translateSymbols(s, maggie, symbols, aint);
             throw new FormulaParseException("Lexical error at position " + aint[0] + ".");
          } else {
             throw new FormulaParseException(s2);
@@ -1375,10 +1376,10 @@ public class LogicProgram implements LogicConstants {
    }
 
    static Integer parseInteger(String s) {
-      return m1011(s, 10);
+      return parseInteger(s, 10);
    }
 
-   static Integer m1011(String s, int i) {
+   static Integer parseInteger(String s, int i) {
       try {
          return Integer.valueOf(s, i);
       } catch (NumberFormatException numberformatexception) {
@@ -1386,11 +1387,11 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static Long m1012(String s) {
-      return m1013(s, 10);
+   static Long parseLong(String s) {
+      return parseLong(s, 10);
    }
 
-   static Long m1013(String s, int i) {
+   static Long parseLong(String s, int i) {
       try {
          return Long.valueOf(s, i);
       } catch (NumberFormatException numberformatexception) {
@@ -1398,12 +1399,12 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static String m1014(int i) {
+   static String toHex8(int i) {
       String s = "00000000" + Integer.toString(i, 16);
       return s.substring(s.length() - 8);
    }
 
-   static String m1015(String s) {
+   static String findNumberedPlaceholder(String s) {
       int i = s == null ? 0 : s.length();
       int j = 0;
 
@@ -1433,8 +1434,8 @@ public class LogicProgram implements LogicConstants {
       return null;
    }
 
-   static String m1016(int i) {
-      int j = f599.length();
+   static String sentenceLetter(int i) {
+      int j = sentenceLetters.length();
 
       while (i < 0) {
          i += j;
@@ -1444,11 +1445,11 @@ public class LogicProgram implements LogicConstants {
          i -= j;
       }
 
-      return f599.substring(i, i + 1);
+      return sentenceLetters.substring(i, i + 1);
    }
 
-   static String m1017(int i) {
-      int j = f600.length();
+   static String predicateLetter(int i) {
+      int j = predicateLetters.length();
 
       while (i < 0) {
          i += j;
@@ -1458,11 +1459,11 @@ public class LogicProgram implements LogicConstants {
          i -= j;
       }
 
-      return f600.substring(i, i + 1);
+      return predicateLetters.substring(i, i + 1);
    }
 
-   static String m1018(int i) {
-      int j = f601.length();
+   static String operationLetter(int i) {
+      int j = operationLetters.length();
 
       while (i < 0) {
          i += j;
@@ -1472,11 +1473,11 @@ public class LogicProgram implements LogicConstants {
          i -= j;
       }
 
-      return f601.substring(i, i + 1);
+      return operationLetters.substring(i, i + 1);
    }
 
-   static String m1019(int i) {
-      int j = f602.length();
+   static String variableLetter(int i) {
+      int j = variableLetters.length();
 
       while (i < 0) {
          i += j;
@@ -1486,10 +1487,10 @@ public class LogicProgram implements LogicConstants {
          i -= j;
       }
 
-      return f602.substring(i, i + 1);
+      return variableLetters.substring(i, i + 1);
    }
 
-   static String m1020(int i) {
+   static String defaultVariable(int i) {
       int j = "xyzuvw".length();
 
       while (i < 0) {
@@ -1503,7 +1504,7 @@ public class LogicProgram implements LogicConstants {
       return "xyzuvw".substring(i, i + 1);
    }
 
-   static String m1021(String s) {
+   static String reverse(String s) {
       if (s == null) {
          return null;
       } else {
@@ -1518,7 +1519,7 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static String[] m1022(String s) {
+   static String[] splitChars(String s) {
       int i = s == null ? 0 : s.length();
       String[] astring = new String[i];
 
@@ -1529,7 +1530,7 @@ public class LogicProgram implements LogicConstants {
       return astring;
    }
 
-   static String m1023(String s) {
+   static String findQuestionVariable(String s) {
       int i = s == null ? 0 : s.length();
       int j = 0;
 
@@ -1551,16 +1552,16 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static int m1024(String s) {
+   static int parseErrorColumn(String s) {
       String s1 = ", column ";
       String s2 = ".";
       int i;
       if (s != null && (i = s.indexOf(s1)) != -1) {
-         i += s1.length();
+         int k = i + s1.length();
          int j;
-         if ((j = s.indexOf(s2, i)) != -1) {
+         if ((j = s.indexOf(s2, k)) != -1) {
             try {
-               return Integer.parseInt(s.substring(i, j));
+               return Integer.parseInt(s.substring(k, j));
             } catch (NumberFormatException numberformatexception) {
             }
          }
@@ -1569,48 +1570,48 @@ public class LogicProgram implements LogicConstants {
       return -1;
    }
 
-   static Theorem m1025(Integer integer) {
-      return f534 == null ? null : f534.m2204(integer);
+   static Theorem getTheorem(Integer integer) {
+      return ruleTable == null ? null : ruleTable.getTheorem(integer);
    }
 
-   static Rule m1026(String s) {
-      return f534 == null ? null : f534.m2205(s);
+   static Rule getRule(String s) {
+      return ruleTable == null ? null : ruleTable.findRule(s);
    }
 
-   static void m1027(String s, Vector vector, C_n_F c_n_f, boolean flag) {
-      s = s.trim();
+   static void listRules(String s, Vector vector, IntervalSet intervalset, boolean flag) {
+      String s2 = s.trim();
 
-      while (!s.equals("")) {
-         int i = s.indexOf(".");
+      while (!s2.equals("")) {
+         int i = s2.indexOf(".");
          String s1;
          if (i == -1) {
-            s1 = s;
-            s = "";
+            s1 = s2;
+            s2 = "";
          } else {
-            s1 = s.substring(0, i).trim();
-            s = s.substring(i + 1).trim();
+            s1 = s2.substring(0, i).trim();
+            s2 = s2.substring(i + 1).trim();
          }
 
          if ("~{".indexOf(s1.charAt(0)) != -1) {
-            c_n_f.m1975(new C_n_F(s1));
+            intervalset.union(new IntervalSet(s1));
          } else {
             Integer integer;
-            if ((integer = SchematicRule.m1366(s1)) != null) {
-               c_n_f.m1975(C_n_F.m1970(integer));
+            if ((integer = SchematicRule.parseTheoremNumber(s1)) != null) {
+               intervalset.union(IntervalSet.singleton(integer));
             } else {
                Rule rule;
-               if ((rule = m1026(s1)) != null) {
+               if ((rule = getRule(s1)) != null) {
                   if (flag) {
-                     SchematicRule[] aschematicrule = rule.m1374();
+                     SchematicRule[] aschematicrule = rule.getAllForms();
                      int j = aschematicrule.length;
 
                      for (int k = 0; k < j; k++) {
-                        if (!vector.contains(aschematicrule[k].f820)) {
-                           vector.addElement(aschematicrule[k].f820);
+                        if (!vector.contains(aschematicrule[k].name)) {
+                           vector.addElement(aschematicrule[k].name);
                         }
                      }
-                  } else if (!vector.contains(rule.f820)) {
-                     vector.addElement(rule.f820);
+                  } else if (!vector.contains(rule.name)) {
+                     vector.addElement(rule.name);
                   }
                } else {
                   System.out.println("unknown rule: " + s1);
@@ -1620,7 +1621,7 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static int m1028(String s) {
+   static int parseFontSize(String s) {
       int i = s.indexOf("/");
       if (i >= 0) {
          Integer integer = parseInteger(s.substring(0, i));
@@ -1629,7 +1630,7 @@ public class LogicProgram implements LogicConstants {
             int j = integer;
             int k = integer1;
             if (j != 0 && k != 0) {
-               return ProgressDialog.m1288() * j / k;
+               return ProgressDialog.getDefaultFontSize() * j / k;
             }
          }
       } else {
@@ -1651,13 +1652,13 @@ public class LogicProgram implements LogicConstants {
 
    static Font getFont(int i, int j) {
       Font font;
-      return f540 != null && j <= 1 && (font = f540[j]) != null ? font.deriveFont((float)i) : new Font("SanSerif", j, i);
+      return bundledFonts != null && j <= 1 && (font = bundledFonts[j]) != null ? font.deriveFont((float)i) : new Font("SanSerif", j, i);
    }
 
-   static String m1031(ModuleFrame moduleframe, String s, String s1) {
+   static String chooseOpenFile(ModuleFrame moduleframe, String s, String s1) {
       FileDialog filedialog = new FileDialog(moduleframe, s);
       Dimension dimension = new Dimension(400, 250);
-      filedialog.setLocation(MessageDialog.m1321(dimension));
+      filedialog.setLocation(MessageDialog.centeredLocation(dimension));
       if (s1 != null) {
          filedialog.setDirectory(s1);
       }
@@ -1669,10 +1670,10 @@ public class LogicProgram implements LogicConstants {
       return s2 == null ? null : s3 + s2;
    }
 
-   static String m1032(ModuleFrame moduleframe, String s, String s1) {
+   static String chooseSaveFile(ModuleFrame moduleframe, String s, String s1) {
       FileDialog filedialog = new FileDialog(moduleframe, s, 1);
       Dimension dimension = new Dimension(400, 250);
-      filedialog.setLocation(MessageDialog.m1321(dimension));
+      filedialog.setLocation(MessageDialog.centeredLocation(dimension));
       if (s1 != null) {
          filedialog.setDirectory(s1);
       }
@@ -1684,11 +1685,11 @@ public class LogicProgram implements LogicConstants {
       return s2 == null ? null : s3 + s2;
    }
 
-   static boolean m1033(Container container, Component component) {
+   static boolean isDescendant(Container container, Component component) {
       if (container == null) {
          return false;
       } else {
-         Object object = component;
+         Component object = component;
 
          while (object != null && object != container) {
             object = object.getParent();
@@ -1698,13 +1699,13 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static Container m1034(Component component, Component component1) {
+   static Container commonAncestor(Component component, Component component1) {
       if (component1 == null) {
          return null;
       } else {
          Container container = component != null && !(component instanceof Container) ? component.getParent() : (Container)component;
 
-         while (container != null && !m1033(container, component1)) {
+         while (container != null && !isDescendant(container, component1)) {
             container = container.getParent();
          }
 
@@ -1712,11 +1713,11 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static Rectangle m1035(Component component, Component component1) {
-      Container container = m1034(component, component1);
-      Rectangle rectangle = m1036(component, container);
+   static Rectangle boundsRelativeTo(Component component, Component component1) {
+      Container container = commonAncestor(component, component1);
+      Rectangle rectangle = boundsIn(component, container);
       if (component1 != null) {
-         Rectangle rectangle1 = m1036(component1, container);
+         Rectangle rectangle1 = boundsIn(component1, container);
          rectangle.x = rectangle.x - rectangle1.x;
          rectangle.y = rectangle.y - rectangle1.y;
       }
@@ -1724,7 +1725,7 @@ public class LogicProgram implements LogicConstants {
       return rectangle;
    }
 
-   static Rectangle m1036(Component component, Container container) {
+   static Rectangle boundsIn(Component component, Container container) {
       if (component == null) {
          return null;
       } else {
@@ -1737,7 +1738,7 @@ public class LogicProgram implements LogicConstants {
             Container container1 = component.getParent();
 
             while (container1 != null && container1 != container) {
-               Container container2 = m1037(container1);
+               Container container2 = getParentOf(container1);
                Rectangle rectangle1 = container1.getBounds();
                rectangle.x = rectangle.x + rectangle1.x;
                rectangle.y = rectangle.y + rectangle1.y;
@@ -1749,7 +1750,7 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static Container m1037(Component component) {
+   static Container getParentOf(Component component) {
       Container container = component.getParent();
       if (container != null && component instanceof Window) {
          Component[] acomponent = container.getComponents();
@@ -1767,13 +1768,13 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static Rectangle m1038(Container container) {
+   static Rectangle getInteriorBounds(Container container) {
       Insets insets = container.getInsets();
       Dimension dimension = container.getSize();
       return new Rectangle(insets.left, insets.top, dimension.width - insets.left - insets.right, dimension.height - insets.top - insets.bottom);
    }
 
-   static void addCredentials(Credentials credentials) {
+   static void addCredentials(Credentials credentialsx) {
       if (credentials == null) {
          credentials = new Hashtable();
       }
@@ -1785,7 +1786,7 @@ public class LogicProgram implements LogicConstants {
       return credentials != null && s != null ? (Credentials)credentials.get(s.toLowerCase()) : null;
    }
 
-   static Dialog m1041(Component object) {
+   static Dialog findDialog(Component object) {
       while (object != null) {
          if (object instanceof Dialog) {
             return (Dialog)object;
@@ -1797,7 +1798,7 @@ public class LogicProgram implements LogicConstants {
       return null;
    }
 
-   static Dialog m1042(JComponent jcomponent) {
+   static Dialog getDialog(JComponent jcomponent) {
       JRootPane jrootpane = jcomponent.getRootPane();
       if (jrootpane == null) {
          return null;
@@ -1816,7 +1817,7 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static Window m1043(JComponent jcomponent) {
+   static Window getWindow(JComponent jcomponent) {
       JRootPane jrootpane = jcomponent.getRootPane();
       if (jrootpane == null) {
          return null;
@@ -1835,7 +1836,7 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static Frame m1044(Component component) {
+   static Frame findFrame(Component component) {
       Container container = component != null && !(component instanceof Container) ? component.getParent() : (Container)component;
 
       while (container != null && !(container instanceof Frame)) {
@@ -1845,7 +1846,7 @@ public class LogicProgram implements LogicConstants {
       return (Frame)container;
    }
 
-   static JFrame m1045(Component component) {
+   static JFrame findJFrame(Component component) {
       Container container = component != null && !(component instanceof Container) ? component.getParent() : (Container)component;
 
       while (container != null && !(container instanceof JFrame)) {
@@ -1855,34 +1856,34 @@ public class LogicProgram implements LogicConstants {
       return (JFrame)container;
    }
 
-   static void m1046(Window window, boolean flag) {
+   static void setAlwaysOnTop(Window window, boolean flag) {
       window.setAlwaysOnTop(flag);
    }
 
-   static Vector m1047(Vector vector, boolean flag) {
+   static Vector flatten(Vector vector, boolean flag) {
       if (vector == null) {
          return null;
       } else {
          Vector vector1 = new Vector();
-         m1048(vector, flag, vector1);
+         flattenInto(vector, flag, vector1);
          return vector1;
       }
    }
 
-   static void m1048(Vector vector, boolean flag, Vector vector1) {
+   static void flattenInto(Vector vector, boolean flag, Vector vector1) {
       int i = vector == null ? 0 : vector.size();
 
       for (int j = 0; j < i; j++) {
          Object object = vector.elementAt(j);
          if (object instanceof Vector) {
-            m1048((Vector)object, flag, vector1);
+            flattenInto((Vector)object, flag, vector1);
          } else if (!flag || !vector1.contains(object)) {
             vector1.addElement(object);
          }
       }
    }
 
-   static void m1049(Vector vector, Vector vector1, boolean flag) {
+   static void appendAll(Vector vector, Vector vector1, boolean flag) {
       int i = vector.size();
 
       for (int j = 0; j < i; j++) {
@@ -1893,7 +1894,7 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static Hashtable m1050(Hashtable hashtable, Hashtable hashtable1, boolean flag) {
+   static Hashtable mergeTables(Hashtable hashtable, Hashtable hashtable1, boolean flag) {
       if (hashtable != null) {
          if (hashtable1 == null) {
             hashtable1 = new Hashtable();
@@ -1912,11 +1913,11 @@ public class LogicProgram implements LogicConstants {
       return hashtable1;
    }
 
-   static int m1051(Object[] aobject, Object object) {
-      return m1052(aobject, object, 0);
+   static int indexOf(Object[] aobject, Object object) {
+      return indexOf(aobject, object, 0);
    }
 
-   static int m1052(Object[] aobject, Object object, int i) {
+   static int indexOf(Object[] aobject, Object object, int i) {
       int j = aobject == null ? 0 : aobject.length;
       if (object == null) {
          for (int k = i; k < j; k++) {
@@ -1935,7 +1936,7 @@ public class LogicProgram implements LogicConstants {
       return -1;
    }
 
-   static void m1053(boolean flag) {
+   static void showHeadlines(boolean flag) {
       String s = getLink("word");
       String s1 = getLink("headlines");
       String s2 = getLink("headVers");
@@ -1958,7 +1959,7 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static String m1054() {
+   static String askFeedback() {
       ModuleFrame moduleframe = new ModuleFrame();
       JScrollPane jscrollpane = new JScrollPane();
       FormulaTextPane formulatextpane = new FormulaTextPane(true);
@@ -1968,9 +1969,9 @@ public class LogicProgram implements LogicConstants {
       Dimension dimension = new Dimension(700, 500);
       messagedialog.setSize(dimension);
       formulatextpane.requestFocus();
-      messagedialog.m1323(MessageDialog.m1321(dimension), true);
+      messagedialog.showAt(MessageDialog.centeredLocation(dimension), true);
       moduleframe.dispose();
-      return messagedialog.f790 == 0 ? m995(formulatextpane.getText(), symbols, maggie) : null;
+      return messagedialog.selectedButton == 0 ? translateSymbols(formulatextpane.getText(), symbols, maggie) : null;
    }
 
    static void resetOptions() {
@@ -1979,15 +1980,15 @@ public class LogicProgram implements LogicConstants {
       overheadColors = false;
       remote = false;
       noNetwork = false;
-      f577 = false;
-      f584 = false;
-      f585 = false;
-      f566 = 1;
-      f567 = null;
-      f568 = null;
-      f588 = null;
-      f589 = false;
-      f593 = null;
+      hiddenMode = false;
+      noCoreProblems = false;
+      altSymbols = false;
+      maxBackups = 1;
+      backupName = null;
+      restoreName = null;
+      soloPort = null;
+      repeatAuth = false;
+      optionO = null;
       credentials = null;
    }
 
@@ -2000,7 +2001,7 @@ public class LogicProgram implements LogicConstants {
          while (taggedrecord.readNext()) {
             String s = taggedrecord.getName();
             if (s != null && s.trim().equalsIgnoreCase("logic")) {
-               int[] aint = taggedrecord.m1481("+ufcbrpo");
+               int[] aint = taggedrecord.indexesOfAnyTag("+ufcbrpo");
                int i = aint.length;
 
                for (int j = 0; j < i; j++) {
@@ -2012,7 +2013,7 @@ public class LogicProgram implements LogicConstants {
                      } else if (s1.equalsIgnoreCase("noprint")) {
                         printingEnabled = false;
                      } else if (s1.equalsIgnoreCase("altsymbols")) {
-                        f585 = true;
+                        altSymbols = true;
                         symbols = FormulaParser.getSyntax() == 2 ? kaplan1 : kaplan2;
                      } else if (s1.equalsIgnoreCase("overhead")) {
                         overheadColors = true;
@@ -2021,38 +2022,38 @@ public class LogicProgram implements LogicConstants {
                      } else if (s1.equalsIgnoreCase("nonet")) {
                         noNetwork = true;
                      } else if (s1.equalsIgnoreCase("hidden")) {
-                        f577 = true;
+                        hiddenMode = true;
                      } else if (s1.equalsIgnoreCase("noCoreProbs")) {
-                        f584 = true;
+                        noCoreProblems = true;
                      } else if (s1.equalsIgnoreCase("repeatAuth")) {
-                        f589 = true;
+                        repeatAuth = true;
                      } else if (s1.equalsIgnoreCase("hideSensitive")) {
-                        f590 = true;
+                        hideSensitive = true;
                      }
                   } else if (c0 == 'u') {
                      Credentials credentialsx = new Credentials(s1);
                      if (credentialsx.password != null) {
-                        credentialsx.password = Scrambler.unscramble(new String(new Base64Codec(credentialsx.password).m2000()));
+                        credentialsx.password = Scrambler.unscramble(new String(new Base64Codec(credentialsx.password).getBytes()));
                      }
 
                      addCredentials(credentialsx);
                   } else if (c0 == 'f') {
-                     fontSize = m1028(s1);
-                     ProgressDialog.m1285(fontSize);
+                     fontSize = parseFontSize(s1);
+                     ProgressDialog.setFontSize(fontSize);
                      UIManager.put("ToolTip.font", getFont(fontSize * 3 / 4));
                   } else if (c0 == 'c') {
                      Integer integer = parseInteger(s1);
                      if (integer != null) {
-                        f566 = integer;
+                        maxBackups = integer;
                      }
                   } else if (c0 == 'b') {
-                     f567 = s1;
+                     backupName = s1;
                   } else if (c0 == 'r') {
-                     f568 = s1;
+                     restoreName = s1;
                   } else if (c0 == 'p') {
-                     f588 = parseInteger(s1);
+                     soloPort = parseInteger(s1);
                   } else if (c0 == 'o') {
-                     f593 = s1;
+                     optionO = s1;
                   }
                }
             }
@@ -2067,32 +2068,32 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static void m1057() {
+   static void applyOverrideFontSize() {
       String s = (String)overrides.get("FontSize");
       if (s != null) {
-         fontSize = m1028(s);
-         ProgressDialog.m1285(fontSize);
+         fontSize = parseFontSize(s);
+         ProgressDialog.setFontSize(fontSize);
          UIManager.put("ToolTip.font", getFont(fontSize * 3 / 4));
       }
    }
 
-   static void m1058() {
-      String s = prefs.get("font size");
+   static void applyPrefsFontSize() {
+      String s = prefs.getPref("font size");
       if (s != null) {
-         fontSize = m1028(s);
-         ProgressDialog.m1285(fontSize);
+         fontSize = parseFontSize(s);
+         ProgressDialog.setFontSize(fontSize);
          UIManager.put("ToolTip.font", getFont(fontSize * 3 / 4));
       }
    }
 
-   static void m1059() {
-      String s = workPrefs.get("monochrome");
-      f603 = "true".equalsIgnoreCase(s);
-      f607 = f603 ? f606 : f604;
+   static void applyColorPrefs() {
+      String s = workPrefs.getPref("monochrome");
+      monochrome = "true".equalsIgnoreCase(s);
+      moduleColors = monochrome ? monochromeColors : bruinColors;
    }
 
-   static boolean m1060(ProblemSelector problemselector, String s) {
-      return problemselector != null && (s == null ? problemselector.m405('u') : problemselector.m404(s));
+   static boolean selectorMatches(ProblemSelector problemselector, String s) {
+      return problemselector != null && (s == null ? problemselector.hasFlag('u') : problemselector.contains(s));
    }
 
    static void setSyntax(int i) {
@@ -2101,31 +2102,31 @@ public class LogicProgram implements LogicConstants {
       switch (i) {
          case 1:
             symbols = kaplan1;
-            f597 = kaplan5;
-            f598 = html1;
-            f599 = "PQRSTUVWXYZ";
-            f600 = "FGHIJKLMNO";
-            f601 = "ABCDE";
-            f602 = "abcdefghijklmnopqrstuvwxyz";
+            encodedSymbols = kaplan5;
+            htmlSymbols = html1;
+            sentenceLetters = "PQRSTUVWXYZ";
+            predicateLetters = "FGHIJKLMNO";
+            operationLetters = "ABCDE";
+            variableLetters = "abcdefghijklmnopqrstuvwxyz";
             ruleDir = new File(configDir, "syntax1");
             break;
          case 2:
             symbols = kaplan2;
-            f597 = kaplan6;
-            f598 = html2;
-            f599 = "PQRSTUVWXYZ";
-            f600 = "FGHIJKLMNOABCDE";
-            f601 = "abcdefgh";
-            f602 = "ijklmnopqrstuvwxyz";
+            encodedSymbols = kaplan6;
+            htmlSymbols = html2;
+            sentenceLetters = "PQRSTUVWXYZ";
+            predicateLetters = "FGHIJKLMNOABCDE";
+            operationLetters = "abcdefgh";
+            variableLetters = "ijklmnopqrstuvwxyz";
             ruleDir = new File(configDir, "syntax2");
       }
    }
 
    static ScrambledReader openDataFile(String s, boolean flag) {
-      return m1063(s, flag, true);
+      return openDataFile(s, flag, true);
    }
 
-   static ScrambledReader m1063(String s, boolean flag, boolean flag1) {
+   static ScrambledReader openDataFile(String s, boolean flag, boolean flag1) {
       Object object = null;
       if (flag) {
          try {
@@ -2149,22 +2150,22 @@ public class LogicProgram implements LogicConstants {
       return null;
    }
 
-   static ScrambledReader m1064(String s) {
-      return m1066(s, false, true);
+   static ScrambledReader openLocalFile(String s) {
+      return openLocalFile(s, false, true);
    }
 
-   static ScrambledReader m1065(String s, boolean flag) {
-      return m1066(s, flag, true);
+   static ScrambledReader openLocalFile(String s, boolean flag) {
+      return openLocalFile(s, flag, true);
    }
 
-   static ScrambledReader m1066(String s, boolean flag, boolean flag1) {
+   static ScrambledReader openLocalFile(String s, boolean flag, boolean flag1) {
       String s1 = getLink(s);
-      File file1 = flag ? ServerConnection.f466 : ServerConnection.f467;
+      File file1 = flag ? ServerConnection.editDir : ServerConnection.localDir;
       if (s1 != null && file1 != null) {
-         s1 = new File(file1, new File(s1).getName()).getPath();
+         String s2 = new File(file1, new File(s1).getName()).getPath();
 
          try {
-            return new ScrambledReader(new FileReader(s1), flag1 ? scrambleKey : null);
+            return new ScrambledReader(new FileReader(s2), flag1 ? scrambleKey : null);
          } catch (IOException ioexception) {
             return null;
          }
@@ -2173,23 +2174,23 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static ScrambledReader m1067(String s, boolean flag, boolean flag1) {
+   static ScrambledReader openProblemFile(String s, boolean flag, boolean flag1) {
       String s1 = getLink(s);
       if (s1 == null) {
          return null;
       } else {
          File file1 = flag ? new File(configDir, "local") : ruleDir;
-         s1 = new File(file1, new File(s1).getName()).getPath();
+         String s2 = new File(file1, new File(s1).getName()).getPath();
 
          try {
-            return new ScrambledReader(new FileReader(s1), flag1 ? scrambleKey : null);
+            return new ScrambledReader(new FileReader(s2), flag1 ? scrambleKey : null);
          } catch (IOException ioexception) {
             return null;
          }
       }
    }
 
-   static FileWriter m1068(String s, boolean flag, boolean flag1) {
+   static FileWriter openWriter(String s, boolean flag, boolean flag1) {
       Object object = null;
       if (flag1) {
          try {
@@ -2208,7 +2209,7 @@ public class LogicProgram implements LogicConstants {
       return null;
    }
 
-   RandomAccessFile m1069(String s, String s1, boolean flag) {
+   RandomAccessFile openRandomAccessFile(String s, String s1, boolean flag) {
       Object object = null;
       if (flag) {
          try {
@@ -2227,8 +2228,8 @@ public class LogicProgram implements LogicConstants {
       return null;
    }
 
-   static void m1070(String s) {
-      HttpDownloader.m1861(new File(s), configDir);
+   static void extractToConfigDir(String s) {
+      HttpDownloader.unzip(new File(s), configDir);
    }
 
    static Hashtable readCoreInfo() {
@@ -2279,7 +2280,7 @@ public class LogicProgram implements LogicConstants {
       ScrambledReader scrambledreader = null;
       Hashtable hashtable = null;
       if (file1 != null && progDir != null) {
-         Object object;
+         String s;
          try {
             File file2;
             if (scrambleKey == null) {
@@ -2304,13 +2305,13 @@ public class LogicProgram implements LogicConstants {
                   setSyntax(integer != null ? integer : 1);
                }
 
-               m1073(hashtable, "PROGDIR", progDir + "");
-               m1073(hashtable, "LINKDIR", file1 + "");
-               m1073(hashtable, "RULEDIR", ruleDir + "");
+               rebaseLinks(hashtable, "PROGDIR", progDir + "");
+               rebaseLinks(hashtable, "LINKDIR", file1 + "");
+               rebaseLinks(hashtable, "RULEDIR", ruleDir + "");
                return hashtable;
             }
 
-            object = null;
+            hashtable = null;
          } catch (IOException ioexception1) {
             return null;
          } finally {
@@ -2322,13 +2323,13 @@ public class LogicProgram implements LogicConstants {
             }
          }
 
-         return (Hashtable)object;
+         return hashtable;
       } else {
          return null;
       }
    }
 
-   static void m1073(Hashtable hashtable, String s, String s1) {
+   static void rebaseLinks(Hashtable hashtable, String s, String s1) {
       String s2 = (String)hashtable.get(s);
       if (s2 != null) {
          Enumeration enumeration = hashtable.keys();
@@ -2346,10 +2347,10 @@ public class LogicProgram implements LogicConstants {
    }
 
    static File canonicalFile(String s) {
-      return s == null ? null : m1075(new File(s));
+      return s == null ? null : canonicalFile(new File(s));
    }
 
-   static File m1075(File file1) {
+   static File canonicalFile(File file1) {
       if (file1 == null) {
          return null;
       } else {
@@ -2397,18 +2398,18 @@ public class LogicProgram implements LogicConstants {
       return "UTC: " + simpledateformat.format(new Date());
    }
 
-   static String m1080() {
+   static String compactTimestamp() {
       Calendar calendar = Calendar.getInstance();
       String s = "" + calendar.get(1);
-      s = s + m1081("0" + (calendar.get(2) + 1), 2);
-      s = s + m1081("0" + calendar.get(5), 2);
+      s = s + lastChars("0" + (calendar.get(2) + 1), 2);
+      s = s + lastChars("0" + calendar.get(5), 2);
       s = s + ".";
-      s = s + m1081("0" + calendar.get(11), 2);
-      s = s + m1081("0" + calendar.get(12), 2);
-      return s + m1081("0" + calendar.get(13), 2);
+      s = s + lastChars("0" + calendar.get(11), 2);
+      s = s + lastChars("0" + calendar.get(12), 2);
+      return s + lastChars("0" + calendar.get(13), 2);
    }
 
-   static String m1081(String s, int i) {
+   static String lastChars(String s, int i) {
       if (s == null) {
          return null;
       } else {
@@ -2417,30 +2418,30 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static boolean m1082(String s, String s1, String s2) {
-      return m1083(s, s1, s2, null);
+   static boolean appendSubmitLog(String s, String s1, String s2) {
+      return appendSubmitLog(s, s1, s2, null);
    }
 
-   static boolean m1083(String s, String s1, String s2, String s3) {
+   static boolean appendSubmitLog(String s, String s1, String s2, String s3) {
       boolean flag = true;
       BufferedWriter bufferedwriter = null;
-      String s4 = TaggedRecord.m1493(s2);
+      String s4 = TaggedRecord.nameOf(s2);
       if (s4 == null) {
          return false;
       } else {
-         String s5 = m1080();
+         String s5 = compactTimestamp();
          String s6 = Scrambler.md5Base64(s2);
-         String s7 = TaggedRecord.m1508(s4, '$');
-         s7 = s7 + TaggedRecord.m1508(s1, 'a');
-         s7 = s7 + TaggedRecord.m1508(s5, 'd');
-         s7 = s7 + TaggedRecord.m1508(s6, 'w');
+         String s7 = TaggedRecord.formatField(s4, '$');
+         s7 = s7 + TaggedRecord.formatField(s1, 'a');
+         s7 = s7 + TaggedRecord.formatField(s5, 'd');
+         String s8 = s7 + TaggedRecord.formatField(s6, 'w');
          if (s3 != null) {
-            s7 = s7 + TaggedRecord.m1508(s3, 'x');
+            s8 = s8 + TaggedRecord.formatField(s3, 'x');
          }
 
          try {
             bufferedwriter = new BufferedWriter(new FileWriter(new File(workDir, s).getPath(), true));
-            bufferedwriter.write(Scrambler.scramble(TaggedRecord.m1509(s7)));
+            bufferedwriter.write(Scrambler.scramble(TaggedRecord.toLine(s8)));
             bufferedwriter.newLine();
          } catch (IOException ioexception1) {
             flag = false;
@@ -2457,13 +2458,13 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static Hashtable m1084(String s, String s1, ProblemSelector problemselector, C_a_A c_a_a) {
-      if (problemselector != null && !problemselector.m402() && c_a_a != null) {
+   static Hashtable checkSubmitLog(String s, String s1, ProblemSelector problemselector, ProblemRecordEnumeration problemrecordenumeration) {
+      if (problemselector != null && !problemselector.isEmpty() && problemrecordenumeration != null) {
          Vector vector = new Vector();
 
-         while (c_a_a.hasMoreElements()) {
-            String s2 = (String)c_a_a.nextElement();
-            if (problemselector.m404(TaggedRecord.m1493(s2))) {
+         while (problemrecordenumeration.hasMoreElements()) {
+            String s2 = (String)problemrecordenumeration.nextElement();
+            if (problemselector.contains(TaggedRecord.nameOf(s2))) {
                vector.addElement(s2);
             }
          }
@@ -2481,7 +2482,7 @@ public class LogicProgram implements LogicConstants {
                while (taggedrecord.readNext()) {
                   String s3 = taggedrecord.getName();
                   String s4 = taggedrecord.valueAt(taggedrecord.indexOfTag('a'));
-                  if (problemselector.m404(s3) && s1.equals(s4)) {
+                  if (problemselector.contains(s3) && s1.equals(s4)) {
                      hashtable.put(s3, taggedrecord.valueAt(taggedrecord.indexOfTag('w')));
                   }
                }
@@ -2497,7 +2498,7 @@ public class LogicProgram implements LogicConstants {
 
             for (int j = 0; j < i; j++) {
                String s6 = (String)vector.elementAt(j);
-               String s5 = (String)hashtable.get(TaggedRecord.m1493(s6));
+               String s5 = (String)hashtable.get(TaggedRecord.nameOf(s6));
                if (s5 == null) {
                   vector1.addElement(s6);
                } else if (!s5.equals(Scrambler.md5Base64(s6))) {
@@ -2527,8 +2528,8 @@ public class LogicProgram implements LogicConstants {
       }
    }
 
-   static KeyListener m1085(Component object) {
-      Object object1 = null;
+   static KeyListener findParentKeyListener(Component object) {
+      Component object1 = null;
 
       while (object != null && !((object1 = object.getParent()) instanceof KeyListener)) {
          object = object1;
@@ -2537,7 +2538,7 @@ public class LogicProgram implements LogicConstants {
       return (KeyListener)object1;
    }
 
-   static void m1086(Container container, KeyEvent keyevent) {
+   static void forwardKeyEvent(Container container, KeyEvent keyevent) {
       if (!keyevent.isConsumed()) {
          if (keyevent.getID() == 401 && keyevent.getKeyCode() == 10 && container instanceof JComponent) {
             JComponent jcomponent = (JComponent)container;
@@ -2548,7 +2549,7 @@ public class LogicProgram implements LogicConstants {
             }
          }
 
-         KeyListener keylistener = m1085(container);
+         KeyListener keylistener = findParentKeyListener(container);
          if (keylistener != null) {
             if (keyevent.getID() == 401) {
                keylistener.keyPressed(keyevent);
@@ -2562,11 +2563,11 @@ public class LogicProgram implements LogicConstants {
    }
 
    static {
-      ProgressDialog.m1285(fontSize);
+      ProgressDialog.setFontSize(fontSize);
       UIManager.put("ToolTip.font", getFont(fontSize * 3 / 4));
    }
 
-   static class C__A implements Runnable {
+   static class ProgramStartup implements Runnable {
       @Override
       public void run() {
          try {
@@ -2606,10 +2607,10 @@ public class LogicProgram implements LogicConstants {
                      LogicProgram.exit();
                   }
 
-                  MessageDialog.m1312();
-                  ServerConnection.f489 = null;
-                  LogicProgram.mainMenu = MainMenu.m2207(null);
-                  LogicProgram.m1053(true);
+                  MessageDialog.disposeHiddenOwner();
+                  ServerConnection.cachedLogin = null;
+                  LogicProgram.mainMenu = MainMenu.open(null);
+                  LogicProgram.showHeadlines(true);
                   return;
                }
             } else {
