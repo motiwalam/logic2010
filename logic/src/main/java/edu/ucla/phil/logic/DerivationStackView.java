@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.Scrollable;
 import javax.swing.Timer;
+import javax.swing.text.DefaultCaret;
 
 /**
  * The stack view of the derivation module (the Stack button): the formulas on the stack of
@@ -185,6 +186,8 @@ class DerivationStackView extends JPanel implements ActionListener {
    /** Text that wraps to the width of the view. */
    static JTextArea note(String s, Color color) {
       JTextArea jtextarea = new JTextArea(s);
+      // its caret would otherwise scroll the view to it
+      ((DefaultCaret)jtextarea.getCaret()).setUpdatePolicy(1);
       jtextarea.setLineWrap(true);
       jtextarea.setWrapStyleWord(true);
       jtextarea.setEditable(false);

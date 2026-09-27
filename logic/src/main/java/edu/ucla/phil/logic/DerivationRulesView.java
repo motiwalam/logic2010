@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolTip;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 
@@ -41,6 +42,7 @@ class DerivationRulesView extends JPanel implements ActionListener, DerivationCo
    LPDerivation module;
    Timer timer;
    JPanel content;
+   JScrollPane scrollPane;
    String lastKey;
    String lastShown;
    int ticks;
@@ -60,6 +62,7 @@ class DerivationRulesView extends JPanel implements ActionListener, DerivationCo
       JScrollPane jscrollpane = new JScrollPane(widthtrackingpanel, 20, 31);
       jscrollpane.setBorder(null);
       jscrollpane.getVerticalScrollBar().setUnitIncrement(16);
+      this.scrollPane = jscrollpane;
       this.add(jscrollpane, "Center");
       this.setPreferredSize(new Dimension(LogicProgram.fontSize * 24, 0));
       this.timer = new Timer(200, this);
@@ -184,6 +187,14 @@ class DerivationRulesView extends JPanel implements ActionListener, DerivationCo
 
          this.content.revalidate();
          this.content.repaint();
+         // new rules: show the top of the list, where the best ones are
+         this.scrollPane.getViewport().setViewPosition(new java.awt.Point(0, 0));
+         SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+               DerivationRulesView.this.scrollPane.getViewport().setViewPosition(new java.awt.Point(0, 0));
+            }
+         });
       }
    }
 
