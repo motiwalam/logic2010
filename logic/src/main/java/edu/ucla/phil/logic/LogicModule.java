@@ -197,7 +197,7 @@ abstract class LogicModule extends CellPanel implements ModuleConstants, ModuleC
          }
 
          // the digest covers the records as they will be read back from the saved file
-         vector = DataFiles.canonicalRecords(vector);
+         vector = DataFiles.canonicalRecords(vector, DataFiles.schemaForKey(workFileName));
          String s1 = LogicProgram.user.computeDigest(vector.elements(), (String)LogicProgram.user.get(s));
          DataFiles.writeWork(LogicProgram.workDir, workFileName, vector, s1);
       }

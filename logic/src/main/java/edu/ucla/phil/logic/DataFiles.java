@@ -162,6 +162,21 @@ final class DataFiles {
          "a activate-rules"}}
    };
 
+   /**
+    * The fields that hold formulas, by schema: their quantifiers may be written as words
+    * ("forall x", "exists x"; see QuantifierWords). A symbolization node holds a formula
+    * part before its first ':' and English after it; only the formula part is converted.
+    */
+   static final String[][] FORMULA_FIELDS = {
+      {"derivation-problems", "-+<"},
+      {"invalidity-problems", "?"},
+      {"parsing-problems", "="},
+      {"recognition-problems", "="},
+      {"truth-table-problems", "="},
+      {"symbolization-problems", "+"},
+      {"symbolization-answers", "+"}
+   };
+
    static final Hashtable schemaTagToName = new Hashtable(); // "schema\u0000tag" -> name
    static final Hashtable schemaNameToTag = new Hashtable(); // "schema\u0000name" -> Character
 
@@ -185,6 +200,30 @@ final class DataFiles {
          for (int j = 1; j < parts.length; j++) {
             schemaNameToTag.put(schema + "\u0000" + parts[j], tag);
          }
+      }
+   }
+
+   static boolean isFormulaField(String schema, char tag) {
+      for (int i = 0; i < FORMULA_FIELDS.length; i++) {
+         if (FORMULA_FIELDS[i][0].equals(schema)) {
+            return FORMULA_FIELDS[i][1].indexOf(tag) != -1;
+         }
+      }
+
+      return false;
+   }
+
+   /** A field's value with its quantifiers as words (toWords) or as the program's @ and ! symbols. */
+   static String convertQuantifiers(String schema, char tag, String value, boolean toWords) {
+      if (!isFormulaField(schema, tag)) {
+         return value;
+      } else if (schema.startsWith("symbolization")) {
+         int i = value.indexOf(':');
+         String s = i == -1 ? value : value.substring(0, i);
+         s = toWords ? QuantifierWords.toWords(s) : QuantifierWords.toSymbols(s);
+         return i == -1 ? s : s + value.substring(i);
+      } else {
+         return toWords ? QuantifierWords.toWords(value) : QuantifierWords.toSymbols(value);
       }
    }
 
@@ -333,7 +372,7 @@ final class DataFiles {
                if (tag == 0) {
                   warn(fileName, n + 1, "unknown field \"" + name + "\"");
                } else {
-                  record.append(escapeValue(value)).append('`').append(tag);
+                  record.append(escapeValue(convertQuantifiers(schema, tag, value, false))).append('`').append(tag);
                }
             }
          }
@@ -448,7 +487,7 @@ final class DataFiles {
                i++;
             }
 
-            out.append(trimmed.substring(0, i)).append('\t').append(trimmed.substring(i).trim()).append('\n');
+            out.append(trimmed.substring(0, i)).append('\t').append(QuantifierWords.toSymbols(trimmed.substring(i).trim())).append('\n');
          }
       }
 
@@ -563,6 +602,10 @@ final class DataFiles {
     * Records without fields are left out (there is nothing to write for them).
     */
    static Vector canonicalRecords(Vector records) {
+      return canonicalRecords(records, null);
+   }
+
+   static Vector canonicalRecords(Vector records, String schema) {
       Vector out = new Vector();
 
       for (int i = 0; i < records.size(); i++) {
@@ -571,7 +614,12 @@ final class DataFiles {
             StringBuffer fields = new StringBuffer();
 
             for (int j = 0; j < t.getFieldCount(); j++) {
-               fields.append(escapeValue(t.valueAt(j))).append('`').append(t.tagAt(j));
+               String value = t.valueAt(j);
+               if (schema != null) {
+                  value = convertQuantifiers(schema, t.tagAt(j), convertQuantifiers(schema, t.tagAt(j), value, true), false);
+               }
+
+               fields.append(escapeValue(value)).append('`').append(t.tagAt(j));
             }
 
             StringBuffer line = new StringBuffer();
@@ -668,7 +716,7 @@ final class DataFiles {
             out.append("  ");
          }
 
-         out.append(name).append(':').append(formatValue(t.valueAt(i))).append('\n');
+         out.append(name).append(':').append(formatValue(convertQuantifiers(schema, tag, t.valueAt(i), true))).append('\n');
       }
    }
 

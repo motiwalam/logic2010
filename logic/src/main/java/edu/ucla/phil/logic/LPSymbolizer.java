@@ -638,7 +638,7 @@ class LPSymbolizer extends LogicModule implements SymbolizationConstants {
             return true;
          } else {
             try {
-               DataFiles.writeWork(LogicProgram.workDir, "keywork.txt", DataFiles.canonicalRecords(new Vector(userKey.values())), null);
+               DataFiles.writeWork(LogicProgram.workDir, "keywork.txt", DataFiles.canonicalRecords(new Vector(userKey.values()), "symbolization-answers"), null);
             } catch (IOException ioexception) {
                return false;
             }

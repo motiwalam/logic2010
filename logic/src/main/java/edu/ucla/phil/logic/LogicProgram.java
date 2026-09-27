@@ -127,9 +127,9 @@ public class LogicProgram implements LogicConstants {
    static String optionO = null;
    static ArrayList<Image> iconImages = null;
    static Hashtable credentials = null;
-   static String[] symbols = kaplan1;
+   static String[] symbols = kaplan2;
    static String[] encodedSymbols = kaplan5;
-   static String[] htmlSymbols = html1;
+   static String[] htmlSymbols = html2;
    static String sentenceLetters = "PQRSTUVWXYZ";
    static String predicateLetters = "FGHIJKLMNO";
    static String operationLetters = "ABCDE";
@@ -1328,6 +1328,10 @@ public class LogicProgram implements LogicConstants {
    }
 
    static Expression parseFormula(String s, boolean flag, boolean flag1, boolean flag2) throws FormulaParseException {
+      // "forall x" and "exists x" are accepted for @x and !x; errors are reported in the text as typed
+      String s5 = s;
+      s = QuantifierWords.toSymbols(s);
+
       try {
          if (s != null && !s.trim().equals("")) {
             FormulaParser.reinit(new StringReader(s + "\n"));
@@ -1362,8 +1366,8 @@ public class LogicProgram implements LogicConstants {
          String s3 = formulaparseexception.getMessage();
          int j = parseErrorColumn(s3);
          if (j != -1) {
-            int[] aint1 = new int[]{j};
-            translateSymbols(s, maggie, symbols, aint1);
+            int[] aint1 = new int[]{Integer.parseInt(QuantifierWords.toSymbols(s5, j - 1)[1]) + 1};
+            translateSymbols(s5, maggie, symbols, aint1);
             throw new FormulaParseException("Parse error at position " + aint1[0] + ".");
          } else {
             throw formulaparseexception;
@@ -1372,8 +1376,8 @@ public class LogicProgram implements LogicConstants {
          String s2 = formulalexererror.getMessage();
          int i = parseErrorColumn(s2);
          if (i != -1) {
-            int[] aint = new int[]{i};
-            translateSymbols(s, maggie, symbols, aint);
+            int[] aint = new int[]{Integer.parseInt(QuantifierWords.toSymbols(s5, i - 1)[1]) + 1};
+            translateSymbols(s5, maggie, symbols, aint);
             throw new FormulaParseException("Lexical error at position " + aint[0] + ".");
          } else {
             throw new FormulaParseException(s2);
@@ -2020,7 +2024,7 @@ public class LogicProgram implements LogicConstants {
                         printingEnabled = false;
                      } else if (s1.equalsIgnoreCase("altsymbols")) {
                         altSymbols = true;
-                        symbols = FormulaParser.getSyntax() == 2 ? kaplan1 : kaplan2;
+                        symbols = kaplan1; // the wedge quantifiers
                      } else if (s1.equalsIgnoreCase("overhead")) {
                         overheadColors = true;
                      } else if (s1.equalsIgnoreCase("remote")) {
@@ -2111,9 +2115,11 @@ public class LogicProgram implements LogicConstants {
       i = FormulaParser.getSyntax();
       switch (i) {
          case 1:
-            symbols = kaplan1;
+            // quantifiers are shown as the traditional symbols in both notations (kaplan1 and
+            // html1 have wedges); encodedSymbols is a storage encoding and stays per notation
+            symbols = kaplan2;
             encodedSymbols = kaplan5;
-            htmlSymbols = html1;
+            htmlSymbols = html2;
             sentenceLetters = "PQRSTUVWXYZ";
             predicateLetters = "FGHIJKLMNO";
             operationLetters = "ABCDE";

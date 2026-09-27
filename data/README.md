@@ -69,7 +69,7 @@ problem: Deriv 1.002
   - `\n` is a line break in messages
   - `\l` toggles the translation of ASCII formula notation (`->`, `@x`, …) into logic symbols
   - `<name>` in messages is a parameter filled in by the program
-  - formulas are written in ASCII notation
+  - formulas are written in ASCII notation. Quantifiers may be written as words, `forall x Fx` and `exists x Fx`, or as symbols, `@xFx` and `!xFx`. The words are recognized only in fields that hold formulas (the argument, Show and line fields of derivations, arguments and formulas of the other modules, and the part of a symbolization node before its `:`), and in rule and theorem bodies. The program writes the words when it saves work.
 
 **Options** (`options.rec`): records with the same `section` may appear several times. All their fields apply, in order. A problem selector such as `{"1.7","1.72"}` names problems (and `u` means user-created ones); `~` in front negates it.
 

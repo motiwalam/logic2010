@@ -84,6 +84,12 @@ Local and normal mode keep separate runtime directories, so local work never get
 - `config.dir` and `link.dir` point at `Contents/Resources`
 - `prog.dir` points at `Contents/Java`
 
+## Quantifiers
+
+Quantifiers are shown as `∀` and `∃` in both notations. The original program showed notation 1's as the wedges `⋀` and `⋁`; `set: altsymbols` in the `logic` section of `data/options.rec` brings the wedges back.
+
+In typed formulas, commands and the data files, `forall x` may be written for `@x` and `exists x` for `!x`: `forall x (Fx -> exists y Gy)`. A blank between the word and its variable is optional. Internally the program still uses `@` and `!` (`QuantifierWords`, `LogicProgram.parseFormula`, `DataFiles`).
+
 ## Justification syntax extensions
 
 A derivation line's justification is a small stack program: cited line numbers push their formulas, and each rule pops its premises and pushes its result for the next step, as in `2 pr1 MP 2 pr2 MP ID`. This version adds two things to that language. Neither changes how existing justifications are read.
@@ -157,7 +163,7 @@ Where to start reading:
 
 | Branch | Purpose |
 |---|---|
-| `main` | Working branch: `base-logic2010` plus your changes (so far: bundled course data, readable data and work files, local mode, justification syntax extensions, and fixes for deleting a problem's work, the menu layout on modern Java, and formula parse errors). |
+| `main` | Working branch: `base-logic2010` plus your changes (so far: bundled course data, readable data and work files, local mode, justification syntax extensions, quantifier words and symbols, and fixes for deleting a problem's work, the menu layout on modern Java, and formula parse errors). |
 | `base-logic2010` | The unmodified source, exactly equivalent to the official Logic 2010 program (core version 20200601), still needing an existing installation to run. Keep it untouched as the reference point. |
 | `reverse-engineering` | How this source was recovered. It holds the original jars, the naming mappings, the build pipeline that regenerates `base-logic2010`'s source, the equivalence checker, the converter from the original scrambled data files to the readable ones (and documentation of the old formats), and detailed architecture notes (`docs/`). |
 
