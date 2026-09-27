@@ -656,10 +656,10 @@ class QB UnusedIntHolder
 f698 value
 
 # C_p_B: empty, unused class
-class pB UnusedEmptyClassPB
+class pB UnusedEmptyClass1
 
 # C_v_C: empty, unused class
-class vC UnusedEmptyClassVC
+class vC UnusedEmptyClass2
 
 # LogicProgram: unused compile-time constants (inlined everywhere, so no readers remain).
 # f542..f547 duplicate ModuleConstants' module indices; the others can't be identified.

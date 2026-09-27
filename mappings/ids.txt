@@ -4595,7 +4595,7 @@ edu/ucla/phil/logic/oE	edu/ucla/phil/logic/ParsingResultsPage
 edu/ucla/phil/logic/oF	edu/ucla/phil/logic/DefaultRuleListResolver
 edu/ucla/phil/logic/p	edu/ucla/phil/logic/ServerUrl
 edu/ucla/phil/logic/pA	edu/ucla/phil/logic/EditableTextPane
-edu/ucla/phil/logic/pB	edu/ucla/phil/logic/UnusedEmptyClassPB
+edu/ucla/phil/logic/pB	edu/ucla/phil/logic/UnusedEmptyClass1
 edu/ucla/phil/logic/pC	edu/ucla/phil/logic/UcsbInstitution
 edu/ucla/phil/logic/pD	edu/ucla/phil/logic/Credentials
 edu/ucla/phil/logic/pE	edu/ucla/phil/logic/IndirectAssumptionJustification
@@ -4653,7 +4653,7 @@ edu/ucla/phil/logic/uE$9	edu/ucla/phil/logic/TruthToolbar$9
 edu/ucla/phil/logic/v	edu/ucla/phil/logic/ResponseHandler
 edu/ucla/phil/logic/vA	edu/ucla/phil/logic/CollapsibleNode
 edu/ucla/phil/logic/vB	edu/ucla/phil/logic/TextFilePrintJob
-edu/ucla/phil/logic/vC	edu/ucla/phil/logic/UnusedEmptyClassVC
+edu/ucla/phil/logic/vC	edu/ucla/phil/logic/UnusedEmptyClass2
 edu/ucla/phil/logic/vD	edu/ucla/phil/logic/SymbolizationConstants
 edu/ucla/phil/logic/vE	edu/ucla/phil/logic/SunysbInstitution
 edu/ucla/phil/logic/w	edu/ucla/phil/logic/SocketLineReader

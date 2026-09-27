@@ -1,4 +1,4 @@
 package edu.ucla.phil.logic;
 
-class UnusedEmptyClassVC {
+class UnusedEmptyClass2 {
 }

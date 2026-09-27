@@ -303,7 +303,7 @@ design is used for integer sets in `C_n_F` (enumerated by
   - `ProblemEditorFrame` builds two lists and does nothing more, and
     `ProblemEditorChecks.confirmClose` always returns true.
   - `ImportedProblemEntry`, `NamedIndex`, `UnusedIntHolder`,
-    `UnusedEmptyClassPB`/`VC` and `EmptyEntryPoint` are never used.
+    `UnusedEmptyClass1`/`VC` and `EmptyEntryPoint` are never used.
   - `ModuleComponentMarker` is an empty interface that nothing tests.
 - `DialogHandler.handleChoice` in the base class computes the action and then
   returns true on both branches.
